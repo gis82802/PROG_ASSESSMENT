@@ -1,0 +1,68 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- 備註 (20/20)：該程式包含對其功能的明確說明。
+- 格式 (25/25)：保持適當的縮排和編碼風格。
+- 準確性 (25/25)：程式產生正確的結果。
+- 邏輯 (30/30)：程式邏輯正確。
+
+總分：100/100
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式碼簡潔明瞭，邏輯清晰。
+2. 使用 `Math.max` 和 `Math.min` 函數來找出最大值和最小值，避免了使用 `if-else` 判斷式。
+3. 程式碼包含詳細的註解，說明了程式的功能和步驟。
+
+**缺點：**
+1. 輸入提示信息有誤，第三個數字的提示信息應該是「請輸入第三個數字」。
+2. 變數命名可以更具描述性，例如 `num1`, `num2`, `num3` 可以改為 `firstNumber`, `secondNumber`, `thirdNumber`。
+
+### 3. 改進的程式碼
+
+```java
+/*
+   資工二乙 41243202 林沛慧
+   作業三：比大小
+   功能：可讓使用者輸入3個數字，並列出三個數字的最大值、中間值及最小值
+         (不可使用if...else判斷式)
+*/
+import java.util.Scanner;
+
+public class hw3
+{
+    public static void main(String[] args)
+    {
+        //輸入
+        Scanner sc = new Scanner(System.in);
+        System.out.println("請輸入第一個數字：");
+        int firstNumber = sc.nextInt();
+        System.out.println("請輸入第二個數字：");
+        int secondNumber = sc.nextInt();
+        System.out.println("請輸入第三個數字：");
+        int thirdNumber = sc.nextInt();
+
+        //判斷
+        int max = Math.max(firstNumber, Math.max(secondNumber, thirdNumber));
+        int min = Math.min(firstNumber, Math.min(secondNumber, thirdNumber));
+        int mid = firstNumber + secondNumber + thirdNumber - max - min;
+
+        //輸出
+        System.out.println("最大值：" + max + "\n中間值：" + mid + "\n最小值：" + min);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **修改輸入提示信息**：第三個數字的提示信息從「請輸入第二個數字」改為「請輸入第三個數字」，以避免誤導使用者。
+2. **變數命名**：將 `num1`, `num2`, `num3` 改為 `firstNumber`, `secondNumber`, `thirdNumber`，使變數名稱更具描述性，更易於理解。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **注意輸入提示信息的準確性**：確保輸入提示信息準確無誤，避免誤導使用者。
+2. **變數命名應具描述性**：變數名稱應該能夠清楚地描述其用途，這樣可以提高程式碼的可讀性和可維護性。
+3. **保持程式碼簡潔明瞭**：你的程式碼已經很簡潔明瞭，保持這種風格，並在必要時加入詳細的註解。
+4. **進一步挑戰**：如果你有興趣，可以嘗試使用不同的方法來解決這個問題，例如使用數組和排序算法來找出最大值、中間值和最小值。
+
+總體來說，這份作業完成得非常好，繼續保持這種高水平的表現！

@@ -1,0 +1,183 @@
+### 1. 打分
+根據您的標準，這份作業的分數如下：
+
+- 備註 (滿分20)：10
+  - 該程式缺乏對其功能的明確說明，僅有簡單的註解。
+
+- 格式 (滿分25)：20
+  - 程式碼格式基本齊整，但有些地方可以改進，例如變數命名和註解。
+
+- 準確性 (滿分25)：25
+  - 程式能夠正確地計算矩陣相乘的結果。
+
+- 邏輯 (滿分30)：25
+  - 程式邏輯基本正確，但有些地方可以改進，例如矩陣初始化和輸入處理。
+
+總分：80
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式能夠正確地計算矩陣相乘的結果。
+2. 程式碼格式基本齊整。
+3. 使用了適當的異常處理來處理輸入錯誤。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 變數命名不夠直觀，例如 `rows1` 和 `cols1` 可以改為 `matrix1Rows` 和 `matrix1Cols`。
+3. 矩陣初始化和輸入處理可以改進，例如在輸入矩陣元素時，可以檢查輸入是否合法。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class MatrixMultiplication {
+    /**
+     * 矩陣相乘函式
+     * @param matrix1 第一個矩陣
+     * @param matrix2 第二個矩陣
+     * @return 相乘結果或 null （若無法相乘）
+     */
+    public static double[][] MatMultiply(double[][] matrix1, double[][] matrix2) {
+        if (matrix1 == null || matrix2 == null ||
+            matrix1.length == 0 || matrix2.length == 0 ||
+            matrix1[0].length != matrix2.length) {
+            return null;
+        }
+
+        int matrix1Rows = matrix1.length;
+        int matrix1Cols = matrix1[0].length;
+        int matrix2Cols = matrix2[0].length;
+
+        double[][] result = new double[matrix1Rows][matrix2Cols];
+
+        for (int i = 0; i < matrix1Rows; i++) {
+            for (int j = 0; j < matrix2Cols; j++) {
+                for (int k = 0; k < matrix1Cols; k++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 輸入矩陣元素
+     * @param scanner 輸入流
+     * @param rows 矩陣行數
+     * @param cols 矩陣列數
+     * @return 輸入的矩陣
+     */
+    private static double[][] inputMatrix(Scanner scanner, int rows, int cols) {
+        double[][] matrix = new double[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.printf("請輸入 [%d][%d] 位置的元素: ", i+1, j+1);
+                while (!scanner.hasNextDouble()) {
+                    System.out.println("輸入無效，請重新輸入: ");
+                    scanner.next(); // 清除無效輸入
+                }
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+        return matrix;
+    }
+
+    /**
+     * 打印矩陣
+     * @param matrix 要打印的矩陣
+     */
+    private static void printMatrix(double[][] matrix) {
+        if (matrix == null) {
+            System.out.println("NULL");
+            return;
+        }
+        for (double[] row : matrix) {
+            for (double num : row) {
+                System.out.printf("%.2f\t", num);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("請輸入第一個矩陣的維度：");
+            System.out.print("列數: ");
+            int matrix1Rows = scanner.nextInt();
+            System.out.print("行數: ");
+            int matrix1Cols = scanner.nextInt();
+
+            System.out.println("\n請輸入第二個矩陣的維度：");
+            System.out.print("列數: ");
+            int matrix2Rows = scanner.nextInt();
+            System.out.print("行數: ");
+            int matrix2Cols = scanner.nextInt();
+
+            // 檢查矩陣是否可以相乘
+            if (matrix1Cols != matrix2Rows) {
+                System.out.println("無法相乘，矩陣維度不匹配");
+                return;
+            }
+
+            System.out.println("\n請輸入第一個矩陣的元素：");
+            double[][] matrix1 = inputMatrix(scanner, matrix1Rows, matrix1Cols);
+
+            System.out.println("\n請輸入第二個矩陣的元素：");
+            double[][] matrix2 = inputMatrix(scanner, matrix2Rows, matrix2Cols);
+
+            System.out.println("\n第一個矩陣：");
+            printMatrix(matrix1);
+
+            System.out.println("\n第二個矩陣：");
+            printMatrix(matrix2);
+
+            System.out.println("\n相乘結果：");
+            printMatrix(MatMultiply(matrix1, matrix2));
+
+        } catch (Exception e) {
+            System.out.println("NULL");
+        } finally {
+            scanner.close();
+        }
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **增加註解和說明**：
+   - 在每個函式上方增加註解，說明函式的功能和參數。
+
+2. **變數命名改進**：
+   - 將 `rows1` 和 `cols1` 改為 `matrix1Rows` 和 `matrix1Cols`，使變數名更直觀。
+
+3. **輸入處理改進**：
+   - 在 `inputMatrix` 函式中，增加輸入檢查，確保輸入的是合法的數字。
+
+4. **矩陣初始化改進**：
+   - 在 `main` 函式中，增加矩陣維度檢查，確保矩陣可以相乘。
+
+### 5. 改進建議和反饋
+
+1. **增加註解和說明**：
+   - 在程式碼中增加更多的註解，說明每個函式的功能和參數，讓程式碼更易於理解和維護。
+
+2. **變數命名**：
+   - 使用更直觀的變數名稱，讓程式碼更易於閱讀和理解。
+
+3. **輸入處理**：
+   - 在輸入矩陣元素時，增加輸入檢查，確保輸入的是合法的數字，避免程式崩潰。
+
+4. **矩陣初始化**：
+   - 在初始化矩陣時，增加維度檢查，確保矩陣可以相乘，避免不必要的錯誤。
+
+5. **異常處理**：
+   - 在程式中增加更多的異常處理，確保程式在遇到異常情況時能夠正常運行。
+
+希望這些建議能夠幫助學生改進他們的程式設計技巧。

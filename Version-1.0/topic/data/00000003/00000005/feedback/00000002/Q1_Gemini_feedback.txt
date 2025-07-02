@@ -1,0 +1,169 @@
+好的，我將根據您的標準對學生的作業進行評分、分析、並提供改進建議。
+
+**1. 評分 (總分: 73/100)**
+
+*   **備註 (15/20):** 程式碼開頭有作者、學號、作業名稱和版本號的註解，但對於 `Inventory` 類別和每個方法的具體功能描述較少，缺乏更深入的解釋。
+*   **格式 (20/25):** 程式碼有適當的縮排，命名也基本符合Java的命名規範。但變數名稱略顯簡略，可以更具描述性。
+*   **準確性 (20/25):** 程式碼能產生正確的結果，功能基本實現。
+*   **邏輯 (18/30):**  `remove_product` 方法的邏輯存在潛在問題，當刪除元素後，陣列大小沒有更新，可能導致索引越界或錯誤的結果。 此外，使用多個變數儲存陣列長度容易造成混淆，應盡可能避免。
+
+**2. 優缺點分析**
+
+**優點：**
+
+*   程式碼結構清晰，`Inventory` 類別封裝了產品的相關信息和操作。
+*   基本功能實現，包括添加、刪除、修改產品數量和計算總價值。
+*   程式碼可讀性尚可，縮排一致。
+
+**缺點：**
+
+*   **缺乏詳細的程式碼功能描述：** 雖然程式碼開頭有一些註釋，但缺乏對每個方法功能的具體描述，不利於理解程式碼意圖。
+*   **變數命名不夠直觀：** `n_size`, `c_size`, `p_size` 的命名不夠直觀，難以理解其含義。
+*   **陣列大小固定：** 使用固定大小的陣列 (100) 作為庫存容量，當產品數量超過 100 時會出現問題。
+*   **`remove_product` 方法效率低且有潛在錯誤：** 每次刪除產品都需要創建新的陣列並複製數據，效率較低。同時，刪除元素後沒有更新 `n_size` 等變數，可能導致後續操作出錯。
+*   **缺乏異常處理：** 沒有考慮輸入參數的合法性，例如，當數量為負數時，程式碼不會進行處理。
+
+**3. 改進的程式碼**
+
+```java
+/*
+資工二甲 41043114 吳俊憲
+hw1
+ver 1.1.0 (Modified by AI Assistant)
+*/
+import java.util.Arrays; // 引入 Arrays 類別
+
+class Inventory {
+    // 使用 productCount 替代 n_size, c_size, p_size，避免混淆
+    int productCount = 0;
+    String[] productName = new String[100]; // 更名為 productName
+    int[] productCountArray = new int[100]; // 更名為 productCountArray
+    int[] productPrice = new int[100]; // 更名為 productPrice
+
+    /**
+     * 添加產品到庫存.
+     *
+     * @param name  產品名稱
+     * @param count 產品數量
+     * @param price 產品價格
+     */
+    void add_product(String name, int count, int price) {
+        productName[productCount] = name;
+        productCountArray[productCount] = count;
+        productPrice[productCount] = price;
+        productCount++;
+    }
+
+    /**
+     * 從庫存中移除產品.
+     *
+     * @param index 要移除的產品的索引
+     */
+    void remove_product(int index) {
+        if (index >= 0 && index < productCount) {
+            // 將要刪除的元素之後的元素往前移動
+            for (int i = index; i < productCount - 1; i++) {
+                productName[i] = productName[i + 1];
+                productCountArray[i] = productCountArray[i + 1];
+                productPrice[i] = productPrice[i + 1];
+            }
+
+            // 將最後一個元素設為 null 或 0
+            productName[productCount - 1] = null;
+            productCountArray[productCount - 1] = 0;
+            productPrice[productCount - 1] = 0;
+
+            // 減少產品數量
+            productCount--;
+        } else {
+            System.out.println("無效的索引");
+        }
+    }
+
+    /**
+     * 增加產品數量.
+     *
+     * @param index 要增加數量的產品的索引
+     * @param count 要增加的數量
+     */
+    void add_count(int index, int count) {
+        productCountArray[index] += count;
+    }
+
+    /**
+     * 減少產品數量.
+     *
+     * @param index 要減少數量的產品的索引
+     * @param count 要減少的數量
+     */
+    void reduce_count(int index, int count) {
+        productCountArray[index] -= count;
+    }
+
+    /**
+     * 計算庫存總價值.
+     *
+     * @return 庫存總價值
+     */
+    int cal() {
+        int sum = 0;
+        for (int i = 0; i < productCount; i++) {
+            sum += productCountArray[i] * productPrice[i];
+        }
+        return sum;
+    }
+}
+
+public class hw1 {
+    public static void main(String[] args) {
+        Inventory drinks = new Inventory();
+        Inventory phone = new Inventory();
+
+        drinks.add_product("Green_tea", 20, 25);
+        drinks.add_product("Red_tea", 20, 25);
+        System.out.println("飲料店總庫存價值:" + drinks.cal());
+
+        drinks.reduce_count(0, 10);
+        System.out.println("飲料店總庫存價值(減少'Green_tea'數量後):" + drinks.cal());
+
+        drinks.add_count(1, 20);
+        System.out.println("飲料店總庫存價值(增加'Red_tea'數量後):" + drinks.cal());
+
+        drinks.remove_product(0);
+        System.out.println("飲料店總庫存價值(移除'Green_tea'產品後):" + drinks.cal());
+
+        phone.add_product("phone1", 10, 15000);
+        phone.add_product("phone2", 10, 20000);
+        System.out.println("3C手機店總庫存價值:" + phone.cal());
+
+        phone.reduce_count(0, 5);
+        System.out.println("3C手機店總庫存價值(減少'phone1'數量後):" + phone.cal());
+
+        phone.add_count(1, 10);
+        System.out.println("3C手機店總庫存價值(增加'phone2'數量後):" + phone.cal());
+
+        phone.remove_product(0);
+        System.out.println("3C手機店總庫存價值(移除'phone1'產品後):" + phone.cal());
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **變數更名：**
+    *   將 `n_size`、`c_size` 和 `p_size` 更名為 `productCount`，統一管理產品數量，避免混淆。
+    *   將 `name` 更名為 `productName`，`count` 更名為 `productCountArray`，`price` 更名為 `productPrice`，提高程式碼可讀性。
+*   **`remove_product` 方法改進：**
+    *   修改了 `remove_product` 方法的實現，避免創建新陣列，改為將要刪除的元素之後的元素往前移動，並將最後一個元素設為 `null` 或 `0`。 這樣提高了效率，並避免了潛在的索引越界問題。
+    *   在刪除元素後，更新 `productCount` 的值，以確保程式碼的正確性。
+    *   增加邊界檢查，判斷索引是否有效。
+*   **增加方法註解：** 為每個方法添加了 Javadoc 格式的註解，說明方法的功能、參數和返回值。
+
+**5. 改進建議和反饋**
+
+*   **程式碼可讀性：** 雖然程式碼已經進行了改進，但仍然可以通過使用更具描述性的變數名來提高可讀性。例如，`i` 可以更名為 `index`。
+*   **異常處理：** 在 `add_count` 和 `reduce_count` 方法中，可以增加對 `count` 參數的合法性檢查，例如，如果 `count` 為負數，則輸出錯誤信息。
+*   **使用 ArrayList：** 考慮使用 `ArrayList` 替代固定大小的陣列，以支持動態調整庫存容量。這樣可以避免因庫存容量不足而導致的問題。
+*   **模組化設計：** 可以將 `Inventory` 類別進一步模組化，例如，創建一個 `Product` 類別來封裝產品的相關信息。
+
+總體而言，學生的程式碼基本實現了作業要求，但存在一些可以改進的地方。通過修改變數命名、優化 `remove_product` 方法和增加方法註解，可以提高程式碼的可讀性、可維護性和效率。此外，學生還應該注意異常處理和使用更靈活的數據結構。

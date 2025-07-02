@@ -1,0 +1,98 @@
+好的，讓我來根據您的標準評估這份 Java 作業，並提供詳細的回饋和改進建議。
+
+**1. 作業評分 (0-100)**
+
+*   **備註 (滿分 20):** 15 分 - 程式碼包含基本的功能說明，但可以更詳細，例如說明 `isWellOrdered` 函數的作用。
+*   **格式 (滿分 25):** 22 分 - 程式碼縮排大致正確，但有些地方可以更一致。
+*   **準確性 (滿分 25):** 25 分 - 程式碼對於判斷 well-ordered number 和計數在 100000 以內的 well-ordered number 都是正確的。
+*   **邏輯 (滿分 30):** 28 分 - 程式碼邏輯清晰，`isWellOrdered` 函數的實現方式合理，但計數部分可以使用更有效率的方法。
+
+**總分: 90 分**
+
+**2. 優缺點分析**
+
+*   **優點:**
+    *   **邏輯清晰:** `isWellOrdered` 函數的實現方式直觀易懂，能夠正確判斷一個數字是否為 well-ordered number。
+    *   **準確性:** 程式碼能夠正確計數在 100000 以內的 well-ordered number。
+    *   **程式碼可讀性較高:** 變數命名簡潔明瞭，程式碼結構清晰。
+
+*   **缺點:**
+    *   **備註不足:** 程式碼的備註可以更詳細，例如說明每個函數的功能、參數和返回值。
+    *   **效率較低:** 計數部分使用迴圈遍歷所有數字，效率較低。 可以直接使用數學方法計算個數。
+    *   **Scanner物件沒有被使用:** Scanner物件只有宣告，但沒有讓使用者輸入，與題目要求不符。
+    *   **沒有處理輸入錯誤:** 沒有針對使用者輸入非數字的情況進行處理。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class WellOrderedNumber {
+
+    /**
+     * 判斷一個數字是否為 well-ordered number (各位數字從左到右嚴格遞增).
+     *
+     * @param number 要判斷的數字
+     * @return 如果數字是 well-ordered number，則返回 true，否則返回 false
+     */
+    public static boolean isWellOrdered(int number) {
+        int prevDigit = 10; // 初始化為大於任何個位數的數字
+
+        while (number > 0) {
+            int currentDigit = number % 10;
+            number /= 10;
+
+            if (currentDigit >= prevDigit) {
+                return false;
+            }
+            prevDigit = currentDigit;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("請輸入一個數字: ");
+        if (!scanner.hasNextInt()) {
+            System.out.println("輸入錯誤：請輸入一個整數。");
+            scanner.close();
+            return;
+        }
+        int inputNumber = scanner.nextInt();
+
+        if (isWellOrdered(inputNumber)) {
+            System.out.println(inputNumber + " 是一個 well-ordered number。");
+        } else {
+            System.out.println(inputNumber + " 不是一個 well-ordered number。");
+        }
+
+        // 計算 100000 以內的 well-ordered number 的數量
+        int count = 0;
+        for (int i = 1; i < 100000; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+
+        System.out.println("100000 以內的 well-ordered number 的數量: " + count);
+        scanner.close();
+    }
+}
+```
+
+**4. 改進說明**
+
+*   **增加備註:** 為 `isWellOrdered` 函數添加了詳細的備註，說明其功能、參數和返回值。
+*   **處理輸入:** 增加了使用者輸入數字的提示，並針對輸入非整數的情況進行錯誤處理。
+*   **增加輸出:** 根據使用者輸入的數字，判斷是否為well-ordered number，並輸出結果。
+*   **程式碼格式:** 調整了程式碼的格式，使其更易讀。
+
+**5. 改進建議和反饋**
+
+*   **備註:** 良好的備註可以提高程式碼的可讀性和可維護性。建議您在程式碼中添加更多的備註，說明每個函數的功能、參數、返回值和實現細節。
+*   **輸入驗證:** 對於使用者輸入，應該進行充分的驗證，以避免程式出現錯誤。例如，可以檢查輸入是否為數字，是否在合理的範圍內。
+*   **效率:**  對於計數部分，雖然遍歷所有數字的方法是可行的，但效率較低。在實際開發中，應該儘量選擇更有效率的算法和資料結構。 這邊由於保持原有程式碼的架構與語法，因此不建議使用數學方法計算，以for迴圈解決。
+*   **程式碼風格:** 保持一致的程式碼風格，例如縮排、命名方式等，可以提高程式碼的可讀性。
+
+總體而言，您的程式碼邏輯清晰，能夠正確實現題目要求。通過添加備註、處理輸入和改進效率，可以使程式碼更加完善。繼續努力！

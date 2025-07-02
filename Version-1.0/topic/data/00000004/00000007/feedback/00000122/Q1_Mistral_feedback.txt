@@ -1,0 +1,103 @@
+好的，讓我們根據你的標準對這份作業進行評分和分析。
+
+### 1. 評分（0-100）
+- **備註（滿分20）**：15
+  - 程式沒有對其功能進行明確說明，僅有少量的提示信息。
+- **格式（滿分25）**：20
+  - 程式碼的縮排和編碼風格基本上是適當的，但有些地方可以進一步改進。
+- **準確性（滿分25）**：25
+  - 程式能夠正確地進行排序並輸出結果。
+- **邏輯（滿分30）**：25
+  - 程式邏輯基本正確，但有些地方可以優化。
+
+總分：85
+
+### 2. 分析優缺點
+**優點：**
+1. 程式能夠正確地進行排序並輸出結果。
+2. 基本的縮排和編碼風格是適當的。
+3. 使用了適當的陣列操作和排序算法。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 變數命名不夠直觀，例如 `big` 可以改為 `size`。
+3. 排序算法可以優化，避免重複的陣列克隆和排序操作。
+4. 可以增加更多的註解來解釋程式的各個部分。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class homework101801 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 讀取陣列大小
+        System.out.println("請輸入陣列大小:");
+        int size = scanner.nextInt();
+
+        // 初始化陣列
+        int[] arr = new int[size];
+
+        // 讀取陣列元素
+        System.out.println("請輸入" + size + "個整數：");
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        // 輸出排序前的陣列
+        System.out.print("排序前: ");
+        printArray(arr);
+
+        // 由小到大排序
+        int[] arrAscending = arr.clone();
+        sortArray(arrAscending, true);
+        System.out.print("由小到大排序後: ");
+        printArray(arrAscending);
+
+        // 由大到小排序
+        int[] arrDescending = arr.clone();
+        sortArray(arrDescending, false);
+        System.out.print("由大到小排序後: ");
+        printArray(arrDescending);
+
+        scanner.close();
+    }
+
+    // 排序陣列的方法
+    public static void sortArray(int[] arr, boolean ascending) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                if (ascending ? arr[i] > arr[j] : arr[i] < arr[j]) {
+                    int temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+    }
+
+    // 輸出陣列的方法
+    public static void printArray(int[] arr) {
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+1. **變數命名**：將 `big` 改為 `size`，使命名更直觀。
+2. **排序方法**：將排序邏輯放入 `sortArray` 方法中，並使用一個布林參數來控制排序順序（升序或降序），避免重複的排序邏輯。
+3. **註解**：增加了註解來解釋程式的各個部分，使程式碼更易於理解。
+4. **代碼重用**：通過 `sortArray` 方法來重用排序邏輯，避免重複的陣列克隆和排序操作。
+
+### 5. 改進建議和反饋
+1. **增加註解**：在程式的各個部分增加註解，解釋程式的功能和邏輯，使程式更易於理解和維護。
+2. **使用更直觀的變數名稱**：使用更直觀的變數名稱，使程式碼更易於閱讀和理解。
+3. **代碼重用**：將重複的邏輯提取成方法，避免重複的代碼，提高代碼的可維護性。
+4. **優化排序算法**：可以考慮使用更高效的排序算法，例如快速排序或合併排序，來提高程式的效率。
+5. **測試和驗證**：在不同的輸入情況下測試程式，確保程式在各種情況下都能正確運行。
+
+希望這些建議能夠幫助你的學生改進他們的程式碼質量。

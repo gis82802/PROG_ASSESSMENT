@@ -1,0 +1,66 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+- **備註(滿分20)**: 該程式包含對其功能的明確說明，備註部分清晰且完整。分數: 20
+- **格式(滿分25)**: 程式碼保持適當的縮排和編碼風格，但有些地方可以更加一致。分數: 20
+- **準確性(滿分25)**: 程式能夠正確地計算出最大值、最小值和中間值。分數: 25
+- **邏輯(滿分30)**: 程式邏輯基本正確，但計算中間值的部分可以更加簡潔。分數: 25
+
+總分: 90
+
+### 2. 優缺點分析
+- **優點**:
+  - 程式碼結構清晰，變數名稱有意義，方便閱讀。
+  - 使用三元運算符來避免使用IF-ELSE語句，符合作業要求。
+  - 能夠正確地計算出最大值、最小值和中間值。
+
+- **缺點**:
+  - 計算中間值的邏輯稍顯複雜，可以進一步簡化。
+  - 部分代碼格式不夠一致，例如括號的使用和縮排。
+
+### 3. 改進的程式碼
+```java
+/*
+    filename:hw3_4
+    function:比較大小
+    author:41243204
+    datetime:2024/10/4
+    version:1.0
+*/
+import java.util.Scanner;
+
+public class hw3_4 {
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("請輸入第一個數字");
+        int firstNumber = scanner.nextInt();
+        System.out.println("請輸入第二個數字");
+        int secondNumber = scanner.nextInt();
+        System.out.println("請輸入第三個數字");
+        int thirdNumber = scanner.nextInt();
+
+        int max = (firstNumber > secondNumber) ? (firstNumber > thirdNumber ? firstNumber : thirdNumber) : (secondNumber > thirdNumber ? secondNumber : thirdNumber);
+        int min = (firstNumber < secondNumber) ? (firstNumber < thirdNumber ? firstNumber : thirdNumber) : (secondNumber < thirdNumber ? secondNumber : thirdNumber);
+        int mid = firstNumber + secondNumber + thirdNumber - max - min;
+
+        System.out.println("最大數為:" + max);
+        System.out.println("中間數為:" + mid);
+        System.out.println("最小數為:" + min);
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 修改部分及原因
+- **變數名稱**: 將 `firstnumber`, `secondnumber`, `thirdnumber` 改為 `firstNumber`, `secondNumber`, `thirdNumber`，以符合Java的命名規範。
+- **計算中間值**: 將計算中間值的邏輯簡化為 `int mid = firstNumber + secondNumber + thirdNumber - max - min;`，這樣更加直觀且簡潔。
+- **格式一致性**: 調整了部分括號的使用和縮排，使代碼更加一致和易讀。
+
+### 5. 改進建議和反饋
+- **變數命名**: 請遵循Java的命名規範，變數名稱應該使用駝峰命名法（CamelCase）。
+- **邏輯簡化**: 在計算中間值時，可以利用數學公式來簡化邏輯，使代碼更加簡潔。
+- **格式一致性**: 請保持代碼格式的一致性，特別是括號的使用和縮排，這樣可以提高代碼的可讀性。
+
+總體來說，這份作業已經做得很好，只需在一些細節上進行改進即可。希望這些建議能夠幫助學生進一步提升他們的程式設計能力。

@@ -1,0 +1,145 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：0
+- 格式（滿分25）：10
+- 準確性（滿分25）：20
+- 邏輯（滿分30）：20
+
+總分：50
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式具有基本的功能，能夠新增產品、減少數量並計算庫存價值。
+2. 基本的物件導向概念應用得當，如類別和物件的建立。
+
+**缺點：**
+1. 缺乏備註，無法了解程式的功能和用途。
+2. 格式不夠整齊，縮排和編碼風格不一致。
+3. 程式邏輯有些地方不夠完善，如減少產品時的邏輯。
+4. 程式碼缺乏靈活性和擴展性，如固定大小的陣列。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+41043241
+*/
+
+// 定義物品類別
+class Item {
+    String name;
+    int num;
+    int price;
+
+    Item(String name, int num, int price) {
+        this.name = name;
+        this.num = num;
+        this.price = price;
+    }
+
+    // 計算物品的總價值
+    int value() {
+        return num * price;
+    }
+}
+
+// 定義庫存類別
+class Inventory {
+    private List<Item> items;
+
+    Inventory() {
+        items = new ArrayList<>();
+    }
+
+    // 新增產品
+    void add_product(String name, int num, int price) {
+        items.add(new Item(name, num, price));
+    }
+
+    // 減少產品
+    void reduce_product(String name) {
+        items.removeIf(item -> item.name.equals(name));
+    }
+
+    // 增加產品數量
+    void add_num(String name) {
+        for (Item item : items) {
+            if (item.name.equals(name)) {
+                item.num++;
+                break;
+            }
+        }
+    }
+
+    // 減少產品數量
+    void reduce_num(String name) {
+        for (Item item : items) {
+            if (item.name.equals(name)) {
+                if (item.num > 0) {
+                    item.num--;
+                }
+                break;
+            }
+        }
+    }
+
+    // 計算整個庫存的價值
+    int value() {
+        int totalValue = 0;
+        for (Item item : items) {
+            totalValue += item.value();
+        }
+        return totalValue;
+    }
+}
+
+public class hw {
+    public static void main(String[] args) {
+        Inventory beverageStore = new Inventory();
+        beverageStore.add_product("AAA", 30, 10);
+        beverageStore.add_product("BBB", 111, 10);
+        beverageStore.add_product("CCC", 3354, 10);
+        beverageStore.add_product("DDD", 3543, 10);
+        beverageStore.add_product("EEE", 3054, 10);
+        beverageStore.add_product("FFF", 34, 10);
+        beverageStore.add_product("GGG", 34, 10);
+        beverageStore.reduce_num("GGG");
+        System.out.println("飲料店庫存價值: " + beverageStore.value());
+
+        Inventory mobileStore = new Inventory();
+        mobileStore.add_product("iPhone", 10, 30000);
+        mobileStore.add_product("Samsung", 15, 25000);
+        mobileStore.add_product("Huawei", 5, 20000);
+        mobileStore.reduce_num("iPhone");
+        System.out.println("3C手機店庫存價值: " + mobileStore.value());
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **類別名稱和變數名稱修改：**
+   - 將 `item` 改為 `Item`，使類別名稱符合Java命名規範。
+   - 將 `arr` 改為 `items`，並使用 `List` 來替代固定大小的陣列，提高靈活性和擴展性。
+
+2. **新增備註：**
+   - 添加了註解來說明每個類別和方法的功能。
+
+3. **格式調整：**
+   - 調整了縮排和編碼風格，使程式碼更易讀。
+
+4. **邏輯修正：**
+   - 在 `reduce_num` 方法中加入條件檢查，確保數量不會小於零。
+   - 使用 `removeIf` 方法來簡化 `reduce_product` 方法的邏輯。
+
+### 5. 為學生提供改進建議和反饋
+
+**建議：**
+1. **增加備註：** 為每個類別和方法添加註解，讓其他人能夠更容易理解你的程式碼。
+2. **格式一致：** 保持一致的縮排和編碼風格，使程式碼更易讀。
+3. **使用集合：** 使用 `List` 或其他集合來替代固定大小的陣列，提高程式的靈活性和擴展性。
+4. **邏輯檢查：** 在修改數量的方法中加入條件檢查，確保數量不會小於零。
+
+**反饋：**
+你的程式已經具備了基本的功能，但在備註、格式和邏輯上還有改進的空間。通過添加備註、調整格式和改進邏輯，你的程式將會更加完善和易於維護。繼續努力，保持良好的編碼習慣。

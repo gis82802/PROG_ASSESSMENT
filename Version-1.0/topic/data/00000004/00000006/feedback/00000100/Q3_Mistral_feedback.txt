@@ -1,0 +1,110 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- 備註（滿分20）：15
+- 格式（滿分25）：20
+- 準確性（滿分25）：25
+- 邏輯（滿分30）：25
+
+總分：85
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式碼功能明確，能夠正確反轉用戶輸入的數字。
+2. 變數名稱命名相對直觀，易於理解。
+3. 使用了適當的迴圈結構來實現數字反轉。
+
+**缺點：**
+1. 備註部分缺乏對函數功能的詳細說明。
+2. 格式方面，部分註釋和代碼之間的間距不夠適當。
+3. 未考慮負數的情況，雖然題目未明確要求，但考慮負數會使程式更完善。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+ * project name: Hw03
+ * project author: 41243144温博鈞
+ * project description: 將用戶輸入數值反轉之後print
+ *
+ * project function:
+ * 1. 判斷number是否符合 well-ordered number
+ * 2. 判斷number 內共有多少個well-orderded number
+ *
+ * latest changed date: 10-11-2024
+ */
+package October.oct_11;
+
+import java.util.Scanner;
+
+public class Hw03 {
+    public static void main(String[] args) {
+        // 用戶輸入
+        Scanner input = new Scanner(System.in);
+        System.out.print("請輸入欲反轉數值: ");
+        int number = input.nextInt();
+
+        // 考慮負數的情況
+        boolean isNegative = number < 0;
+        if (isNegative) {
+            number = -number;
+        }
+
+        int reversedNumber = reverse_number(number);
+        if (isNegative) {
+            reversedNumber = -reversedNumber;
+        }
+
+        System.out.println(String.format("%d 反轉之後結果為: %d", number, reversedNumber));
+        input.close();
+    }
+
+    public static int reverse_number(int number) {
+        /*
+         * 將number 反轉之後回傳
+         *
+         * @param number 欲反轉數值
+         * @return 反轉之後數值
+         */
+        int reverse_num = 0;
+
+        // 重複將number最後數字丟進reverse_number直到number歸零
+        while (number > 0) {
+            reverse_num = reverse_num * 10 + number % 10;
+            number /= 10;
+        }
+
+        return reverse_num;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **考慮負數的情況**：
+   - 原因：負數的反轉應該保留負號，這樣程式會更完善。
+   - 修改：在 `main` 方法中新增了對負數的判斷和處理，確保反轉後的數字仍保留負號。
+
+2. **備註部分的補充**：
+   - 原因：原備註部分對函數功能的說明不夠詳細。
+   - 修改：在 `reverse_number` 方法的註釋中補充了對參數和返回值的說明。
+
+3. **格式調整**：
+   - 原因：部分註釋和代碼之間的間距不夠適當。
+   - 修改：調整了註釋和代碼之間的間距，使程式碼更易讀。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **考慮更多邊界情況**：
+   - 建議：除了負數，還可以考慮其他邊界情況，如輸入為0的情況。
+
+2. **增加測試用例**：
+   - 建議：在程式中增加更多的測試用例，以確保程式在不同情況下都能正確運行。
+
+3. **代碼風格一致性**：
+   - 建議：保持代碼風格的一致性，包括縮排、註釋格式等，這樣有助於提高代碼的可讀性和可維護性。
+
+4. **閱讀Java編程規範**：
+   - 建議：閱讀Java編程規範，如Google Java Style Guide，以提高代碼質量和可讀性。
+
+總結來說，這份作業已經能夠正確實現基本功能，但仍有改進空間。希望這些建議能夠幫助你進一步提升程式碼的質量和完整性。

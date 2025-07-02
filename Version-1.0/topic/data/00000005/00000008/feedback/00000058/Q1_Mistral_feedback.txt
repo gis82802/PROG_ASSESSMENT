@@ -1,0 +1,168 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註（20分）**: 該程式包含對其功能的明確說明，但說明不夠詳細。15分。
+- **格式（25分）**: 程式碼格式基本良好，但有些地方縮排不一致。20分。
+- **準確性（25分）**: 程式能夠產生正確的結果，但有些邊界情況未處理。20分。
+- **邏輯（30分）**: 程式邏輯基本正確，但有些部分可以優化。25分。
+
+總分：80分
+
+### 2. 根據標準分析它的優缺點
+
+**優點**:
+1. 程式碼結構清晰，功能模塊分明。
+2. 基本功能實現，能夠新增、減少產品及計算庫存價值。
+
+**缺點**:
+1. 變數命名不夠直觀，如 `oc` 應該命名為 `quantity`，`incnt` 應該命名為 `itemCount`。
+2. `decide` 方法中的 `for` 迴圈條件應該是 `i < incnt` 而不是 `i <= incnt`。
+3. `limitextend` 方法中的陣列擴展處理有問題，應該使用 `System.arraycopy`。
+4. 缺乏邊界處理，如新增產品時未檢查產品是否已存在。
+5. 邏輯上有些地方可以優化，如 `decide` 方法中的刪除操作。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+public class Inventory {
+    public static void main(String[] args) {
+        Inventory drink = new Inventory();
+        Inventory cellphone = new Inventory();
+
+        drink.insert("bubbletea", 10, 60);
+        drink.insert("blacktea", 18, 30);
+        drink.insert("greentea", 13, 30);
+        drink.display();
+
+        drink.decide("greentea");
+        drink.display();
+
+        drink.ocset("bubbletea", 17);
+        drink.display();
+
+        drink.invalue();
+
+        cellphone.insert("monitor", 14, 228);
+        cellphone.insert("battery", 26, 320);
+        cellphone.insert("charging", 8, 105);
+        cellphone.display();
+
+        cellphone.decide("charging");
+        cellphone.display();
+
+        cellphone.ocset("monitor", 6);
+        cellphone.display();
+
+        cellphone.invalue();
+    }
+}
+
+class Inventory {
+    String[] name;
+    int[] quantity;
+    int[] price;
+    int itemCount;
+    int capacity;
+
+    Inventory() {
+        capacity = 5;
+        itemCount = 0;
+        name = new String[capacity];
+        quantity = new int[capacity];
+        price = new int[capacity];
+    }
+
+    void insert(String com, int coc, int p) {
+        if (itemCount == capacity) limitextend();
+
+        name[itemCount] = com;
+        quantity[itemCount] = coc;
+        price[itemCount] = p;
+        itemCount++;
+    }
+
+    void decide(String com) {
+        int target = -1;
+        for (int i = 0; i < itemCount; i++) {
+            if (com.equals(name[i])) {
+                target = i;
+                break;
+            }
+        }
+
+        if (target != -1) {
+            for (int i = target; i < itemCount - 1; i++) {
+                name[i] = name[i + 1];
+                quantity[i] = quantity[i + 1];
+                price[i] = price[i + 1];
+            }
+            itemCount--;
+        }
+    }
+
+    void ocset(String com, int coc) {
+        int target = -1;
+        for (int i = 0; i < itemCount; i++) {
+            if (com.equals(name[i])) {
+                target = i;
+                break;
+            }
+        }
+        if (target != -1) quantity[target] = coc;
+    }
+
+    void invalue() {
+        int sum = 0;
+        for (int i = 0; i < itemCount; i++) {
+            sum += quantity[i] * price[i];
+        }
+        System.out.println("all inventory value is " + sum);
+        System.out.println("");
+    }
+
+    void display() {
+        for (int i = 0; i < itemCount; i++) {
+            System.out.println(name[i] + " have " + quantity[i] + ", and " + price[i] + "/pcs");
+        }
+        System.out.println("");
+    }
+
+    void limitextend() {
+        capacity *= 2;
+        String[] tempName = new String[capacity];
+        int[] tempQuantity = new int[capacity];
+        int[] tempPrice = new int[capacity];
+
+        System.arraycopy(name, 0, tempName, 0, itemCount);
+        System.arraycopy(quantity, 0, tempQuantity, 0, itemCount);
+        System.arraycopy(price, 0, tempPrice, 0, itemCount);
+
+        name = tempName;
+        quantity = tempQuantity;
+        price = tempPrice;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名**:
+   - 將 `oc` 改為 `quantity`，將 `incnt` 改為 `itemCount`，使變數名稱更直觀。
+
+2. **陣列擴展**:
+   - 在 `limitextend` 方法中，使用 `System.arraycopy` 來正確地擴展陣列。
+
+3. **邏輯優化**:
+   - 在 `decide` 方法中，修正 `for` 迴圈條件為 `i < itemCount`，並在找到目標後立即中斷迴圈。
+
+4. **邊界處理**:
+   - 在 `insert` 方法中，增加了檢查產品是否已存在的邏輯（未實現，建議學生自行添加）。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **變數命名**: 請使用更直觀的變數名稱，以提高程式碼的可讀性。
+2. **陣列擴展**: 使用 `System.arraycopy` 來正確地擴展陣列，避免數據丟失。
+3. **邏輯優化**: 在 `decide` 方法中，修正 `for` 迴圈條件，並在找到目標後立即中斷迴圈，以提高效率。
+4. **邊界處理**: 在 `insert` 方法中，增加檢查產品是否已存在的邏輯，避免重複新增產品。
+5. **註解**: 增加更多註解，尤其是在複雜的邏輯部分，以幫助其他人理解你的程式碼。
+
+希望這些建議能幫助你的學生進一步改進他們的程式碼。

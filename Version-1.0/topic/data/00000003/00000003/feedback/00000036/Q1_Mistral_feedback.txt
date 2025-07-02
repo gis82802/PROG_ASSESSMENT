@@ -1,0 +1,191 @@
+根據您的標準，以下是對這份作業的評分和分析：
+
+### 1. 評分
+- **備註 (20分)**：該程式包含對其功能的明確說明，但缺乏對函數的詳細說明。15/20
+- **格式 (25分)**：整體格式良好，但有些地方的縮排和編碼風格可以改進。20/25
+- **準確性 (25分)**：程式產生正確的結果，但未處理所有邊緣情況（例如矩陣相乘的條件檢查）。20/25
+- **邏輯 (30分)**：程式邏輯基本正確，但可以進一步優化。25/30
+
+總分：80/100
+
+### 2. 優缺點分析
+**優點：**
+1. 程式功能完整，能夠實現矩陣相乘和2x2矩陣求逆的功能。
+2. 程式結構清晰，變數命名合理。
+3. 使用者輸入部分設計合理，易於理解。
+
+**缺點：**
+1. 缺乏對函數的詳細說明，這會影響代碼的可讀性和可維護性。
+2. 在矩陣相乘部分，未處理矩陣大小不匹配的情況。
+3. 矩陣求逆部分未處理非2x2矩陣的情況。
+4. 縮排和編碼風格有些地方可以改進。
+
+### 3. 改進的程式碼
+```java
+/*
+filename: hw7_3
+function: Matrix multiplication and matrix inversion with user input
+author: PoXsun
+date: 2024/10/25
+version: 11.0.12
+*/
+
+import java.util.Scanner;
+
+public class hw7_3 {
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input Matrix A
+        System.out.println("Enter number of rows for Matrix A: ");
+        int rowsA = scanner.nextInt();
+        System.out.println("Enter number of cols for Matrix A: ");
+        int colsA = scanner.nextInt();
+
+        int[][] matrixA = new int[rowsA][colsA];
+
+        System.out.println("Enter elements of Matrix A: ");
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                matrixA[i][j] = scanner.nextInt();
+            }
+        }
+
+        // Input Matrix B
+        System.out.println("Enter number of rows for Matrix B: ");
+        int rowsB = scanner.nextInt();
+        System.out.println("Enter number of cols for Matrix B: ");
+        int colsB = scanner.nextInt();
+
+        int[][] matrixB = new int[rowsB][colsB];
+
+        System.out.println("Enter elements of Matrix B: ");
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                matrixB[i][j] = scanner.nextInt();
+            }
+        }
+
+        // Call matrix multiplication function
+        if (colsA == rowsB) {
+            int[][] result = MatMultiply(matrixA, matrixB);
+
+            // Print matrix multiplication result
+            System.out.println("Result of matrix multiplication: ");
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++) {
+                    System.out.print(result[i][j] + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("Matrix multiplication is not possible. Number of columns in Matrix A must equal number of rows in Matrix B.");
+        }
+
+        // Input Matrix C for inversion
+        System.out.println("Now, let's invert a 2x2 matrix.");
+        System.out.println("Enter elements for a 2x2 matrix C:");
+
+        int[][] matrixC = new int[2][2];
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrixC[i][j] = scanner.nextInt();
+            }
+        }
+
+        // Call matrix inversion function
+        double[][] invResult = invMatrix(matrixC);
+        if (invResult.length > 0) {
+            System.out.println("Inverse of Matrix C:");
+            for (int i = 0; i < invResult.length; i++) {
+                for (int j = 0; j < invResult[i].length; j++) {
+                    System.out.print(invResult[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+
+        scanner.close();
+    }
+
+    /**
+     * Matrix multiplication function
+     * @param matrixA first matrix
+     * @param matrixB second matrix
+     * @return result matrix or null if multiplication is not possible
+     */
+    public static int[][] MatMultiply(int[][] matrixA, int[][] matrixB) {
+        int rowsA = matrixA.length;
+        int colsA = matrixA[0].length;
+        int rowsB = matrixB.length;
+        int colsB = matrixB[0].length;
+
+        if (colsA != rowsB) {
+            return null;
+        }
+
+        int[][] result = new int[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Matrix inversion for 2x2 matrix
+     * @param matrix 2x2 matrix
+     * @return inverse matrix or empty matrix if inversion is not possible
+     */
+    public static double[][] invMatrix(int[][] matrix) {
+        // Ensure the matrix is 2x2
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            System.out.println("Matrix inversion is only implemented for 2x2 matrices.");
+            return new double[0][0]; // Return empty array if not 2x2 matrix
+        }
+
+        // Extract elements from matrix
+        int a = matrix[0][0];
+        int b = matrix[0][1];
+        int c = matrix[1][0];
+        int d = matrix[1][1];
+
+        // Calculate determinant
+        int det = a * d - b * c;
+
+        if (det == 0) {
+            System.out.println("Matrix is singular and cannot be inverted.");
+            return new double[0][0]; // Return empty array if matrix is singular
+        }
+
+        // Create 2x2 inverse matrix
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = d / (double) det;
+        inverse[0][1] = -b / (double) det;
+        inverse[1][0] = -c / (double) det;
+        inverse[1][1] = a / (double) det;
+
+        return inverse;
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **函數說明**：增加了對 `MatMultiply` 和 `invMatrix` 函數的詳細說明，提高代碼的可讀性和可維護性。
+2. **矩陣相乘條件檢查**：在 `MatMultiply` 函數中增加了對矩陣大小不匹配情況的處理，返回 `null`。
+3. **縮排和編碼風格**：對部分代碼進行了縮排和格式優化，使代碼更加清晰易讀。
+
+### 5. 改進建議和反饋
+1. **增加函數說明**：在每個函數的開頭添加詳細的說明，這有助於其他開發者理解函數的功能和使用方法。
+2. **處理邊緣情況**：在矩陣相乘和求逆的過程中，應該處理所有可能的邊緣情況，例如矩陣大小不匹配、矩陣為奇異矩陣等。
+3. **代碼格式**：保持一致的縮排和編碼風格，使代碼更加清晰易讀。
+4. **優化用戶輸入部分**：可以考慮增加對用戶輸入的驗證，確保輸入的數據格式正確。
+
+希望這些改進建議能夠幫助您的學生提高代碼質量。

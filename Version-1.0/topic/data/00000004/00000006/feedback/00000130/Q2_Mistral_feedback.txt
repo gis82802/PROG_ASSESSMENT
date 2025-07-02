@@ -1,0 +1,95 @@
+### 1. 打分
+根據您的標準，這份作業的分數如下：
+- 備註(滿分20)：15
+- 格式(滿分25)：20
+- 準確性(滿分25)：25
+- 邏輯(滿分30)：25
+
+總分：85
+
+### 2. 分析優缺點
+**優點：**
+1. 程式碼逻辑清晰，能够正确判断一个数是否为well-ordered number。
+2. 使用了简单的循环和条件判断来实现功能。
+3. 代码风格基本符合规范，缩进和编码风格良好。
+
+**缺點：**
+1. 备注部分不够详细，缺乏对程序功能的明确说明。
+2. 变量名称可以更加直观，例如`flag`可以改为`isWellOrdered`。
+3. 没有处理用户输入的部分，只计算了1到100000之间的well-ordered number数量。
+
+### 3. 改进的程式碼
+```java
+/*
+    Filename: "hwapp02b_1011"
+    Function: This program determines whether a user input number is a well-ordered number and counts the number of well-ordered numbers between 1 and 100000.
+    Author: SHUN-YE XU
+    Version: 23
+    Date: 2024/10/11
+*/
+
+import java.util.Scanner;
+
+public class hwapp02b_1011
+{
+    public static void main(String args[])
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+        int userInput = scanner.nextInt();
+
+        boolean isWellOrdered = isWellOrderedNumber(userInput);
+        if (isWellOrdered) {
+            System.out.println(userInput + " is a well-ordered number.");
+        } else {
+            System.out.println(userInput + " is not a well-ordered number.");
+        }
+
+        int count = countWellOrderedNumbers(100000);
+        System.out.println("Number of well-ordered numbers between 1 and 100000: " + count);
+    }
+
+    // 判断一个数是否为well-ordered number
+    public static boolean isWellOrderedNumber(int number)
+    {
+        String snum = Integer.toString(number);
+        for (int j = 0; j < snum.length() - 1; j++)
+        {
+            if (snum.charAt(j) >= snum.charAt(j + 1))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 计算1到max之间的well-ordered number数量
+    public static int countWellOrderedNumbers(int max)
+    {
+        int count = 0;
+        for (int i = 1; i <= max; i++)
+        {
+            if (isWellOrderedNumber(i))
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+### 4. 修改的部分及原因
+1. **新增用户输入部分**：增加了用户输入功能，使程序能够判断用户输入的数是否为well-ordered number。
+2. **新增函数`isWellOrderedNumber`**：将判断一个数是否为well-ordered number的逻辑抽取到一个单独的函数中，提高代码的可读性和可维护性。
+3. **新增函数`countWellOrderedNumbers`**：将计算well-ordered number数量的逻辑抽取到一个单独的函数中，提高代码的可读性和可维护性。
+4. **改进变量名称**：将`flag`改为`isWellOrdered`，使变量名称更加直观。
+5. **改进备注**：增加了对程序功能的详细说明。
+
+### 5. 改进建議和反饋
+1. **增加用户输入功能**：让程序能够处理用户输入的数字，判断其是否为well-ordered number。
+2. **函数抽取**：将复杂的逻辑抽取到单独的函数中，提高代码的可读性和可维护性。
+3. **变量命名**：使用更加直观的变量名称，提高代码的可读性。
+4. **备注详细**：在备注中详细说明程序的功能，使他人更容易理解代码的用途。
+
+希望这些改进和建议能幫助學生更好地理解和完成作業。

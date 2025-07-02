@@ -1,0 +1,145 @@
+1. 根據您的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：該程式包含對其功能的明確說明，但說明不夠詳細且有些字體無法正確顯示，建議使用更清晰的註解。分數：10
+- 格式（滿分25）：程式碼的縮排和編碼風格有待改進，部分註解和變數名稱不夠直觀。分數：15
+- 準確性（滿分25）：程式能夠正確地新增產品、減少產品、新增數量、減少數量、以及計算整個庫存的價值，但有些邏輯上的問題需要修正。分數：20
+- 邏輯（滿分30）：程式的邏輯基本正確，但在某些地方有待改進，例如減少產品時應該減少數量而不是將數量歸零。分數：20
+
+總分：65
+
+2. 根據我的標準分析它的優缺點
+
+優點：
+- 程式能夠基本实现所需的功能，包括新增產品、減少產品、新增數量、減少數量、以及計算整個庫存的價值。
+- 使用了物件導向的概念來設計類別和方法。
+
+缺點：
+- 註解不夠詳細且有些字體無法正確顯示，影響可讀性。
+- 變數名稱和方法名稱不夠直觀，影響程式的可讀性。
+- 程式碼的縮排和編碼風格有待改進。
+- 減少產品時應該減少數量而不是將數量歸零。
+
+3. 為我的學生提供改進的程式碼
+
+```java
+/*
+  author: 41043122LR
+  date: 03/14
+  function: 實作一個庫存系統，包含飲料店和3C手機店的庫存管理
+*/
+public class Work3141 {
+    public static void main(String[] args) {
+        Inventory drink = new Inventory("飲料店"); // 飲料店
+        Inventory phone = new Inventory("3C手機店"); // 3C手機店
+
+        Inventory blacktea = new Inventory("black tea", 10, 20); // 紅茶
+        Inventory bubbletea = new Inventory("bubble tea", 15, 30); // 珍珠奶茶
+        Inventory samsung = new Inventory("Samsung", 100, 750); // 三星手機
+        Inventory iphone = new Inventory("iPhone", 120, 1000); // iPhone
+
+        drink.addProduct(blacktea);
+        drink.addProduct(bubbletea);
+        phone.addProduct(samsung);
+        phone.addProduct(iphone);
+
+        System.out.println("飲料店庫存:");
+        drink.displayInventory();
+        System.out.println("3C手機店庫存:");
+        phone.displayInventory();
+        System.out.println("飲料店總價值: " + drink.totalValue());
+        System.out.println("3C手機店總價值: " + phone.totalValue());
+
+        System.out.println("減少一個iPhone");
+        phone.subtractProduct(iphone, 1);
+        System.out.println("3C手機店庫存:");
+        phone.displayInventory();
+    }
+}
+
+class Inventory {
+    private String name;
+    private int quantity;
+    private int price;
+    private Inventory[] inventory;
+    private int index;
+
+    public Inventory(String name, int quantity, int price) {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+        this.inventory = new Inventory[100];
+        this.index = 0;
+    }
+
+    public Inventory(String name) {
+        this.name = name;
+        this.inventory = new Inventory[100];
+        this.index = 0;
+    }
+
+    public void addProduct(Inventory product) {
+        inventory[index] = product;
+        index++;
+    }
+
+    public void subtractProduct(Inventory product, int quantity) {
+        for (int i = 0; i < index; i++) {
+            if (inventory[i].name.equals(product.name)) {
+                inventory[i].quantity -= quantity;
+                if (inventory[i].quantity <= 0) {
+                    inventory[i].quantity = 0;
+                    inventory[i].name = " ";
+                    inventory[i].price = 0;
+                }
+            }
+        }
+    }
+
+    public void subtractQuantity(Inventory product, int quantity) {
+        for (int i = 0; i < index; i++) {
+            if (inventory[i].name.equals(product.name)) {
+                inventory[i].quantity -= quantity;
+            }
+        }
+    }
+
+    public void addQuantity(Inventory product, int quantity) {
+        for (int i = 0; i < index; i++) {
+            if (inventory[i].name.equals(product.name)) {
+                inventory[i].quantity += quantity;
+            }
+        }
+    }
+
+    public void displayInventory() {
+        for (int i = 0; i < index; i++) {
+            if (!inventory[i].name.equals(" ")) {
+                System.out.println("產品名稱: " + inventory[i].name + ", 數量: " + inventory[i].quantity + ", 價格: " + inventory[i].price);
+            }
+        }
+    }
+
+    public int totalValue() {
+        int total = 0;
+        for (int i = 0; i < index; i++) {
+            total += (inventory[i].price * inventory[i].quantity);
+        }
+        return total;
+    }
+}
+```
+
+4. 說明改進的程式碼有修改的部分及原因
+
+- 修改了變數名稱和方法名稱，使其更加直觀，例如 `quan` 改為 `quantity`，`addprod` 改為 `addProduct`。
+- 修改了註解，使其更加清晰和易懂。
+- 修改了減少產品的邏輯，使其減少數量而不是將數量歸零。
+- 修改了程式碼的縮排和編碼風格，使其更加規範。
+
+5. 為學生提供改進建議和反饋
+
+- 建議在編寫程式碼時，保持良好的縮排和編碼風格，這有助於提高程式的可讀性和可維護性。
+- 註解應該清晰明了，幫助其他人理解程式的功能和邏輯。
+- 變數名稱和方法名稱應該直觀，反映其功能和用途。
+- 在實現功能時，應該仔細考慮邏輯的合理性，避免出現不合理的操作，例如將數量歸零而不是減少數量。
+- 可以考慮使用更多的物件導向概念，例如將產品和庫存分開成不同的類別，這樣可以使程式更加模組化和易於擴展。

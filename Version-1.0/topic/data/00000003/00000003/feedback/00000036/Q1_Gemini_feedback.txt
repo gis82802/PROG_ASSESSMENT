@@ -1,0 +1,221 @@
+好的，我將根據您的標準評估學生的作業，並提供改進建議。
+
+**1. 作業評分 (總分: 80)**
+
+*   **備註 (18/20):** 程式碼開頭有檔案名稱、功能描述、作者、日期和版本信息，註釋完整。但函數內部的說明略少。
+*   **格式 (22/25):** 程式碼縮排良好，排版整齊，命名基本符合規範。
+*   **準確性 (20/25):** 矩陣乘法和2x2矩陣反轉的功能實現正確。但是沒有處理MatMultiply大小無法相乘的回傳是null的情況。
+*   **邏輯 (20/30):** 程式碼邏輯基本正確，但是主函數中混雜了矩陣乘法和矩陣反轉的邏輯，如果能夠拆分成單獨的函數會更好。矩陣乘法對於輸入驗證不夠完善。
+
+**2. 優缺點分析**
+
+*   **優點：**
+    *   程式碼可讀性高，縮排和命名都比較規範。
+    *   程式碼有基礎的註釋。
+    *   矩陣乘法和2x2矩陣反轉的實現演算法正確。
+*   **缺點：**
+    *   `MatMultiply`沒有處理矩陣大小不符時回傳`null`的情況。
+    *   沒有對輸入的矩陣進行合法性檢查，例如檢查是否為空矩陣。
+    *   主函數 `main` 執行了太多的功能，混雜了輸入、輸出和計算邏輯，結構不夠清晰。
+    *   可以將輸入矩陣的過程封裝成一個單獨的函數。
+    *   只做了2*2矩陣的反轉，可以考慮擴展到N*N矩陣。
+
+**3. 改進的程式碼**
+
+```java
+/*
+filename: hw7_3
+function: Matrix multiplication and matrix inversion with user input
+author: PoXsun
+date: 2024/10/25
+version: 11.0.12
+*/
+
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class hw7_3 {
+    public static void main(String args[]) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        // Input Matrix A
+        int[][] matrixA = inputMatrix(scanner, "A");
+        if (matrixA == null) {
+            System.out.println("Invalid input for Matrix A.");
+            scanner.close();
+            return;
+        }
+
+        // Input Matrix B
+        int[][] matrixB = inputMatrix(scanner, "B");
+        if (matrixB == null) {
+            System.out.println("Invalid input for Matrix B.");
+            scanner.close();
+            return;
+        }
+
+        // Call matrix multiplication function
+        if (matrixA[0].length == matrixB.length) {
+            int[][] result = MatMultiply(matrixA, matrixB);
+
+            // Print matrix multiplication result
+            if (result != null) {
+                System.out.println("Result of matrix multiplication: ");
+                printMatrix(result);
+            } else {
+                System.out.println("Matrix multiplication resulted in null."); // 提示null結果
+            }
+        } else {
+            System.out.println("Matrix multiplication is not possible. Number of columns in Matrix A must equal number of rows in Matrix B.");
+        }
+
+        // Input Matrix C for inversion
+        System.out.println("Now, let's invert a 2x2 matrix.");
+        int[][] matrixC = new int[2][2];
+        System.out.println("Enter elements for a 2x2 matrix C:");
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrixC[i][j] = scanner.nextInt();
+            }
+        }
+
+        // Call matrix inversion function
+        double[][] invResult = invMatrix(matrixC);
+        if (invResult.length > 0) {
+            System.out.println("Inverse of Matrix C:");
+            printMatrix(invResult);
+        }
+
+        scanner.close();
+    }
+
+    // Helper function to input matrix from user
+    public static int[][] inputMatrix(Scanner scanner, String matrixName) {
+        System.out.println("Enter number of rows for Matrix " + matrixName + ": ");
+        int rows = scanner.nextInt();
+        if (rows <= 0) return null;  // Add validation for rows and cols
+        System.out.println("Enter number of cols for Matrix " + matrixName + ": ");
+        int cols = scanner.nextInt();
+        if (cols <= 0) return null;
+
+
+        int[][] matrix = new int[rows][cols];
+
+        System.out.println("Enter elements of Matrix " + matrixName + ": ");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = scanner.nextInt();
+            }
+        }
+        return matrix;
+    }
+
+    // Helper function to print integer matrix
+    public static void printMatrix(int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Helper function to print double matrix
+    public static void printMatrix(double[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+
+    // Matrix multiplication function
+    public static int[][] MatMultiply(int[][] matrixA, int[][] matrixB) {
+        int rowsA = matrixA.length;
+        int colsA = matrixA[0].length;
+        int rowsB = matrixB.length;
+        int colsB = matrixB[0].length;
+
+        if (colsA != rowsB) {
+            return null; // Return null if matrices cannot be multiplied
+        }
+
+        int[][] result = new int[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // Matrix inversion for 2x2 matrix
+    public static double[][] invMatrix(int[][] matrix) {
+        // Ensure the matrix is 2x2
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            System.out.println("Matrix inversion is only implemented for 2x2 matrices.");
+            return new double[0][0]; // Return empty array if not 2x2 matrix
+        }
+
+        // Extract elements from matrix
+        int a = matrix[0][0];
+        int b = matrix[0][1];
+        int c = matrix[1][0];
+        int d = matrix[1][1];
+
+        // Calculate determinant
+        int det = a * d - b * c;
+
+        if (det == 0) {
+            System.out.println("Matrix is singular and cannot be inverted.");
+            return new double[0][0]; // Return empty array if matrix is singular
+        }
+
+        // Create 2x2 inverse matrix
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = d / (double) det;
+        inverse[0][1] = -b / (double) det;
+        inverse[1][0] = -c / (double) det;
+        inverse[1][1] = a / (double) det;
+
+        return inverse;
+    }
+}
+```
+
+**4. 程式碼修改說明**
+
+*   **`MatMultiply`函數：**
+    *   在函數開頭增加了判斷 `colsA != rowsB` 的條件，如果矩陣無法相乘，則回傳 `null`。
+*   **`main` 函數：**
+    *   在調用 `MatMultiply` 後，增加了對 `result` 是否為 `null` 的判斷，並輸出相應的提示信息。
+    *   創建了`inputMatrix`函數，將輸入矩陣的程式碼拆分到 `inputMatrix` 函數中，使 `main` 函數更加簡潔。
+        *   增加了對行列數量的校驗，確保行列數大於0。
+    *   創建了`printMatrix`函數，將列印矩陣的程式碼拆分到 `printMatrix` 函數中。
+*   **錯誤處理：**
+    *   當矩陣不可逆時，返回空矩陣`new double[0][0]`。調用invMatrix函數的地方對返回結果做了判斷。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格：**
+    *   繼續保持良好的程式碼縮排和命名習慣。
+    *   可以在每個函數的開頭添加更詳細的註釋，說明函數的功能、輸入參數和回傳值。
+*   **功能擴展：**
+    *   可以考慮實現 N x N 矩陣的反轉算法，而不仅仅是 2x2 矩陣。
+    *   可以添加矩陣加法、減法等其他矩陣運算功能。
+*   **錯誤處理：**
+    *   可以添加更完善的輸入驗證，例如檢查輸入是否為數字。
+    *   對於矩陣反轉，可以考慮使用try-catch塊來捕獲可能發生的異常，例如除以零的異常。
+*   **程式碼結構：**
+    *   可以將矩陣運算相關的函數封裝到一個單獨的 `Matrix` 類中，使程式碼更加模組化。
+
+總體來說，你的程式碼基礎紮實，邏輯清晰。通過增加適當的錯誤處理和程式碼模組化，可以進一步提高程式碼的健壯性和可維護性。繼續努力！

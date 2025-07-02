@@ -1,0 +1,168 @@
+### 1. 評分 (0-100)
+- 備註 (20/20)：該程式包含對其功能的明確說明。
+- 格式 (20/25)：大部分保持適當的縮排和編碼風格，但有些地方可以改進。
+- 準確性 (20/25)：程式大部分能產生正確的結果，但有些細節需要修正。
+- 邏輯 (25/30)：程式邏輯基本正確，但有些地方可以優化。
+
+總分：85
+
+### 2. 優缺點分析
+#### 優點：
+1. **功能完整**：程式實現了基本的功能，包括員工信息顯示和薪資計算。
+2. **繼承和多樣性**：使用了繼承來實現不同類型的員工，並且每個子類別都覆蓋了父類別的方法。
+3. **數據結構**：使用陣列來儲存員工數據，這是一個合理的選擇。
+
+#### 缺點：
+1. **變數命名**：一些變數名稱不夠直觀，例如 `Epay`、`Eyears`、`Etype`、`oth`。
+2. **硬編碼值**：在子類別中有一些硬編碼的值，例如 `HourlyEmployee` 中的 `p=250` 和 `h=180`。
+3. **縮排和格式**：有些地方的縮排和格式不夠一致，影響程式的可讀性。
+4. **邏輯錯誤**：`CommissionEmployee` 的 `calculatePay` 方法沒有實現，這會導致錯誤。
+5. **不必要的變數**：`Employee` 類別中的 `type` 變數在子類別中被覆蓋，但在父類別中沒有用到。
+
+### 3. 改進的程式碼
+```java
+/*
+function:Employee
+date:3/14
+name:R
+number:41043134
+*/
+public class hw1 {
+    public static void main(String args[]) {
+        String employeeNames[] = {"Han", "Peter Park", "Jerry", "Kenny"};
+        int basePays[] = {260, 31000, 210, 240};
+        int years[] = {2, 6, 4, 1};
+        int types[] = {0, 2, 1, 0};
+        int additionalInfo[] = {170, 13, 21, 180};
+
+        Company nfu = new Company(employeeNames, basePays, years, types, additionalInfo);
+        nfu.info();
+        nfu.count();
+    }
+}
+
+class Company {
+    Employee[] all;
+
+    Company(String[] names, int[] basePays, int[] years, int[] types, int[] additionalInfo) {
+        all = new Employee[names.length];
+        for (int i = 0; i < names.length; i++) {
+            if (types[i] == 0)
+                all[i] = new HourlyEmployee(names[i], basePays[i], years[i], additionalInfo[i]);
+            else if (types[i] == 1)
+                all[i] = new SalaryEmployee(names[i], basePays[i], years[i], additionalInfo[i]);
+            else
+                all[i] = new CommissionEmployee(names[i], basePays[i], years[i], additionalInfo[i]);
+        }
+    }
+
+    public void info() {
+        System.out.println("EmployeeInfo:");
+        for (Employee e : all)
+            e.displayEmployeeInfo();
+    }
+
+    public void count() {
+        int totalPay = 0;
+        for (Employee e : all)
+            totalPay += e.calculatePay();
+        System.out.println("\nMonthly payment: " + totalPay);
+    }
+}
+
+class Employee {
+    String name;
+    int basePay;
+    int years;
+
+    Employee(String name, int basePay, int years) {
+        this.name = name;
+        this.basePay = basePay;
+        this.years = years;
+    }
+
+    public void displayEmployeeInfo() {
+        System.out.println("Name: " + name + " Years: " + years + " years");
+    }
+
+    public int calculatePay() {
+        return basePay;
+    }
+}
+
+class HourlyEmployee extends Employee {
+    int workHours;
+
+    HourlyEmployee(String name, int basePay, int years, int workHours) {
+        super(name, basePay, years);
+        this.workHours = workHours;
+    }
+
+    @Override
+    public void displayEmployeeInfo() {
+        super.displayEmployeeInfo();
+        System.out.println(" Work hours: " + workHours + " hours Type: Hourly Employee");
+    }
+
+    @Override
+    public int calculatePay() {
+        return basePay * workHours;
+    }
+}
+
+class SalaryEmployee extends Employee {
+    int workDays;
+
+    SalaryEmployee(String name, int basePay, int years, int workDays) {
+        super(name, basePay, years);
+        this.workDays = workDays;
+    }
+
+    @Override
+    public void displayEmployeeInfo() {
+        super.displayEmployeeInfo();
+        System.out.println(" Work days: " + workDays + " days Type: Salary Employee");
+    }
+
+    @Override
+    public int calculatePay() {
+        return basePay * workDays * 8;
+    }
+}
+
+class CommissionEmployee extends Employee {
+    int contractMonths;
+
+    CommissionEmployee(String name, int basePay, int years, int contractMonths) {
+        super(name, basePay, years);
+        this.contractMonths = contractMonths;
+    }
+
+    @Override
+    public void displayEmployeeInfo() {
+        super.displayEmployeeInfo();
+        System.out.println(" Contract months: " + contractMonths + " months Type: Commission Employee");
+    }
+
+    @Override
+    public int calculatePay() {
+        return basePay * contractMonths;
+    }
+}
+```
+
+### 4. 改進的程式碼修改部分及原因
+1. **變數命名**：將變數名稱改為更直觀的名稱，例如 `employeeNames`、`basePays`、`years`、`types`、`additionalInfo`。
+2. **硬編碼值**：移除了子類別中的硬編碼值，改為使用構造函數傳入的參數。
+3. **格式和縮排**：調整了縮排和格式，使程式碼更易讀。
+4. **邏輯錯誤**：實現了 `CommissionEmployee` 的 `calculatePay` 方法。
+5. **不必要的變數**：移除了 `Employee` 類別中的 `type` 變數，因為它在子類別中被覆蓋且在父類別中沒有用到。
+
+### 5. 改進建議和反饋
+1. **變數命名**：請使用更直觀的變數名稱，這樣可以提高程式碼的可讀性。
+2. **避免硬編碼**：避免在程式碼中使用硬編碼的值，應該通過參數傳入。
+3. **格式和縮排**：保持一致的縮排和格式，這樣可以讓程式碼更易讀和維護。
+4. **完整性**：確保所有方法都有實現，避免邏輯錯誤。
+5. **不必要的變數**：避免使用不必要的變數，這樣可以簡化程式碼。
+
+希望這些改進建議能幫助你的學生提高程式碼的質量。

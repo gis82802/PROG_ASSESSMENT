@@ -1,0 +1,70 @@
+好的，根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分
+- **備註(滿分20)**：該程式沒有包含對其功能的明確說明。分數：0
+- **格式(滿分25)**：縮排和編碼風格基本適當，但缺乏對程式的註解和說明。分數：20
+- **準確性(滿分25)**：程式能夠產生正確的結果，旋轉的棒子效果達成。分數：25
+- **邏輯(滿分30)**：程式邏輯正確，但缺乏對程式結束條件的處理。分數：25
+
+總分：70
+
+### 2. 分析優缺點
+**優點：**
+1. 程式能夠實現旋轉棒子的效果。
+2. 使用了適當的迴圈和延遲來達成動畫效果。
+
+**缺點：**
+1. 缺乏對程式功能的註解和說明。
+2. 沒有結束條件，程式會無限迴圈。
+3. 沒有處理可能的異常情況，例如中斷異常。
+
+### 3. 改進的程式碼
+```java
+public class java3_7 {
+    public static void main(String[] args) {
+        char[] spinner = {'|', '/', '-', '\\'};
+        boolean running = true;
+
+        // 註解：在控制台上顯示一個旋轉的棒子
+        System.out.println("按下 Enter 鍵可以停止旋轉");
+
+        // 使用 Scanner 來檢測用戶輸入
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
+
+        // 使用 try-finally 來確保資源被釋放
+        try {
+            while (running) {
+                for (char ch : spinner) {
+                    // 檢查是否有用戶輸入
+                    if (System.in.available() > 0) {
+                        running = false;
+                        break;
+                    }
+                    System.out.print("\r" + ch);
+                    Thread.sleep(200);
+                }
+            }
+        } catch (InterruptedException e) {
+            System.err.println("Thread was interrupted.");
+        } finally {
+            scanner.close();
+        }
+
+        System.out.println("\n程式已停止");
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+1. **新增註解**：在程式開頭新增註解，說明程式的功能。
+2. **新增結束條件**：使用 `Scanner` 來檢測用戶輸入，當用戶按下 Enter 鍵時，程式會停止運行。
+3. **異常處理**：使用 `try-finally` 來確保資源被釋放，並處理可能的 `InterruptedException`。
+4. **資源管理**：在 `finally` 塊中關閉 `Scanner`，確保資源被釋放。
+
+### 5. 改進建議和反饋
+1. **加強註解**：在程式中加入更多註解，說明每一部分的功能，這樣其他人看程式時會更容易理解。
+2. **處理異常**：在程式中處理可能的異常情況，例如中斷異常，這樣可以提高程式的健壯性。
+3. **結束條件**：為程式新增結束條件，避免無限迴圈，讓程式運行更加靈活。
+4. **資源管理**：確保在程式結束時釋放所有資源，避免資源洩漏。
+
+希望這些改進建議能夠幫助您的學生提升程式設計的能力。

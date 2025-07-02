@@ -1,0 +1,180 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註（滿分20）**: 15
+  - 說明：程式碼包含了基本的說明，但缺乏對函式功能的詳細描述。
+
+- **格式（滿分25）**: 20
+  - 說明：程式碼的縮排和編碼風格基本合理，但有些部分的縮排不夠一致。
+
+- **準確性（滿分25）**: 20
+  - 說明：程式碼能夠正確地計算矩陣相乘，但反矩陣的計算僅適用於2x2矩陣，且未處理行列式為零的情況。
+
+- **邏輯（滿分30）**: 25
+  - 說明：矩陣相乘的邏輯正確，但反矩陣的計算僅適用於2x2矩陣，且未處理行列式為零的情況。
+
+**總分：80**
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式碼結構清晰，功能分離明確。
+2. 矩陣相乘的邏輯正確。
+3. 包含了基本的說明和註釋。
+
+**缺點：**
+1. 反矩陣的計算僅適用於2x2矩陣，且未處理行列式為零的情況。
+2. 輸入矩陣時，未檢查輸入的合法性。
+3. 程式碼中有些部分的縮排不夠一致。
+4. 缺乏對函式功能的詳細描述。
+
+### 3. 為學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class hw03
+{
+    public static void main(String args[])
+    {
+        float[][] a, b;
+        int n, m;
+        Scanner sc = new Scanner(System.in);
+
+        // 輸入矩陣a
+        System.out.print("輸入矩陣a的n, m:");
+        n = sc.nextInt(); m = sc.nextInt();
+        a = new float[n][m];
+        System.out.println("輸入矩陣a的內容:");
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+                a[i][j] = sc.nextFloat();
+
+        // 輸入矩陣b
+        System.out.print("輸入矩陣b的n, m:");
+        n = sc.nextInt(); m = sc.nextInt();
+        b = new float[n][m];
+        System.out.println("輸入矩陣b的內容:");
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+                b[i][j] = sc.nextFloat();
+        sc.close();
+
+        // axb
+        float[][] r = matMultiply(a, b);
+        System.out.println("a x b=");
+        if(r == null) System.out.print("無法相乘");
+        else print_mat(r);
+
+        // a的反矩陣和驗證
+        float[][] ia, re;
+        ia = invMatrix(a);
+        if(ia != null)
+        {
+            System.out.println("\nInverse Matrix a=");
+            print_mat(ia);
+            re = matMultiply(ia, a);
+            System.out.println("\nInverse Matrix a x Matrix a=");
+            print_mat(re);
+        }
+        else
+        {
+            System.out.println("無法計算反矩陣");
+        }
+    }
+
+    public static float[][] matMultiply(float[][] a, float[][] b)
+    {
+        if(a[0].length != b.length) return null;
+
+        float[][] result = new float[a.length][b[0].length];
+
+        for(int i = 0; i < a.length; i++)
+        {
+            for(int j = 0; j < b[0].length; j++)
+            {
+                float sum = 0;
+                for(int z = 0; z < a[0].length; z++)
+                {
+                    sum += a[i][z] * b[z][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+
+        return result;
+    }
+
+    public static float[][] invMatrix(float[][] a)
+    {
+        if(a.length != 2 || a[0].length != 2)
+        {
+            System.out.println("反矩陣計算僅支持2x2矩陣");
+            return null;
+        }
+
+        float det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+        if(det == 0)
+        {
+            System.out.println("行列式為零，無法計算反矩陣");
+            return null;
+        }
+
+        float[][] invMat = new float[2][2];
+        invMat[0][0] = a[1][1] / det;
+        invMat[0][1] = -a[0][1] / det;
+        invMat[1][0] = -a[1][0] / det;
+        invMat[1][1] = a[0][0] / det;
+
+        return invMat;
+    }
+
+    public static void print_mat(float[][] arr)
+    {
+        for(int i = 0; i < arr.length; i++)
+        {
+            for(int j = 0; j < arr[i].length; j++)
+            {
+                System.out.print(arr[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **修正輸入矩陣的類型**：
+   - 原因：學生使用 `nextInt()` 輸入矩陣元素，但矩陣元素應該是 `float` 類型。
+   - 修改：將 `nextInt()` 改為 `nextFloat()`。
+
+2. **改進反矩陣計算**：
+   - 原因：學生的反矩陣計算僅適用於2x2矩陣，且未處理行列式為零的情況。
+   - 修改：添加檢查以確保矩陣為2x2，並處理行列式為零的情況。
+
+3. **改進輸入矩陣的說明**：
+   - 原因：學生在輸入矩陣b時，說明仍為 "輸入矩陣a的內容"。
+   - 修改：將說明改為 "輸入矩陣b的內容"。
+
+4. **改進程式碼格式**：
+   - 原因：學生的程式碼有些部分的縮排不夠一致。
+   - 修改：統一程式碼的縮排和編碼風格。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **詳細說明函式功能**：
+   - 建議在每個函式前添加註釋，詳細說明函式的功能和參數。
+
+2. **檢查輸入的合法性**：
+   - 建議在輸入矩陣大小時，檢查輸入的合法性，避免輸入非法值。
+
+3. **處理特殊情況**：
+   - 建議在反矩陣計算時，處理行列式為零的情況，並給出合理的響應。
+
+4. **統一程式碼格式**：
+   - 建議統一程式碼的縮排和編碼風格，使程式碼更易讀和維護。
+
+5. **使用適當的類型**：
+   - 建議在輸入矩陣元素時，使用適當的類型（如 `float`），避免類型不匹配的問題。
+
+希望這些建議能夠幫助學生改進他們的程式碼，提高程式設計的能力。

@@ -1,0 +1,109 @@
+根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分（0-100）
+- **備註(滿分20)**: 該程式包含對其功能的明確說明，但缺乏一些細節說明，如函式的使用方法和輸入輸出格式。分數：15
+- **格式(滿分25)**: 程式碼的縮排和編碼風格基本適當，但有些地方可以更加一致。分數：22
+- **準確性(滿分25)**: 程式能夠正確計算2x2矩陣的反矩陣，並且處理了行列式為0的情況。分數：25
+- **邏輯(滿分30)**: 程式邏輯基本正確，但在處理浮點數輸出時有一些小問題。分數：28
+
+總分：90
+
+### 2. 優缺點分析
+**優點**:
+1. 程式能夠正確計算2x2矩陣的反矩陣。
+2. 處理了行列式為0的情況。
+3. 提供了使用者輸入矩陣的功能。
+
+**缺點**:
+1. 缺乏對函式使用方法和輸入輸出格式的詳細說明。
+2. 處理浮點數輸出時，替換 -0.0 的方式不夠完美。
+3. 程式碼的縮排和編碼風格有些地方可以更加一致。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class InvMatrix {
+
+    // 2x2矩陣反矩陣函式
+    public static double[][] inverseMatrix(double[][] matrix) {
+        // 檢查是否為2x2矩陣
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            return null; // 不是2x2矩陣
+        }
+
+        double det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]; // 計算行列式
+
+        // 如果行列式為0，則反矩陣不存在
+        if (det == 0) {
+            return null;
+        }
+
+        // 計算反矩陣
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] / det;
+        inverse[0][1] = -matrix[0][1] / det;
+        inverse[1][0] = -matrix[1][0] / det;
+        inverse[1][1] = matrix[0][0] / det;
+
+        return inverse;
+    }
+
+    // 允許使用者輸入2x2矩陣
+    public static double[][] inputMatrix(Scanner sc) {
+        double[][] matrix = new double[2][2];
+        System.out.println("請輸入2x2矩陣數值:");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrix[i][j] = sc.nextDouble();
+            }
+        }
+        return matrix;
+    }
+
+    // 處理浮點數輸出，避免顯示 -0.0
+    public static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            for (double elem : row) {
+                if (elem == -0.0) {
+                    elem = 0.0; // 將 -0.0 替換為 0.0
+                }
+                System.out.printf("%.2f ", elem); // 使用 printf 格式化輸出
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // 允許使用者輸入2x2矩陣
+        double[][] matrix = inputMatrix(sc);
+
+        // 計算反矩陣
+        double[][] inverse = inverseMatrix(matrix);
+
+        if (inverse != null) {
+            System.out.println("反矩陣：");
+            printMatrix(inverse); // 使用處理後的輸出方法
+        } else {
+            System.out.println("反矩陣不存在。");
+        }
+
+        sc.close();
+    }
+}
+```
+
+### 4. 改進的部分及原因
+1. **格式化輸出**：使用 `System.out.printf` 來格式化浮點數輸出，這樣可以更好地處理浮點數的顯示問題。
+2. **註釋**：增加了一些註釋，使程式碼更易於理解。
+3. **縮排和編碼風格**：調整了一些縮排和編碼風格，使程式碼更加一致和易讀。
+
+### 5. 改進建議和反饋
+1. **增加註釋**：在程式碼中增加更多的註釋，說明每個函式的功能和使用方法。
+2. **處理浮點數輸出**：使用 `System.out.printf` 來格式化浮點數輸出，這樣可以更好地處理浮點數的顯示問題。
+3. **縮排和編碼風格**：保持一致的縮排和編碼風格，使程式碼更加易讀。
+4. **驗證結果**：可以考慮增加一個函式來驗證反矩陣的結果是否正確，即將原矩陣與其反矩陣相乘，檢查結果是否為單位矩陣。
+
+希望這些建議能夠幫助您的學生進一步改進他們的程式碼。

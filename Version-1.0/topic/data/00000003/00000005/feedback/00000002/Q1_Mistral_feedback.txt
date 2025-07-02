@@ -1,0 +1,142 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+- **備註 (20分)**：該程式包含了一些基本的備註，但缺乏對功能的明確說明。分數：10
+- **格式 (25分)**：程式碼的縮排和編碼風格基本合理，但可以更加一致和清晰。分數：20
+- **準確性 (25分)**：程式在大部分情況下能產生正確的結果，但在移除產品後，數據結構的維護有問題。分數：15
+- **邏輯 (30分)**：程式的邏輯基本正確，但在移除產品時的數據結構維護有問題。分數：20
+
+總分：65
+
+### 2. 優缺點分析
+**優點：**
+1. 程式碼結構清晰，基本功能實現。
+2. 使用了陣列來管理庫存，這是一個基本且直觀的方法。
+3. 提供了基本的庫存管理功能，如添加產品、移除產品、增加和減少數量。
+
+**缺點：**
+1. 備註不足，缺乏對功能的明確說明。
+2. 在移除產品後，陣列的維護有問題，導致數據不一致。
+3. 變數名稱不夠直觀，如 `n_size`、`c_size`、`p_size` 可以改為更具描述性的名稱。
+4. 程式碼格式和編碼風格可以更加一致和清晰。
+
+### 3. 改進的程式碼
+```java
+/*
+資工二甲 41043114 吳俊憲
+hw1
+ver 1.0.0
+*/
+
+class Inventory {
+    private int productCount = 0;
+    private String[] names = new String[100];
+    private int[] counts = new int[100];
+    private int[] prices = new int[100];
+
+    // 添加產品
+    void addProduct(String name, int count, int price) {
+        names[productCount] = name;
+        counts[productCount] = count;
+        prices[productCount] = price;
+        productCount++;
+    }
+
+    // 移除產品
+    void removeProduct(int index) {
+        if (index < 0 || index >= productCount) {
+            System.out.println("無效的索引");
+            return;
+        }
+        for (int i = index; i < productCount - 1; i++) {
+            names[i] = names[i + 1];
+            counts[i] = counts[i + 1];
+            prices[i] = prices[i + 1];
+        }
+        productCount--;
+    }
+
+    // 增加數量
+    void addCount(int index, int count) {
+        if (index < 0 || index >= productCount) {
+            System.out.println("無效的索引");
+            return;
+        }
+        counts[index] += count;
+    }
+
+    // 減少數量
+    void reduceCount(int index, int count) {
+        if (index < 0 || index >= productCount) {
+            System.out.println("無效的索引");
+            return;
+        }
+        counts[index] -= count;
+    }
+
+    // 計算總價值
+    int calculateTotalValue() {
+        int sum = 0;
+        for (int i = 0; i < productCount; i++) {
+            sum += counts[i] * prices[i];
+        }
+        return sum;
+    }
+}
+
+public class hw1 {
+    public static void main(String[] args) {
+        Inventory drinks = new Inventory();
+        Inventory phone = new Inventory();
+
+        drinks.addProduct("Green_tea", 20, 25);
+        drinks.addProduct("Red_tea", 20, 25);
+        System.out.println("飲料店總庫存價值: " + drinks.calculateTotalValue());
+
+        drinks.reduceCount(0, 10);
+        System.out.println("飲料店總庫存價值(減少'Green_tea'數量後): " + drinks.calculateTotalValue());
+
+        drinks.addCount(1, 20);
+        System.out.println("飲料店總庫存價值(增加'Red_tea'數量後): " + drinks.calculateTotalValue());
+
+        drinks.removeProduct(0);
+        System.out.println("飲料店總庫存價值(移除'Green_tea'產品後): " + drinks.calculateTotalValue());
+
+        phone.addProduct("phone1", 10, 15000);
+        phone.addProduct("phone2", 10, 20000);
+        System.out.println("3C手機店總庫存價值: " + phone.calculateTotalValue());
+
+        phone.reduceCount(0, 5);
+        System.out.println("3C手機店總庫存價值(減少'phone1'數量後): " + phone.calculateTotalValue());
+
+        phone.addCount(1, 10);
+        System.out.println("3C手機店總庫存價值(增加'phone2'數量後): " + phone.calculateTotalValue());
+
+        phone.removeProduct(0);
+        System.out.println("3C手機店總庫存價值(移除'phone1'產品後): " + phone.calculateTotalValue());
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **變數名稱修改**：
+   - `n_size`、`c_size`、`p_size` 改為 `productCount`，因為這更直觀地表示了產品的數量。
+   - `name`、`count`、`price` 改為 `names`、`counts`、`prices`，以符合Java的命名慣例。
+
+2. **移除產品的邏輯**：
+   - 修改了 `removeProduct` 方法，使其在移除產品後正確地維護陣列的數據結構。
+
+3. **添加檢查**：
+   - 在 `removeProduct`、`addCount` 和 `reduceCount` 方法中添加了索引檢查，以確保索引在有效範圍內。
+
+4. **備註增加**：
+   - 增加了對方法功能的簡要說明。
+
+### 5. 改進建議和反饋
+1. **備註**：在每個方法前添加詳細的註釋，說明該方法的功能和參數。
+2. **變數命名**：使用更具描述性的變數名稱，以提高程式碼的可讀性。
+3. **邏輯檢查**：在移除產品後，確保陣列的數據結構正確維護。
+4. **編碼風格**：保持一致的縮排和編碼風格，使程式碼更加清晰易讀。
+5. **錯誤處理**：在方法中添加更多的錯誤處理，以確保程式的穩定性。
+
+希望這些建議能夠幫助您的學生改進他們的程式設計技能。

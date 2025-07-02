@@ -1,0 +1,171 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註（20分）**：該程式缺乏對其功能的明確說明，沒有註釋說明程式的功能和每個部分的作用。（0分）
+- **格式（25分）**：程式碼的縮排和編碼風格基本正確，但有些地方的變數命名不夠直觀，且缺乏註釋。（15分）
+- **準確性（25分）**：程式在大部分情況下能正確運行，但在某些邊界情況下可能會出現問題，例如矩陣乘法時沒有初始化結果矩陣。（20分）
+- **邏輯（30分）**：程式的邏輯基本正確，能夠完成矩陣乘法和逆矩陣的計算，但在某些情況下可能會出現邏輯錯誤。（25分）
+
+總分：60分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式能夠正確讀取輸入的矩陣並進行基本的矩陣乘法和逆矩陣計算。
+2. 程式結構清晰，主要功能分別由不同的函式實現。
+
+**缺點：**
+1. 缺乏註釋，程式的功能和每個部分的作用不明確。
+2. 矩陣乘法時沒有初始化結果矩陣，可能會導致錯誤。
+3. 變數命名不夠直觀，例如 `rowsA`、`colsA` 等，應該使用更具描述性的名稱。
+4. 矩陣乘法函式 `MathMultiply` 的參數類型不一致，一個是 `int[][]`，另一個是 `double[][]`，應該統一類型。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class work3 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // (a) 讀取矩陣 A
+        System.out.print("Enter rows and columns for matrix A: ");
+        int rowsA = scanner.nextInt();
+        int colsA = scanner.nextInt();
+        double[][] matrixA = new double[rowsA][colsA];
+
+        System.out.println("Enter elements of matrix A:");
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                matrixA[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 讀取矩陣 B
+        System.out.print("Enter rows and columns for matrix B: ");
+        int rowsB = scanner.nextInt();
+        int colsB = scanner.nextInt();
+        double[][] matrixB = new double[rowsB][colsB];
+
+        System.out.println("Enter elements of matrix B:");
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                matrixB[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 矩陣乘法
+        double[][] result = MatMultiply(matrixA, matrixB);
+
+        // 輸出結果
+        if (result != null) {
+            System.out.println("Result of multiplication:");
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++) {
+                    System.out.printf("%.2f ", result[i][j]);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("Matrix multiplication not possible.");
+        }
+
+        // (b) 讀取 2x2 矩陣 C
+        System.out.print("Enter elements of a 2x2 matrix for inversion (a11 a12 a21 a22): ");
+        double[][] matrixC = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrixC[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 計算逆矩陣
+        double[][] inverse = invMatrix(matrixC);
+        if (inverse != null) {
+            System.out.println("Inverse of the matrix:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f ", inverse[i][j]);
+                }
+                System.out.println();
+            }
+
+            // 驗證
+            double[][] identity = MatMultiply(matrixC, inverse);
+            System.out.println("Verification (original matrix * inverse):");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f ", identity[i][j]);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("Matrix inversion not possible.");
+        }
+
+        scanner.close();
+    }
+
+    public static double[][] MatMultiply(double[][] a, double[][] b) {
+        if (a[0].length != b.length) {
+            return null; // 無法進行矩陣乘法，返回 null
+        }
+
+        int rowsA = a.length;
+        int colsA = a[0].length;
+        int colsB = b[0].length;
+
+        double[][] result = new double[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                result[i][j] = 0; // 初始化結果矩陣
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+
+        return result; // 返回結果矩陣
+    }
+
+    public static double[][] invMatrix(double[][] matrix) {
+        double[][] inverse = new double[2][2];
+        double determinant = (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]);
+
+        if (determinant == 0) {
+            return null; // 無法求逆，返回 null
+        }
+
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse; // 返回逆矩陣
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **統一矩陣類型**：將所有矩陣的類型統一為 `double[][]`，以避免混淆和潛在的類型轉換問題。
+2. **初始化結果矩陣**：在 `MatMultiply` 函式中，初始化結果矩陣為 0，以避免未初始化的問題。
+3. **變數命名**：將變數命名改為更具描述性的名稱，例如 `matrixA`、`matrixB`、`matrixC`。
+4. **註釋**：添加註釋以說明程式的功能和每個部分的作用。
+5. **輸出格式**：將矩陣元素的輸出格式統一為小數點後兩位。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **添加註釋**：在程式碼中添加註釋，說明程式的功能和每個部分的作用，使程式更易於理解和維護。
+2. **統一變數類型**：在矩陣操作中，統一使用 `double[][]` 類型，以避免類型轉換問題。
+3. **初始化變數**：在使用變數之前，確保變數已被正確初始化，以避免潛在的錯誤。
+4. **輸出格式**：統一輸出格式，使結果更易於閱讀和理解。
+
+**反饋：**
+1. **程式邏輯**：程式的主要邏輯基本正確，能夠完成矩陣乘法和逆矩陣的計算，但需要在某些細節上進行改進。
+2. **變數命名**：變數命名應該更具描述性，以增強程式的可讀性。
+3. **邊界檢查**：在矩陣操作中，應該加入更多的邊界檢查，以確保程式的穩定性和正確性。
+
+希望這些建議和反饋能夠幫助學生改進他們的程式碼，提升他們的編程技能。

@@ -1,0 +1,103 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註 (20/20)**: 該程式包含對其功能的明確說明，並且每個部分都有註解。
+- **格式 (20/25)**: 程式的縮排和編碼風格大致合理，但有些地方可以改進。
+- **準確性 (25/25)**: 程式在大多數情況下能夠產生正確的結果。
+- **邏輯 (20/30)**: 程式的邏輯大致正確，但在某些地方有需要改進的地方，例如斜率計算時的整數除法問題。
+
+總分: 85/100
+
+### 2. 根據標準分析它的優缺點
+
+**優點**:
+1. 程式功能完整，能夠計算所需的各種距離和夾角。
+2. 註解詳細，說明了每個部分的功能。
+3. 使用了適當的數學函數來計算距離和夾角。
+
+**缺點**:
+1. 斜率計算時使用了整數除法，這可能導致結果不準確。
+2. 部分變數命名不夠直觀，例如 `coex1`。
+3. 格式上有些地方可以改進，例如變數宣告和使用之間的間距。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class hw1 {
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 讓使用者輸入兩個二維資料點，分別為(x1,y1)以及(x2,y2)
+        System.out.println("請輸入x1的值:");
+        int x1 = scanner.nextInt();
+        System.out.println("請輸入x2的值:");
+        int x2 = scanner.nextInt();
+        System.out.println("請輸入y1的值:");
+        int y1 = scanner.nextInt();
+        System.out.println("請輸入y2的值:");
+        int y2 = scanner.nextInt();
+
+        // 計算斜率
+        double m = (double) (y2 - y1) / (x2 - x1);
+        int intercept = (-x1 * (int) m) + y1;
+        System.out.println("二點直線方程式為：y=" + m + "x+" + intercept);
+
+        // 歐式距離
+        double ED = Math.sqrt(Math.pow(x1 - x2, 2.0) + Math.pow(y1 - y2, 2.0));
+        System.out.println("二點的歐式距離為：" + ED);
+
+        // 曼哈頓距離
+        int absData1 = Math.abs(x1 - x2);
+        int absData2 = Math.abs(y1 - y2);
+        System.out.println("曼哈頓距離為：" + (absData1 + absData2));
+
+        // 切比雪夫距離
+        System.out.println("切比雪夫 Max(" + absData1 + "," + absData2 + ")");
+        if (absData1 > absData2) {
+            System.out.println("切比雪夫距離為：" + absData1);
+        } else {
+            System.out.println("切比雪夫距離為：" + absData2);
+        }
+
+        // 向量角度
+        double DP = (x1 * x2) + (y1 * y2); // 點積
+        double m1 = Math.sqrt(Math.pow(x1, 2.0) + Math.pow(y1, 2.0)); // 向量1的長度
+        double m2 = Math.sqrt(Math.pow(x2, 2.0) + Math.pow(y2, 2.0)); // 向量2的長度
+
+        if (m1 == 0 || m2 == 0) {
+            System.out.println("向量的長度為零，無法計算夾角");
+        } else {
+            // 計算cosθ並夾住範圍在-1到1之間
+            double cosTheta = DP / (m1 * m2);
+            cosTheta = Math.max(-1.0, Math.min(1.0, cosTheta));
+
+            // 計算夾角並轉換為度數
+            double angle = Math.toDegrees(Math.acos(cosTheta));
+            System.out.println("二個向量的夾角為：" + angle + " 度");
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **斜率計算**:
+   - **原因**: 原程式使用整數除法計算斜率，這可能導致結果不準確。
+   - **修改**: 將斜率計算改為浮點數除法，確保結果的準確性。
+
+2. **變數命名**:
+   - **原因**: 原變數名稱 `coex1` 不夠直觀。
+   - **修改**: 將 `coex1` 改為 `intercept`，更直觀地表示截距。
+
+3. **格式**:
+   - **原因**: 原程式的格式在某些地方不夠整齊。
+   - **修改**: 調整變數宣告和使用之間的間距，使程式更易讀。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **數值計算**: 在進行數值計算時，特別是涉及除法的部分，應該考慮使用浮點數來避免整數除法帶來的誤差。
+2. **變數命名**: 變數命名應該盡量直觀，讓人一看就知道變數的用途。例如，`coex1` 可以改為 `intercept`。
+3. **格式**: 保持良好的編碼風格，包括適當的縮排和變數宣告與使用之間的間距，這樣可以提高程式的可讀性。
+4. **註解**: 註解應該簡潔明了，說明每個部分的功能，但不需要過於詳細，避免冗長。
+5. **邊界條件**: 在處理向量角度計算時，應該考慮向量長度為零的情況，這樣可以避免程式在這種情況下崩潰。

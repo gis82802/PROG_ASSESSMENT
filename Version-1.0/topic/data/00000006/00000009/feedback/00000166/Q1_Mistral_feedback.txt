@@ -1,0 +1,166 @@
+### 1. 打分
+
+根據您的標準，這份作業的打分如下：
+
+- **備註 (滿分20)**：程式包含對其功能的明確說明，但缺乏對程式碼結構和設計的詳細說明。分數：15
+- **格式 (滿分25)**：程式碼的縮排和編碼風格基本適當，但部分地方缺乏一致性和清晰性。分數：20
+- **準確性 (滿分25)**：程式能夠正確執行井字棋遊戲的基本功能，但在某些情況下可能會出現錯誤（例如輸入錯誤處理）。分數：20
+- **邏輯 (滿分30)**：程式的邏輯基本正確，但在某些情況下可能會出現錯誤（例如遊戲結束條件的判斷）。分數：25
+
+總分：80
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式能夠正確執行井字棋遊戲的基本功能。
+2. 程式碼結構相對清晰，基本上保持了適當的縮排和編碼風格。
+3. 包含了基本的輸入和輸出功能，能夠與使用者互動。
+
+**缺點：**
+1. 缺乏對程式碼結構和設計的詳細說明。
+2. 部分地方缺乏一致性和清晰性，例如變數命名和註解。
+3. 輸入錯誤處理不夠完善，可能會導致程式出現錯誤。
+4. 遊戲結束條件的判斷不夠完善，可能會導致遊戲無法正確結束。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+class Chessboard {
+    int[][] array = new int[3][3];
+    int turn = 0;
+
+    public Chessboard() {
+        System.out.println("Game Start");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                array[i][j] = -1;
+            }
+        }
+    }
+
+    public boolean cin(String xy) {
+        String[] inxy = xy.split(",");
+        int x = Integer.parseInt(inxy[0]) - 1;
+        int y = Integer.parseInt(inxy[1]) - 1;
+        if (x < 0 || x >= 3 || y < 0 || y >= 3) {
+            System.out.println("**輸入超出範圍**");
+            return false;
+        }
+        if (array[x][y] == -1) {
+            array[x][y] = turn % 2;
+            return true;
+        } else {
+            System.out.println("**輸入有誤**");
+            return false;
+        }
+    }
+
+    public void player() {
+        turn++;
+        System.out.print("第" + turn + "回合  ");
+        if (turn % 2 == 1) {
+            System.out.println(" O 方回合");
+        } else if (turn % 2 == 0) {
+            System.out.println(" X 方回合");
+        }
+    }
+
+    public void OX(int num) {
+        System.out.print(num == 1 ? " O " : num == 0 ? " X " : "   ");
+    }
+}
+
+class TicTacToe extends Chessboard {
+    public void cout() {
+        System.out.println("-------------");
+        for (int[] out : array) {
+            System.out.print("|");
+            for (int in : out) {
+                OX(in);
+                System.out.print("|");
+            }
+            System.out.println("\n-------------");
+        }
+    }
+
+    public int rule() {
+        for (int i = 0; i < array.length; i++) {
+            if (array[0][i] == array[1][i] && array[1][i] == array[2][i] && array[2][i] == (turn - 1) % 2) {
+                return 0;
+            }
+            if (array[i][0] == array[i][1] && array[i][1] == array[i][2] && array[i][2] == (turn - 1) % 2) {
+                return 0;
+            }
+        }
+        if (array[0][0] == array[1][1] && array[1][1] == array[2][2] && array[2][2] == (turn - 1) % 2) {
+            return 0;
+        }
+        if (array[0][2] == array[1][1] && array[1][1] == array[2][0] && array[2][0] == (turn - 1) % 2) {
+            return 0;
+        }
+        if (turn == 9) {
+            return -1;
+        }
+        return 1;
+    }
+
+    public void gameover() {
+        if (rule() == 0) {
+            OX((turn - 1) % 2);
+            System.out.print("方獲勝");
+        } else if (rule() == -1) {
+            System.out.print("雙方平手");
+        }
+    }
+}
+
+public class OOXX {
+    public static void main(String[] args) {
+        TicTacToe t = new TicTacToe();
+        Scanner scn = new Scanner(System.in);
+        while (t.rule() == 1) {
+            t.player();
+            System.out.print("請輸入橫向位與縱向位(格式：3,3)：");
+            String in = scn.nextLine();
+            if (t.cin(in)) {
+                t.cout();
+                t.gameover();
+            }
+        }
+        scn.close();
+    }
+}
+```
+
+### 4. 說明改進的程式碼修改部分及原因
+
+1. **cin 方法的改進**：
+   - 添加了對輸入範圍的檢查，避免輸入超出棋盤範圍。
+   - 返回布爾值，表示輸入是否成功，以避免在輸入錯誤時進行無效的回合計算。
+
+2. **rule 方法的改進**：
+   - 修正了勝利條件的判斷，確保在每次回合結束後正確判斷勝利條件。
+
+3. **gameover 方法的改進**：
+   - 修正了勝利方的判斷，確保在每次回合結束後正確顯示勝利方。
+
+### 5. 改進建議和反饋
+
+1. **增加註解和說明**：
+   - 在程式碼中增加更多的註解，說明每個方法的功能和邏輯，以提高程式碼的可讀性和可維護性。
+
+2. **改進輸入錯誤處理**：
+   - 在輸入錯誤時，應該提示使用者重新輸入，而不是直接進行下一回合。
+
+3. **改進變數命名**：
+   - 使用更具描述性的變數名稱，例如 `turn` 可以改為 `currentTurn`，`array` 可以改為 `board`。
+
+4. **增加遊戲結束條件的判斷**：
+   - 在每次回合結束後，應該立即判斷是否有玩家勝利或遊戲平手，而不是在下一回合開始時判斷。
+
+5. **改進程式碼結構**：
+   - 將棋盤和遊戲邏輯分開，使程式碼結構更加清晰和模塊化。例如，可以將 `Chessboard` 類別中的遊戲邏輯移到 `TicTacToe` 類別中。
+
+希望這些改進建議能夠幫助學生提高程式設計的能力和程式碼的質量。

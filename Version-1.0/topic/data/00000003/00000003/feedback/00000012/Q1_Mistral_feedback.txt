@@ -1,0 +1,172 @@
+### 1. 根據標準打分（0-100）
+
+- **備註（滿分20）**：該程式包含對其功能的明確說明，但有些地方不夠詳細。例如，`matrixMult`函式的參數說明有誤，應該是第一個矩陣的行數和列數，而不是列數和行數。分數：15
+- **格式（滿分25）**：程式碼的縮排和編碼風格基本遵循Java的慣例，但在某些地方可以改進。例如，變數命名可以更直觀，註解可以更詳細。分數：20
+- **準確性（滿分25）**：程式在某些情況下無法正確運行。例如，矩陣相乘的條件判斷有誤，應該是`col_1 != row_2`而不是`row_1 != col_1`。分數：15
+- **邏輯（滿分30）**：程式的邏輯基本正確，但有些地方需要改進。例如，矩陣相乘的條件判斷和結果輸出。分數：20
+
+總分：70
+
+### 2. 根據標準分析優缺點
+
+**優點：**
+1. 程式碼有基本的註解，說明了每個函式的功能。
+2. 使用了適當的Java語法和結構，如`for`迴圈和陣列。
+3. 程式碼的縮排和編碼風格基本遵循Java的慣例。
+
+**缺點：**
+1. 矩陣相乘的條件判斷有誤，應該是`col_1 != row_2`而不是`row_1 != col_1`。
+2. 變數命名不夠直觀，例如`row_1`和`col_1`應該命名為`rows_1`和`cols_1`。
+3. 註解不夠詳細，某些地方的註解有誤。
+4. 矩陣相乘的結果輸出格式不夠清晰。
+
+### 3. 改進的程式碼
+
+```java
+/**
+ * Project Name: Hw03
+ *
+ * Author: 41243144 温博鈞
+ *
+ * Description:
+ *      1.輸入2個矩陣，並輸出矩陣相乘結果
+ *
+ * Functionality:
+ *      - matrixMult(): 輸入矩陣1和的行及列及矩陣陣列，並輸出相乘後結果，無回傳
+ *      - reverse_matrix(): 輸入2x2矩陣，輸出反矩陣
+ *
+ * Last Edit Date: 2024-10-25
+ */
+package October.oct_25;
+
+import java.util.Scanner;
+
+public class Hw03 {
+    public static void main(String[] args) {
+        // 創建輸入初始化
+        Scanner input = new Scanner(System.in);
+
+        // 定義矩陣1、2初始行列
+        int rows_1, cols_1, rows_2, cols_2;
+
+        // 輸入第一個矩陣
+        System.out.print("請輸入第一個矩陣的行及列(中間空格隔開):");
+        rows_1 = input.nextInt();
+        cols_1 = input.nextInt();
+
+        int[][] matrix_1 = new int[rows_1][cols_1];
+
+        System.out.print("請輸入第一個矩陣(用空格隔開或換行):");
+
+        for(int i=0; i < rows_1; i++){
+            for(int j=0; j < cols_1; j++){
+                matrix_1[i][j] = input.nextInt();
+            }
+        }
+
+        // 輸入第2個矩陣
+        System.out.print("請輸入第二個矩陣的行及列(中間空格隔開):");
+        rows_2 = input.nextInt();
+        cols_2 = input.nextInt();
+
+        int[][] matrix_2 = new int[rows_2][cols_2];
+
+        System.out.print("請輸入第二個矩陣(用空格隔開或換行):");
+
+        for(int i=0; i < rows_2; i++){
+            for(int j=0; j < cols_2; j++){
+                matrix_2[i][j] = input.nextInt();
+            }
+        }
+
+        // 矩陣相乘函式
+        matrixMult(rows_1, cols_1, matrix_1, rows_2, cols_2, matrix_2);
+
+        // 輸入2x2矩陣
+        System.out.println("請輸入一2x2矩陣: ");
+
+        int[] matrix = new int[4];
+
+        for(int i=0; i < 4; i++){
+            matrix[i] = input.nextInt();
+        }
+
+        // 反矩陣函式
+        reverse_matrix(matrix);
+
+        input.close();
+    }
+
+    public static void matrixMult(int rows_1, int cols_1, int[][] matrix_1, int rows_2, int cols_2, int[][] matrix_2){
+        /*
+         * 將矩陣相乘後並輸出，若矩陣無法相乘則輸出null
+         *
+         * args:
+         *      - rows_1: 第一個矩陣行數
+         *      - cols_1: 第一個矩陣列數
+         *      - matrix_1: 第一個矩陣陣列
+         *      - rows_2: 第二個矩陣行數
+         *      - cols_2: 第二個矩陣列數
+         *      - matrix_2: 第二個矩陣陣列
+         *
+         * return: null
+         */
+        System.out.print("矩陣相乘結果為: ");
+
+        if(cols_1 != rows_2){
+            System.out.println("null");
+        }else{
+            int[][] result = new int[rows_1][cols_2];
+
+            for (int i = 0; i < rows_1; i++) {
+                for (int j = 0; j < cols_2; j++) {
+                    for (int k = 0; k < cols_1; k++)
+                        result[i][j] += matrix_1[i][k] * matrix_2[k][j];
+                }
+            }
+
+            for(int[] row: result){
+                for(int val: row){
+                    System.out.print(val + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    public static void reverse_matrix(int[] matrix){
+        /*
+         * 輸出輸入矩陣之反矩陣，若det = 0代表沒有反矩陣
+         *
+         * args:
+         *      - matrix: 矩陣
+         *
+         * return: null
+         */
+        int det = matrix[0] * matrix[3] - matrix[1] * matrix[2];
+
+        if(det == 0){
+            System.out.println("反矩陣不存在");
+        }else{
+            double reverse_det = 1.0 / det;
+            System.out.println(String.format("%.3f %.3f", matrix[3] * reverse_det, -matrix[1] * reverse_det));
+            System.out.println(String.format("%.3f %.3f", -matrix[2] * reverse_det, matrix[0] * reverse_det));
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名**：將`row_1`和`col_1`改為`rows_1`和`cols_1`，使變數名稱更直觀。
+2. **矩陣相乘條件判斷**：將`row_1 != col_1`改為`cols_1 != rows_2`，因為矩陣相乘的條件是第一個矩陣的列數等於第二個矩陣的行數。
+3. **註解修正**：修正了`matrixMult`函式的參數說明，使其更準確。
+4. **結果輸出格式**：修改了矩陣相乘結果的輸出格式，使其更清晰。
+
+### 5. 改進建議和反饋
+
+1. **變數命名**：請使用更直觀的變數名稱，使程式碼更易讀。
+2. **條件判斷**：請仔細檢查矩陣相乘的條件判斷，確保其正確性。
+3. **註解**：請在程式碼中加入更多詳細的註解，說明每個函式和變數的用途。
+4. **輸出格式**：請確保輸出結果的格式清晰易讀。
+5. **測試**：請多進行測試，確保程式在不同情況下都能正確運行。

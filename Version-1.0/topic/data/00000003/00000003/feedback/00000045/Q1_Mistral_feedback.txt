@@ -1,0 +1,161 @@
+好的，讓我們根據您的標準逐一評估這份作業。
+
+### 1. 打分
+
+- **備註 (20分)**：該程式沒有包含對其功能的明確說明。(0分)
+- **格式 (25分)**：程式整體格式良好，保持了適當的縮排和編碼風格。(25分)
+- **準確性 (25分)**：程式在正確的輸入下能夠產生正確的結果。(25分)
+- **邏輯 (30分)**：程式邏輯基本正確，但有一些可以改進的地方。(25分)
+
+總分：75分
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式結構清晰，功能模塊化，每個函式都有明確的職責。
+2. 使用了適當的縮排和編碼風格，提高了程式的可讀性。
+3. 程式能夠正確地執行矩陣相乘和反矩陣的計算。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明和注釋。
+2. 矩陣相乘的結果矩陣初始化時，未對矩陣元素進行初始化，可能導致錯誤。
+3. 矩陣相乘的過程中，沒有檢查矩陣元素是否為空。
+4. 反矩陣計算時，沒有對輸入矩陣的正確性進行檢查。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+import java.util.Random;
+
+public class OwoblueJava15 {
+
+    // (a) 矩陣相乘
+    public static double[][] MatMultiply(double[][] mat1, double[][] mat2) {
+        int rows1 = mat1.length, cols1 = mat1[0].length;
+        int rows2 = mat2.length, cols2 = mat2[0].length;
+
+        // 確認矩陣是否可相乘
+        if (cols1 != rows2) return null;
+
+        // 初始化結果矩陣
+        double[][] result = new double[rows1][cols2];
+
+        // 矩陣相乘
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                result[i][j] = 0; // 初始化結果矩陣元素
+                for (int k = 0; k < cols1; k++) {
+                    result[i][j] += mat1[i][k] * mat2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // (b) 2x2 矩陣反矩陣
+    public static double[][] invMatrix(double[][] mat) {
+        if (mat.length != 2 || mat[0].length != 2) return null;
+
+        double det = mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+        if (det == 0) return null;  // 不可逆
+
+        double[][] inv = new double[2][2];
+        inv[0][0] = mat[1][1] / det;
+        inv[0][1] = -mat[0][1] / det;
+        inv[1][0] = -mat[1][0] / det;
+        inv[1][1] = mat[0][0] / det;
+
+        return inv;
+    }
+
+    // 顯示矩陣
+    public static void printMatrix(double[][] mat) {
+        if (mat == null) {
+            System.out.println("null");
+            return;
+        }
+        for (double[] row : mat) {
+            for (double elem : row) {
+                System.out.printf("%.2f ", elem);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        // 1. 使用者輸入矩陣大小，並隨機生成矩陣
+        System.out.print("輸入矩陣1的行數和列數: ");
+        int rows1 = scanner.nextInt();
+        int cols1 = scanner.nextInt();
+        double[][] mat1 = new double[rows1][cols1];
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
+                mat1[i][j] = random.nextInt(10);
+            }
+        }
+
+        System.out.print("輸入矩陣2的行數和列數: ");
+        int rows2 = scanner.nextInt();
+        int cols2 = scanner.nextInt();
+        double[][] mat2 = new double[rows2][cols2];
+        for (int i = 0; i < rows2; i++) {
+            for (int j = 0; j < cols2; j++) {
+                mat2[i][j] = random.nextInt(10);
+            }
+        }
+
+        System.out.println("矩陣1:");
+        printMatrix(mat1);
+        System.out.println("矩陣2:");
+        printMatrix(mat2);
+
+        // 2. 計算矩陣乘積
+        double[][] product = MatMultiply(mat1, mat2);
+        System.out.println("矩陣相乘的結果:");
+        printMatrix(product);
+
+        // 3. 驗證反矩陣的正確性
+        System.out.println("請輸入 2x2 矩陣:");
+        double[][] mat = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                mat[i][j] = scanner.nextDouble();
+            }
+        }
+
+        System.out.println("原始矩陣:");
+        printMatrix(mat);
+
+        // 計算反矩陣
+        double[][] invMat = invMatrix(mat);
+        System.out.println("反矩陣:");
+        printMatrix(invMat);
+
+        // 使用 (a) 的矩陣乘法進行驗證
+        double[][] identity = MatMultiply(mat, invMat);
+        System.out.println("原矩陣乘以反矩陣的結果:");
+        printMatrix(identity);
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 修改的部分及原因
+
+1. **結果矩陣初始化**：在矩陣相乘的過程中，對結果矩陣元素進行初始化，避免未初始化的元素導致錯誤。
+2. **函數說明**：在每個函數前添加了簡單的說明，提高程式的可讀性和可維護性。
+3. **變數命名**：保持了原有的變數命名，但在必要時進行了註釋說明。
+
+### 5. 改進建議和反饋
+
+1. **添加註釋和說明**：在每個函數和關鍵步驟前添加註釋和說明，讓程式更容易理解和維護。
+2. **初始化矩陣元素**：在矩陣相乘的過程中，確保結果矩陣的元素被正確初始化。
+3. **輸入檢查**：在反矩陣計算時，可以添加對輸入矩陣正確性的檢查，避免不合法的輸入。
+4. **測試驗證**：增加更多的測試案例，驗證程式在不同情況下的正確性和穩定性。
+
+希望這些建議能夠幫助學生提高程式的質量和可讀性。

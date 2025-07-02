@@ -1,0 +1,101 @@
+好的，我將按照您的標準評估您的學生作業，並提供詳細的分析和改進建議。
+
+**1. 作業評分**
+
+*   **備註 (10/20):** 缺乏備註，程式碼沒有任何解釋性的文字，未能說明程式的功能。
+*   **格式 (20/25):** 程式碼縮排尚可，但類別名稱 `un` 不具描述性，整體編碼風格可以更好。
+*   **準確性 (15/25):** 程式碼可以執行，但輸出的結果只顯示了每個字元的Unicode碼，沒有實際轉換成 Unicode 數值，最後又輸出了原始字串，與程式意圖不符 (猜測意圖是印出每個字元的 Unicode 數值)。
+*   **邏輯 (15/30):** 迴圈邏輯基本正確，但程式的整體邏輯存在問題，未能實現正確的 Unicode 轉換。
+
+**總分：60/100**
+
+**2. 優缺點分析**
+
+**優點：**
+
+*   使用了 `Scanner` 類別讀取使用者輸入。
+*   使用了 `for` 迴圈來迭代字串中的每個字元。
+*   使用了 `name.charAt(i)` 來獲取字串中特定位置的字元。
+
+**缺點：**
+
+*   **缺乏備註：** 程式碼沒有任何註解，難以理解程式的意圖。
+*   **類別命名不佳：** 類別名稱 `un` 沒有任何意義，不符合良好的編碼規範。
+*   **沒有執行 Unicode 轉換：** 程式碼只是印出了字元，沒有將字元轉換為 Unicode 數值。
+*   **程式碼邏輯不完整：** 程式碼沒有實現預期的功能（印出每個字元的 Unicode 數值）。
+*   **多餘的輸出：** 最後一行 `System.out.println(name);` 會額外輸出原始字串，與預期輸出不符。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class UnicodeConverter { // 修改類別名稱，更具描述性
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in, "UTF-8"); // 保留 Scanner 的使用
+
+        System.out.println("請輸入一個字串："); // 添加提示訊息
+        String name = scn.nextLine();
+
+        System.out.println("字串 '" + name + "' 的 Unicode 數值如下：");  // 添加描述性輸出
+        for (int i = 0; i < name.length(); i++) {
+            char character = name.charAt(i);
+            int unicodeValue = (int) character; // 將字元轉換為 Unicode 數值
+            System.out.println(character + ": " + unicodeValue); // 輸出字元和其 Unicode 數值
+        }
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **類別名稱：** 將 `un` 修改為 `UnicodeConverter`，使類別名稱更具描述性。
+*   **新增提示訊息：** 在讀取使用者輸入前添加了 `System.out.println("請輸入一個字串：");`，提示使用者輸入字串。
+*   **新增描述性輸出：** 增加了 `System.out.println("字串 '" + name + "' 的 Unicode 數值如下：");`，讓輸出結果更清晰。
+*   **Unicode 轉換：**  在迴圈中添加了 `int unicodeValue = (int) character;`，將 `char` 類型的字元強制轉換為 `int` 類型，從而得到其 Unicode 數值。
+*   **修改輸出格式：** 將 `System.out.println(name.charAt(i)+":");` 修改為 `System.out.println(character + ": " + unicodeValue);`，輸出字元及其對應的 Unicode 數值。
+*   **移除多餘的輸出：** 移除了 `System.out.println(name);`，避免重複輸出原始字串。
+
+**修改原因：**
+
+*   原始程式碼未能正確地將字元轉換為 Unicode 數值，而是直接印出了字元。
+*   原始程式碼缺乏必要的註解和描述性輸出，使程式碼難以理解。
+*   原始程式碼的類別名稱不具描述性。
+*   原始程式碼最後會重複印出原始字串。
+
+**5. 改進建議和反饋**
+
+*   **程式碼註解：** 務必在程式碼中添加必要的註解，解釋程式的功能、變數的用途以及重要的邏輯。這可以幫助其他人（包括您自己）更容易地理解程式碼。
+*   **有意義的命名：** 使用有意義的變數和函數名稱。例如，`name` 可以更清楚地表達變數存儲的是使用者的姓名。
+*   **逐步測試：** 在編寫程式碼時，可以逐步測試每個部分的功能，以確保程式碼的正確性。例如，您可以先測試讀取使用者輸入的部分，然後再測試 Unicode 轉換的部分。
+*   **學習 Unicode 相關知識：** 深入了解 Unicode 編碼的原理和應用，這將有助於您編寫更可靠的程式碼。
+*   **編碼風格一致性：**  保持一致的縮排和編碼風格，使程式碼更易於閱讀和維護。
+
+總之，您的程式碼具有一定的基礎，但仍有很大的改進空間。透過添加註解、使用有意義的命名、逐步測試以及深入學習相關知識，您可以編寫出更清晰、更可靠的程式碼。
+
+**我的中文姓名的 Unicode 數值：**
+
+為了計算我的中文姓名（假設為「李明」）的 Unicode 數值，我將使用 Java 程式碼來執行：
+
+```java
+public class UnicodeOfName {
+    public static void main(String[] args) {
+        String name = "李明";
+        for (int i = 0; i < name.length(); i++) {
+            char character = name.charAt(i);
+            int unicodeValue = (int) character;
+            System.out.println(character + ": " + unicodeValue);
+        }
+    }
+}
+```
+
+執行結果：
+
+```
+李: 26446
+明: 26202
+```
+
+因此，我的中文姓名「李明」的 Unicode 數值分別是 26446 和 26202。

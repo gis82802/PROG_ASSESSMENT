@@ -1,0 +1,154 @@
+### 1. 打分
+根據您的標準，這份作業的打分如下：
+- 備註（滿分20）：15分
+- 格式（滿分25）：22分
+- 準確性（滿分25）：25分
+- 邏輯（滿分30）：28分
+
+總分：90分
+
+### 2. 分析優缺點
+**優點：**
+1. **程式結構清晰**：程式碼分為多個方法，每個方法負責不同的功能，這使得程式碼易於理解和維護。
+2. **錯誤處理**：在計算反矩陣時檢查行列式是否為0，並在行列式為0時返回null。
+3. **驗證結果**：通過計算矩陣與其反矩陣的乘積來驗證結果是否正確。
+4. **用戶互動**：提供了用戶輸入矩陣元素的功能，並且在輸入無效時捕捉例外。
+
+**缺點：**
+1. **缺乏註解**：程式碼缺乏詳細的註解，特別是在計算反矩陣的部分。
+2. **變數命名**：一些變數名稱不夠直觀，例如`det`可以改為`determinant`。
+3. **矩陣乘法方法缺失**：`MatrixMultiplication.MatMultiply`方法未提供，這使得程式碼無法完整運行。
+4. **輸出格式**：輸出矩陣的格式可以更美觀，例如在每行結束時加入分隔線。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class MatrixInverse {
+    public static double[][] invMatrix(double[][] matrix) {
+        // 檢查矩陣是否為2x2
+        if (matrix == null || matrix.length != 2 ||
+            matrix[0].length != 2 || matrix[1].length != 2) {
+            return null;
+        }
+
+        // 計算行列式
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // 檢查行列式是否為0
+        if (determinant == 0) {
+            return null;
+        }
+
+        // 計算反矩陣
+        double[][] result = new double[2][2];
+        result[0][0] = matrix[1][1] / determinant;
+        result[0][1] = -matrix[0][1] / determinant;
+        result[1][0] = -matrix[1][0] / determinant;
+        result[1][1] = matrix[0][0] / determinant;
+
+        return result;
+    }
+
+    // 輔助方法：輸入2x2矩陣
+    private static double[][] inputMatrix(Scanner scanner) {
+        double[][] matrix = new double[2][2];
+
+        System.out.println("請輸入2x2矩陣的元素：");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.printf("請輸入 [%d][%d] 位置的元素: ", i+1, j+1);
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+        return matrix;
+    }
+
+    // 輔助方法：印出矩陣
+    private static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            for (double num : row) {
+                System.out.printf("%.4f\t", num);
+            }
+            System.out.println();
+        }
+    }
+
+    // 輔助方法：矩陣乘法
+    private static double[][] multiplyMatrices(double[][] matrixA, double[][] matrixB) {
+        double[][] result = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                result[i][j] = matrixA[i][0] * matrixB[0][j] + matrixA[i][1] * matrixB[1][j];
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            // 輸入2x2矩陣
+            double[][] matrix = inputMatrix(scanner);
+
+            System.out.println("\n原始矩陣：");
+            printMatrix(matrix);
+
+            // 計算反矩陣
+            double[][] inverse = invMatrix(matrix);
+
+            if (inverse != null) {
+                System.out.println("\n反矩陣：");
+                printMatrix(inverse);
+
+                // 驗證結果
+                System.out.println("\n驗證結果（應該是單位矩陣）：");
+                double[][] product = multiplyMatrices(matrix, inverse);
+                printMatrix(product);
+
+                // 檢查是否為單位矩陣
+                boolean isIdentity = true;
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        if (i == j) {
+                            if (Math.abs(product[i][j] - 1.0) > 1e-10) {
+                                isIdentity = false;
+                            }
+                        } else {
+                            if (Math.abs(product[i][j]) > 1e-10) {
+                                isIdentity = false;
+                            }
+                        }
+                    }
+                }
+                System.out.println("\n驗證結果：" +
+                    (isIdentity ? "反矩陣計算正確！" : "驗證失敗！"));
+
+            } else {
+                System.out.println("\n此矩陣無法求反矩陣（行列式為0）");
+            }
+
+        } catch (Exception e) {
+            System.out.println("錯誤：輸入無效！請輸入有效的數字。");
+        } finally {
+            scanner.close();
+        }
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **變數命名**：將`det`改為`determinant`，使變數名稱更直觀。
+2. **矩陣乘法方法**：添加了`multiplyMatrices`方法，因為原程式碼中缺少這部分。
+3. **註解**：在計算反矩陣的部分添加了註解，使程式碼更易理解。
+4. **輸出格式**：在輸出矩陣時保持一致的格式，使輸出更美觀。
+
+### 5. 改進建議和反饋
+1. **註解**：在程式碼中添加更多註解，特別是在關鍵步驟和邏輯部分，這樣可以幫助其他人更快地理解您的程式碼。
+2. **變數命名**：使用更直觀的變數名稱，這樣可以提高程式碼的可讀性。
+3. **錯誤處理**：在輸入和計算過程中增加更多的錯誤處理，例如檢查輸入是否為數字，並在出現錯誤時提供明確的錯誤信息。
+4. **單元測試**：考慮添加單元測試來驗證您的程式碼，這樣可以確保程式碼在不同的情況下都能正確運行。
+5. **用戶互動**：改進用戶互動部分，例如在輸入矩陣元素時提供更詳細的提示信息，並在輸入無效時提供重新輸入的機會。
+
+希望這些建議能夠幫助您的學生進一步改進他們的程式碼。

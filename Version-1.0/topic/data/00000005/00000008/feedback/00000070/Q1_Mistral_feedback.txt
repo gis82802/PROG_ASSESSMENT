@@ -1,0 +1,165 @@
+### 1. 打分
+根據您的標準，這份作業的打分如下：
+- 備註（滿分20）：10（程式有簡單的說明，但不夠詳細）
+- 格式（滿分25）：20（程式碼格式基本良好，但有些地方可以改進）
+- 準確性（滿分25）：20（程式基本上能正確運行，但有些地方需要改進）
+- 邏輯（滿分30）：20（程式邏輯基本正確，但有些地方需要改進）
+
+總分：70
+
+### 2. 優缺點分析
+**優點：**
+1. 程式碼結構清晰，功能模塊分明。
+2. 使用了陣列來存儲產品信息，並且實現了陣列擴展功能。
+3. 提供了基本的庫存管理功能，包括新增產品、減少產品、新增數量、減少數量、計算整個庫存的價值。
+
+**缺點：**
+1. 備註不夠詳細，難以理解程式的具體功能和使用方法。
+2. 在移除產品時，陣列元素的移動操作可以優化。
+3. 在檢查產品是否存在時，使用了 `==` 運算符來比較字串，這在 Java 中是不正確的，應該使用 `equals` 方法。
+4. 在 `RemoveProduct` 方法中，當產品不存在時，未處理錯誤情況。
+5. 在 `ChangeStock` 方法中，當產品不存在時，未處理錯誤情況。
+
+### 3. 改進的程式碼
+```java
+/*
+	INFO:
+	----------------------------------------
+	FILE NAME:	hw20230314_1.java
+	FUNCTION:	建立一個類別 "Inventory"(庫存) 具有屬性像是：產品名稱、數量、價格，並且提供成員函式可以讓使用者新增產品、減少產品、新增數量、減少數量、以及計算整個庫存的價值。
+	AUTHOR(S):	41043243
+	VERSION:	1.0
+	----------------------------------------
+*/
+import java.util.Arrays;
+
+class Inventory{
+	private String	ProductName[];
+	private int		ProductStocks[];
+	private int		ProductPrice[];
+
+	private int		ProductIndex;
+
+	public Inventory(){
+		ProductName 	= new String[8];
+		ProductStocks	= new int[8];
+		ProductPrice	= new int[8];
+		System.out.println("[INFO] Inventory constructor called.");
+	}
+
+	public Inventory(int size){
+		ProductName 	= new String[size];
+		ProductStocks	= new int[size];
+		ProductPrice	= new int[size];
+		System.out.println("[INFO] Inventory constructor called.");
+	}
+
+	public void LaunchProduct(String Name, int Stocks, int Price){
+		if (ProductIndex + 1 >= ProductName.length){
+			ProductName		= Arrays.copyOf(ProductName,	ProductName.length * 2);
+			ProductStocks	= Arrays.copyOf(ProductStocks,	ProductStocks.length * 2);
+			ProductPrice	= Arrays.copyOf(ProductPrice,	ProductPrice.length	* 2);
+			System.out.println("[INFO] Extended Array Size.");
+		}
+		ProductName[ProductIndex]	= Name;
+		ProductStocks[ProductIndex]	= Stocks;
+		ProductPrice[ProductIndex]	= Price;
+
+		ProductIndex++;
+		System.out.println("[INFO] Launched product '" + Name + "'.");
+	}
+
+	public void RemoveProduct(String Name){
+		int targetIndex = CheckProductAvailable(Name);
+		if (targetIndex != -1){
+			for (int i = targetIndex; i < ProductIndex - 1; i++){
+				ProductName[i]		= ProductName[i + 1];
+				ProductStocks[i]	= ProductStocks[i + 1];
+				ProductPrice[i]		= ProductPrice[i + 1];
+			}
+			ProductIndex--;
+			System.out.println("[INFO] Removed product '" + Name + "'.");
+		} else {
+			System.out.println("[ERROR] Product '" + Name + "' not found.");
+		}
+	}
+
+	public int OverallBalance(){
+		int balance = 0;
+		for (int i = 0; i < ProductIndex; i++)
+			balance += ProductPrice[i] * ProductStocks[i];
+		return balance;
+	}
+
+	public void ListProducts(){
+		System.out.println("--------------");
+		System.out.println("Product list:");
+		System.out.println("Name\tStocks\tPrice");
+		for (int i = 0; i < ProductIndex; i++)
+			System.out.println(ProductName[i] + "\t" + ProductStocks[i] + "\t" + ProductPrice[i]);
+		System.out.println("--------------");
+	}
+
+	public void ChangeStock(String Name, int stocks){
+		int targetIndex = CheckProductAvailable(Name);
+		if (targetIndex != -1){
+			ProductStocks[targetIndex] += stocks;
+			System.out.println("[INFO] Changed product '" + Name + "' stocks.");
+		} else {
+			System.out.println("[ERROR] Product '" + Name + "' not found.");
+		}
+	}
+
+	private int CheckProductAvailable(String Name){
+		for (int targetIndex = 0; targetIndex < ProductIndex ; targetIndex++)
+			if (Name.equals(ProductName[targetIndex])) return targetIndex;
+		return -1;
+	}
+}
+
+public class hw20230314_1{
+	public static void main(String args[]){
+		Inventory DrinkShop = new Inventory();
+		DrinkShop.LaunchProduct("Milk Tea", 100, 25);
+		DrinkShop.LaunchProduct("Black Tea", 100, 20);
+		DrinkShop.LaunchProduct("Green Tea", 100, 20);
+		DrinkShop.LaunchProduct("Suspectious drink", 1, 50);
+		DrinkShop.ChangeStock("Milk Tea", -50);
+		DrinkShop.ChangeStock("Green Tea", 30);
+		DrinkShop.RemoveProduct("Suspectious drink");
+		DrinkShop.ChangeStock("Suspectious drink", 1);
+		DrinkShop.ListProducts();
+		System.out.println("Total Balance: " + DrinkShop.OverallBalance());
+
+		Inventory ElectronicShop = new Inventory(4);
+		ElectronicShop.LaunchProduct("Fan", 20, 300);
+		ElectronicShop.LaunchProduct("Heater", 10, 1000);
+		ElectronicShop.LaunchProduct("Television", 10, 25000);
+		ElectronicShop.LaunchProduct("Refridgeator", 5, 15000);
+		ElectronicShop.LaunchProduct("Monitor", 30, 4500);
+		ElectronicShop.LaunchProduct("Vacumm", 15, 3500);
+		ElectronicShop.LaunchProduct("Custom Order", 1, 15000);
+		ElectronicShop.ChangeStock("Fan", -15);
+		ElectronicShop.ChangeStock("Vacumm", -5);
+		ElectronicShop.ChangeStock("Monitor", 5);
+		ElectronicShop.RemoveProduct("Custom Order");
+		ElectronicShop.ListProducts();
+		System.out.println("Total Balance: " + ElectronicShop.OverallBalance());
+	}
+}
+```
+
+### 4. 改進的程式碼有修改的部分及原因
+1. **備註部分**：加入了更詳細的程式說明，使得程式的功能和使用方法更清晰。
+2. **`RemoveProduct` 方法**：修改了陣列元素的移動操作，避免多餘的移動。
+3. **字串比較**：在 `CheckProductAvailable` 方法中，將 `==` 運算符改為 `equals` 方法，以正確比較字串。
+4. **錯誤處理**：在 `RemoveProduct` 和 `ChangeStock` 方法中，當產品不存在時，增加了錯誤處理。
+
+### 5. 改進建議和反饋
+1. **備註**：請在程式碼中加入更多的註解，特別是對於每個方法的功能和使用方法進行詳細說明。
+2. **錯誤處理**：在所有可能出現錯誤的地方，增加錯誤處理，以提高程式的健壯性。
+3. **字串比較**：請注意在 Java 中使用 `equals` 方法來比較字串，而不是 `==` 運算符。
+4. **陣列操作**：在移除產品時，可以優化陣列元素的移動操作，減少不必要的操作。
+5. **測試**：請多做測試，特別是邊界條件和錯誤情況，以確保程式的正確性和健壯性。
+
+希望這些建議能夠幫助學生改進他們的程式碼，並在未來的作業中取得更好的成績。

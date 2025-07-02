@@ -1,0 +1,93 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註 (20分)**：程式沒有包含對其功能的明確說明。 0分
+- **格式 (25分)**：程式的縮排和編碼風格有待改進，變數命名不夠直觀。 15分
+- **準確性 (25分)**：程式在計算歐式距離、曼哈頓距離和向量夾角時是正確的，但直線方程式的計算和表達有誤。 20分
+- **邏輯 (30分)**：程式邏輯基本正確，但有些地方可以優化。 25分
+
+總分：60分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式能夠正確計算歐式距離、曼哈頓距離和向量夾角。
+2. 使用了基本的Java語法和數學函數。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 變數命名不夠直觀，難以理解。
+3. 直線方程式的計算和表達有誤。
+4. 程式格式不夠規範，縮排不一致。
+5. 部分計算重複，可以優化。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class app4_2 {
+    public static void main(String arg[]) {
+        Scanner sc = new Scanner(System.in);
+        float slope, xDiff, yDiff, manhattanDistance;
+        double dotProduct, lengthA, lengthB;
+        double euclideanDistance, cosAngle;
+        float x1, y1, x2, y2;
+
+        // 輸入初值
+        System.out.print("請輸入Pa(x,y)的x值:");
+        x1 = sc.nextFloat();
+        System.out.print("請輸入Pa(x,y)的y值:");
+        y1 = sc.nextFloat();
+        System.out.print("請輸入Pb(x,y)的x值:");
+        x2 = sc.nextFloat();
+        System.out.print("請輸入Pb(x,y)的y值:");
+        y2 = sc.nextFloat();
+
+        // 計算斜率，判斷是否垂直
+        if (x1 != x2) {
+            slope = (y2 - y1) / (x2 - x1);
+            // 直線方程式
+            System.out.println("直線方程式: y = " + slope + "(x - " + x1 + ") + " + y1);
+        } else {
+            System.out.println("直線方程式: x = " + x1);
+        }
+
+        // 歐式距離
+        xDiff = x1 - x2;
+        yDiff = y1 - y2;
+        euclideanDistance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+        System.out.println("歐式距離: " + euclideanDistance);
+
+        // 曼哈頓距離
+        manhattanDistance = Math.abs(xDiff) + Math.abs(yDiff);
+        System.out.println("曼哈頓距離: " + manhattanDistance);
+
+        // 切比雪夫距離
+        System.out.println("切比雪夫距離: " + Math.max(Math.abs(xDiff), Math.abs(yDiff)));
+
+        // 向量夾角
+        dotProduct = x1 * x2 + y1 * y2;
+        lengthA = Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2));
+        lengthB = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
+        cosAngle = dotProduct / (lengthA * lengthB);
+        System.out.println("夾角為 " + Math.toDegrees(Math.acos(cosAngle)) + "度");
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名**：將變數名稱改為更直觀的名稱，如 `slope`、`xDiff`、`yDiff` 等，使程式更易於理解。
+2. **直線方程式**：修正了直線方程式的計算和表達方式，使其更符合數學表示。
+3. **重複計算**：將重複的計算合併，減少冗餘代碼。
+4. **格式**：調整了程式的格式，使縮排更加一致，提高可讀性。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **新增備註**：在程式開頭新增備註，說明程式的功能和各部分的作用。
+2. **變數命名**：使用更直觀的變數名稱，使程式更易於理解和維護。
+3. **直線方程式**：確保直線方程式的計算和表達方式正確無誤。
+4. **格式規範**：保持縮排和編碼風格的一致性，提高程式的可讀性。
+5. **優化計算**：避免重複計算，提高程式效率。
+
+希望這些改進和建議能幫助學生提升程式編寫的質量。

@@ -1,0 +1,160 @@
+### 1. 打分
+根據你的標準，這份作業的打分如下：
+
+- **備註 (20分)**：0分（程式沒有包含對其功能的明確說明）
+- **格式 (25分)**：15分（雖然有基本的縮排，但編碼風格不夠規範）
+- **準確性 (25分)**：20分（程式大部分能產生正確的結果，但有些邏輯錯誤）
+- **邏輯 (30分)**：15分（程式有一些邏輯錯誤，特別是反矩陣部分）
+
+總分：50分
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式能夠讀取使用者輸入的矩陣並進行相乘。
+2. 程式能夠處理整數和浮點數矩陣的相乘。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 反矩陣的計算邏輯有誤。
+3. 程式格式不夠規範，缺乏一致性。
+4. 沒有處理使用者輸入錯誤的情況。
+5. 矩陣乘法的結果顯示時有些錯誤。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class Hw3_1 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int rowA, colA, rowB, colB;
+
+        System.out.print("請輸入A矩陣大小(行 列): ");
+        rowA = sc.nextInt();
+        colA = sc.nextInt();
+        int[][] a = new int[rowA][colA];
+        System.out.print("請輸入A矩陣內容: ");
+        for (int i = 0; i < rowA; i++) {
+            for (int j = 0; j < colA; j++) {
+                a[i][j] = sc.nextInt();
+            }
+        }
+
+        System.out.print("請輸入B矩陣大小(行 列): ");
+        rowB = sc.nextInt();
+        colB = sc.nextInt();
+        int[][] b = new int[rowB][colB];
+        System.out.print("請輸入B矩陣內容: ");
+        for (int i = 0; i < rowB; i++) {
+            for (int j = 0; j < colB; j++) {
+                b[i][j] = sc.nextInt();
+            }
+        }
+
+        int[][] Mult = MatMultiply(a, b);
+        if (Mult != null) {
+            System.out.println("矩陣相乘結果:");
+            for (int i = 0; i < Mult.length; i++) {
+                for (int j = 0; j < Mult[0].length; j++) {
+                    System.out.printf("%2d ", Mult[i][j]);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("矩陣無法相乘");
+        }
+
+        float[][] c = new float[2][2];
+        System.out.print("請輸入inv矩陣內容: ");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                c[i][j] = sc.nextFloat();
+            }
+        }
+
+        float[][] inv = invMatrix(c);
+        if (inv != null) {
+            float[][] UMatrix = MatMultiply(inv, c);
+            System.out.println("反矩陣:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f ", inv[i][j]);
+                }
+                System.out.println();
+            }
+            System.out.println("\n單位矩陣:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f ", UMatrix[i][j]);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("無法計算反矩陣");
+        }
+    }
+
+    public static int[][] MatMultiply(int[][] a, int[][] b) {
+        if (a[0].length != b.length) {
+            return null;
+        }
+        int[][] c = new int[a.length][b[0].length];
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b[0].length; j++) {
+                c[i][j] = 0;
+                for (int k = 0; k < b.length; k++) {
+                    c[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return c;
+    }
+
+    public static float[][] MatMultiply(float[][] a, float[][] b) {
+        if (a[0].length != b.length) {
+            return null;
+        }
+        float[][] c = new float[a.length][b[0].length];
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b[0].length; j++) {
+                c[i][j] = 0;
+                for (int k = 0; k < b.length; k++) {
+                    c[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return c;
+    }
+
+    public static float[][] invMatrix(float[][] a) {
+        float det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+        if (det == 0) {
+            return null;
+        }
+        float[][] b = new float[2][2];
+        b[0][0] = a[1][1] / det;
+        b[0][1] = -a[0][1] / det;
+        b[1][0] = -a[1][0] / det;
+        b[1][1] = a[0][0] / det;
+        return b;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **矩陣大小輸入**：將矩陣大小的輸入改為更清晰的提示，並分別讀取行和列。
+2. **矩陣乘法函數**：修正了矩陣乘法的邏輯錯誤，並在函數開頭檢查矩陣是否可以相乘。
+3. **反矩陣函數**：修正了反矩陣計算的邏輯錯誤，並在函數開頭檢查行列式是否為零。
+4. **格式**：改進了程式的格式，使其更具一致性和可讀性。
+
+### 5. 改進建議和反饋
+
+1. **加入註解**：在程式中加入詳細的註解，說明每個函數的功能和主要步驟。
+2. **錯誤處理**：增加對使用者輸入錯誤的處理，例如輸入不合法的矩陣大小或內容。
+3. **測試**：多做一些測試，特別是邊界條件的測試，確保程式在各種情況下都能正確運行。
+4. **模組化**：將程式進一步模組化，例如將矩陣輸入的部分獨立成一個函數，增加程式的可讀性和可維護性。
+
+希望這些建議能幫助你的學生改進他們的程式碼質量。

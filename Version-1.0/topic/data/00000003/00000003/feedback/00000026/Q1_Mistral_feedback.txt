@@ -1,0 +1,167 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註(滿分20)：15
+- 格式(滿分25)：20
+- 準確性(滿分25)：25
+- 邏輯(滿分30)：25
+
+總分：85分
+
+### 2. 根據我的標準分析它的優缺點
+
+#### 優點：
+1. **功能完整**：程式實現了矩陣乘法和2x2矩陣的逆運算。
+2. **基本格式正確**：程式碼的縮排和基本編碼風格尚可。
+3. **準確性高**：程式能夠正確地計算矩陣乘法和逆矩陣。
+4. **邏輯清晰**：矩陣乘法和逆矩陣的邏輯實現正確。
+
+#### 缺點：
+1. **缺乏註釋**：程式碼缺乏對功能的明確說明，導致備註分數較低。
+2. **格式不夠完美**：部分變數名稱和函數名稱不夠直觀，可以進一步優化。
+3. **邏輯可以優化**：矩陣乘法中的初始化部分可以優化，以避免不必要的運算。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class matwork2 {
+
+    /**
+     * 矩陣乘法函數
+     * @param a 第一個矩陣
+     * @param b 第二個矩陣
+     * @return 乘法結果矩陣，若無法相乘則返回 null
+     */
+    public static double[][] MatMultiply(double[][] a, double[][] b) {
+        if (a[0].length != b.length) {
+            return null;
+        }
+
+        double[][] result = new double[a.length][b[0].length];
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b[0].length; j++) {
+                result[i][j] = 0; // 初始化結果矩陣的元素
+                for (int k = 0; k < a[0].length; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 2x2 矩陣求逆函數
+     * @param matrix 2x2 矩陣
+     * @return 逆矩陣，若無法求逆則返回 null
+     */
+    public static double[][] invMatrix(double[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            return null;
+        }
+
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        if (determinant == 0) {
+            return null;
+        }
+
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse;
+    }
+
+    /**
+     * 打印矩陣
+     * @param matrix 要打印的矩陣
+     */
+    private static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            for (double val : row) {
+                if (val == (int) val) {
+                    System.out.printf("%d ", (int) val);
+                } else {
+                    System.out.printf("%.2f ", val);
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of rows for Matrix A: ");
+        int rowsA = scanner.nextInt();
+        System.out.print("Enter the number of columns for Matrix A: ");
+        int colsA = scanner.nextInt();
+        double[][] matrixA = new double[rowsA][colsA];
+
+        System.out.println("Enter the values for Matrix A:");
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                matrixA[i][j] = scanner.nextDouble();
+            }
+        }
+
+        System.out.print("Enter the number of rows for Matrix B: ");
+        int rowsB = scanner.nextInt();
+        System.out.print("Enter the number of columns for Matrix B: ");
+        int colsB = scanner.nextInt();
+        double[][] matrixB = new double[rowsB][colsB];
+
+        System.out.println("Enter the values for Matrix B:");
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                matrixB[i][j] = scanner.nextDouble();
+            }
+        }
+
+        System.out.println("Matrix A:");
+        printMatrix(matrixA);
+        System.out.println("Matrix B:");
+        printMatrix(matrixB);
+
+        double[][] productAB = MatMultiply(matrixA, matrixB);
+        if (productAB != null) {
+            System.out.println("Product of A and B:");
+            printMatrix(productAB);
+        } else {
+            System.out.println("Matrices cannot be multiplied.");
+        }
+
+        double[][] inverseA = invMatrix(matrixA);
+        if (inverseA != null) {
+            System.out.println("Inverse of Matrix A:");
+            printMatrix(inverseA);
+
+            double[][] productAI = MatMultiply(matrixA, inverseA);
+            System.out.println("Product of A and Inverse of A:");
+            printMatrix(productAI);
+        } else {
+            System.out.println("Matrix A is not invertible.");
+        }
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **添加註釋**：在每個函數前添加註釋，說明函數的功能和參數，以提高程式碼的可讀性和可維護性。
+2. **初始化結果矩陣**：在矩陣乘法中，初始化結果矩陣的元素為0，避免不必要的運算。
+3. **變數名稱和函數名稱**：保持原有的變數名稱和函數名稱，但添加註釋以提高可讀性。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **添加註釋**：在每個函數和重要的代碼塊前添加註釋，說明其功能和用途，這樣不僅有助於自己理解代碼，也便於他人閱讀和維護。
+2. **變數名稱和函數名稱**：選擇直觀的變數名稱和函數名稱，使代碼更易於理解。
+3. **初始化變數**：在使用變數之前，確保其已被正確初始化，避免不必要的錯誤。
+4. **格式一致性**：保持代碼的格式一致性，包括縮排、空行和命名規範，使代碼看起來更整潔和專業。
+5. **邏輯優化**：在實現算法時，考慮是否有更高效的方法來完成任務，避免不必要的運算。
+
+希望這些建議能幫助學生進一步提高程式設計水平。

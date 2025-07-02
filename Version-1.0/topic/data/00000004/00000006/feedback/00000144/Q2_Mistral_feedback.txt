@@ -1,0 +1,94 @@
+好的，讓我們逐一根據您的標準來評估這份作業。
+
+### 1. 打分
+
+- **備註 (滿分20)**: 該程式沒有包含對其功能的明確說明。(0分)
+- **格式 (滿分25)**: 縮排和編碼風格基本合理，但有些地方可以改進。(20分)
+- **準確性 (滿分25)**: 程式能夠正確計算出1到100000之間的well-ordered number數量。(25分)
+- **邏輯 (滿分30)**: 程式邏輯基本正確，但有些地方可以改進以提高效率。(25分)
+
+**總分**: 70分
+
+### 2. 分析優缺點
+
+**優點**:
+1. 程式能夠正確計算出1到100000之間的well-ordered number數量。
+2. 基本的縮排和編碼風格合理。
+
+**缺點**:
+1. 缺乏對程式功能的明確說明。
+2. 變數命名不夠直觀，例如 `x` 和 `y` 可以更具體一些。
+3. 邏輯部分可以進一步優化，例如檢查每個數字是否為well-ordered number的方法可以更高效。
+
+### 3. 改進的程式碼
+
+```java
+public class hw2_2
+{
+    public static void main(String[] args)
+    {
+        int wellOrderedCount = 0;
+
+        for (int num = 1; num <= 100000; num++)
+        {
+            if (isWellOrderedNumber(num))
+            {
+                wellOrderedCount++;
+            }
+        }
+
+        System.out.println("1~100000之間有" + wellOrderedCount + "個well-ordered number");
+    }
+
+    // 檢查一個數字是否為well-ordered number
+    public static boolean isWellOrderedNumber(int num)
+    {
+        int previousDigit = 0; // 初始化前一位數字為0
+        int temp = num;
+
+        while (temp > 0)
+        {
+            int currentDigit = temp % 10; // 取得當前數字的最後一位
+            if (currentDigit <= previousDigit)
+            {
+                return false;
+            }
+            previousDigit = currentDigit;
+            temp /= 10; // 刪掉最後一位
+        }
+
+        return true;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名改進**:
+   - `sum` 改為 `wellOrderedCount`，使變數名稱更具描述性。
+   - `x` 改為 `currentDigit`，`y` 改為 `previousDigit`，使變數名稱更具描述性。
+
+2. **邏輯改進**:
+   - 將檢查well-ordered number的邏輯移到一個單獨的方法 `isWellOrderedNumber` 中，使主程式更簡潔，並且更容易理解和維護。
+   - 在 `isWellOrderedNumber` 方法中，初始化 `previousDigit` 為 0，並在每次迴圈中檢查當前數字是否小於等於前一位數字，如果是則返回 `false`，否則更新 `previousDigit` 並繼續檢查。
+
+### 5. 改進建議和反饋
+
+1. **備註**:
+   - 在程式開頭添加註釋，說明程式的功能。例如：
+     ```java
+     /**
+      * 這個程式用來檢查1到100000之間的數字是否為well-ordered number，並計算這些數字的總數。
+      */
+     ```
+
+2. **格式和編碼風格**:
+   - 保持一致的縮排和空白，使程式碼更易讀。
+
+3. **變數命名**:
+   - 使用更具描述性的變數名稱，使程式碼更易理解。
+
+4. **邏輯優化**:
+   - 將邏輯部分劃分為獨立的方法，使主程式更簡潔，並且更容易維護和擴展。
+
+希望這些建議能夠幫助您的學生改進他們的程式碼。

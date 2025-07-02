@@ -1,0 +1,134 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註 (滿分20)**：10
+  - 該程式未包含對其功能的明確說明。
+
+- **格式 (滿分25)**：15
+  - 程式碼的縮排和編碼風格尚可，但有些地方可以改進。
+
+- **準確性 (滿分25)**：20
+  - 程式在大部分情況下能夠產生正確的結果，但在某些特殊情況下可能會出現問題。
+
+- **邏輯 (滿分30)**：25
+  - 程式的邏輯基本正確，但有些地方可以更簡潔和高效。
+
+**總分**：70
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點**：
+1. 程式能夠正確地讀取矩陣並進行基本的矩陣相乘和求反矩陣操作。
+2. 使用了 Jama 庫來處理矩陣操作，簡化了部分代碼。
+
+**缺點**：
+1. 缺乏對程式功能的明確說明。
+2. 矩陣輸入部分的代碼重複，可以進一步抽象和重構。
+3. 求反矩陣的邏輯僅適用於 2x2 矩陣，對於更大的矩陣無法處理。
+4. 沒有處理用戶輸入的異常情況，例如非法輸入。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+import Jama.Matrix;
+
+public class HW1025 {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        Matrix m1 = readMatrix(sc, "第一個");
+        Matrix m2 = readMatrix(sc, "第二個");
+
+        // 輸出矩陣
+        System.out.printf("\n第一個矩陣為：\n");
+        m1.print(4, 1);
+        System.out.printf("\n第二個矩陣為：\n");
+        m2.print(4, 1);
+        System.out.printf("\n乘上：\n");
+        Matrix res = MatMul(m1, m2);
+        if (res != null) {
+            System.out.printf("\n等於：\n");
+            res.print(4, 1);
+        } else {
+            System.out.printf("無法相乘\n");
+        }
+
+        System.out.printf("\n第一個矩陣的反矩陣為：\n");
+        Matrix invM1 = InvMat(m1);
+        if (invM1 != null) {
+            invM1.print(4, 1);
+        } else {
+            System.out.printf("無法求反矩陣\n");
+        }
+
+        System.out.printf("\n第二個矩陣的反矩陣為：\n");
+        Matrix invM2 = InvMat(m2);
+        if (invM2 != null) {
+            invM2.print(4, 1);
+        } else {
+            System.out.printf("無法求反矩陣\n");
+        }
+
+        sc.close();
+    }
+
+    public static Matrix MatMul(Matrix m1, Matrix m2) {
+        if (m1.getColumnDimension() != m2.getRowDimension()) {
+            return null;
+        }
+        return m1.times(m2);
+    }
+
+    public static Matrix InvMat(Matrix m) {
+        if (m.getRowDimension() != m.getColumnDimension()) {
+            return null;
+        }
+        try {
+            return m.inverse();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Matrix readMatrix(Scanner sc, String matrixName) {
+        System.out.printf("請輸入%s矩陣的列：", matrixName);
+        int r = sc.nextInt();
+        System.out.printf("請輸入%s矩陣的行：", matrixName);
+        int c = sc.nextInt();
+        System.out.printf("請輸入%s矩陣的值：\n", matrixName);
+        double[][] arr = new double[r][c];
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                arr[i][j] = sc.nextDouble();
+            }
+        }
+        return new Matrix(arr);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **加入 `readMatrix` 方法**：
+   - 原因：避免重複的矩陣輸入代碼，使程式碼更簡潔。
+
+2. **改進 `InvMat` 方法**：
+   - 原因：使用 Jama 庫的 `inverse` 方法來處理任意大小的矩陣求反，提高靈活性。
+
+3. **加入異常處理**：
+   - 原因：處理矩陣求反時可能出現的異常情況，提高程式的穩定性。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議**：
+1. 在程式開頭加入詳細的註解，說明程式的功能和各個方法的用途。
+2. 考慮更多的異常情況，例如用戶輸入非法值的情況，並加入相應的處理。
+3. 進一步優化代碼結構，使其更加模塊化和易於維護。
+
+**反饋**：
+1. 你的程式已經能夠完成基本的矩陣相乘和求反矩陣操作，這是一個很好的開始。
+2. 請注意代碼的重構和模塊化，這樣可以提高代碼的可讀性和可維護性。
+3. 多考慮一些特殊情況和異常處理，這樣可以使你的程式更加穩定和健壯。
+
+希望這些建議能夠幫助你進一步提升程式設計的能力。加油！

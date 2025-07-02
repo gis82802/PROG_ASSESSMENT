@@ -1,0 +1,124 @@
+根據您的標準，以下是對這份作業的評分和分析：
+
+### 1. 評分
+- **備註 (滿分20)**: 該程式未包含對其功能的明確說明，缺乏註解和文檔說明。分數: 5
+- **格式 (滿分25)**: 程式碼格式不夠整潔，缺乏適當的縮排和編碼風格。分數: 15
+- **準確性 (滿分25)**: 程式能夠產生正確的結果，但未實現所有要求的功能（如計算整個庫存的價值）。分數: 20
+- **邏輯 (滿分30)**: 程式邏輯基本正確，但缺乏一些必要的功能（如刪除產品和計算整個庫存的價值）。分數: 20
+
+總分: 60
+
+### 2. 優缺點分析
+**優點**:
+1. 基本功能實現，如新增產品、修改數量和顯示產品信息。
+2. 使用了物件導向的概念，創建了`inventory`類別並繼承到`phone`和`beverageshop`類別。
+
+**缺點**:
+1. 缺乏對程式功能的明確說明和註解。
+2. 格式不夠整潔，缺乏適當的縮排和編碼風格。
+3. 未實現刪除產品和計算整個庫存價值的功能。
+4. 變數名稱和函數名稱不夠直觀，難以理解。
+5. 未處理陣列越界的情況。
+
+### 3. 改進的程式碼
+```java
+/*
+ * 名字: 楊峻朋
+ * 學號: 41043229
+ * 班級: 資二乙
+ */
+
+public class Main {
+    public static void main(String[] args) {
+        PhoneStore phoneStore = new PhoneStore();
+        BeverageShop beverageShop = new BeverageShop();
+
+        phoneStore.addItem("samsung", 10, 1000);
+        phoneStore.addItem("asus", 5, 100);
+        phoneStore.showItem(0);
+        phoneStore.changeQuantity(0, -5);
+        phoneStore.showItem(0);
+        System.out.println("Total value of phone store: " + phoneStore.calculateTotalValue());
+
+        beverageShop.addItem("black tea", 5, 10);
+        beverageShop.showItem(0);
+        beverageShop.changeQuantity(0, 15);
+        beverageShop.showItem(0);
+        System.out.println("Total value of beverage shop: " + beverageShop.calculateTotalValue());
+    }
+}
+
+class Inventory {
+    private String[] productNames = new String[100];
+    private int[] quantities = new int[100];
+    private int[] prices = new int[100];
+    private int itemCount = 0;
+
+    public void addItem(String name, int quantity, int price) {
+        productNames[itemCount] = name;
+        quantities[itemCount] = quantity;
+        prices[itemCount] = price;
+        itemCount++;
+    }
+
+    public void removeItem(int index) {
+        if (index >= 0 && index < itemCount) {
+            for (int i = index; i < itemCount - 1; i++) {
+                productNames[i] = productNames[i + 1];
+                quantities[i] = quantities[i + 1];
+                prices[i] = prices[i + 1];
+            }
+            itemCount--;
+        } else {
+            System.out.println("Invalid index");
+        }
+    }
+
+    public void changeQuantity(int index, int change) {
+        if (index >= 0 && index < itemCount) {
+            quantities[index] += change;
+        } else {
+            System.out.println("Invalid index");
+        }
+    }
+
+    public void showItem(int index) {
+        if (index >= 0 && index < itemCount) {
+            System.out.println("Name: " + productNames[index] +
+                               "\nQuantity: " + quantities[index] +
+                               "\nPrice: " + prices[index]);
+        } else {
+            System.out.println("Invalid index");
+        }
+    }
+
+    public int calculateTotalValue() {
+        int totalValue = 0;
+        for (int i = 0; i < itemCount; i++) {
+            totalValue += quantities[i] * prices[i];
+        }
+        return totalValue;
+    }
+}
+
+class PhoneStore extends Inventory {
+}
+
+class BeverageShop extends Inventory {
+}
+```
+
+### 4. 修改部分及原因
+1. **變數名稱和函數名稱**: 將變數名稱和函數名稱改為更直觀的名稱，如`productNames`、`quantities`、`prices`、`addItem`、`removeItem`、`changeQuantity`、`showItem`和`calculateTotalValue`，以提高可讀性。
+2. **新增刪除產品功能**: 實現`removeItem`方法，讓使用者可以刪除產品。
+3. **計算整個庫存價值**: 新增`calculateTotalValue`方法，計算整個庫存的價值。
+4. **檢查陣列越界**: 在`removeItem`、`changeQuantity`和`showItem`方法中新增檢查，確保索引在有效範圍內。
+5. **格式和編碼風格**: 改進程式碼格式，使其更加整潔和易讀。
+
+### 5. 改進建議和反饋
+1. **添加註解和文檔說明**: 在程式碼中添加註解，說明每個類別和方法的功能，以便其他人理解。
+2. **考慮使用動態數組或集合**: 如果數據量較大，可以考慮使用`ArrayList`或其他動態數組來替代固定大小的陣列。
+3. **測試和除錯**: 多進行測試，確保所有功能正常運行，並處理可能出現的異常情況。
+4. **代碼重構**: 如果有重複的代碼或可以簡化的邏輯，考慮進行代碼重構，提高代碼的可維護性。
+
+希望這些建議能幫助您的學生進一步提升程式設計能力。

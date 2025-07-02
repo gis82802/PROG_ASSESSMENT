@@ -1,0 +1,97 @@
+好的，我將根據您的標準對學生的作業進行評估和提供改進建議。
+
+**1. 作業評分：**
+
+*   **備註 (18/20)：** 程式碼開頭有說明程式功能，但可以在 `approximatePi` 函式上方增加函式功能的說明。
+*   **格式 (23/25)：** 程式碼縮排良好，編碼風格基本符合規範。
+*   **準確性 (20/25)：** 程式可以計算出近似的 pi 值，但當 i 值非常大時，由於浮點數精度問題，結果可能不夠精確。
+*   **邏輯 (28/30)：** 程式邏輯正確，使用迴圈計算級數和，並乘以 4 得到 pi 的近似值。缺少判斷 pi=3.14159 的邏輯
+
+**總分：89/100**
+
+**2. 優缺點分析：**
+
+**優點：**
+
+*   **程式碼結構清晰：** 使用 `approximatePi` 函式將計算 pi 的邏輯獨立出來，提高了程式碼的可讀性和可維護性。
+*   **程式碼格式良好：** 縮排和命名規範基本符合標準。
+*   **邏輯正確：** 程式正確實現了計算 pi 近似值的公式。
+
+**缺點：**
+
+*   **缺少函式功能的說明：** 函式 `approximatePi` 的功能可以更明確地在函式上方註釋說明。
+*   **沒有尋找i的最小值：** 程式碼只計算了termsList中的pi值，缺少尋找pi=3.14159時的i最小值。
+*   **浮點數精度問題：** 當 i 值非常大時，由於浮點數的精度限制，計算結果可能不夠準確。雖然這是一個普遍的浮點數問題，但可以考慮使用更高精度的資料型別（例如 `BigDecimal`）來提高準確性。但這不屬於現階段學生程度的要求。
+
+**3. 改進的程式碼：**
+
+```java
+public class hw {
+    public static void main(String[] args) {
+        // Define the list of terms to compute
+        int[] termsList = {10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000};
+
+        // Loop through the terms and calculate the approximate value of pi
+        for (int terms : termsList) {
+            double pi = approximatePi(terms);
+            System.out.printf("For i = %d, pi ≈ %.10f%n", terms, pi);
+        }
+
+        // Find the minimum i for pi ≈ 3.14159
+        int minI = findMinIForPi(3.14159);
+        System.out.printf("Minimum i for pi ≈ 3.14159: %d%n", minI);
+    }
+
+    /**
+     * Approximates the value of pi using the given series.
+     * @param terms The number of terms to use in the series.
+     * @return The approximate value of pi.
+     */
+    public static double approximatePi(int terms) {
+        double piApprox = 0.0;
+
+        // Calculate the sum using the given series
+        for (int i = 0; i < terms; i++) {
+            // Alternating series: add when i is even, subtract when i is odd
+            piApprox += Math.pow(-1, i) / (2 * i + 1);
+        }
+
+        // Multiply the result by 4 to get pi
+        return 4 * piApprox;
+    }
+
+    /**
+     * Finds the minimum i value for which the approximate value of pi is close to the target value.
+     * @param targetPi The target value of pi.
+     * @return The minimum i value.
+     */
+    public static int findMinIForPi(double targetPi) {
+        int i = 1;
+        double piApprox = 0.0;
+        while (Math.abs(piApprox - targetPi) > 0.000005) { // Adjust tolerance as needed
+            piApprox = approximatePi(i);
+            i++;
+        }
+        return i - 1; // Return the last i that satisfies the condition
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **增加了`findMinIForPi`函式：**
+    *   **原因：** 為了尋找使 pi ≈ 3.14159 的最小 i 值，需要一個新的函式來迭代計算 pi 值，直到滿足精度要求。
+    *   **功能：** 這個函式接受目標 pi 值作為參數，使用迴圈不斷增加 i 的值，並計算對應的 pi 近似值。當 pi 近似值與目標 pi 值的差小於一定的容差（這裡設為 0.000005）時，迴圈停止，並返回此時的 i 值。
+*   **增加了`approximatePi`函式註解：**
+     *   **原因：** 更加清楚表達此方程式的功能
+*   **`main`函式中的呼叫：**
+    *   在`main`函式中呼叫`findMinIForPi`函式，並印出結果。
+
+**5. 改進建議和反饋：**
+
+*   **註釋：** 繼續保持良好的註釋習慣，對每個函式的功能進行清晰的說明。
+*   **精度問題：** 了解浮點數的精度限制，並在需要高精度計算時考慮使用 `BigDecimal`。
+*   **演算法效率：** 可以嘗試使用更高效的演算法來計算 pi 的近似值，例如 Chudnovsky 演算法。
+*   **模組化設計：** 繼續保持良好的模組化設計，將程式碼分解為小的、可重用的函式。
+
+總體而言，你的程式碼邏輯清晰，格式良好，基本完成了作業的要求。通過增加尋找最小 i 值的邏輯，可以使程式的功能更加完善。繼續努力！

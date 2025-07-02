@@ -1,0 +1,96 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：0分（沒有對程式功能的明確說明）
+- 格式（滿分25）：20分（縮排和編碼風格基本合理，但可以更好）
+- 準確性（滿分25）：25分（程式能正確產生排序結果）
+- 邏輯（滿分30）：25分（邏輯基本正確，但排序部分可以優化）
+
+總分：70分
+
+### 2. 根據我的標準分析它的優缺點
+
+#### 優點：
+1. 程式能夠正確地讀取輸入並進行排序。
+2. 使用了冒泡排序的基本思想來實現排序。
+
+#### 缺點：
+1. 沒有對程式功能的明確說明。
+2. 排序部分使用了位運算和加減法來交換元素，這樣的做法不太直觀且容易出錯。
+3. 沒有使用Java提供的排序工具（如`Arrays.sort`）來簡化程式碼。
+4. 程式碼結構可以更好地組織，例如將排序邏輯封裝成函數。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class hw181 {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("請輸入陣列的大小: ");
+        int n = sc.nextInt();
+
+        int[] arr = new int[n];
+
+        System.out.print("輸入陣列: ");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        System.out.print("排序前: ");
+        printArray(arr);
+
+        // 使用Java的內建排序方法進行排序
+        Arrays.sort(arr);
+
+        System.out.print("排序小到大: ");
+        printArray(arr);
+
+        // 反轉陣列以實現大到小排序
+        reverseArray(arr);
+
+        System.out.print("排序大到小: ");
+        printArray(arr);
+    }
+
+    // 打印陣列的方法
+    public static void printArray(int[] arr) {
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+
+    // 反轉陣列的方法
+    public static void reverseArray(int[] arr) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left < right) {
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left++;
+            right--;
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **添加備註**：在程式開頭添加對程式功能的說明。
+2. **使用內建排序方法**：使用`Arrays.sort`來進行排序，這樣可以簡化程式碼並提高效率。
+3. **封裝排序和打印陣列的邏輯**：將排序和打印陣列的邏輯封裝成方法，這樣可以提高程式碼的可讀性和可維護性。
+4. **反轉陣列**：通過反轉陣列來實現大到小的排序，這樣可以避免重複編寫排序邏輯。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **添加備註**：在程式開頭添加對程式功能的明確說明，這樣可以幫助他人理解程式的功能。
+2. **使用內建工具**：盡量使用Java提供的內建工具（如`Arrays.sort`）來簡化程式碼並提高效率。
+3. **封裝邏輯**：將重複使用的邏輯封裝成方法，這樣可以提高程式碼的可讀性和可維護性。
+4. **代碼風格**：保持一致的縮排和編碼風格，這樣可以提高程式碼的可讀性。
+5. **變數命名**：確保變數命名直觀且有意義，這樣可以幫助他人理解程式碼。
+
+希望這些建議能夠幫助學生改進他們的程式設計技能。

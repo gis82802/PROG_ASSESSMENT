@@ -1,0 +1,186 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註 (20分)：15分
+- 格式 (25分)：20分
+- 準確性 (25分)：20分
+- 邏輯 (30分)：25分
+
+總分：80分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式功能描述清晰，備註部分有提供作者、日期和版本資訊。
+2. 程式碼格式整齊，縮排和編碼風格基本符合規範。
+3. 程式功能基本正確，能夠新增和移除產品，調整數量，並計算庫存價值。
+
+**缺點：**
+1. 備註部分缺乏對程式功能的詳細說明，例如每個方法的功能描述。
+2. `Decrease_Product` 方法邏輯有誤，導致移除產品時可能會出現錯誤。
+3. `Decrease_Count` 方法中對產品數量的檢查不夠完善。
+4. 當產品數量為負數時，`print` 方法會繼續列印產品資訊。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+   Author:資工二乙 41043238 劉章佑
+   datetime: 2023/03/14
+   version:1.0
+   程式功能:建立一個類別 "Inventory"(庫存) 具有屬性像是：產品名稱、數量、價格，並且提供成員函式可以讓使用者新增產品、減少產品、新增數量、減少數量、以及計算整個庫存的價值。在主程式中建立二個庫存物件，分別給飲料店、以及3C手機店可以記錄其庫存。
+*/
+class Product {
+    private String productName;
+    private int count;
+    private int price;
+
+    Product(String productName, int count, int price) {
+        this.productName = productName;
+        this.count = count;
+        this.price = price;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getName() {
+        return productName;
+    }
+}
+
+class Inventory {
+    private Product[] products;
+
+    Inventory() {
+        products = new Product[0];
+    }
+
+    void Increase_Product(Product product) {
+        Product[] newProducts = new Product[products.length + 1]; // 建立新的產品陣列
+        for (int i = 0; i < products.length; i++) {
+            newProducts[i] = products[i];
+        }
+        newProducts[products.length] = product;
+        products = newProducts;
+    }
+
+    void Decrease_Product(Product product) {
+        Product[] newProducts = new Product[products.length - 1]; // 建立新的產品陣列
+        int index = 0;
+        for (int i = 0; i < products.length; i++) {
+            if (!products[i].getName().equals(product.getName())) {
+                newProducts[index++] = products[i];
+            }
+        }
+        products = newProducts;
+    }
+
+    void Increase_Count(String productName, int count) {
+        for (int i = 0; i < products.length; i++) {
+            if (products[i].getName().equals(productName)) { // 如果產品名稱和傳入的產品名稱相同，則將對應的位置，新增產品數量
+                products[i].setCount(products[i].getCount() + count);
+                break;
+            }
+        }
+    }
+
+    void Decrease_Count(String productName, int count) {
+        for (int i = 0; i < products.length; i++) {
+            if (products[i].getName().equals(productName)) { // 如果產品名稱和傳入的產品名稱相同，則將對應的位置，減少產品數量
+                int newCount = products[i].getCount() - count;
+                if (newCount >= 0) { // 如果減少過後的產品數量，有大於等於0 才將數量放回對應的位置
+                    products[i].setCount(newCount);
+                } else {
+                    System.out.println("減少的產品數量不可以小於 0");
+                }
+                break;
+            }
+        }
+    }
+
+    int Inventory_Value() {
+        int value = 0;
+        for (int i = 0; i < products.length; i++) {
+            value += products[i].getCount() * products[i].getPrice();
+        }
+        return value;
+    }
+
+    public void print() {
+        for (int i = 0; i < products.length; i++) {
+            if (products[i].getCount() > 0) {
+                System.out.println("   產品名稱:" + products[i].getName() + "，" + "產品數量:" + products[i].getCount() + "，" + "產品價值:" + products[i].getPrice());
+            }
+        }
+    }
+}
+
+public class HomeWork1 {
+    public static void main(String args[]) {
+        Inventory beverage_Shop = new Inventory();
+        beverage_Shop.Increase_Product(new Product("Coca-cola", 100, 10));
+        beverage_Shop.Increase_Product(new Product("紅茶", 20, 5));
+        beverage_Shop.Decrease_Product(new Product("紅茶", 20, 5));
+        beverage_Shop.Increase_Count("Coca-cola", 5);
+        // beverage_Shop.Decrease_Count("Coca-cola", 106); // 執行例外條件:減少的產品數量不可以小於 0
+        int beverage_Shop_Value = beverage_Shop.Inventory_Value();
+        System.out.println("飲料店的產品項目");
+        beverage_Shop.print();
+        System.out.println("整個庫存價值:" + beverage_Shop_Value);
+        System.out.println();
+
+        Inventory Phone_Shop = new Inventory();
+        Phone_Shop.Increase_Product(new Product("Apple", 20, 1000));
+        Phone_Shop.Increase_Product(new Product("三星", 10, 500));
+        Phone_Shop.Increase_Count("三星", 5);
+        Phone_Shop.Decrease_Product(new Product("Apple", 20, 1000));
+        int Phone_Shop_Value = Phone_Shop.Inventory_Value();
+        System.out.println("3C手機店的產品項目");
+        Phone_Shop.print();
+        System.out.println("整個庫存價值:" + Phone_Shop_Value);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **修改變數名稱：**
+   - 將 `Product_name` 改為 `productName`，使變數名稱更符合 Java 命名規範。
+
+2. **修改 `Decrease_Product` 方法：**
+   - 使用 `equals` 方法比較字串，而不是 `==`，避免字串比較錯誤。
+
+3. **修改 `Increase_Count` 和 `Decrease_Count` 方法：**
+   - 使用 `equals` 方法比較字串，確保字串比較的正確性。
+
+4. **修改 `print` 方法：**
+   - 修改條件判斷，確保只列印產品數量大於 0 的產品資訊。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **加強備註：**
+   - 在每個方法和類別的開頭加上詳細的註解，說明其功能和用途。
+
+2. **變數命名：**
+   - 使用更直觀的變數名稱，例如 `productName` 而不是 `Product_name`。
+
+3. **方法邏輯：**
+   - 確保方法邏輯正確，避免使用 `==` 比較字串，應使用 `equals` 方法。
+
+4. **錯誤處理：**
+   - 在 `Decrease_Count` 方法中，當減少的產品數量小於 0 時，應該拋出例外或返回錯誤信息，而不是繼續執行。
+
+**反饋：**
+- 總體來說，這份作業展示了對物件導向程式設計的基本理解，但在細節上還有改進空間。
+- 請多加強對 Java 基本語法和編碼風格的理解，特別是字串比較和變數命名。
+- 多加練習錯誤處理和例外情況的處理，確保程式在各種情況下都能正確運行。

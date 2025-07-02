@@ -1,0 +1,178 @@
+### 1. 打分
+**備註(滿分20)：** 10
+- 程式包含了對功能的說明，但不夠詳細，缺乏對矩陣相乘和反矩陣計算的具體說明。
+
+**格式(滿分25)：** 20
+- 程式的縮排和編碼風格基本符合標準，但部分變數命名不夠直觀。
+
+**準確性(滿分25)：** 20
+- 程式在大部分情況下能產生正確的結果，但在矩陣相乘的初始化部分有一個小錯誤。
+
+**邏輯(滿分30)：** 25
+- 程式的邏輯基本正確，但在矩陣相乘的初始化部分有一個小錯誤。
+
+**總分：** 75
+
+### 2. 分析優缺點
+**優點：**
+1. 程式結構清晰，功能完整，能夠正確計算矩陣相乘和反矩陣。
+2. 使用了適當的條件判斷來確保矩陣相乘和反矩陣計算的合法性。
+3. 適當的錯誤處理，當矩陣無法相乘或反矩陣無法計算時，返回null。
+
+**缺點：**
+1. 矩陣相乘的初始化部分有一個小錯誤，導致結果不準確。
+2. 變數命名不夠直觀，部分變數名稱可以更具描述性。
+3. 缺乏對功能的詳細說明，難以理解程式的具體實現方式。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class MatrixOperations {
+
+    // 矩陣相乘的函式
+    public static double[][] MatMultiply(double[][] matrixA, double[][] matrixB) {
+        // 確認兩個矩陣的大小是否符合相乘條件
+        if (matrixA[0].length != matrixB.length) {
+            return null; // 無法相乘
+        }
+
+        int rowsA = matrixA.length;
+        int colsA = matrixA[0].length;
+        int colsB = matrixB[0].length;
+
+        double[][] result = new double[rowsA][colsB];
+
+        // 計算矩陣相乘
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                result[i][j] = 0; // 初始化結果矩陣的元素
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+            }
+        }
+        return result; // 回傳相乘的結果
+    }
+
+    // 計算 2x2 矩陣的反矩陣的函式
+    public static double[][] invMatrix(double[][] matrix) {
+        // 確保矩陣是 2x2
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            return null;
+        }
+
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // 檢查行列式是否為 0
+        if (determinant == 0) {
+            return null; // 無法計算反矩陣
+        }
+
+        // 計算反矩陣
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse; // 回傳反矩陣
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 讀取矩陣A的大小
+        System.out.print("請輸入矩陣A的行數和列數（格式：行 列）：");
+        int rowsA = scanner.nextInt();
+        int colsA = scanner.nextInt();
+        double[][] matrixA = new double[rowsA][colsA];
+
+        // 讀取矩陣A的數值
+        System.out.println("請輸入矩陣A的數值：");
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                System.out.print("A[" + i + "][" + j + "] = ");
+                matrixA[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 讀取矩陣B的大小
+        System.out.print("請輸入矩陣B的行數和列數（格式：行 列）：");
+        int rowsB = scanner.nextInt();
+        int colsB = scanner.nextInt();
+        double[][] matrixB = new double[rowsB][colsB];
+
+        // 讀取矩陣B的數值
+        System.out.println("請輸入矩陣B的數值：");
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                System.out.print("B[" + i + "][" + j + "] = ");
+                matrixB[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 矩陣相乘
+        double[][] product = MatMultiply(matrixA, matrixB);
+
+        // 顯示相乘的結果
+        if (product != null) {
+            System.out.println("矩陣相乘的結果:");
+            for (double[] row : product) {
+                for (double value : row) {
+                    System.out.print(value + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("無法完成相乘運算");
+        }
+
+        // 如果矩陣A是2x2，則計算反矩陣
+        if (rowsA == 2 && colsA == 2) {
+            double[][] inverse = invMatrix(matrixA);
+
+            // 顯示反矩陣的結果
+            if (inverse != null) {
+                System.out.println("反矩陣A:");
+                for (double[] row : inverse) {
+                    for (double value : row) {
+                        System.out.print(value + " ");
+                    }
+                    System.out.println();
+                }
+
+                // 驗證反矩陣的正確性
+                double[][] identity = MatMultiply(matrixA, inverse);
+                System.out.println("原矩陣A與其反矩陣的相乘結果（應為單位矩陣）:");
+                for (double[] row : identity) {
+                    for (double value : row) {
+                        System.out.print(value + " ");
+                    }
+                    System.out.println();
+                }
+            } else {
+                System.out.println("無法計算反矩陣");
+            }
+        } else {
+            System.out.println("矩陣A不是2x2，無法計算反矩陣。");
+        }
+
+        // 關閉掃描器
+        scanner.close();
+    }
+}
+```
+
+### 4. 修改的部分及原因
+1. **初始化結果矩陣的元素：**
+   - **原因：** 在矩陣相乘的過程中，結果矩陣的元素需要初始化為0，否則會導致結果不準確。
+   - **修改：** 在矩陣相乘的迴圈中，添加了 `result[i][j] = 0;` 來初始化結果矩陣的元素。
+
+### 5. 改進建議和反饋
+1. **詳細說明功能：** 在程式碼中添加更多的註解，詳細說明每個函式的功能和實現方式，以便更好地理解程式。
+2. **變數命名：** 使用更具描述性的變數名稱，例如 `rowsA` 和 `colsA` 可以改為 `matrixARows` 和 `matrixACols`。
+3. **錯誤處理：** 在矩陣相乘和反矩陣計算的過程中，添加更多的錯誤處理，確保程式在不同情況下都能夠正確運行。
+4. **測試：** 增加更多的測試案例，確保程式在不同輸入情況下都能夠正確運行。
+
+希望這些建議能夠幫助學生進一步改進他們的程式碼。

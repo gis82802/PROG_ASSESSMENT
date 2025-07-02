@@ -1,0 +1,99 @@
+好的，我將根據您的標準評估這份Java作業，並提供改進建議和程式碼。
+
+**1. 作業評分:**
+
+*   **備註 (20/20):** 程式碼包含檔案名稱、功能說明、作者、日期和版本資訊。說明清晰明確，完整提供了程式資訊，**滿分**。
+*   **格式 (23/25):** 程式碼縮排正確，風格一致，易於閱讀。但可以考慮在 `main` 方法內增加一些空行，將輸入、反轉和輸出部分隔開，增加可讀性。**扣2分**。
+*   **準確性 (25/25):** 程式可以正確反轉數字，包括末尾帶有零的數字。**滿分**。
+*   **邏輯 (30/30):** 使用 `while` 迴圈和取餘數運算，反轉數字的邏輯正確高效。**滿分**。
+
+**總分: 98/100**
+
+**2. 優缺點分析:**
+
+*   **優點:**
+    *   **程式碼簡潔易懂:** 使用了迴圈和基本的數學運算，邏輯清晰。
+    *   **功能完整:** 可以正確反轉正整數，包括末尾帶零的情況。
+    *   **備註完善:** 提供了程式的基本資訊，方便理解。
+    *   **格式良好:** 程式碼縮排和風格一致，易於閱讀。
+*   **缺點:**
+    *   **沒有處理負數的情況:** 如果輸入負數，程式會產生不符合預期的結果。雖然題目沒有明確說明要處理負數，但考慮到程式的健壯性，可以增加對負數的處理。
+    *   **沒有錯誤處理:** 沒有對輸入進行驗證。如果使用者輸入非整數，程式會拋出異常。
+    *   **可以增加可讀性:** 在 `main` 方法內增加一些空行，將輸入、反轉和輸出部分隔開。
+
+**3. 改進的程式碼:**
+
+```java
+/*
+filename:app5_3
+function:Reverse number
+author:PoXsun
+date:2024/10/11
+version:11.0.12
+*/
+
+import java.util.Scanner;
+
+public class app5_3 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("請輸入一個數字: ");
+
+        if (scanner.hasNextInt()) { // 檢查輸入是否為整數
+            int number = scanner.nextInt();
+
+            int reversed = reverse(number);
+
+            System.out.println("反轉後的數字是: " + reversed);
+        } else {
+            System.out.println("輸入錯誤：請輸入一個整數。");
+        }
+
+        scanner.close(); // 關閉scanner
+    }
+
+    public static int reverse(int number) {
+        int reversed = 0;
+        int sign = 1;  // 預設為正數
+        if (number < 0) {
+            sign = -1; // 如果是負數，sign設為-1
+            number = -number; // 將number轉為正數計算
+        }
+
+        while (number != 0) {
+            int pop = number % 10;
+            // 檢查是否溢位
+            if (reversed > Integer.MAX_VALUE / 10 || (reversed == Integer.MAX_VALUE / 10 && pop > 7)) {
+                return 0; // 整數溢位
+            }
+            if (reversed < Integer.MIN_VALUE / 10 || (reversed == Integer.MIN_VALUE / 10 && pop < -8)) {
+                return 0; // 整數溢位
+            }
+
+            reversed = reversed * 10 + pop;
+            number /= 10;
+        }
+
+        return reversed * sign; // 返回帶符號的結果
+    }
+}
+```
+
+**4. 修改說明:**
+
+*   **錯誤處理 (Error Handling):**
+    *   在 `main` 方法中，增加了 `scanner.hasNextInt()` 來檢查使用者是否輸入了整數。如果不是整數，則輸出錯誤訊息，避免程式拋出異常。
+    *   在 `reverse` 方法中，增加了Integer.MAX_VALUE和Integer.MIN_VALUE溢位判斷。
+*   **負數處理 (Negative Number Handling):**
+    *   在 `reverse` 方法中，增加了對負數的處理。如果輸入的數字是負數，則記錄其符號，然後將數字轉換為正數進行反轉，最後再將符號加回結果中。
+*   **關閉Scanner (Close Scanner):**
+    *   在 `main` 方法中，增加了`scanner.close();` 用於關閉scanner，避免資源洩漏。
+
+**5. 改進建議和反饋:**
+
+*   **程式碼風格:** 程式碼風格總體良好，可以繼續保持。注意在 `main` 方法中使用空行分隔不同的邏輯部分，提高可讀性。
+*   **錯誤處理:** 程式現在可以處理非整數輸入和負數，提高了程式的健壯性。可以考慮添加更詳細的錯誤訊息，例如，告知使用者輸入的數字範圍。
+*   **程式碼擴展:** 可以考慮添加對輸入數字範圍的限制，避免整數溢位。雖然改進後的程式碼有考慮溢位的情況，但如果能夠從一開始就限制輸入的數字範圍，可以避免不必要的計算。
+*   **測試:** 嘗試使用不同的測試案例（正數、負數、零、大數、小數）來測試程式，確保程式在各種情況下都能正常工作。
+
+總體來說，你的程式碼寫得不錯，邏輯清晰，功能完整。通過增加錯誤處理和對負數的處理，可以進一步提高程式的品質。繼續保持良好的編碼習慣，並不斷學習新的知識，你會成為一名優秀的程式設計師！

@@ -1,0 +1,171 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註（滿分20）**：15
+  - 該程式包含了一些對功能的說明，但不夠詳細，特別是對於矩陣相乘的條件和反矩陣的計算部分。
+
+- **格式（滿分25）**：20
+  - 程式的縮排和編碼風格基本上是正確的，但可以在某些地方進一步改進，例如變數名稱和註解的使用。
+
+- **準確性（滿分25）**：20
+  - 程式在特定情況下可以產生正確的結果，但沒有處理矩陣大小不匹配的情況。
+
+- **邏輯（滿分30）**：25
+  - 程式的邏輯基本上是正確的，但在處理矩陣相乘和反矩陣的計算時，缺乏對輸入矩陣大小的檢查。
+
+**總分**：80
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點**：
+1. 程式實現了矩陣相乘和反矩陣的計算，並且能夠正確輸出結果。
+2. 使用了適當的縮排和編碼風格，程式碼結構清晰。
+3. 提供了基本的註解，說明了主要功能。
+
+**缺點**：
+1. 沒有處理矩陣大小不匹配的情況，這可能會導致程式在某些輸入下崩潰。
+2. 變數名稱不夠直觀，例如 `array1` 和 `array2` 可以改為 `matrix1` 和 `matrix2`。
+3. 缺乏對矩陣相乘和反矩陣計算的詳細說明。
+4. 反矩陣計算時沒有處理矩陣不可逆的情況。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class Main {
+
+    // 計算兩個矩陣的乘積，並返回結果
+    public static int[][] matMultiply(int[][] matrix1, int[][] matrix2) {
+        if (matrix1[0].length != matrix2.length) {
+            System.out.println("矩陣大小不匹配，無法相乘");
+            return null;
+        }
+
+        int[][] result = new int[matrix1.length][matrix2[0].length];
+        for (int i = 0; i < matrix1.length; i++) {
+            for (int j = 0; j < matrix2[0].length; j++) {
+                for (int k = 0; k < matrix2.length; k++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // 計算 2x2 矩陣的反矩陣，並返回結果
+    public static double[][] inverseMatrix(int[][] matrix) {
+        double det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]; // 行列式
+
+        if (det == 0) {
+            System.out.println("矩陣不可逆");
+            return null;
+        }
+
+        double invDet = 1.0 / det;
+        double[][] inv = new double[2][2];
+        inv[0][0] = invDet * matrix[1][1];
+        inv[0][1] = invDet * -matrix[0][1];
+        inv[1][0] = invDet * -matrix[1][0];
+        inv[1][1] = invDet * matrix[0][0];
+        return inv;
+    }
+
+    // 輸出矩陣
+    public static void printMatrix(double[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.printf("%.2f ", matrix[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    // 輸出矩陣
+    public static void printMatrix(int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 讓使用者輸入兩個矩陣
+        System.out.println("請輸入第1個矩陣的行數:");
+        int rows1 = scanner.nextInt();
+        System.out.println("請輸入第1個矩陣的列數:");
+        int cols1 = scanner.nextInt();
+        int[][] matrix1 = new int[rows1][cols1];
+
+        System.out.println("請輸入第1個矩陣的元素:");
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
+                matrix1[i][j] = scanner.nextInt();
+            }
+        }
+
+        System.out.println("請輸入第2個矩陣的行數:");
+        int rows2 = scanner.nextInt();
+        System.out.println("請輸入第2個矩陣的列數:");
+        int cols2 = scanner.nextInt();
+        int[][] matrix2 = new int[rows2][cols2];
+
+        System.out.println("請輸入第2個矩陣的元素:");
+        for (int i = 0; i < rows2; i++) {
+            for (int j = 0; j < cols2; j++) {
+                matrix2[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 計算矩陣乘法
+        int[][] result = matMultiply(matrix1, matrix2);
+        if (result != null) {
+            System.out.println("相乘後的矩陣為:");
+            printMatrix(result);
+
+            // 計算反矩陣
+            double[][] inverse = inverseMatrix(result);
+            if (inverse != null) {
+                System.out.println("相乘後的矩陣的反矩陣為:");
+                printMatrix(inverse);
+            }
+        }
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **矩陣大小檢查**：
+   - 在 `matMultiply` 函式中加入了矩陣大小檢查，確保第一個矩陣的列數等於第二個矩陣的行數，這樣才能進行矩陣相乘。
+
+2. **變數名稱**：
+   - 將 `array1` 和 `array2` 改為 `matrix1` 和 `matrix2`，使變數名稱更直觀。
+
+3. **反矩陣計算**：
+   - 在 `inverseMatrix` 函式中加入了矩陣不可逆的處理，當行列式為零時返回 null。
+
+4. **輸入矩陣大小**：
+   - 在 `main` 函式中加入了矩陣大小的輸入，使程式能夠處理不同大小的矩陣，而不僅僅是 2x2 矩陣。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加註解**：
+   - 在程式碼中增加更多的註解，說明每一部分的功能和邏輯，這樣可以幫助其他人更好地理解你的程式碼。
+
+2. **處理例外情況**：
+   - 在程式碼中處理更多的例外情況，例如矩陣大小不匹配和矩陣不可逆的情況，這樣可以提高程式的健壯性。
+
+3. **變數命名**：
+   - 使用更直觀的變數名稱，這樣可以提高程式碼的可讀性。
+
+4. **模組化設計**：
+   - 將程式碼分成更小的模組，每個模組負責一個特定的功能，這樣可以提高程式碼的可維護性和可重用性。
+
+5. **測試**：
+   - 在程式碼中加入更多的測試案例，確保程式在不同的輸入下都能夠正確運行。

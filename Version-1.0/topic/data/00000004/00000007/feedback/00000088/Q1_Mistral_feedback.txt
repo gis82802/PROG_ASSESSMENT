@@ -1,0 +1,134 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註 (滿分20)**: 0 分
+  - 該程式沒有包含對其功能的明確說明。
+
+- **格式 (滿分25)**: 15 分
+  - 程式的縮排和編碼風格基本正確，但缺乏一些基本的注釋和文件說明。
+
+- **準確性 (滿分25)**: 20 分
+  - 程式能夠正確地輸出排序前和排序後的結果。
+
+- **邏輯 (滿分30)**: 25 分
+  - 程式的邏輯基本正確，但可以改進。
+
+**總分**: 60 分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點**:
+1. 程式能夠正確地實現排序功能。
+2. 基本的縮排和編碼風格正確。
+
+**缺點**:
+1. 缺乏對程式功能的明確說明和注釋。
+2. 變數名稱不夠直觀，例如 `snc` 和 `m`。
+3. 排序算法可以改進，目前使用的是泡沫排序，效率較低。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class ArraySort {
+    public static void main(String args[]) {
+        // 創建Scanner對象
+        Scanner scanner = new Scanner(System.in);
+
+        // 提示用戶輸入陣列長度
+        System.out.println("請輸入陣列長度:");
+        int size = scanner.nextInt();
+
+        // 創建整數陣列
+        int array[] = new int[size];
+
+        // 提示用戶輸入陣列內容
+        System.out.println("請輸入陣列元素:");
+        for (int i = 0; i < size; i++) {
+            array[i] = scanner.nextInt();
+        }
+
+        // 輸出排序前的陣列
+        System.out.print("排序前: ");
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+
+        // 使用快速排序算法對陣列進行排序
+        quickSort(array, 0, array.length - 1);
+
+        // 輸出排序後的陣列
+        System.out.print("排序後: ");
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+
+        // 關閉Scanner對象
+        scanner.close();
+    }
+
+    // 快速排序算法
+    public static void quickSort(int[] array, int low, int high) {
+        if (low < high) {
+            int pi = partition(array, low, high);
+
+            quickSort(array, low, pi - 1);  // 排序左半部分
+            quickSort(array, pi + 1, high); // 排序右半部分
+        }
+    }
+
+    // 分區函數
+    public static int partition(int[] array, int low, int high) {
+        int pivot = array[high];
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (array[j] < pivot) {
+                i++;
+
+                // 交換 array[i] 和 array[j]
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        // 交換 array[i+1] 和 array[high] (或樞紐元素)
+        int temp = array[i + 1];
+        array[i + 1] = array[high];
+        array[high] = temp;
+
+        return i + 1;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數名稱**:
+   - 將 `snc` 改為 `scanner`，使其更具描述性。
+   - 將 `m` 改為 `temp`，使其更具描述性。
+
+2. **排序算法**:
+   - 將原來的泡沫排序改為快速排序，提高排序效率。
+
+3. **注釋**:
+   - 增加了對程式功能的簡單說明和注釋，使程式更易讀。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加注釋**:
+   - 在程式中增加詳細的注釋，說明每一部分的功能，這有助於其他人理解你的程式。
+
+2. **變數命名**:
+   - 使用具描述性的變數名稱，這樣可以使程式更易讀和維護。
+
+3. **選擇合適的排序算法**:
+   - 根據需求選擇合適的排序算法，例如快速排序、合併排序等，這樣可以提高程式的效率。
+
+4. **資源管理**:
+   - 記得在程式結束時關閉 `Scanner` 對象，這樣可以釋放資源。
+
+5. **測試**:
+   - 多進行測試，確保程式在不同情況下都能正確運行。

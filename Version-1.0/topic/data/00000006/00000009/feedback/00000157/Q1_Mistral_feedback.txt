@@ -1,0 +1,226 @@
+### 評分
+根據您的標準，這份作業的評分如下：
+
+- **備註 (20分)**: 該程式包含對其功能的明確說明，但缺乏一些細節，例如如何判斷勝利條件。得分：15/20
+- **格式 (25分)**: 程式碼的縮排和編碼風格基本上是合理的，但有些地方可以改進，例如變數命名和註解的位置。得分：20/25
+- **準確性 (25分)**: 程式能夠正確地運行並產生預期的結果，但在某些情況下可能會出現錯誤（例如邊界檢查）。得分：20/25
+- **邏輯 (30分)**: 程式的邏輯基本上是正確的，但在某些地方可以改進，例如勝利條件的檢查和輸入的處理。得分：25/30
+
+總分：80/100
+
+### 優缺點分析
+
+**優點：**
+1. 程式碼結構清晰，分為不同的類別（ChessBoard, Player, Piece, Game），每個類別負責不同的功能。
+2. 程式能夠正確地運行並顯示井字棋遊戲的狀態。
+3. 包含基本的輸入處理和勝利條件檢查。
+
+**缺點：**
+1. 變數命名不夠直觀，例如 `HUMAN_CRO` 和 `HUMAN_NOU` 可以改為 `PLAYER_CROSS` 和 `PLAYER_NOUGHT`。
+2. 勝利條件檢查的邏輯可以簡化和改進。
+3. 輸入處理不夠嚴謹，例如沒有處理非法輸入的情況。
+4. 缺乏詳細的註解和說明，特別是在勝利條件檢查和輸入處理部分。
+
+### 改進的程式碼
+
+```java
+/*
+    資工二甲 41143145 楊柏文
+    0307 上課練習
+    井字遊戲
+    玩家1為圈 玩家2為叉 每回合需要輸入座標下棋
+    ex : Player1's time
+        input : 0 0
+        output : |O  |   |
+                 -----------
+                 |   |   |
+                 -----------
+                 |   |   |
+    (0,0)位置處會打圈 接著換玩家2輸入
+    直到有人連成一線或是全部都填滿了遊戲才會結束
+
+    date: 03/10
+
+ */
+import java.util.Scanner ;
+
+class ChessBoard
+{
+    Piece [][] size ;
+    ChessBoard(){
+        size = new Piece[3][3] ;                         //預設為井字遊戲
+    }
+    ChessBoard(int length , int width){
+        size = new Piece [length][width] ;               //可以更動棋盤的長跟寬 以加入其他遊戲
+    }
+    public void show() {
+        for(int i = 0 ; i < size.length ; i++)
+        {
+            System.out.printf("|");
+            for(int j = 0 ; j < size[0].length ; j++)
+            {
+                System.out.printf("%s  ",size[i][j].shape);
+                if(j != size[0].length-1 )System.out.printf("|");
+            }
+            System.out.println() ;
+            if(i != size.length -1 )System.out.println("-----------");
+        }
+        System.out.println();
+    }
+}
+
+class Player
+{
+    int mode ;
+    String shape ;
+    Player(int mode) {
+        this.mode = mode ;
+        if(mode == 1 ) shape = "O";
+        if(mode == 2 ) shape = "X";
+    }
+    public void setPiece (ChessBoard board , int x , int y)
+    {
+        if(check(board , x , y))board.size[x][y] = new Piece(shape) ;
+    }
+    boolean check (ChessBoard board , int x , int y){
+        if(x >= board.size.length || y >= board.size[0].length || x < 0 || y < 0){
+            System.out.println("The x or y out of range!!");
+            return false ;
+        }
+        else if (board.size[x][y].shape != " ")
+        {
+            System.out.println("This place has already use !");
+            return false ;
+        }
+        return true ;
+    }
+}
+
+class Piece{
+    String shape ;
+    Piece(){
+        shape = " " ;
+    }
+    Piece(String shape)
+    {
+        this.shape = shape ;
+    }
+}
+
+class Game{
+    ChessBoard newGame ;
+    Game(){
+         newGame = new ChessBoard();
+    }
+    public void start(){
+        System.out.println("The TicTacToeGame Start!") ;
+        for(int i = 0 ; i < newGame.size.length; i++)               //對棋盤初始化
+        {
+            for(int j = 0 ; j < newGame.size[0].length ; j++)
+            {
+                newGame.size[i][j] = new Piece() ;
+            }
+        }
+        newGame.show();
+    }
+    boolean checkWin(String shape){
+        for(int i = 0 ; i < newGame.size.length ; i++){
+            if(newGame.size[i][0].shape.equals(shape) && newGame.size[i][1].shape.equals(shape) && newGame.size[i][2].shape.equals(shape))
+                return true ;
+        }
+        for(int i = 0 ; i < newGame.size.length ; i++){
+            if(newGame.size[0][i].shape.equals(shape) && newGame.size[1][i].shape.equals(shape) && newGame.size[2][i].shape.equals(shape))
+                return true ;
+        }
+        if(newGame.size[0][0].shape.equals(shape) && newGame.size[1][1].shape.equals(shape) && newGame.size[2][2].shape.equals(shape)) return true ;
+        if(newGame.size[0][2].shape.equals(shape) && newGame.size[1][1].shape.equals(shape) && newGame.size[2][0].shape.equals(shape)) return true ;
+        return false ;
+    }
+    public void checkGameOver(){
+        boolean allFull = true ;
+        for(int i = 0 ; i < newGame.size.length ; i++)
+        {
+            for(int j = 0 ; j < newGame.size[0].length ; j++)
+            {
+                if(newGame.size[i][j].shape.equals(" "))
+                {
+                    allFull = false ;
+                    break ;
+                }
+            }
+        }
+
+        if(checkWin("O")){
+            System.out.println("The game is over . Cross Win!") ;
+            System.exit(0);
+        }
+        else if(checkWin("X")){
+            System.out.println("The game is over . Nought Win!");
+            System.exit(0);
+        }
+        else if(!checkWin("O") && !checkWin("X") && allFull){
+            System.out.println("The game is over . Tie! No one win the game") ;
+            System.exit(0);
+        }
+        else{
+            System.out.println("The game is not over . Please continue!");
+        }
+    }
+}
+
+public class TicTacToeDesign_Full {
+    public static void main(String[] args)
+    {
+        final int PLAYER_CROSS = 1 ;
+        final int PLAYER_NOUGHT = 2 ;
+        Game TTTGame = new Game() ;
+        TTTGame.start();
+        Player playerA = new Player(PLAYER_CROSS);  // 建立一個玩家 playerA 當圈
+        Player playerB = new Player(PLAYER_NOUGHT);  // 建立一個玩家 playerB 當叉
+        System.out.println("Player1 is Cross(O) , Player2 is Nought(X)");
+        Scanner scn = new Scanner(System.in) ;
+        while (true)
+        {
+            int x = 0, y = 0 ;
+            System.out.println("Player1's time");
+            x = scn.nextInt() ;
+            y = scn.nextInt() ;
+            while (!playerA.check(TTTGame.newGame, x, y)) {
+                System.out.println("Please enter a valid position:");
+                x = scn.nextInt() ;
+                y = scn.nextInt() ;
+            }
+            playerA.setPiece(TTTGame.newGame, x , y);
+            TTTGame.newGame.show();
+            TTTGame.checkGameOver();
+            System.out.println("Player2's time");
+            x = scn.nextInt() ;
+            y = scn.nextInt() ;
+            while (!playerB.check(TTTGame.newGame, x, y)) {
+                System.out.println("Please enter a valid position:");
+                x = scn.nextInt() ;
+                y = scn.nextInt() ;
+            }
+            playerB.setPiece(TTTGame.newGame, x , y );
+            TTTGame.newGame.show();
+            TTTGame.checkGameOver();
+        }
+    }
+}
+```
+
+### 修改的部分及原因
+
+1. **變數命名**：將 `HUMAN_CRO` 和 `HUMAN_NOU` 改為 `PLAYER_CROSS` 和 `PLAYER_NOUGHT`，使變數名稱更直觀。
+2. **邊界檢查**：在 `Player` 類別的 `check` 方法中，將邊界檢查改為使用棋盤的長度和寬度，而不是硬編碼的值。
+3. **勝利條件檢查**：在 `checkWin` 方法中，使用 `.equals` 方法來比較字串，而不是 `==`，因為字串應該使用 `.equals` 方法來比較。
+4. **輸入處理**：在 `main` 方法中，增加了輸入處理的驗證循環，確保玩家輸入的座標是有效的。
+
+### 改進建議和反饋
+
+1. **註解和說明**：增加更多的註解和說明，特別是在勝利條件檢查和輸入處理部分，以便其他人更容易理解程式碼。
+2. **輸入驗證**：在輸入處理部分，可以考慮增加更多的驗證，例如檢查輸入是否為整數。
+3. **變數命名**：確保所有變數名稱都是直觀且易於理解的。
+4. **程式結構**：保持程式結構清晰，確保每個類別和方法都有明確的責任。
+
+希望這些建議能幫助學生進一步改進他們的程式碼。

@@ -1,0 +1,135 @@
+好的，讓我們根據您的標準來評估這份作業，並提供改進建議。
+
+### 1. 評分
+- 備註 (20分): 10分
+  - 程式包含一些說明，但不夠明確，且有些部分使用了不常見的符號和文字。
+- 格式 (25分): 20分
+  - 程式碼的縮排和編碼風格基本上是適當的，但部分變數和函數命名不夠直觀。
+- 準確性 (25分): 25分
+  - 程式產生正確的結果，計算薪資的邏輯正確。
+- 邏輯 (30分): 25分
+  - 程式的邏輯基本正確，但有些地方可以優化，例如變數命名和類別設計。
+
+總分: 80分
+
+### 2. 優缺點分析
+**優點:**
+1. 程式的基本結構和邏輯正確，能夠計算不同類型員工的薪資。
+2. 使用了繼承和多態的概念，展示了不同員工類型的薪資計算方式。
+3. 程式碼的縮排和基本格式良好。
+
+**缺點:**
+1. 變數和函數命名不夠直觀，部分注釋使用了不常見的符號和文字。
+2. 程式碼中有些地方可以進一步優化，例如計算薪資的方法可以更簡潔。
+3. 主程式中的部分邏輯可以更加清晰和簡潔。
+
+### 3. 改進的程式碼
+```java
+class Company {
+    class Employee {
+        protected int salary;
+        protected String name;
+        protected String type; // 員工類型 (Ex: 時薪員工, 正式員工, 合約員工)
+
+        void setType(String type) {
+            this.type = type;
+        }
+
+        int calculatePay() {
+            return 0;
+        }
+
+        public void displayEmployeeInfo() {
+            System.out.println("員工類型: " + type + ", 姓名: " + name + ", 薪資: " + salary + " 元");
+        }
+    }
+
+    class HourlyEmployee extends Employee {
+        private final int minimumWage = 176; // 最低時薪
+        private int hour;
+        private int day;
+
+        HourlyEmployee(String name, int hour, int day) {
+            super.name = name;
+            this.hour = hour;
+            this.day = day;
+        }
+
+        int calculatePay() {
+            super.salary = hour * minimumWage * day;
+            return super.salary;
+        }
+    }
+
+    class SalaryEmployee extends Employee {
+        private final int daySalary = 2000; // 日薪
+        private int day;
+
+        SalaryEmployee(String name, int day) {
+            super.name = name;
+            this.day = day;
+        }
+
+        int calculatePay() {
+            super.salary = daySalary * day;
+            return super.salary;
+        }
+    }
+
+    class CommissionEmployee extends Employee {
+        private int yearSalary;
+
+        CommissionEmployee(String name, int yearSalary) {
+            this.yearSalary = yearSalary;
+            super.name = name;
+        }
+
+        int calculatePay() {
+            super.salary = yearSalary / 12;
+            return super.salary;
+        }
+    }
+}
+
+public class HomeWork2 {
+    public static void main(String args[]) {
+        Company company = new Company();
+        Company.Employee[] employees = new Company.Employee[3];
+
+        employees[0] = company.new HourlyEmployee("Allen", 10, 10);
+        employees[0].setType("時薪員工");
+        employees[1] = company.new SalaryEmployee("Tina", 20);
+        employees[1].setType("正式員工");
+        employees[2] = company.new CommissionEmployee("Eric", 1200000);
+        employees[2].setType("合約員工");
+
+        int totalSalary = employees[0].calculatePay() + employees[1].calculatePay() + employees[2].calculatePay();
+
+        for (Company.Employee employee : employees) {
+            employee.displayEmployeeInfo();
+        }
+
+        System.out.println("公司總薪資: " + totalSalary + " 元");
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **變數和函數命名:**
+   - 將變數和函數名稱改為更直觀的英文，例如 `minimum_wage` 改為 `minimumWage`，`day_salary` 改為 `daySalary` 等。
+2. **注釋:**
+   - 將注釋改為中文，並使用更明確的說明。
+3. **主程式邏輯:**
+   - 使用 `for` 迴圈來展示每個員工的信息，使程式碼更簡潔。
+
+### 5. 改進建議和反饋
+1. **命名規範:**
+   - 請使用更直觀的變數和函數名稱，這樣可以提高程式的可讀性。
+2. **注釋:**
+   - 請使用明確的中文注釋，避免使用不常見的符號和文字。
+3. **程式結構:**
+   - 可以考慮將 `calculatePay` 方法的邏輯進一步簡化，例如將一些常量提取出來作為類別的成員變數。
+4. **邏輯優化:**
+   - 在主程式中，使用 `for` 迴圈來處理員工的信息展示，這樣可以使程式碼更簡潔和易於維護。
+
+希望這些建議能夠幫助學生改進他們的程式設計能力。

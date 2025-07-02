@@ -1,0 +1,154 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註 (20分)**：該程式未包含對其功能的明確說明，只有簡單的檔名、功能和作者資訊。分數：5
+- **格式 (25分)**：程式碼縮排和編碼風格基本正確，但部分變數名稱和函式名稱不夠直觀。分數：20
+- **準確性 (25分)**：程式能夠正確執行並產生結果，但與課題要求不符。分數：0
+- **邏輯 (30分)**：程式邏輯基本正確，但與課題要求不符，應該實現的是員工薪資計算而非庫存管理。分數：0
+
+總分：25
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式碼結構清晰，使用了類別和內部類別來組織代碼。
+2. 基本的庫存管理功能實現得比較完整。
+
+**缺點：**
+1. 程式功能與課題要求不符，應該實現員工薪資計算而非庫存管理。
+2. 缺乏對程式功能的詳細說明。
+3. 部分變數名稱和函式名稱不夠直觀。
+4. 未實現繼承和多態的概念。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+ * Filename: EmployeePayroll
+ * Function: 員工薪資計算系統
+ * Author: 41043247
+ * Date: 2023/3/14
+ */
+
+import java.util.ArrayList;
+
+public class EmployeePayroll {
+    public static void main(String[] args) {
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        employees.add(new HourlyEmployee("John Doe", 160, 50)); // 160小時，每小時50元
+        employees.add(new SalaryEmployee("Jane Smith", 50000)); // 月薪50000元
+        employees.add(new CommissionEmployee("Mike Johnson", 20000, 10000)); // 底薪20000元，佣金10000元
+
+        int totalPay = 0;
+        for (Employee employee : employees) {
+            employee.displayEmployeeInfo();
+            totalPay += employee.calculatePay();
+        }
+
+        System.out.println("Total Payroll for the month: $" + totalPay);
+    }
+}
+
+abstract class Employee {
+    String name;
+
+    Employee(String name) {
+        this.name = name;
+    }
+
+    abstract int calculatePay();
+
+    void displayEmployeeInfo() {
+        System.out.println("Employee Name: " + name);
+    }
+}
+
+class HourlyEmployee extends Employee {
+    int hoursWorked;
+    int hourlyRate;
+
+    HourlyEmployee(String name, int hoursWorked, int hourlyRate) {
+        super(name);
+        this.hoursWorked = hoursWorked;
+        this.hourlyRate = hourlyRate;
+    }
+
+    @Override
+    int calculatePay() {
+        return hoursWorked * hourlyRate;
+    }
+
+    @Override
+    void displayEmployeeInfo() {
+        super.displayEmployeeInfo();
+        System.out.println("Hours Worked: " + hoursWorked);
+        System.out.println("Hourly Rate: $" + hourlyRate);
+    }
+}
+
+class SalaryEmployee extends Employee {
+    int monthlySalary;
+
+    SalaryEmployee(String name, int monthlySalary) {
+        super(name);
+        this.monthlySalary = monthlySalary;
+    }
+
+    @Override
+    int calculatePay() {
+        return monthlySalary;
+    }
+
+    @Override
+    void displayEmployeeInfo() {
+        super.displayEmployeeInfo();
+        System.out.println("Monthly Salary: $" + monthlySalary);
+    }
+}
+
+class CommissionEmployee extends Employee {
+    int baseSalary;
+    int commission;
+
+    CommissionEmployee(String name, int baseSalary, int commission) {
+        super(name);
+        this.baseSalary = baseSalary;
+        this.commission = commission;
+    }
+
+    @Override
+    int calculatePay() {
+        return baseSalary + commission;
+    }
+
+    @Override
+    void displayEmployeeInfo() {
+        super.displayEmployeeInfo();
+        System.out.println("Base Salary: $" + baseSalary);
+        System.out.println("Commission: $" + commission);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **修改了程式的功能**：將原本的庫存管理功能改為員工薪資計算功能，以符合課題要求。
+2. **增加了父類別和子類別**：實現了`Employee`父類別，並增加了`HourlyEmployee`、`SalaryEmployee`和`CommissionEmployee`子類別，並重寫了`calculatePay`方法。
+3. **修改了主程式**：增加了員工物件的創建和薪資計算，並展示總薪資。
+4. **增加了備註**：在程式開頭增加了對程式功能的說明。
+5. **修改了變數名稱**：使變數名稱更加直觀，例如`hoursWorked`、`hourlyRate`、`monthlySalary`等。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **閱讀課題要求**：確保課題要求的功能正確實現，避免偏離主題。
+2. **增加備註**：在程式開頭增加詳細的功能說明，幫助他人理解程式的功能。
+3. **命名規範**：使用直觀的變數名稱和函式名稱，提高程式的可讀性。
+4. **使用繼承和多態**：熟悉並應用繼承和多態的概念，提高程式的靈活性和可擴展性。
+
+**反饋：**
+1. **功能實現**：這次的作業功能實現偏離了課題要求，請仔細閱讀課題要求並確保實現正確的功能。
+2. **備註和文件化**：增加詳細的備註和文件化，幫助他人理解程式的功能和實現方式。
+3. **程式設計技巧**：繼續練習使用繼承和多態的概念，提高程式設計的技巧和水平。
+
+希望這些建議能幫助你在未來的作業中取得更好的成績！

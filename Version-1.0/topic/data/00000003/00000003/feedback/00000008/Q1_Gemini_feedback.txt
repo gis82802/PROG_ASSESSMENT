@@ -1,0 +1,171 @@
+好的，作為您的助教，我將根據您提供的標準來評估學生的作業，並提供修改建議。
+
+**1. 評分：**
+
+*   **備註 (20分)：** 5分 - 程式碼幾乎沒有備註，缺少對 `MatMultiply` 函式功能的明確說明，以及對變數用途的解釋。
+*   **格式 (25分)：** 18分 - 程式碼縮排大致正確，但部分地方可以更一致。變數命名 `r` 和 `c` 在多次使用時容易混淆，應使用更具體的名稱。 使用Jama套件是可以的，但不該直接將數值印出，應做驗證。
+*   **準確性 (25分)：** 20分 - 程式在矩陣相乘方面基本正確，使用了 `Jama` 庫，但沒有提供充分的錯誤處理或輸入驗證。 invMatrix沒有要求，不該顯示在main function。
+*   **邏輯 (30分)：** 22分 -  `MatMultiply` 函式邏輯正確，能判斷矩陣是否可以相乘並返回結果或 `null`。但程式碼可以更簡潔，並且減少對外部庫的依賴（如果這是課程目標的話）。invMatrix沒有要求，不該顯示在main function。
+
+**總分：65/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼基本功能（矩陣相乘）實現正確。
+    *   使用了 `Jama` 庫，簡化了矩陣運算。
+    *   `MatMultiply` 函式能夠判斷矩陣是否可以相乘。
+
+*   **缺點：**
+    *   缺少必要的備註說明，降低了程式碼的可讀性。
+    *   格式不夠一致，變數命名不夠直觀。
+    *   缺少輸入驗證，容易因錯誤輸入導致程式崩潰。
+    *   過度依賴外部庫，沒有體現手動實現矩陣相乘的邏輯（如果這是課程的要求）。
+    *   主程式碼過於冗長，包含了不必要的反矩陣計算。
+    *   輸出格式不夠友好，缺少必要的提示資訊。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+//import Jama.Matrix; // 移除 Jama 庫的引用
+
+public class Test3 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in); // 更改變數名稱
+
+        //========= 輸入矩陣
+        System.out.printf("請輸入第一個矩陣的列數: ");
+        int row1 = scanner.nextInt(); // 更具體的變數名稱
+        System.out.printf("請輸入第一個矩陣的行數: ");
+        int col1 = scanner.nextInt(); // 更具體的變數名稱
+        System.out.printf("請輸入第一個矩陣的值: ");
+
+        double[][] matrix1 = new double[row1][col1];  // 輸入第一個矩陣
+        for (int i = 0; i < row1; i++) {
+            for (int j = 0; j < col1; j++) {
+                matrix1[i][j] = scanner.nextDouble();
+            }
+        }
+        //Matrix M1 = new Matrix(arr1);  // 移除 Jama 庫的使用
+
+        System.out.printf("請輸入第二個矩陣的列數: ");
+        int row2 = scanner.nextInt(); // 更具體的變數名稱
+        System.out.printf("請輸入第二個矩陣的行數: ");
+        int col2 = scanner.nextInt(); // 更具體的變數名稱
+        System.out.printf("請輸入第二個矩陣的值: ");
+
+        double[][] matrix2 = new double[row2][col2];  // 輸入第二個矩陣
+        for (int i = 0; i < row2; i++) {
+            for (int j = 0; j < col2; j++) {
+                matrix2[i][j] = scanner.nextDouble();
+            }
+        }
+        //Matrix M2 = new Matrix(arr2);  // 移除 Jama 庫的使用
+
+        //========= 處理輸出
+        //M1.print(4, 1);  // 移除 Jama 庫的使用
+        //System.out.printf("     乘上\n");
+        //M2.print(4, 1);  // 移除 Jama 庫的使用
+        //System.out.printf("     等於\n");
+
+        double[][] resultMatrix = MatMultiply(matrix1, matrix2); // 呼叫改寫後的函數
+        if(resultMatrix != null) {
+            printMatrix(resultMatrix);  // 使用輔助函數列印矩陣
+        } else {
+            System.out.printf("        無法相乘\n");
+        }
+
+        //移除不必要的反矩陣計算
+        //System.out.printf("第一個矩陣的反矩陣為\n");
+        //temp = invMatrix(M1);
+        //if(temp != null) {
+        //    temp.print(4, 1);
+        //} else {
+        //    System.out.printf("無法求反矩陣\n");
+        //}
+        //
+        //System.out.printf("第二個矩陣的反矩陣為\n");
+        //temp = invMatrix(M2);
+        //if(temp != null) {
+        //    temp.print(4, 1);
+        //} else {
+        //    System.out.printf("無法求反矩陣\n");
+        //}
+
+        scanner.close();
+    }
+
+    /**
+     *  MatMultiply 函式接收兩個二維矩陣作為輸入，並計算它們的乘積。
+     *  如果兩個矩陣無法相乘（即第一個矩陣的列數不等於第二個矩陣的行數），則返回 null。
+     *  @param matrix1 第一個矩陣
+     *  @param matrix2 第二個矩陣
+     *  @return 兩個矩陣的乘積，如果無法相乘則返回 null
+     */
+    public static double[][] MatMultiply (double[][] matrix1, double[][] matrix2) {  // 修改參數類型
+        int col1 = matrix1[0].length;
+        int row2 = matrix2.length;
+        if(col1 != row2) {
+            return null;
+        }
+
+        int row1 = matrix1.length;
+        int col2 = matrix2[0].length;
+
+        double[][] resultMatrix = new double[row1][col2];
+
+        for (int i = 0; i < row1; i++) {
+            for (int j = 0; j < col2; j++) {
+                for (int k = 0; k < col1; k++) {
+                    resultMatrix[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+        return resultMatrix;
+    }
+    
+    /**
+     * 用於列印二維矩陣的輔助函數
+     * @param matrix 要列印的矩陣
+     */
+    public static void printMatrix(double[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.printf("%8.2f", matrix[i][j]);  // 格式化輸出
+            }
+            System.out.println();
+        }
+    }
+
+    //public static Matrix invMatrix (Matrix M) { //移除反矩陣
+    //    if(M.getColumnDimension() == M.getRowDimension()) {
+    //        Matrix temp = M.inverse();
+    //        return temp;
+    //    } else {
+    //        return null;
+    //    }
+    //}
+}
+```
+
+**4. 修改說明：**
+
+*   **移除 `Jama` 庫的引用：**  為了更符合課程要求，我移除了對 `Jama` 庫的依賴，並手動實現了矩陣相乘的邏輯。
+*   **修改變數命名：** 將 `r` 和 `c` 替換為更具體的 `row1`, `col1`, `row2`, `col2`，以提高程式碼可讀性。
+*   **添加備註：**  增加了對 `MatMultiply` 函式的備註說明，解釋了其功能、參數和返回值。
+*   **手動實現矩陣相乘：**  在 `MatMultiply` 函式中，使用三重迴圈實現了矩陣相乘的邏輯。
+*   **添加輔助函數 `printMatrix`：**  創建了一個輔助函數，用於格式化輸出矩陣，提高了程式碼的可維護性。
+*   **移除不必要的程式碼：** 移除了反矩陣相關的程式碼，使其更專注於矩陣相乘的功能。
+*    **修改參數類型：** `MatMultiply`的參數從Matrix改為double[][]。
+
+**5. 改進建議和反饋：**
+
+*   **加強備註：**  在程式碼中添加更多的備註，解釋每個變數和函式的作用，提高程式碼的可讀性。
+*   **輸入驗證：**  在讀取使用者輸入時，添加輸入驗證，例如檢查矩陣的維度是否為正數，以避免程式崩潰。
+*   **錯誤處理：**  考慮添加更完善的錯誤處理機制，例如當矩陣無法相乘時，可以拋出異常，而不是簡單地返回 `null`。
+*   **程式碼風格：**  保持一致的程式碼風格，例如統一使用空格或 Tab 進行縮排。
+*   **模組化：**  將程式碼分解為更小的模組，每個模組負責一個特定的功能，提高程式碼的可維護性。
+*   **單元測試：**  編寫單元測試，驗證程式碼的正確性。
+
+總體來說，這位學生的作業基本完成了要求，但程式碼風格、備註和錯誤處理方面還有很大的改進空間。 通過這次修改和反饋，希望學生能夠更好地理解程式設計的要點，寫出更清晰、健壯和易於維護的程式碼。

@@ -1,0 +1,127 @@
+### 1. 評分
+
+- **備註(滿分20)**：該程式包含了對其功能的明確說明，但缺乏對函數和變數的詳細註解。分數：15
+- **格式(滿分25)**：程式碼保持了適當的縮排和編碼風格，但部分變數命名不夠直觀。分數：20
+- **準確性(滿分25)**：程式能夠正確計算矩陣乘積，但在矩陣大小不匹配時的處理有誤。分數：20
+- **邏輯(滿分30)**：程式邏輯基本正確，但在矩陣大小不匹配時的處理和結果顯示有誤。分數：25
+
+總分：80
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式能夠正確讀取輸入並初始化矩陣。
+2. 矩陣乘積的邏輯基本正確。
+3. 程式碼結構清晰，易於閱讀。
+
+**缺點：**
+1. 缺乏對函數和變數的詳細註解。
+2. 矩陣大小不匹配時的處理有誤，應該在讀取矩陣後立即檢查並返回null。
+3. 部分變數命名不夠直觀，如`rowsA`、`colsA`可以改為`rowsMatrixA`、`colsMatrixA`。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class hw5_1 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入第一個矩陣的維度
+        System.out.print("輸入第一個矩陣的行數: ");
+        int rowsMatrixA = scanner.nextInt();
+        System.out.print("輸入第一個矩陣的列數: ");
+        int colsMatrixA = scanner.nextInt();
+
+        // 初始化第一個矩陣
+        int[][] matrixA = new int[rowsMatrixA][colsMatrixA];
+        System.out.println("輸入第一個矩陣的元素: ");
+        for (int i = 0; i < rowsMatrixA; i++) {
+            for (int j = 0; j < colsMatrixA; j++) {
+                matrixA[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 輸入第二個矩陣的維度
+        System.out.print("輸入第二個矩陣的行數: ");
+        int rowsMatrixB = scanner.nextInt();
+        System.out.print("輸入第二個矩陣的列數: ");
+        int colsMatrixB = scanner.nextInt();
+
+        // 初始化第二個矩陣
+        int[][] matrixB = new int[rowsMatrixB][colsMatrixB];
+        System.out.println("輸入第二個矩陣的元素: ");
+        for (int i = 0; i < rowsMatrixB; i++) {
+            for (int j = 0; j < colsMatrixB; j++) {
+                matrixB[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 計算矩陣乘積
+        int[][] result = multiplyMatrices(matrixA, matrixB);
+        if (result != null) {
+            // 顯示結果矩陣
+            System.out.println("結果矩陣: ");
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[i].length; j++) {
+                    System.out.print(result[i][j] + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("矩陣大小不匹配，無法進行相乘運算。");
+        }
+
+        scanner.close();
+    }
+
+    /**
+     * 矩陣乘積函數
+     * @param A 第一個矩陣
+     * @param B 第二個矩陣
+     * @return 結果矩陣，若無法相乘則返回null
+     */
+    public static int[][] multiplyMatrices(int[][] A, int[][] B) {
+        int rowsMatrixA = A.length;
+        int colsMatrixA = A[0].length;
+        int colsMatrixB = B[0].length;
+        int rowsMatrixB = B.length;
+
+        // 判斷矩陣相乘是否合理
+        if (colsMatrixA != rowsMatrixB) {
+            return null;
+        } else {
+            // 初始化結果矩陣
+            int[][] result = new int[rowsMatrixA][colsMatrixB];
+
+            // 矩陣相乘
+            for (int i = 0; i < rowsMatrixA; i++) {
+                for (int j = 0; j < colsMatrixB; j++) {
+                    result[i][j] = 0;
+                    for (int k = 0; k < colsMatrixA; k++) {
+                        result[i][j] += A[i][k] * B[k][j];
+                    }
+                }
+            }
+            return result;
+        }
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **變數命名**：將`rowsA`、`colsA`改為`rowsMatrixA`、`colsMatrixA`，以提高可讀性。
+2. **矩陣大小檢查**：將矩陣大小檢查移至矩陣乘積函數內，並在矩陣大小不匹配時立即返回null。
+3. **錯誤處理**：在主函數中增加了對矩陣大小不匹配的錯誤處理，顯示相應的錯誤訊息。
+4. **註解**：增加了對函數和變數的詳細註解，以提高程式的可讀性和可維護性。
+
+### 5. 改進建議和反饋
+
+1. **註解**：在程式碼中增加更多的註解，特別是對於複雜的邏輯和變數的解釋。
+2. **變數命名**：使用更直觀的變數名稱，以便於理解和維護。
+3. **錯誤處理**：在程式中增加更多的錯誤處理，以確保程式在各種情況下都能正常運行。
+4. **測試**：多進行測試，特別是邊界條件和異常情況，以確保程式的穩定性和正確性。
+
+希望這些建議能幫助學生進一步改進他們的程式設計能力。

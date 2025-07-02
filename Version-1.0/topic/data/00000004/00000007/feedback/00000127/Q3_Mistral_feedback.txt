@@ -1,0 +1,77 @@
+好的，根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分
+- 備註 (滿分20)：該程式未包含對其功能的明確說明。 (0分)
+- 格式 (滿分25)：程式碼格式基本適當，但有些地方可以改進。 (20分)
+- 準確性 (滿分25)：程式未完全正確地實現要求，有多餘的部分。 (15分)
+- 邏輯 (滿分30)：程式邏輯基本正確，但有些地方可以優化。 (20分)
+
+總分：55分
+
+### 2. 分析優缺點
+**優點：**
+1. 使用了基本的Java語法和數據結構（如Stack和Scanner）。
+2. 程式碼結構清晰，易於理解。
+
+**缺點：**
+1. 未包含對程式功能的說明，缺乏備註。
+2. 程式碼中有多餘的部分（minarr的計算），這部分與題目無關。
+3. 使用了Object[]而不是int[]，這樣的選擇不夠直觀且不必要。
+4. 未處理輸入的邊界情況，例如空數組或非整數輸入。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class t3 {
+    public static void main(String[] args) {
+        // 讀取輸入
+        Scanner input = new Scanner(System.in);
+        System.out.print("Input a One-Dimensional Array (','split): ");
+        String str = input.nextLine();
+        input.close();
+
+        // 將輸入字串轉換為整數數組
+        String[] strArr = str.split(",");
+        int[] arr = new int[strArr.length];
+        for (int i = 0; i < strArr.length; i++) {
+            arr[i] = Integer.parseInt(strArr[i]);
+        }
+
+        // 初始化結果數組
+        int[] result = new int[arr.length];
+
+        // 從右向左遍歷數組，找到每個元素右側的最大值
+        result[arr.length - 1] = -1; // 最後一個元素置為-1
+        for (int i = arr.length - 2; i >= 0; i--) {
+            int maxRight = -1;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] > maxRight) {
+                    maxRight = arr[j];
+                }
+            }
+            result[i] = maxRight;
+        }
+
+        // 輸出結果
+        System.out.print("max: ");
+        for (int x : result) {
+            System.out.print(x + " ");
+        }
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+1. **移除多餘的minarr計算**：原程式碼中計算了minarr，但這與題目要求無關，因此移除。
+2. **使用int[]而非Object[]**：原程式碼使用了Object[]，這樣的選擇不夠直觀且不必要，改為使用int[]。
+3. **優化輸入處理**：原程式碼使用了Stack來處理輸入，這樣的做法不必要，改為直接將輸入字串轉換為整數數組。
+4. **添加備註**：在適當的地方添加備註，說明程式的功能和邏輯。
+
+### 5. 改進建議和反饋
+1. **添加備註**：在程式碼中添加適當的備註，說明程式的功能和邏輯，這樣有助於他人理解。
+2. **處理邊界情況**：考慮到輸入可能為空或非整數，應該添加相應的處理邏輯。
+3. **優化邏輯**：在遍歷數組時，可以考慮使用更高效的算法來找到每個元素右側的最大值。
+4. **測試**：多進行測試，確保程式在各種情況下都能正確運行。
+
+希望這些改進建議和反饋能夠幫助學生提升程式設計水平。

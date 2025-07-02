@@ -1,0 +1,67 @@
+好的，我將根據您的標準評估學生提交的Java程式碼，並提供改進建議和程式碼。
+
+**1. 作業評分：**
+
+*   **備註 (20/20):** 程式碼開頭有檔案名稱、功能、作者、日期和版本訊息，並且在程式碼中也有簡短的功能描述，非常明確。
+*   **格式 (23/25):** 程式碼縮排良好，風格一致。變數命名合理，整體易於閱讀。scanner沒有放在while外面宣告。
+*   **準確性 (25/25):** 程式能正確反轉數字，符合題目要求。
+*   **邏輯 (30/30):** 程式邏輯清晰，使用while迴圈正確地提取和反轉數字，思路清晰。
+
+**總分: 98/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼功能明確，邏輯清晰，易於理解。
+    *   程式碼格式良好，縮排一致，可讀性高。
+    *   程式碼可以正確的運行，並通過多個test case。
+*   **缺點：**
+    *   scanner應該放在while外面宣告，避免資源重複宣告。
+
+**3. 改進的程式碼：**
+
+```java
+//app5_test5
+//filename:app5_test5
+//function:反轉所給的數字
+//author:xiao
+//date:10/11
+//version:11.0.12
+
+import java.util.Scanner;
+
+public class app5_test5 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("請輸入一個數字: ");
+        int number = scanner.nextInt();
+
+        int reversed = 0;
+
+        try {
+            while (number != 0) {
+                int digit = number % 10; // 取出最後一位數字
+                reversed = reversed * 10 + digit; // 將反轉後的數字更新
+                number /= 10; // 去掉最後一位數字
+            }
+        } finally {
+            // 確保scanner被關閉
+            scanner.close();
+        }
+
+        // 輸出結果
+        System.out.println("反轉後的數字: " + reversed);
+    }
+}
+```
+
+**4. 程式碼修改說明：**
+
+*   使用 `try-finally` 結構: 程式碼將原有的 `while` 迴圈放置在 `try` 區塊中，並在 `finally` 區塊中關閉 `scanner`。
+    *   **原因:** 確保無論迴圈是否正常結束（例如，發生異常），`scanner` 資源都會被關閉，防止資源洩漏。
+
+**5. 改進建議和反饋：**
+
+*   **總體評價：** 這位同學的程式碼寫得相當不錯，邏輯清晰，功能完整，格式規範，註釋也很到位。
+*   **建議：** 雖然程式碼功能已經完整，但可以更加注意資源管理，特別是 `Scanner` 這樣的資源，確保在使用完畢後及時關閉。`try-finally` 是一種確保資源釋放的良好模式。
+*   **鼓勵：** 繼續保持良好的程式碼風格，並學習更多關於資源管理的知識。

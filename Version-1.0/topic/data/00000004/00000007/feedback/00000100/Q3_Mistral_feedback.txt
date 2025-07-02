@@ -1,0 +1,100 @@
+### 1. 評分
+根據您的標準，這份作業的評分如下：
+- **備註(滿分20)**: 15
+  - 說明了程式的功能，但缺乏對具體功能和邏輯的詳細說明。
+- **格式(滿分25)**: 20
+  - 程式碼縮排和編碼風格基本符合標準，但部分變數名稱不夠直觀。
+- **準確性(滿分25)**: 15
+  - 程式未完全實現題目要求，尤其是替換最大值的部分有誤。
+- **邏輯(滿分30)**: 20
+  - 程式邏輯基本正確，但有一些不必要的步驟和錯誤的實現。
+
+總分：70
+
+### 2. 優缺點分析
+**優點：**
+1. 程式碼結構清晰，縮排和編碼風格基本符合標準。
+2. 使用了 `ArrayList` 和 `Scanner`，展示了基本的Java使用技巧。
+3. 有基本的輸入和輸出功能，能夠讀取使用者輸入並顯示結果。
+
+**缺點：**
+1. 程式碼未完全實現題目要求，尤其是替換最大值的部分有誤。
+2. 變數名稱不夠直觀，例如 `array_copy` 和 `current_number`。
+3. 有一些不必要的步驟，例如替換最小值的部分。
+4. 缺乏對具體功能和邏輯的詳細說明。
+
+### 3. 改進的程式碼
+```java
+/**
+ * Project Name: Hw03
+ * Author: 41243144 温博鈞
+ * Description:
+ *      輸入一連串的數字，輸出原始陣列，並輸出替換後的陣列
+ * Functionality:
+ *      - ArrayList<Integer>: 建立動態array
+ *      - Scanner: 建立使用者輸入
+ *
+ * Last Edit Date: 2024-10-18
+ */
+package October.oct_18;
+
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class Hw03 {
+    public static void main(String[] args) {
+        // 建立使用者輸入
+        Scanner input = new Scanner(System.in);
+        // 初始化動態陣列
+        ArrayList<Integer> array = new ArrayList<Integer>();
+
+        System.out.print("請輸入陣列，以空格隔開(結束EOF): ");
+
+        // 讀取使用者輸入放到動態陣列中
+        while (input.hasNextInt()) {
+            array.add(input.nextInt());
+        }
+
+        // 輸出原始陣列
+        System.out.print("原始陣列: ");
+        System.out.println(array);
+
+        // 陣列長度
+        int length = array.size();
+        int max = -1;
+
+        // 替換array[index]，並更新最大值
+        for (int index = length - 1; index >= 0; index--) {
+            int currentNumber = array.get(index);
+            array.set(index, max);
+
+            if (currentNumber > max) {
+                max = currentNumber;
+            }
+        }
+
+        // 將最後一個元素設為 -1
+        array.set(length - 1, -1);
+
+        System.out.print("替換最大值陣列: ");
+        System.out.println(array);
+
+        input.close();
+    }
+}
+```
+
+### 4. 修改說明
+1. **變數名稱改進**：將 `current_number` 改為 `currentNumber`，以符合Java命名規範。
+2. **刪除不必要的部分**：移除了替換最小值的部分，因為這不符合題目要求。
+3. **更新最大值邏輯**：修正了替換最大值的邏輯，確保每個元素都被正確替換。
+4. **設置最後一個元素為 -1**：在最後一個元素設為 -1 的步驟中進行了修正。
+
+### 5. 改進建議和反饋
+1. **變數命名**：請使用更具描述性的變數名稱，例如 `currentNumber` 而不是 `current_number`。
+2. **註釋**：加入更多詳細的註釋，說明每一段程式碼的功能和邏輯。
+3. **邏輯檢查**：在編寫程式時，請逐步檢查每一步的邏輯是否正確，特別是迴圈和條件判斷。
+4. **測試**：多進行測試，確保程式在不同輸入情況下都能正確運行。
+5. **簡化程式碼**：移除不必要的步驟和變數，保持程式碼簡潔明了。
+
+希望這些建議能幫助您的學生改進他們的程式設計技巧。

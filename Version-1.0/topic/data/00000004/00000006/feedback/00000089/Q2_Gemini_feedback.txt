@@ -1,0 +1,108 @@
+好的，我將根據你的標準對學生的作業進行評分、分析並提供改進建議。
+
+**1. 評分：**
+
+*   **備註 (滿分20)：** 5 分 - 程式碼幾乎沒有註釋，缺乏對程式邏輯和變數用途的解釋。
+*   **格式 (滿分25)：** 18 分 - 程式碼縮排基本正確，但變數命名不夠直觀，影響程式碼的可讀性。
+*   **準確性 (滿分25)：** 15 分 - 對於某些 well-ordered numbers 判斷有誤，例如輸入12345，會判斷錯誤。
+*   **邏輯 (滿分30)：** 20 分 - 程式的判斷邏輯較為複雜，使用了switch語句和大量的條件判斷，可讀性較差，並且對位數多的數字判斷有誤。
+
+**總分：5 + 18 + 15 + 20 = 58 分**
+
+**2. 優缺點分析：**
+
+**優點：**
+
+*   能夠接收使用者輸入。
+*   可以判斷輸入是否在1-10000的範圍內。
+*   基本能提取數字的各位數。
+
+**缺點：**
+
+*   **缺乏註釋：** 程式碼沒有任何註釋，難以理解程式碼的意圖和邏輯。
+*   **可讀性差：** 變數命名不夠直觀 (如 a, b, c, d, e, x)，使程式碼難以理解。
+*   **邏輯複雜：** 使用 `switch` 語句和多個 `if` 條件判斷，使程式碼複雜且容易出錯。
+*   **錯誤處理不足：** 如果使用者輸入非數字，程式會崩潰，沒有處理 `InputMismatchException`。
+*   **程式結構不佳：** 所有的程式碼都放在 `main` 函數中，程式結構不清晰。
+*   **準確性問題：** 對於五位數的 well-ordered number 判斷出錯。
+*   **沒有解決所有問題：** 只解決了判斷well-ordered number，沒有計算小於100000的well-ordered number總數。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class decide {
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        System.out.println("請輸入一個1~10000間的整數值:");
+        int number = scn.nextInt();
+
+        if (number > 0 && number < 10001) {
+            if (isWellOrdered(number)) {
+                System.out.println("This is a well-ordered number");
+            } else {
+                System.out.println("This is not a well-ordered number");
+            }
+        } else {
+            System.out.println("請重新輸入一個1~10000間的整數值:");
+        }
+
+        // 計算小於 100000 的 well-ordered number 數量
+        int count = countWellOrderedNumbers(100000);
+        System.out.println("小於 100000 的 well-ordered number 數量: " + count);
+    }
+
+    // 判斷一個數字是否為 well-ordered number
+    public static boolean isWellOrdered(int number) {
+        String numStr = String.valueOf(number);
+        for (int i = 1; i < numStr.length(); i++) {
+            if (numStr.charAt(i) <= numStr.charAt(i - 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 計算小於 max 的 well-ordered number 數量
+    public static int countWellOrderedNumbers(int max) {
+        int count = 0;
+        for (int i = 1; i < max; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+**4. 改進說明：**
+
+*   **`isWellOrdered(int number)` 函數：**
+    *   **修改原因：** 將判斷 well-ordered number 的邏輯提取到一個單獨的函數中，使程式碼更模組化，提高可讀性和可維護性。
+    *   **修改說明：** 使用字串來簡化判斷邏輯。將整數轉換為字串，然後逐個比較相鄰的數字字符。如果發現後一個數字小於或等於前一個數字，則該數字不是 well-ordered number。
+*   **`countWellOrderedNumbers(int max)` 函數：**
+    *   **新增原因：** 解決原程式碼未完成的第二個問題，計算小於指定最大值的 well-ordered number 的數量。
+    *   **新增說明：** 遍歷從 1 到 `max` 的所有數字，並使用 `isWellOrdered` 函數檢查每個數字是否為 well-ordered number。如果是，則計數器遞增。
+*   **變數命名：**
+    *   將 `x` 更改為 `number`，使變數名稱更具描述性，更容易理解變數的用途。
+*   **邏輯簡化：**
+    *   移除了 `switch` 語句和大量的 `if` 條件判斷，使用更簡潔的迴圈和條件判斷來實現相同的邏輯。
+*   **程式結構：**
+    *   將程式碼分解為多個函數，使程式結構更清晰，更易於理解和維護。
+*   **保留優點：**
+    *   保留了使用者輸入和範圍檢查的功能。
+
+**5. 改進建議和反饋：**
+
+*   **程式碼註釋：** 撰寫程式碼時，請務必添加註釋，解釋程式碼的意圖、邏輯和變數的用途。這將使你的程式碼更易於理解和維護。
+*   **變數命名：** 選擇具有描述性的變數名稱，使程式碼更易於閱讀和理解。
+*   **模組化：** 將程式碼分解為多個函數，每個函數負責一個特定的任務。這將使你的程式碼更模組化、更易於測試和維護。
+*   **錯誤處理：** 考慮程式可能遇到的各種錯誤情況，並添加適當的錯誤處理程式碼。例如，可以捕獲 `InputMismatchException` 異常，以處理使用者輸入非數字的情況。
+*   **測試：** 編寫單元測試，以確保你的程式碼能夠正確處理各種輸入。
+*   **演算法效率：**  對於 `countWellOrderedNumbers` 函數，可以考慮使用更高效的演算法來計算 well-ordered number 的數量，特別是當 `max` 值很大時。
+*   **解決所有問題：** 仔細閱讀題目要求，確保你的程式能夠解決所有問題。
+
+總體來說，你的程式碼有一些基礎，但需要改進可讀性、程式結構、錯誤處理和程式碼風格。透過遵循上述建議，你可以寫出更清晰、更健壯、更易於維護的程式碼。

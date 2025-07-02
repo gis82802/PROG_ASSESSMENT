@@ -1,0 +1,83 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+
+- **備註 (20/20)**：該程式包含了對其功能的明確說明，包括文件名、功能描述、作者、日期和版本。
+- **格式 (20/25)**：程式碼保持了適當的縮排和編碼風格，但部分注釋和變數命名可以更加清晰。
+- **準確性 (25/25)**：程式能夠正確地計算並輸出三個輸入數字的最大值、最小值和中間值。
+- **邏輯 (25/30)**：程式邏輯基本正確，但使用三元運算符來計算最大值和最小值的方式稍顯複雜，可以簡化。
+
+總分：90/100
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式功能明確，能夠正確地計算並輸出三個輸入數字的最大值、最小值和中間值。
+2. 程式碼結構清晰，易於理解。
+3. 使用三元運算符來避免使用if-else語句，符合作業要求。
+
+**缺點：**
+1. 部分注釋和變數命名可以更加清晰。
+2. 使用三元運算符來計算最大值和最小值的方式稍顯複雜，可以簡化。
+3. 三元運算符的使用過於頻繁，可能影響程式碼的可讀性。
+
+### 3. 改進的程式碼
+
+```java
+/*
+filename: app4_4
+function: Max Mid Min
+author: PoXsun
+date: 2024/10/04
+version: 11.0.12
+*/
+
+import java.util.Scanner;
+
+public class app4_4 {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("輸入三個數字:");
+
+        System.out.print("輸入數字一: ");
+        int a = sc.nextInt();
+        System.out.print("輸入數字二: ");
+        int b = sc.nextInt();
+        System.out.print("輸入數字三: ");
+        int c = sc.nextInt();
+
+        // 使用Math.max和Math.min來簡化最大值和最小值的計算
+        int max = Math.max(a, Math.max(b, c)); // 取最大值
+        int min = Math.min(a, Math.min(b, c)); // 取最小值
+        int mid = a + b + c - max - min; // 將中數取出
+
+        System.out.println("從小到大的排序為:");
+        System.out.println("min: " + min);
+        System.out.println("mid: " + mid);
+        System.out.println("max: " + max);
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **改進注釋和變數命名**：
+   - 將`System.out.println`改為`System.out.print`，以便輸入提示和輸入在同一行，提高可讀性。
+   - 將變數名稱保持不變，因為它們已經足夠直觀。
+
+2. **簡化最大值和最小值的計算**：
+   - 使用`Math.max`和`Math.min`來簡化最大值和最小值的計算，使程式碼更加簡潔和易讀。
+
+### 5. 改進建議和反饋
+
+1. **提高可讀性**：
+   - 避免過於頻繁地使用三元運算符，適當使用`Math.max`和`Math.min`來簡化計算。
+   - 確保輸入提示和輸入在同一行，提高用戶體驗。
+
+2. **注釋和變數命名**：
+   - 確保注釋清晰明了，變數命名直觀易懂。
+
+3. **保持簡潔**：
+   - 在不影響程式功能的前提下，盡量簡化程式碼，提高可讀性和可維護性。
+
+希望這些改進建議能夠幫助學生提高程式設計水平。

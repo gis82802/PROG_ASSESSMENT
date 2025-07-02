@@ -1,0 +1,185 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：10
+  - 該程式缺乏對其功能的明確說明。
+
+- 格式（滿分25）：20
+  - 縮排和編碼風格基本合理，但可以更加一致和清晰。
+
+- 準確性（滿分25）：10
+  - 程式在某些情況下無法產生正確的結果，例如新增產品時會覆蓋原有產品。
+
+- 邏輯（滿分30）：20
+  - 程式邏輯有一些問題，例如無法正確處理多個產品的庫存。
+
+總分：60
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 基本功能實現了庫存管理的基本操作，如新增產品、減少產品、新增數量、減少數量、計算總價值。
+2. 程式碼結構相對清晰，函式名稱和變數名稱基本合理。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 無法正確處理多個產品的庫存，每次新增產品會覆蓋原有產品。
+3. 一些邏輯錯誤，例如在減少數量時未正確檢查庫存數量。
+4. 缺乏對多個產品的管理，僅能管理單一產品。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+
+class Inventory {
+    private Map<String, Product> products;
+
+    public Inventory() {
+        this.products = new HashMap<>();
+    }
+
+    public void add_product(String name, int amount, int price) {
+        if (products.containsKey(name)) {
+            System.out.println("This product already exists, and add " + amount + " amount");
+            products.get(name).addAmount(amount);
+        } else {
+            System.out.println("Add product: " + name + " amount: " + amount + " price: " + price);
+            products.put(name, new Product(name, amount, price));
+        }
+    }
+
+    public void reduce_product(String name) {
+        if (products.containsKey(name)) {
+            System.out.println("Remove product: " + name);
+            products.remove(name);
+        } else {
+            System.out.println("No product found: " + name);
+        }
+    }
+
+    public void add_amount(String name, int amount) {
+        if (products.containsKey(name)) {
+            products.get(name).addAmount(amount);
+            System.out.println("Product: " + name + " add amount: " + amount);
+            System.out.println("This product is currently in stock for: " + products.get(name).getAmount());
+        } else {
+            System.out.println("No product found: " + name);
+        }
+    }
+
+    public void reduce_amount(String name, int amount) {
+        if (products.containsKey(name)) {
+            if (amount > products.get(name).getAmount()) {
+                System.out.println("The inventory quantity is less than the quantity to be reduced");
+            } else {
+                products.get(name).reduceAmount(amount);
+                System.out.println("This product is currently in stock for: " + products.get(name).getAmount());
+            }
+        } else {
+            System.out.println("No product found: " + name);
+        }
+    }
+
+    public void total(String name) {
+        if (products.containsKey(name)) {
+            System.out.println("Total price is: " + products.get(name).getTotalPrice() + " dollars");
+        } else {
+            System.out.println("No product found: " + name);
+        }
+    }
+
+    private class Product {
+        private String name;
+        private int amount;
+        private int price;
+
+        public Product(String name, int amount, int price) {
+            this.name = name;
+            this.amount = amount;
+            this.price = price;
+        }
+
+        public void addAmount(int amount) {
+            this.amount += amount;
+        }
+
+        public void reduceAmount(int amount) {
+            this.amount -= amount;
+        }
+
+        public int getAmount() {
+            return this.amount;
+        }
+
+        public int getTotalPrice() {
+            return this.amount * this.price;
+        }
+    }
+}
+
+public class homework1 {
+    public static void main(String[] args) {
+        Inventory DrinkShop = new Inventory();
+        Inventory Product_3C = new Inventory();
+
+        DrinkShop.add_product("green tea", 5, 30);
+        Product_3C.add_product("IPhone", 3, 3000);
+
+        DrinkShop.add_product("black tea", 3, 25);
+        Product_3C.add_product("Android", 6, 1500);
+
+        DrinkShop.reduce_product("green tea");
+        Product_3C.reduce_product("Samsung");
+
+        DrinkShop.add_amount("green tea", 5);
+        Product_3C.add_amount("OPPO", 3);
+
+        DrinkShop.reduce_amount("green tea", 3);
+        Product_3C.reduce_amount("Android", 7);
+
+        DrinkShop.total("green tea");
+        DrinkShop.total("black tea");
+        Product_3C.total("IPhone");
+        Product_3C.total("Android");
+        Product_3C.total("Samsung");
+        Product_3C.total("OPPO");
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **新增 `Product` 類別：**
+   - 原因：為了更好地管理每個產品的屬性和方法，將產品相關的屬性和方法封裝在 `Product` 類別中。
+
+2. **使用 `Map` 來管理多個產品：**
+   - 原因：原始程式碼無法處理多個產品的庫存管理，使用 `Map` 可以更方便地管理多個產品。
+
+3. **修改 `add_product` 方法：**
+   - 原因：原始程式碼在新增產品時會覆蓋原有產品，新的實現方式是檢查產品是否存在，如果存在則增加數量，否則新增產品。
+
+4. **修改 `reduce_product` 方法：**
+   - 原因：原始程式碼在移除產品時僅將數量和價格設為0，新的實現方式是直接從 `Map` 中移除該產品。
+
+5. **修改 `add_amount` 和 `reduce_amount` 方法：**
+   - 原因：原始程式碼在增加和減少數量時未正確檢查庫存數量，新的實現方式是通過 `Product` 類別的方法來操作數量。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **明確說明程式功能：**
+   - 在程式開頭添加註釋，說明程式的主要功能和各個方法的作用。
+
+2. **保持一致的編碼風格：**
+   - 確保所有變數和方法名稱的命名風格一致，並保持適當的縮排。
+
+3. **檢查邏輯錯誤：**
+   - 在減少數量時，確保檢查庫存數量是否足夠。
+
+4. **管理多個產品：**
+   - 使用適當的數據結構（如 `Map`）來管理多個產品的庫存。
+
+5. **封裝和抽象：**
+   - 將產品相關的屬性和方法封裝在單獨的類別中，以提高程式的可維護性和可重用性。
+
+希望這些建議能夠幫助學生改進他們的程式設計能力。

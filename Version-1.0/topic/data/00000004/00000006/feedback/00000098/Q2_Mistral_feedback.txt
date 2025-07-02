@@ -1,0 +1,99 @@
+根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分
+- **備註 (20分)**: 該程式包含部分說明，但說明不夠明確，且部分中文字符可能是亂碼。得分：10
+- **格式 (25分)**: 程式碼縮排和編碼風格基本符合要求，但變數名稱和函數名稱不夠直觀。得分：20
+- **準確性 (25分)**: 程式能夠正確判斷是否為井然有序數，但計算100000以內的井然有序數數量的部分有誤。得分：20
+- **邏輯 (30分)**: 程式邏輯基本正確，但有些地方需要改進。得分：25
+
+總分：75
+
+### 2. 分析優缺點
+**優點**:
+1. 程式能夠正確判斷是否為井然有序數。
+2. 基本的程式結構和邏輯是正確的。
+3. 使用了適當的迴圈和條件判斷。
+
+**缺點**:
+1. 變數名稱和函數名稱不夠直觀，難以理解。
+2. 部分中文字符可能是亂碼，影響可讀性。
+3. 計算100000以內的井然有序數數量的部分有誤。
+4. 程式碼中缺乏詳細的註釋說明。
+
+### 3. 改進的程式碼
+```java
+// File name: app5_2
+// Author: 41243142
+// Function: 判斷一個數是否為井然有序數，並計算100000以內的井然有序數數量
+// Date: 24/10/11
+// Version:
+
+import java.util.Scanner;
+
+public class app5_2 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("請輸入一個數字: ");
+        int number = scanner.nextInt();
+
+        if (isWellOrdered(number)) {
+            System.out.println(number + " 是井然有序數");
+        } else {
+            System.out.println(number + " 不是井然有序數");
+        }
+
+        int count = countWellOrderedNumbers(1, 100000);
+        System.out.println("100000以內的井然有序數數量: " + count);
+
+        scanner.close();
+    }
+
+    // 判斷一個數是否為井然有序數
+    public static boolean isWellOrdered(int number) {
+        int previousDigit = -1;
+        while (number > 0) {
+            int currentDigit = number % 10;
+            if (currentDigit <= previousDigit) {
+                return false;
+            }
+            previousDigit = currentDigit;
+            number /= 10;
+        }
+        return true;
+    }
+
+    // 計算範圍內的井然有序數數量
+    public static int countWellOrderedNumbers(int start, int end) {
+        int count = 0;
+        for (int i = start; i <= end; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+1. **變數名稱和函數名稱**:
+   - 將 `isWO` 改為 `isWellOrdered`，使名稱更直觀。
+   - 將 `cNumbers` 改為 `countWellOrderedNumbers`，使名稱更直觀。
+   - 將變數 `a` 改為 `previousDigit`，變數 `cc` 改為 `currentDigit`，使名稱更直觀。
+
+2. **註釋**:
+   - 新增詳細的註釋說明，使程式碼更易讀。
+
+3. **邏輯修正**:
+   - 修正了 `isWellOrdered` 函數中的邏輯錯誤，將 `if (cc >= a)` 改為 `if (currentDigit <= previousDigit)`。
+
+4. **輸出**:
+   - 修正了輸出信息中的亂碼問題。
+
+### 5. 改進建議和反饋
+1. **命名**: 請確保變數名稱和函數名稱盡可能直觀，這樣可以提高程式碼的可讀性和可維護性。
+2. **註釋**: 詳細的註釋可以幫助他人理解你的程式碼，請在關鍵步驟上添加註釋。
+3. **邏輯**: 請仔細檢查程式邏輯，確保每一步都是正確的。
+4. **輸出**: 確保輸出信息正確，避免使用亂碼或不明確的字符。
+
+希望這些建議能夠幫助你的學生改進他們的程式設計能力。

@@ -1,0 +1,72 @@
+### 1. 打分
+
+- 備註(滿分20)：18
+- 格式(滿分25)：20
+- 準確性(滿分25)：20
+- 邏輯(滿分30)：25
+
+總分：83
+
+### 2. 分析
+
+#### 優點：
+1. **備註**：程式有詳細的說明，包括專案名稱、作者、描述、功能性和最後修改日期。
+2. **格式**：程式碼格式良好，縮排和編碼風格適當。
+3. **準確性**：程式能夠正確地執行並顯示旋轉的棒子。
+4. **邏輯**：基本邏輯正確，能夠實現旋轉效果。
+
+#### 缺點：
+1. **備註**：缺少對特定函數和變數的詳細說明。
+2. **邏輯**：使用了ProcessBuilder來清除命令行，這在某些系統上可能無法正常運行，並且不是最佳實踐。
+
+### 3. 改進的程式碼
+
+```java
+/**
+ * Project Name: Simulation
+ * Author: 41243144 温博鈞
+ * Description:
+ *      This project simulates the icon animation during system execution.
+ * Functionality:
+ *      Displays the information using print().
+ *      Thread.sleep(): let the system wait for the delay
+ *      ProcessBuilder(): operating system commands
+ * Last Edit Date: 2024-09-27
+ */
+
+package September.sep_27;
+
+public class Simulation {
+    public static void main(String[] args) throws Exception{
+        String str = "/|—\\|—";
+        for(int i=0; i < 12; i++){
+            // cycle
+            System.out.print("\r" + str.charAt(i % 6));
+            Thread.sleep(200);
+        }
+        System.out.println(); // move to the next line after the animation
+    }
+}
+```
+
+### 4. 說明修改的部分及原因
+
+1. **修改了清除命令行的方式**：
+   - 原本使用 `ProcessBuilder` 來清除命令行，這在某些系統上可能無法正常運行，並且不是最佳實踐。
+   - 改為使用 `\r` (回車符) 來回到行首，這樣可以在大多數系統上正常運行，並且更為簡潔。
+
+2. **增加了最後的換行**：
+   - 在迴圈結束後增加了 `System.out.println();`，這樣可以確保在動畫結束後，光標移到下一行，避免後續輸出被覆蓋。
+
+### 5. 改進建議和反饋
+
+1. **備註**：
+   - 可以考慮在備註中增加對特定函數和變數的詳細說明，這樣可以讓其他人更容易理解程式碼。
+
+2. **跨平台兼容性**：
+   - 避免使用平台相關的命令（如 `ProcessBuilder` 來清除命令行），改用更通用的方法，這樣可以提高程式的跨平台兼容性。
+
+3. **代碼可讀性**：
+   - 保持良好的縮排和編碼風格，這樣可以提高代碼的可讀性和可維護性。
+
+希望這些建議能夠幫助你的學生進一步改進他們的程式碼。如果有任何問題或需要進一步的幫助，請隨時告訴我。

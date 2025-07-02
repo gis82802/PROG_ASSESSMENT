@@ -1,0 +1,15 @@
+設計井字棋遊戲(TicTacToe)中的類別，例如：ChessBoard, Player, Piece 等，思考每個類別應具備的成員函式，以及互動方式，例如：
+:
+// TicTacToe 類別可能的使cb, new Piece(5,6));   // 玩家 A 將棋子放在棋盤 cb的五子棋遊戲
+game.start();   // 開始遊戲
+game.checkGameOver();  //檢查是否有玩家勝利
+:
+// ChessBoard 類別可能的使用方式
+ChessBoard  cb = new ChessBoard();  // 建立一個棋盤
+cb.show(); // 印出目前棋盤內容
+:
+// Player 類別可能的使用方式
+Player playerA = new Player(Player.HUMAN_BK); // 建立一個玩家 playerA 執黑棋
+Player playerB = new Player(Player.COMPUTER);  // 建立一個電腦玩家
+
+playerA.setPieces(cb, new Piece(1,2));   // 玩家 A 將棋子放在棋盤 cb 的位置 (1,2)

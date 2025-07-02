@@ -1,0 +1,97 @@
+好的，以下是根據您的標準對這份作業的評分和分析：
+
+### 1. 評分
+- **備註(滿分20)**: 18
+  - 說明：程式包含了對其功能的明確說明，但缺少一些細節，例如作者的學號或更詳細的版本資訊。
+- **格式(滿分25)**: 22
+  - 說明：整體格式和縮排良好，但變數命名和部分註解可以更清晰。
+- **準確性(滿分25)**: 25
+  - 說明：程式能正確地反轉數字。
+- **邏輯(滿分30)**: 28
+  - 說明：邏輯基本正確，但可以更簡潔和高效。
+
+**總分**: 93
+
+### 2. 優缺點分析
+**優點**:
+1. 程式功能明確，能夠正確反轉數字。
+2. 使用了適當的數學運算來反轉數字。
+3. 變數命名基本清晰。
+
+**缺點**:
+1. 變數命名可以更直觀，例如 `Reverse_Num` 可以改為 `reversedNum`。
+2. 註解可以更詳細，特別是對於迴圈的解釋。
+3. 可以加入對使用者輸入的檢查，避免輸入過大的數字。
+
+### 3. 改進的程式碼
+```java
+/*檔案標頭
+filename: ch5_9.java
+function: Reverse the digit order of an integer given by the user
+author: 劉宗修
+date: 2024/10/11
+version: jdk23
+*/
+
+//函式庫導入
+import java.util.Scanner; //引入Scanner
+
+public class ch5_9
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in); //初始化Scanner套件
+
+        //變數設定
+        int num = 0; //儲存使用者輸入值
+        int reversedNum = 0; //儲存和計算反轉的數字
+
+        //輸入讀取
+        System.out.print("請輸入一個小於10000的整數(Int):");
+        num = sc.nextInt(); //讓使用者輸入int
+
+        //處理負數情況
+        boolean isNegative = num < 0;
+        if (isNegative) {
+            num = -num;
+        }
+
+        //迴圈
+        for (; num != 0; num /= 10)
+        {
+            int digit = num % 10;
+            reversedNum = reversedNum * 10 + digit;
+        }
+
+        //處理負數結果
+        if (isNegative) {
+            reversedNum = -reversedNum;
+        }
+
+        //輸出結果
+        System.out.println("反轉後的整數: " + reversedNum);
+
+        //程式結束
+        sc.close();
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **變數命名**:
+   - 將 `Reverse_Num` 改為 `reversedNum`，使變數名稱更符合Java的命名規範。
+
+2. **處理負數**:
+   - 增加了對負數的處理，確保輸入的負數也能正確反轉。
+
+3. **程式碼格式**:
+   - 調整了部分註解位置和內容，使註解更清晰。
+
+### 5. 改進建議和反饋
+1. **變數命名**: 請使用駝峰式命名法（Camel Case），這樣的命名方式更符合Java的編碼風格。
+2. **註解**: 請在關鍵步驟加入更多註解，特別是對於迴圈的解釋。
+3. **輸入檢查**: 可以考慮加入對使用者輸入的檢查，避免輸入過大的數字或非法輸入。
+4. **負數處理**: 記得考慮負數情況，確保程式能夠正確處理所有可能的輸入。
+5. **測試**: 多進行一些測試，確保程式在不同情況下都能正確運行。
+
+希望這些建議能幫助您的學生提高他們的程式設計能力。

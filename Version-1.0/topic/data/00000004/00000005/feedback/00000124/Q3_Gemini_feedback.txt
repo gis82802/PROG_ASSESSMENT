@@ -1,0 +1,74 @@
+好的，我將按照您的要求，對您學生提交的作業進行評估、分析並提供改進建議。
+
+**1. 評分：**
+
+*   **備註 (滿分20):** 15分 - 程式開頭沒有檔案/類別層級的說明，但方法內部有簡單註解，說明了變數的用途。
+*   **格式 (滿分25):** 20分 - 程式碼縮排基本正確，變數命名尚可，但可以更具可讀性，例如`In_a`可以改為`inputA`。
+*   **準確性 (滿分25):** 20分 - 在大多數情況下，程式可以產生正確的結果，但是當三個數相等時，middle的值會出錯(見程式碼分析)。
+*   **邏輯 (滿分30):** 20分 - 程式的邏輯基本正確，使用了三元運算符避免了`if-else`的使用，但判斷中間值的邏輯可以更簡潔。
+
+**總分：75/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   成功避免了使用`if-else`語句，符合題目要求。
+    *   程式碼結構清晰，易於理解。
+    *   使用了三元運算符，程式碼相對簡潔。
+*   **缺點：**
+    *   **註解不足：** 程式缺少整體性的說明，例如程式的功能、作者、日期等。
+    *   **變數命名：** 變數命名可以更加直觀，提高可讀性。例如`In_a`可以改成`inputA`。
+    *   **Middle的計算邏輯複雜：** 計算中間值的邏輯略顯複雜，可以簡化。特別是處理三個數相等的情況時，存在缺陷。當In_a, In_b, In_c相等時，第一個middle的判斷會跳過，然後走到第二個判斷，因為(In_a==In_b)成立，所以middle會被賦值In_a。但程式的意圖應該是，三個數相等時，middle應該也是那個相同的值，但目前的程式碼不能保證這一點。
+    *   **缺乏錯誤處理：** 沒有考慮使用者輸入非整數的情況。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class app4_4 {
+    public static void main(String[] arg) {
+        Scanner sc = new Scanner(System.in);
+        int inputA, inputB, inputC;  // 輸入值a、b、c
+        int max, middle, min;        // 最大值、中間值、最小值
+
+        // 輸入初值
+        System.out.print("請輸入a值:");
+        inputA = sc.nextInt();
+        System.out.print("請輸入b值:");
+        inputB = sc.nextInt();
+        System.out.print("請輸入c值:");
+        inputC = sc.nextInt();
+
+        // 計算最大值
+        max = (inputA > inputB) ? ((inputA > inputC) ? inputA : inputC) : ((inputB > inputC) ? inputB : inputC);
+
+        // 計算最小值
+        min = (inputA < inputB) ? ((inputA < inputC) ? inputA : inputC) : ((inputB < inputC) ? inputB : inputC);
+
+        // 計算中間值
+        middle = (inputA + inputB + inputC) - max - min;  //總和減去最大值與最小值，剩下中間值
+
+        System.out.println("MAX=" + max);
+        System.out.println("MIN=" + min);
+        System.out.println("MIDDLE=" + middle);
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **變數命名：** 將`In_a`、`In_b`、`In_c`改為`inputA`、`inputB`、`inputC`，提高可讀性。
+*   **簡化中間值計算：**  計算中間值的方式更改為 `middle = (inputA + inputB + inputC) - max - min;`。  這個方法利用了三個數的總和減去最大值和最小值，剩下的就是中間值。這樣不僅簡潔，而且在三個數相等時也能得到正確的結果。
+*   **刪除冗餘程式碼：** 刪除了原本計算中間值的第二行程式碼，因為它是不必要的且存在缺陷。
+
+**5. 改進建議和反饋：**
+
+*   **註解：**  增加程式碼的註解，特別是程式碼的功能、作者、建立/修改日期等，方便他人理解和維護。
+*   **錯誤處理：**  加入錯誤處理機制，例如使用`try-catch`語句來捕獲`InputMismatchException`，防止使用者輸入非整數時程式崩潰。
+*   **程式碼風格：** 雖然目前的程式碼風格基本符合規範，但可以參考Google Java Style Guide等規範，使程式碼更加統一和易讀。
+*   **可擴展性：** 雖然題目只要求處理三個數，但可以考慮將程式改造成可以處理任意多個數的情況，例如使用陣列來儲存輸入值。
+
+**總結：**
+
+你的學生成功地避免了使用`if-else`語句，這是值得肯定的。但程式碼在可讀性、邏輯簡潔性和錯誤處理方面還有提升空間。通過這次作業，學生可以學習到如何編寫更清晰、更健壯的程式碼。 希望這次的評估和建議對您和您的學生有所幫助！

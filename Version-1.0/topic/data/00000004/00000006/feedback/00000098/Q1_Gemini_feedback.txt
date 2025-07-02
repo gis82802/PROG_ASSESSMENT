@@ -1,0 +1,95 @@
+好的，我將根據您的標準評估這份作業，並提供改進建議。
+
+**1. 評分**
+
+*   **備註 (滿分 20):** 5 分。程式碼開頭有檔案名稱、作者和日期，但功能說明非常簡短，沒有解釋演算法的原理或程式的目標。缺少對 `cPi` 和 `MPi` 函數具體作用的描述。
+*   **格式 (滿分 25):** 18 分。縮排基本正確，但變數命名 `a` 沒有明確的意義，可讀性較差。 輸出語句中的亂碼和函數名稱中的不一致的格式扣分。
+*   **準確性 (滿分 25):** 20 分。程式能計算出 pi 值，但輸出包含亂碼，影響了結果的呈現。`MPi` 函數的計算結果可以達到目標精度。
+*   **邏輯 (滿分 30):** 25 分。程式邏輯基本正確，使用了迴圈和數學公式來近似計算 pi 值。但 `MPi` 函数中 `while` 循环的条件略有瑕疵，可能导致循环次数过多。
+
+**總分：68/100**
+
+**2. 優缺點分析**
+
+**優點：**
+
+*   **基本功能實現：** 程式成功計算了指定 i 值下的 pi 值，並能找到滿足精度要求的最小 i 值。
+*   **結構清晰：** 使用了兩個函數 `cPi` 和 `MPi` 將程式碼分成兩個部分，分別處理不同的計算需求。
+
+**缺點：**
+
+*   **備註不足：** 缺少對程式功能和演算法的詳細說明，可讀性差。
+*   **格式問題：**
+    *   變數命名不夠直觀 (`a`)。
+    *   輸出語句包含亂碼。
+    *   函數名稱中的中英文混用（`cPi`和`MPi`）。
+*   **輸出不清晰：** 輸出的格式不一致，且含有亂碼，影響使用者體驗。
+*   **效率問題：** `MPi` 函數中， `while` 循環的條件 `Math.abs(pi * 4 - targetPi) > 0.000001` 每次都重新計算 `pi * 4`，可以優化。
+
+**3. 改進的程式碼**
+
+```java
+// File name: app5_1
+// Author: 41243142
+// Function: This program calculates the approximate value of pi using the formula:
+//           pi = 4 * (1 - 1/3 + 1/5 - 1/7 + ... + (-1)^i / (2*i + 1))
+//           It first calculates pi for i = 10000, 20000, ..., 100000.
+//           Then, it finds the minimum i value required to achieve pi = 3.14159 with a certain precision.
+// Date: 24/10/11
+
+public class app5_1 {
+    public static void main(String[] args) {
+        int startIterations = 10000;
+        for (int i = 1; i <= 10; i++) {
+            calculatePi(startIterations);
+            startIterations += 10000;
+        }
+        findMinimumIterations(3.14159);
+    }
+
+    // Calculates pi for a given number of iterations
+    public static void calculatePi(int iterations) {
+        double pi = 0.0;
+        for (int i = 0; i < iterations; i++) {
+            pi += Math.pow(-1, i) / (2 * i + 1);
+        }
+        pi *= 4;
+        System.out.printf("i = %d, pi = %.6f\n", iterations, pi);
+    }
+
+    // Finds the minimum number of iterations required to achieve a target pi value
+    public static void findMinimumIterations(double targetPi) {
+        double pi = 0.0;
+        int i = 0;
+        double calculatedPi; // Store pi * 4 to avoid repeated calculation
+        do {
+            pi += Math.pow(-1, i) / (2 * i + 1);
+            i++;
+            calculatedPi = pi * 4;
+        } while (Math.abs(calculatedPi - targetPi) > 0.000001);
+
+        System.out.printf("i = %d, pi = %.6f, targetPi = %.6f\n", i, calculatedPi, targetPi);
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **備註：** 在程式碼開頭添加了更詳細的備註，解釋程式的功能和演算法。
+*   **變數命名：** 將變數 `a` 改為 `startIterations`，使其意義更明確。
+*   **函數命名：** 將 `cPi` 改為 `calculatePi`，`MPi`改為`findMinimumIterations`，統一使用英文。
+*   **輸出：** 修改了輸出語句，避免亂碼，並使格式更清晰。
+*   **效率：** 在 `findMinimumIterations` 函數中，將 `pi * 4` 的計算結果儲存在 `calculatedPi` 變數中，避免在 `while` 迴圈中重複計算。
+*   **邏輯：** `findMinimumIterations`函数中，将`while`循环改为`do...while`循环，确保至少计算一次pi值。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格：** 繼續保持良好的縮排習慣，並注意變數和函數的命名規範，使其具有描述性。
+*   **備註：** 在程式碼中添加適當的備註，解釋程式的功能、演算法和設計思路。
+*   **錯誤處理：** 考慮添加錯誤處理機制，例如，檢查輸入的有效性。
+*   **可讀性：** 程式碼應易於理解和維護。可以使用更有意義的變數名稱、更清晰的邏輯結構，以及更詳細的備註來提高可讀性。
+*   **效率：** 考慮程式的效能，避免不必要的計算和資源浪費。
+*   **測試：** 编写完整的测试用例来验证代码的正确性。
+*   **關於亂碼問題:** 確保您的程式碼檔案保存為 UTF-8 編碼，並且您的終端或 IDE 也使用 UTF-8 編碼。這通常可以解決亂碼問題。
+
+總體而言，您的程式碼在基本功能上是正確的，但仍有改進的空間，特別是在程式碼風格、備註和輸出方面。 透過這些改進，可以使程式碼更易於理解、維護和擴展。

@@ -1,0 +1,93 @@
+根據您的標準，我將對這份作業進行評分並提供改進建議。
+
+### 1. 評分
+- **備註（滿分20）**：該程式沒有包含對其功能的明確說明。分數：0
+- **格式（滿分25）**：程式碼的縮排和編碼風格基本適當，但部分地方可以改進。分數：20
+- **準確性（滿分25）**：程式在輸入正確的2x2矩陣時能夠計算出正確的反矩陣。分數：25
+- **邏輯（滿分30）**：程式邏輯基本正確，但缺乏對行列式為零的情況的處理。分數：20
+
+總分：65
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式能夠正確計算2x2矩陣的反矩陣。
+2. 程式碼結構清晰，易於理解。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 未處理行列式為零的情況，可能會導致除以零的錯誤。
+3. 輸入矩陣的元素使用了 `scn.nextInt()`，但應該使用 `scn.nextDouble()` 來處理浮點數。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class hw1025_3_2
+{
+    public static void main(String[] args)
+    {
+        Scanner scn = new Scanner(System.in);
+
+        System.out.println("輸入2*2矩陣A內容:");
+        double[][] A = new double[2][2];
+        for(int i = 0; i < 2; i++)
+            for(int j = 0; j < 2; j++)
+                A[i][j] = scn.nextDouble();
+
+        double[][] result = invMatrix(A);
+
+        if (result != null)
+        {
+            System.out.println("A反矩陣為:");
+            for(int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < 2; j++)
+                {
+                    System.out.print(result[i][j] + "  ");
+                }
+                System.out.println();
+            }
+        }
+        else
+        {
+            System.out.println("矩陣不可逆，無法計算反矩陣。");
+        }
+    }
+
+    public static double[][] invMatrix(double[][] A1)
+    {
+        double a = A1[0][0];
+        double b = A1[0][1];
+        double c = A1[1][0];
+        double d = A1[1][1];
+
+        double dt = a * d - b * c;
+
+        if (dt == 0)
+        {
+            return null; // 行列式為零，矩陣不可逆
+        }
+
+        double[][] r = {{d / dt, -b / dt}, {-c / dt, a / dt}};
+
+        return r;
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **修改輸入方式**：將 `scn.nextInt()` 改為 `scn.nextDouble()`，因為矩陣元素可能是浮點數。
+2. **處理行列式為零的情況**：在 `invMatrix` 方法中，檢查行列式是否為零。如果是，返回 `null`，並在主程式中處理這種情況，輸出提示訊息。
+3. **添加備註**：在程式開頭添加備註，說明程式的功能。
+
+### 5. 改進建議和反饋
+
+1. **添加備註**：在程式開頭添加備註，說明程式的功能和使用方法。
+2. **錯誤處理**：在程式中添加對可能出現的錯誤情況的處理，如行列式為零的情況。
+3. **輸入處理**：確保輸入的數據類型與程式處理的數據類型一致，避免類型不匹配的錯誤。
+4. **程式碼風格**：保持一致的縮排和編碼風格，使程式碼更易於閱讀和維護。
+
+希望這些建議能夠幫助學生改進他們的程式碼。

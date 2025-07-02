@@ -1,0 +1,174 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註** (滿分20): 該程式包含對其功能的明確說明，但說明部分有些字符不清楚，影響閱讀。分數：15
+- **格式** (滿分25): 程式碼保持了適當的縮排和編碼風格，但部分變數名稱和方法名稱不夠直觀。分數：20
+- **準確性** (滿分25): 程式在計算薪資方面有些問題，特別是「HourlyEmployee」的薪資計算方式不正確。分數：15
+- **邏輯** (滿分30): 程式的邏輯基本正確，但在計算薪資和設置工作時間方面有些問題。分數：20
+
+總分：70
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式結構清晰，使用了繼承和多態的概念。
+2. 每個類別都有相應的建構子和方法。
+3. 程式碼的格式和縮排基本合理。
+
+**缺點：**
+1. 備註部分有些字符不清楚，影響閱讀。
+2. 部分變數名稱和方法名稱不夠直觀。
+3. 「HourlyEmployee」的薪資計算方式不正確。
+4. 「References」類別的設計不夠靈活，無法針對不同員工設置不同的工作時間。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Random;
+
+/*
+	INFO:
+	----------------------------------------
+	FILE NAME:	hw20230314_2.java
+	FUNCTION:	建立一父類別 "Employee"(員工) 具有二個成員函式 "calculatePay" 和 "displayEmployeeInfo"。
+				建立繼承此父類別的子類別： "HourlyEmployee"(時薪員工), "SalaryEmployee"(正式員工), 和 "CommissionEmployee"(合約員工)。
+				這三個子類別都會改寫(override) 成員函式 "calculatePay"，並依照其計薪方式計算月薪資。
+				在主程式建立一個公司的物件，裡面包含這三種員工，計算這間公司一個月要發多少薪水來展示其功能。
+				這三種員工的物件要儲存在同一個陣列內。
+	AUTHOR(S):	41043243
+	VERSION:	1.0
+	----------------------------------------
+*/
+
+class Employee {
+    String employeeName = "";
+    protected int workHours = 0;
+
+    public Employee(String name) {
+        employeeName = name;
+        System.out.println("[INFO] Employee constructor called.");
+    }
+
+    public int calculatePay() {
+        return 0; // 父類別的計薪方法應該返回0，子類別會覆寫這個方法
+    }
+
+    public void setWorkHours(int hours, int days) {
+        workHours = hours * days;
+    }
+
+    public String displayEmployeeInfo() {
+        return "Name:\t" + employeeName;
+    }
+}
+
+class HourlyEmployee extends Employee {
+    private static final int hourPay = 250;
+
+    public HourlyEmployee(String name) {
+        super(name);
+    }
+
+    @Override
+    public int calculatePay() {
+        return hourPay * workHours;
+    }
+
+    @Override
+    public String displayEmployeeInfo() {
+        return "Name:\t" + employeeName + " Type: Hourly";
+    }
+}
+
+class SalaryEmployee extends Employee {
+    private static final int monthlySalary = 50000;
+
+    public SalaryEmployee(String name) {
+        super(name);
+    }
+
+    @Override
+    public int calculatePay() {
+        return monthlySalary;
+    }
+
+    @Override
+    public String displayEmployeeInfo() {
+        return "Name:\t" + employeeName + " Type: Salary";
+    }
+}
+
+class CommissionEmployee extends Employee {
+    private static final int basePay = 20000;
+    private static final int commission = 1000;
+
+    public CommissionEmployee(String name) {
+        super(name);
+    }
+
+    @Override
+    public int calculatePay() {
+        return basePay + commission * workHours;
+    }
+
+    @Override
+    public String displayEmployeeInfo() {
+        return "Name:\t" + employeeName + " Type: Commission";
+    }
+}
+
+public class hw20230314_2 {
+    public static void main(String args[]) {
+        Employee[] RandomCompany = new Employee[3];
+        RandomCompany[0] = new HourlyEmployee("Employee1");
+        RandomCompany[1] = new SalaryEmployee("Employee2");
+        RandomCompany[2] = new CommissionEmployee("Employee3");
+
+        RandomCompany[0].setWorkHours(6, 20);
+        RandomCompany[2].setWorkHours(6, 20);
+
+        int totalPayment = 0;
+        for (int i = 0; i < RandomCompany.length; i++) {
+            System.out.println(RandomCompany[i].displayEmployeeInfo());
+            System.out.println("Payment: " + RandomCompany[i].calculatePay());
+            totalPayment += RandomCompany[i].calculatePay();
+        }
+        System.out.println("Total Payment: " + totalPayment);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **移除了 `References` 類別**：
+   - 原因：這個類別的設計不夠靈活，無法針對不同員工設置不同的工作時間。將工作時間和薪資計算直接放入各個子類別中。
+
+2. **修改了 `HourlyEmployee` 的薪資計算方式**：
+   - 原因：原來的薪資計算方式不正確，應該根據工作時間和時薪計算。
+
+3. **修改了 `Employee` 類別的 `calculatePay` 方法**：
+   - 原因：父類別的計薪方法應該返回0，因為子類別會覆寫這個方法。
+
+4. **增加了 `SalaryEmployee` 和 `CommissionEmployee` 的薪資計算方式**：
+   - 原因：這兩個子類別需要有自己的薪資計算方式，而不是使用父類別的方法。
+
+5. **修改了 `CommissionEmployee` 的薪資計算方式**：
+   - 原因：原來的薪資計算方式不正確，應該根據基本薪資和佣金計算。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **備註部分需要更清晰**：
+   - 建議：使用簡單明瞭的文字描述程式的功能和設計思路，避免使用不清楚的字符。
+
+2. **變數名稱和方法名稱需要更直觀**：
+   - 建議：變數名稱和方法名稱應該反映其功能和用途，例如 `workHours` 可以改為 `totalWorkHours`。
+
+3. **靈活設計**：
+   - 建議：避免使用靜態變數來存儲所有員工的工作時間和薪資，應該根據不同員工的需求設置不同的工作時間和薪資。
+
+4. **測試和驗證**：
+   - 建議：在完成程式後，應該進行充分的測試和驗證，確保程式的正確性和可靠性。
+
+5. **代碼重構**：
+   - 建議：適當地重構代碼，使其更加簡潔和易於理解。例如，可以將薪資計算方法放入各個子類別中，而不是在父類別中。
+
+希望這些建議能夠幫助學生改進他們的程式碼，提高程式的質量和可靠性。

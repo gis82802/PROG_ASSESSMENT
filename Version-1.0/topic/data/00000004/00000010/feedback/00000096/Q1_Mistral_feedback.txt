@@ -1,0 +1,198 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註(滿分20)：15
+- 格式(滿分25)：20
+- 準確性(滿分25)：20
+- 邏輯(滿分30)：25
+
+總分：80
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. **功能完整**：程式實現了矩陣相乘和2x2矩陣的反矩陣計算功能。
+2. **基本邏輯正確**：矩陣相乘和反矩陣的計算邏輯基本正確。
+3. **基本格式**：程式碼的縮排和基本格式較為整齊。
+
+**缺點：**
+1. **備註不足**：程式碼缺乏對功能的明確說明和註釋，使得閱讀者難以快速理解程式的功能和邏輯。
+2. **變數命名不夠直觀**：部分變數名稱（如 `f` 和 `f1`）不夠直觀，難以理解其功能。
+3. **邏輯可改進**：反矩陣計算部分的邏輯可以進一步優化，以提高可讀性和效率。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class a1025_1 {
+    public static void main(String arg[]) {
+        Scanner scn = new Scanner(System.in);
+
+        // 輸入陣列1
+        System.out.print("請輸入陣列1大小(M和N):");
+        int m = scn.nextInt(), n = scn.nextInt();
+        double arr[][] = new double[m][n];
+        System.out.print("請輸入陣列1內容:");
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                arr[i][j] = scn.nextDouble();
+
+        // 輸入陣列2
+        System.out.print("請輸入陣列2大小(M和N):");
+        int m1 = scn.nextInt(), n1 = scn.nextInt();
+        double arr1[][] = new double[m1][n1];
+        System.out.print("請輸入陣列2內容:");
+        for (int i = 0; i < m1; i++)
+            for (int j = 0; j < n1; j++)
+                arr1[i][j] = scn.nextDouble();
+
+        // 呼叫矩陣乘法副程式
+        double arr_OUT[][] = matrixMultiply(arr, arr1);
+        if (arr_OUT != null) {
+            System.out.println("矩陣相乘結果:");
+            for (int i = 0; i < arr_OUT.length; i++) {
+                for (int j = 0; j < arr_OUT[i].length; j++)
+                    System.out.printf("%.2f ", arr_OUT[i][j]);
+                System.out.println();
+            }
+        } else {
+            System.out.println("這兩個矩陣不能相乘");
+        }
+
+        // 反矩陣測試
+        double arr2[][] = new double[2][2];
+        System.out.print("請輸入矩陣(2x2)內容:");
+        for (int i = 0; i < arr2.length; i++)
+            for (int j = 0; j < arr2[i].length; j++)
+                arr2[i][j] = scn.nextDouble();
+
+        double arr_inverse[][] = inverseMatrix(arr2);
+        if (arr_inverse != null) {
+            System.out.println("此矩陣的反矩陣為:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++)
+                    System.out.printf("%.2f ", arr_inverse[i][j]);
+                System.out.println();
+            }
+        } else {
+            System.out.println("此矩陣不可逆");
+        }
+    }
+
+    /**
+     * 矩陣相乘函數
+     * @param arr 第一個矩陣
+     * @param arr1 第二個矩陣
+     * @return 相乘結果矩陣，若無法相乘則回傳 null
+     */
+    public static double[][] matrixMultiply(double[][] arr, double[][] arr1) {
+        // 檢查矩陣是否可以相乘
+        if (arr[0].length != arr1.length) {
+            return null;
+        }
+
+        // 定義結果矩陣大小
+        int rows = arr.length;
+        int cols = arr1[0].length;
+        double[][] result = new double[rows][cols];
+
+        // 執行矩陣相乘
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < arr[0].length; k++) {
+                    result[i][j] += arr[i][k] * arr1[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 計算2x2矩陣的反矩陣
+     * @param matrix 2x2矩陣
+     * @return 反矩陣，若不可逆則回傳 null
+     */
+    public static double[][] inverseMatrix(double[][] matrix) {
+        int n = matrix.length;
+        double det = determinant(matrix, n);
+
+        if (det == 0) {
+            return null; // 矩陣不可逆
+        }
+
+        // 計算伴隨矩陣
+        double[][] adj = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                // 計算每個元素的余子矩陣
+                double[][] temp = new double[n - 1][n - 1];
+                for (int row = 0, tempRow = 0; row < n; row++) {
+                    if (row == i)
+                        continue;
+                    for (int col = 0, tempCol = 0; col < n; col++) {
+                        if (col == j)
+                            continue;
+                        temp[tempRow][tempCol++] = matrix[row][col];
+                    }
+                    tempRow++;
+                }
+                adj[j][i] = Math.pow(-1, i + j) * determinant(temp, n - 1);
+            }
+        }
+
+        // 計算反矩陣
+        double[][] inverse = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                inverse[i][j] = adj[i][j] / det;
+            }
+        }
+        return inverse;
+    }
+
+    /**
+     * 計算矩陣的行列式
+     * @param matrix 矩陣
+     * @param n 矩陣的大小
+     * @return 行列式的值
+     */
+    private static double determinant(double[][] matrix, int n) {
+        double det = 0;
+        if (n == 1) {
+            return matrix[0][0];
+        }
+
+        for (int f = 0; f < n; f++) {
+            double[][] temp = new double[n - 1][n - 1];
+            for (int i = 1; i < n; i++) {
+                int tempColIndex = 0;
+                for (int j = 0; j < n; j++) {
+                    if (j != f) {
+                        temp[i - 1][tempColIndex++] = matrix[i][j];
+                    }
+                }
+            }
+            det += Math.pow(-1, f) * matrix[0][f] * determinant(temp, n - 1);
+        }
+        return det;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **函數名稱**：將 `f` 和 `f1` 函數名稱改為 `matrixMultiply` 和 `inverseMatrix`，以提高可讀性。
+2. **註釋**：在函數上方添加了註釋，說明每個函數的功能和參數。
+3. **變數命名**：保留原有變數名稱，但在必要時進行了補充說明。
+4. **輸出格式**：在輸出結果時添加了提示信息，使得輸出更加直觀。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **增加註釋**：在程式碼中增加更多的註釋，說明每個步驟的功能和邏輯，這樣可以幫助他人更快地理解你的程式。
+2. **變數命名**：使用更具描述性的變數名稱，這樣可以提高程式的可讀性。
+3. **邏輯優化**：在反矩陣計算部分，可以考慮進一步優化邏輯，以提高效率和可讀性。
+
+**反饋：**
+你的程式已經實現了基本的功能，但在可讀性和可維護性方面還有提升的空間。通過增加註釋和使用更具描述性的變數名稱，可以讓你的程式更易於理解和維護。希望你能在未來的作業中注意這些細節，進一步提高程式的質量。

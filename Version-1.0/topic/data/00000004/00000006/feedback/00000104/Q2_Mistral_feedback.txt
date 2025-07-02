@@ -1,0 +1,79 @@
+好的，讓我們根據您的標準來評分並分析這份作業。
+
+### 1. 評分
+- **備註 (20分)**：程式碼沒有對其功能進行明確說明，缺乏註解。（0分）
+- **格式 (25分)**：程式碼的縮排和編碼風格基本合理，但有些地方可以改進。（20分）
+- **準確性 (25分)**：程式能夠判斷數字是否為well-ordered number，但沒有實現計算100000以下的well-ordered number的數量。（10分）
+- **邏輯 (30分)**：程式邏輯基本正確，但有些地方可以優化。（20分）
+
+總分：50分
+
+### 2. 優缺點分析
+**優點：**
+1. 程式能夠正確判斷數字是否為well-ordered number。
+2. 基本的縮排和編碼風格合理。
+
+**缺點：**
+1. 缺乏註解，無法明確說明程式功能。
+2. 沒有實現計算100000以下的well-ordered number的數量。
+3. 變數命名不夠直觀，例如`cun`和`cnt1`。
+4. 程式邏輯可以進一步優化，例如可以使用更高效的方法來判斷well-ordered number。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class HW2 {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Input an integer number: ");
+        int num = scan.nextInt();
+
+        // Check if the input number is a well-ordered number
+        if (isWellOrdered(num)) {
+            System.out.printf("%d is a well-ordered number\n", num);
+        } else {
+            System.out.printf("%d is not a well-ordered number\n", num);
+        }
+
+        // Count the number of well-ordered numbers under 100000
+        int count = 0;
+        for (int i = 1; i < 100000; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+        System.out.printf("There are %d well-ordered numbers under 100000\n", count);
+
+        scan.close();
+    }
+
+    // Function to check if a number is well-ordered
+    public static boolean isWellOrdered(int num) {
+        int prevDigit = 10; // Initialize to a value greater than any digit
+        while (num > 0) {
+            int currDigit = num % 10;
+            if (currDigit >= prevDigit) {
+                return false;
+            }
+            prevDigit = currDigit;
+            num /= 10;
+        }
+        return true;
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **添加註解**：增加了對程式功能的註解，使程式更易於理解。
+2. **變數命名**：將`cun`改為`prevDigit`，將`cnt1`改為`currDigit`，使變數名稱更直觀。
+3. **邏輯優化**：將判斷well-ordered number的邏輯封裝在`isWellOrdered`函數中，使主程式更簡潔。
+4. **實現計數功能**：添加了計算100000以下well-ordered number的數量的功能。
+
+### 5. 改進建議和反饋
+1. **添加註解**：建議在程式中添加註解，說明每個部分的功能，使程式更易於理解和維護。
+2. **變數命名**：使用更直觀的變數名稱，使程式更易讀。
+3. **模組化設計**：將功能封裝在函數中，使程式結構更清晰。
+4. **綜合測試**：在提交作業前，建議進行多次測試，確保程式在各種情況下都能正確運行。
+
+希望這些建議能夠幫助學生改進他們的作業。如果有任何問題，請隨時告訴我。

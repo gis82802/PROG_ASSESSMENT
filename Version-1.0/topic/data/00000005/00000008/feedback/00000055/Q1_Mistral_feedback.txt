@@ -1,0 +1,158 @@
+根據您的標準，以下是這份作業的評分和分析：
+
+### 1. 評分
+- 備註 (20分)：15分
+- 格式 (25分)：18分
+- 準確性 (25分)：20分
+- 邏輯 (30分)：25分
+
+總分：78分
+
+### 2. 分析優缺點
+
+#### 優點：
+1. **功能完整**：程式包含了所有必要的功能，如新增產品、刪除產品、新增數量、減少數量以及計算庫存總價值。
+2. **基本格式**：程式碼的縮排和基本格式還算合理，閱讀起來不會太困難。
+3. **邏輯正確**：大部分邏輯都是正確的，能夠正確地處理庫存管理的各種操作。
+
+#### 缺點：
+1. **備註不足**：程式缺乏對功能的明確說明，導致難以理解每個函式的用途。
+2. **格式不夠統一**：有些地方的縮排和編碼風格不夠統一，影響了程式碼的可讀性。
+3. **錯誤處理不足**：在某些操作中缺乏錯誤處理，例如在新增數量和減少數量時沒有檢查產品是否存在。
+4. **重複代碼**：主程式中有大量重複的代碼，可以通過函式封裝來簡化。
+
+### 3. 改進的程式碼
+
+```java
+package inventory;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// 庫存類別
+public class CW1
+{
+	public static void main(String[] args)
+	{
+		Scanner scn = new Scanner(System.in);
+		Inventory beverage_shop = new Inventory();
+		Inventory cellphone_shop = new Inventory();
+
+		beverage_shop.add_product("蘋果汁", 10, 25);
+		beverage_shop.products_list();
+		beverage_shop.add_quantity(1, 20);
+		beverage_shop.reduce_quantity(1, 10);
+		System.out.println("飲料店庫存總價值: " + beverage_shop.prices_sum() + " 元");
+		beverage_shop.product_overview();
+		beverage_shop.delete_product(1);
+
+		cellphone_shop.add_product("蘋果手機", 10, 25000);
+		cellphone_shop.products_list();
+		cellphone_shop.add_quantity(1, 20);
+		cellphone_shop.reduce_quantity(1, 10);
+		System.out.println("手機店庫存總價值: " + cellphone_shop.prices_sum() + " 元");
+		cellphone_shop.product_overview();
+		cellphone_shop.delete_product(1);
+	}
+}
+
+class Inventory
+{
+	private ArrayList<String> product = new ArrayList<String>();
+	private ArrayList<Integer> quantity = new ArrayList<Integer>();
+	private ArrayList<Integer> price = new ArrayList<Integer>();
+
+	public Inventory(){}
+
+	// 新增產品
+	public void add_product(String name, int qty, int price)
+	{
+		product.add(name);
+		quantity.add(qty);
+		this.price.add(price);
+	}
+
+	// 刪除產品
+	public void delete_product(int index)
+	{
+		if (index >= 0 && index < product.size()) {
+			product.remove(index);
+			quantity.remove(index);
+			this.price.remove(index);
+		} else {
+			System.out.println("產品不存在");
+		}
+	}
+
+	// 新增數量
+	public void add_quantity(int index, int qty)
+	{
+		if (index >= 0 && index < product.size()) {
+			quantity.set(index, quantity.get(index) + qty);
+		} else {
+			System.out.println("產品不存在");
+		}
+	}
+
+	// 減少數量
+	public void reduce_quantity(int index, int qty)
+	{
+		if (index >= 0 && index < product.size()) {
+			if (quantity.get(index) - qty < 0) {
+				quantity.set(index, 0);
+			} else {
+				quantity.set(index, quantity.get(index) - qty);
+			}
+		} else {
+			System.out.println("產品不存在");
+		}
+	}
+
+	// 計算庫存總價值
+	public int prices_sum()
+	{
+		int sum = 0;
+		for (int i = 0; i < product.size(); i++) {
+			sum += quantity.get(i) * price.get(i);
+		}
+		return sum;
+	}
+
+	// 列出產品清單
+	public void products_list()
+	{
+		for (int i = 0; i < product.size(); i++) {
+			System.out.println((i + 1) + ". " + product.get(i));
+		}
+	}
+
+	// 產品概覽
+	public void product_overview()
+	{
+		System.out.println("產品名稱　　數量　　價格");
+		for (int i = 0; i < product.size(); i++) {
+			System.out.println(product.get(i) + "　　" + quantity.get(i) + "　　" + price.get(i));
+		}
+	}
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **類別和函式名稱的修改**：
+   - 將類別名稱從 `inventory` 改為 `Inventory`，以符合Java的命名規範。
+   - 將變數名稱 `price` 改為 `this.price`，以避免與函式參數名稱衝突。
+
+2. **錯誤處理**：
+   - 在 `delete_product`、`add_quantity` 和 `reduce_quantity` 函式中添加了檢查，確保操作的產品存在。
+
+3. **重複代碼的簡化**：
+   - 移除了主程式中的重複代碼，並且將重複的操作封裝在函式中。
+
+### 5. 改進建議和反饋
+
+1. **增加備註**：在每個函式前增加註解，說明函式的用途和參數。
+2. **統一格式**：確保所有程式碼的縮排和編碼風格統一，提高可讀性。
+3. **錯誤處理**：在所有可能出錯的地方添加錯誤處理，避免程式在運行時出現未預期的錯誤。
+4. **模組化**：將重複的代碼封裝在函式中，提高程式的可維護性和可讀性。
+
+希望這些改進和建議能夠幫助學生提升程式設計的能力。

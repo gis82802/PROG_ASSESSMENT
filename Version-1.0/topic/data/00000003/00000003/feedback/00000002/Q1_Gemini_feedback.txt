@@ -1,0 +1,191 @@
+好的，我将根据您的标准对这份作业进行评分、分析并提供改进建议。
+
+**1. 评分：**
+
+*   **备註 (10/20):**  程式碼缺少對 `MatMultiply` 函式的實作，也缺少對 Inventory 類別作用的說明。雖然程式碼可讀，但缺乏整體功能的描述。
+*   **格式 (20/25):**  程式碼縮排和命名風格基本一致，易於閱讀。但類別名稱 `app_1` 較不具描述性。
+*   **準確性 (20/25):**  提供的 `Inventory` 類別功能基本正確，可以新增、移除、增加/減少產品數量，並計算總價值。但缺少錯誤處理，例如產品不存在時的處理。
+*   **邏輯 (20/30):**  `Inventory` 類別的邏輯基本合理，但可以考慮使用介面來定義產品行為，並允許不同類型的產品。缺少 `MatMultiply` 函式的實作是主要問題。
+
+**總分：70/100**
+
+**2. 優缺點分析：**
+
+**優點：**
+
+*   **程式碼可讀性高：** 縮排一致，命名基本合理，易於理解程式碼的意圖。
+*   **基本功能完整：** `Inventory` 類別提供了商品管理的基本功能。
+*   **使用HashMap：** 合適的選擇，方便快速查找商品。
+
+**缺點：**
+
+*   **缺少 `MatMultiply` 函式：**  這是主要問題，未完成作業要求。
+*   **備註不足：**  程式碼缺乏必要的說明，不利於他人理解。
+*   **錯誤處理缺失：**  未考慮產品不存在時的錯誤處理，程式健壯性不足。
+*   **類別命名不佳：** `app_1` 命名不具描述性，應改為更易懂的名稱。
+*   **缺乏介面抽象：**  `Inventory` 類別直接依賴於 `product` 內部類別，缺乏彈性，不利於擴展。
+*   **amount_、price_變數命名不夠直觀:** 可以改為amount、price
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Map;
+import java.util.HashMap;
+
+class Inventory {
+    Inventory() {
+        productMap = new HashMap<String, Product>();
+    }
+
+    private class Product {
+        public Product(int price) {
+            this.price = price;
+            this.amount = 0; // 初始化商品數量為0
+        }
+
+        public int amount;
+        public int price;
+    }
+
+    public void add_product(String productName, int price) {
+        if (productMap.containsKey(productName)) {
+            System.out.println("商品已存在：" + productName); // 錯誤處理：商品已存在
+            return;
+        }
+        productMap.put(productName, new Product(price));
+    }
+
+    public void remove_product(String productName) {
+        if (!productMap.containsKey(productName)) {
+            System.out.println("商品不存在：" + productName); // 錯誤處理：商品不存在
+            return;
+        }
+        productMap.remove(productName);
+    }
+
+    public void increase_amount_product(String productName, int amount) {
+        if (!productMap.containsKey(productName)) {
+            System.out.println("商品不存在：" + productName); // 錯誤處理：商品不存在
+            return;
+        }
+        productMap.get(productName).amount += amount;
+    }
+
+    public void decrease_amount_product(String productName, int amount) {
+        if (!productMap.containsKey(productName)) {
+            System.out.println("商品不存在：" + productName); // 錯誤處理：商品不存在
+            return;
+        }
+
+        Product product = productMap.get(productName);
+        if (product.amount < amount) {
+            System.out.println("商品數量不足：" + productName); // 錯誤處理：商品數量不足
+            return;
+        }
+        product.amount -= amount;
+    }
+
+    public void show_product() {
+        for (Map.Entry<String, Product> entry : productMap.entrySet()) {
+            System.out.println(
+                    "商品名稱：" + entry.getKey() +
+                            "\n    價格：" + entry.getValue().price +
+                            "\n    數量：" + entry.getValue().amount);
+        }
+    }
+
+    public int total_product() {
+        int cost = 0;
+        for (Map.Entry<String, Product> entry : productMap.entrySet()) {
+            cost += entry.getValue().amount * entry.getValue().price;
+        }
+        return cost;
+    }
+
+    private Map<String, Product> productMap;
+}
+
+class MatMultiply {
+    public static int[][] multiplyMatrices(int[][] matrix1, int[][] matrix2) {
+        if (matrix1[0].length != matrix2.length) {
+            System.out.println("矩陣大小不符，無法相乘");
+            return null;
+        }
+
+        int rows1 = matrix1.length;
+        int cols2 = matrix2[0].length;
+        int cols1 = matrix1[0].length; // matrix1的列數也是matrix2的行數
+
+        int[][] result = new int[rows1][cols2];
+
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                for (int k = 0; k < cols1; k++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+}
+
+// 應用程式類別
+class MainApp {
+    public static void main(String[] args) {
+        Inventory drinkShop = new Inventory();
+        Inventory phoneShop = new Inventory();
+
+        drinkShop.add_product("tea", 25);
+        drinkShop.add_product("milk tea", 40);
+        drinkShop.increase_amount_product("tea", 50);
+        drinkShop.increase_amount_product("milk tea", 30);
+        drinkShop.show_product();
+        System.out.println("總商品價格：" + drinkShop.total_product());
+
+        System.out.println();
+
+        phoneShop.add_product("iphone", 30000);
+        phoneShop.add_product("htc one", 12000);
+        phoneShop.increase_amount_product("iphone", 20);
+        phoneShop.increase_amount_product("htc one", 60);
+        phoneShop.show_product();
+        System.out.println("總商品價格：" + phoneShop.total_product());
+
+        // 矩陣相乘測試
+        int[][] matrixA = {{1, 2}, {3, 4}};
+        int[][] matrixB = {{5, 6}, {7, 8}};
+        int[][] resultMatrix = MatMultiply.multiplyMatrices(matrixA, matrixB);
+
+        if (resultMatrix != null) {
+            System.out.println("\n矩陣相乘結果：");
+            for (int i = 0; i < resultMatrix.length; i++) {
+                for (int j = 0; j < resultMatrix[0].length; j++) {
+                    System.out.print(resultMatrix[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **新增 `MatMultiply` 類別和 `multiplyMatrices` 函式：**  根據作業要求，實作了矩陣相乘的函式。如果矩陣大小不符，則回傳 `null`。
+*   **錯誤處理：** 在 `Inventory` 類別的 `add_product`、`remove_product`、`increase_amount_product` 和 `decrease_amount_product` 函式中，新增了錯誤處理，例如檢查商品是否存在，商品數量是否足夠等。
+*   **修改變數名稱:** 將amount_、price_改為amount、price，增加可讀性
+*   **增加備註：** 在 `multiplyMatrices` 加上判斷大小是否符合的備註
+*   **調整命名：**  將 `app_1` 改為 `MainApp`，使類別名稱更具描述性。 `product_map`改為 `productMap`，提高可讀性。
+*   **初始化商品數量：** 在 `Product` 類別的建構函式中，初始化商品數量為0。
+*   **測試 `MatMultiply` 函式：** 在 `MainApp` 的 `main` 函式中，增加了矩陣相乘的測試程式碼，並將結果輸出到控制台。
+
+**5. 改進建議和反饋：**
+
+*   **完成所有作業要求：** 這次作業的主要問題是缺少 `MatMultiply` 函式的實作。務必確保下次作業完成所有要求。
+*   **加強錯誤處理：**  在程式碼中加入更多的錯誤處理，使程式更加健壯。例如，可以拋出例外，或者返回錯誤碼。
+*   **增加備註：**  對程式碼進行詳細的備註，說明程式碼的功能、輸入、輸出和邊界條件。
+*   **學習使用介面：** 考慮使用介面來定義產品行為，使程式碼更具彈性和可擴展性。例如，可以建立一個 `Sellable` 介面，定義 `getPrice()` 和 `getDescription()` 方法，然後讓不同的產品類別實作這個介面。
+*   **命名：** 變數/函式命名清晰易懂，能讓讀者快速了解其用途。
+*   **測試：** 撰寫單元測試，驗證程式碼的正確性。
+
+希望這些建議能幫助您在下次作業中取得更好的成績。

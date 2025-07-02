@@ -1,0 +1,151 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註（滿分20）**：10/20
+  - 程式缺乏對其功能的明確說明，雖然有一些輸出提示，但沒有詳細的註解說明程式的功能和步驟。
+
+- **格式（滿分25）**：20/25
+  - 程式的縮排和編碼風格基本上是合理的，但有些地方可以改進，例如變數命名和註解的詳細程度。
+
+- **準確性（滿分25）**：25/25
+  - 程式能夠正確地計算矩陣乘法和反矩陣，並且在矩陣無法相乘或無法求反矩陣時回傳 null。
+
+- **邏輯（滿分30）**：25/30
+  - 程式的邏輯基本上是正確的，但在處理反矩陣時，沒有考慮矩陣是否可逆（即行列式是否為零）。
+
+**總分**：80/100
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點**：
+1. 程式能夠正確地計算矩陣乘法和反矩陣。
+2. 程式在矩陣無法相乘或無法求反矩陣時會回傳 null，並且有相應的提示。
+3. 基本的輸入輸出處理和格式輸出是正確的。
+
+**缺點**：
+1. 缺乏對程式功能的詳細說明和註解。
+2. 變數命名不夠直觀，例如 `r` 和 `c` 可以改為 `rows` 和 `columns`。
+3. 在求反矩陣時，沒有考慮矩陣是否可逆。
+4. 程式碼中有一些冗餘的輸出提示，可以簡化。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+import Jama.Matrix;
+
+public class Test3 {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+
+        //========= 輸入矩陣
+        System.out.printf("請輸入第一個矩陣的行數: ");
+        int rows1 = s.nextInt();
+        System.out.printf("請輸入第一個矩陣的列數: ");
+        int columns1 = s.nextInt();
+        System.out.printf("請輸入第一個矩陣的值: ");
+
+        double[][] matrix1 = new double[rows1][columns1];  // 輸入第一個矩陣
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < columns1; j++) {
+                matrix1[i][j] = s.nextDouble();
+            }
+        }
+        Matrix M1 = new Matrix(matrix1);
+
+        System.out.printf("請輸入第二個矩陣的行數: ");
+        int rows2 = s.nextInt();
+        System.out.printf("請輸入第二個矩陣的列數: ");
+        int columns2 = s.nextInt();
+        System.out.printf("請輸入第二個矩陣的值: ");
+
+        double[][] matrix2 = new double[rows2][columns2];  // 輸入第二個矩陣
+        for (int i = 0; i < rows2; i++) {
+            for (int j = 0; j < columns2; j++) {
+                matrix2[i][j] = s.nextDouble();
+            }
+        }
+        Matrix M2 = new Matrix(matrix2);
+
+        //========= 處理輸出
+        M1.print(4, 1);
+        System.out.printf("     乘上\n");
+        M2.print(4, 1);
+        System.out.printf("     等於\n");
+
+        Matrix result = MatMultiply(M1, M2);
+        if (result != null) {
+            result.print(4, 1);
+        } else {
+            System.out.printf("        無法相乘\n");
+        }
+
+        System.out.printf("第一個矩陣的反矩陣為\n");
+        result = invMatrix(M1);
+        if (result != null) {
+            result.print(4, 1);
+        } else {
+            System.out.printf("無法求反矩陣\n");
+        }
+
+        System.out.printf("第二個矩陣的反矩陣為\n");
+        result = invMatrix(M2);
+        if (result != null) {
+            result.print(4, 1);
+        } else {
+            System.out.printf("無法求反矩陣\n");
+        }
+
+        s.close();
+    }
+
+    public static Matrix MatMultiply(Matrix M1, Matrix M2) {
+        if (M1.getColumnDimension() == M2.getRowDimension()) {
+            return M1.times(M2);
+        } else {
+            return null;
+        }
+    }
+
+    public static Matrix invMatrix(Matrix M) {
+        if (M.getColumnDimension() == M.getRowDimension()) {
+            try {
+                return M.inverse();
+            } catch (RuntimeException e) {
+                System.out.println("矩陣不可逆");
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名**：
+   - 將 `r` 和 `c` 改為 `rows` 和 `columns`，以使變數名稱更具描述性。
+
+2. **註解**：
+   - 增加了更多的註解，說明每個步驟的功能。
+
+3. **反矩陣計算**：
+   - 在求反矩陣時，增加了捕捉 `RuntimeException` 的處理，以確保在矩陣不可逆時能夠正確處理。
+
+4. **輸出提示**：
+   - 簡化了一些冗餘的輸出提示，使程式更簡潔。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議**：
+1. **增加註解**：在程式中增加更多詳細的註解，說明每個步驟的功能和目的。
+2. **變數命名**：使用更具描述性的變數名稱，使程式更易讀懂和維護。
+3. **錯誤處理**：在進行矩陣運算時，增加錯誤處理機制，確保程式在異常情況下能夠正確處理。
+4. **簡化輸出**：簡化一些冗餘的輸出提示，使程式更簡潔。
+
+**反饋**：
+- 總體來說，程式的功能實現得很好，能夠正確地計算矩陣乘法和反矩陣。
+- 需要注意的是，程式碼的可讀性和維護性還有改進的空間，特別是變數命名和註解方面。
+- 在處理矩陣運算時，增加錯誤處理機制，可以提高程式的穩定性和可靠性。
+
+希望這些建議和反饋能夠幫助學生進一步改進他們的程式碼。

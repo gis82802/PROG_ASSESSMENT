@@ -1,0 +1,113 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+
+- **備註 (滿分20)**：該程式沒有對其功能的明確說明，缺乏註釋。分數：5
+- **格式 (滿分25)**：程式碼的縮排和編碼風格還算合理，但可以更加規範。分數：20
+- **準確性 (滿分25)**：程式能夠正確計算2x2矩陣的反矩陣，並驗證結果。分數：25
+- **邏輯 (滿分30)**：程式邏輯基本正確，但可以更清晰。分數：25
+
+總分：5 + 20 + 25 + 25 = 75
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式能夠正確計算2x2矩陣的反矩陣並驗證結果。
+2. 基本的縮排和編碼風格還算合理。
+
+**缺點：**
+1. 缺乏註釋，無法讓讀者快速理解程式的功能。
+2. 變數命名不夠直觀，如 `a1`, `b1`, `flag`, `n` 等。
+3. 矩陣乘法的部分可以抽取成一個函式，提高程式的模組化。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class app7_H4 {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int size = 2;
+        double[][] matrix = new double[size][size];
+        double[][] inverseMatrix = new double[size][size];
+        double[][] resultMatrix = new double[size][size];
+
+        System.out.printf("Enter %2d*%2d array value = ", size, size);
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 計算反矩陣
+        inverseMatrix = invMatrix(matrix);
+
+        // 驗證矩陣乘法結果
+        resultMatrix = multiplyMatrices(matrix, inverseMatrix);
+
+        System.out.printf("Inverse array value = \n");
+        printMatrix(inverseMatrix);
+
+        System.out.printf("Array * Inverse array value = \n");
+        printMatrix(resultMatrix);
+    }
+
+    // 計算2x2矩陣的反矩陣
+    public static double[][] invMatrix(double[][] matrix) {
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        if (determinant == 0) {
+            throw new IllegalArgumentException("Matrix is not invertible");
+        }
+        double invDet = 1 / determinant;
+        double[][] inverseMatrix = new double[2][2];
+        inverseMatrix[0][0] = invDet * matrix[1][1];
+        inverseMatrix[0][1] = invDet * (-matrix[0][1]);
+        inverseMatrix[1][0] = invDet * (-matrix[1][0]);
+        inverseMatrix[1][1] = invDet * matrix[0][0];
+        return inverseMatrix;
+    }
+
+    // 矩陣乘法
+    public static double[][] multiplyMatrices(double[][] a, double[][] b) {
+        int size = a.length;
+        double[][] result = new double[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                for (int k = 0; k < size; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // 打印矩陣
+    public static void printMatrix(double[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.printf("%4.1f ", matrix[i][j]);
+            }
+            System.out.print("\n");
+        }
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **增加註釋**：在關鍵步驟添加註釋，讓讀者能夠快速理解程式的功能。
+2. **變數命名**：將變數名稱改為更直觀的名稱，如 `size`, `matrix`, `inverseMatrix`, `resultMatrix` 等。
+3. **模組化**：將計算反矩陣和矩陣乘法的部分抽取成獨立的函式 `invMatrix` 和 `multiplyMatrices`，提高程式的可讀性和可維護性。
+4. **錯誤處理**：在計算反矩陣時，檢查行列式是否為零，避免不可逆矩陣的情況。
+
+### 5. 改進建議和反饋
+
+1. **註釋**：在程式中增加註釋，說明每個步驟的功能和用途。
+2. **變數命名**：使用更直觀的變數名稱，讓程式更易讀。
+3. **模組化**：將重複使用的邏輯抽取成獨立的函式，提高程式的可讀性和可維護性。
+4. **錯誤處理**：在計算反矩陣時，檢查行列式是否為零，避免不可逆矩陣的情況。
+5. **測試**：多進行一些測試，確保程式在不同情況下都能正確運行。
+
+希望這些建議能夠幫助您的學生改進他們的程式碼。如果有任何問題，請隨時告訴我。

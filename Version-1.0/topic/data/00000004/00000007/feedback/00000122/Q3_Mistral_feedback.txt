@@ -1,0 +1,104 @@
+好的，根據您提供的標準和程式碼，我將逐一進行評分和分析。
+
+### 1. 評分
+
+- **備註 (滿分20)**: 該程式包含了對其功能的明確說明，但缺乏對每個函數的詳細說明。分數: 15
+- **格式 (滿分25)**: 程式碼的縮排和編碼風格基本上是適當的，但有些地方可以改進。分數: 20
+- **準確性 (滿分25)**: 程式能夠產生正確的結果，但有一些多余的功能（如replaceWithMin）。分數: 20
+- **邏輯 (滿分30)**: 程式的邏輯基本正確，但可以進一步優化。分數: 25
+
+總分：15 + 20 + 20 + 25 = 80
+
+### 2. 分析優缺點
+
+**優點**:
+1. 程式碼結構清晰，功能模塊化。
+2. 使用了適當的數據結構和循環。
+3. 提供了用戶輸入和輸出的功能。
+
+**缺點**:
+1. 缺乏對函數的詳細說明。
+2. 有一些多余的功能（如replaceWithMin）。
+3. 邏輯部分可以進一步優化，減少重複計算。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class homework101803 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int big;
+
+        System.out.println("請輸入陣列大小:");
+        big = scanner.nextInt();
+
+        int[] arr = new int[big];
+
+        System.out.println("請輸入" + big + "個整數：");
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.print("原始陣列: ");
+        printArray(arr);
+
+        int[] maxArr = replaceWithMax(arr);
+        System.out.print("以後面的最大值取代後: ");
+        printArray(maxArr);
+
+        scanner.close();
+    }
+
+    /**
+     * 將陣列中的每個元素替換為其右側的最大值，最後一個元素替換為-1
+     * @param arr 輸入的數組
+     * @return 替換後的數組
+     */
+    public static int[] replaceWithMax(int[] arr) {
+        int[] result = new int[arr.length];
+        int max = -1;
+
+        // 從後向前遍歷，找到每個位置右側的最大值
+        for (int i = arr.length - 1; i >= 0; i--) {
+            if (i == arr.length - 1) {
+                result[i] = -1;
+            } else {
+                if (arr[i + 1] > max) {
+                    max = arr[i + 1];
+                }
+                result[i] = max;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 打印數組
+     * @param arr 要打印的數組
+     */
+    public static void printArray(int[] arr) {
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+### 4. 說明修改的部分及原因
+
+1. **移除多余的 replaceWithMin 函數**：這個函數與題目要求無關，移除以使程式碼更簡潔。
+2. **優化 replaceWithMax 函數**：從後向前遍歷，減少重複計算，提高效率。
+3. **增加函數說明**：為 replaceWithMax 和 printArray 函數增加說明，使程式碼更易理解。
+
+### 5. 改進建議和反饋
+
+1. **增加註釋**：在每個函數和關鍵步驟添加註釋，使程式碼更易理解。
+2. **優化邏輯**：在邏輯部分，盡量減少重複計算，提高程式效率。
+3. **移除多余功能**：保持程式簡潔，移除與題目無關的功能。
+4. **測試邊界情況**：在程式中添加邊界情況的測試，確保程式在各種情況下都能正確運行。
+
+希望這些建議能幫助您的學生進一步改進他們的程式設計能力。

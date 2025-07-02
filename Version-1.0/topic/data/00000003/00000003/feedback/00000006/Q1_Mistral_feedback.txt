@@ -1,0 +1,201 @@
+根據您的標準，以下是對這份作業的評分和分析：
+
+### 1. 評分（0-100）
+- **備註 (20分)**: 15分
+  - 程式包含了對其功能的部分說明，但缺乏詳細的註解。
+- **格式 (25分)**: 20分
+  - 程式的縮排和編碼風格基本適當，但有些地方的縮排不夠一致。
+- **準確性 (25分)**: 25分
+  - 程式能夠正確計算二維矩陣相乘的結果，並且檢查矩陣是否可逆。
+- **邏輯 (30分)**: 25分
+  - 程式的邏輯基本正確，但在某些地方可以優化，例如逆矩陣的計算和驗證部分。
+
+總分：85分
+
+### 2. 優缺點分析
+**優點：**
+- 程式能夠正確計算二維矩陣的相乘結果。
+- 程式能夠檢查矩陣是否可逆，並計算逆矩陣。
+- 程式的結構清晰，易於理解。
+
+**缺點：**
+- 缺乏詳細的註解，導致程式的可讀性不高。
+- 某些地方的縮排不夠一致，影響程式的可讀性。
+- 逆矩陣的計算和驗證部分可以優化。
+
+### 3. 改進的程式碼
+```java
+public class hw
+{
+	public static void main(String[] args)
+	{
+		int A[][]={{1,2,3},{4,5,6}};
+		int B[][]={{1,2},{3,4},{5,6}};
+		int C[][];
+		C=MatMultiply(A,B);
+		System.out.println("A陣列內容:");
+		printMatrix(A);
+		System.out.println();
+		System.out.println("B陣列內容:");
+		printMatrix(B);
+		System.out.println();
+		System.out.println("兩矩陣相乘的結果=");
+		printMatrix(C);
+		System.out.println();
+
+		//A的逆矩陣
+		if(A.length==A[0].length&&A.length==2)
+		{
+			double[][] invA= invMatrix(A);
+			if (invA!= null)
+			{
+				//驗證A*invA是否為單位矩陣
+				double D[][]=MatMultiply(A,invA);
+				System.out.println("A * A的逆矩陣:");
+				printMatrix(D);
+				System.out.println();
+				boolean isIdentity = isIdentityMatrix(D);
+				if (isIdentity)
+				{
+					System.out.println("A 的逆矩陣:");
+					printMatrix(invA);
+				}
+				else
+				{
+					System.out.println("此逆矩陣有誤");
+				}
+			}
+			else
+			{
+				System.out.println("此矩陣不可逆");
+			}
+		}
+		else
+		{
+			System.out.println("此矩陣非2X2方陣");
+		}
+	}
+
+	//計算兩矩陣相乘 (int 和 int)
+	public static int[][] MatMultiply(int arr [][],int arr2 [][])
+	{
+		int product[][]=new int[arr.length][arr2[0].length];
+		if(arr[0].length!=arr2.length)
+		{
+			return null;
+		}
+		else
+		{
+			for(int i=0;i<arr.length;i++)
+			{
+				for(int j=0;j<arr2[0].length;j++)
+				{
+					for(int k=0;k<arr[0].length;k++)
+					{
+						product[i][j]+=arr[i][k]*arr2[k][j];
+					}
+				}
+			}
+			return product;
+		}
+	}
+
+	// 計算兩矩陣相乘 (int 和 double)
+	public static double[][] MatMultiply(int[][] arr, double[][] arr2)
+	{
+		double[][] product = new double[arr.length][arr2[0].length];
+		if (arr[0].length != arr2.length)
+		{
+			return null;
+		}
+		else
+		{
+			for (int i = 0; i < arr.length; i++)
+			{
+				for (int j = 0; j < arr2[0].length; j++)
+				{
+					for (int k = 0; k < arr[0].length; k++)
+					{
+						product[i][j] += arr[i][k] * arr2[k][j];
+					}
+				}
+			}
+			return product;
+		}
+	}
+
+	//計算逆矩陣
+	public static double[][] invMatrix(int matrix [][])
+	{
+		int a = matrix[0][0];
+		int b = matrix[0][1];
+		int c = matrix[1][0];
+		int d = matrix[1][1];
+
+		double determinant = a * d - b * c; //行列式
+
+		if (determinant == 0)
+		{
+			return null; //不可逆
+		}
+
+		double[][] inverse ={{d / determinant, -b / determinant},{-c / determinant, a / determinant}};//計算逆矩陣
+		return inverse;
+	}
+
+	//檢查是否為單位矩陣
+	public static boolean isIdentityMatrix(double[][] matrix)
+	{
+		for (int i = 0; i < matrix.length; i++)
+		{
+			for (int j = 0; j < matrix[i].length; j++)
+			{
+				if ((i == j && matrix[i][j] != 1) || (i != j && matrix[i][j] != 0))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	//打印矩陣
+	public static void printMatrix(int[][] matrix)
+	{
+		for (int i = 0; i < matrix.length; i++)
+		{
+			for (int j = 0; j < matrix[i].length; j++)
+			{
+				System.out.print(matrix[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	//打印矩陣
+	public static void printMatrix(double[][] matrix)
+	{
+		for (int i = 0; i < matrix.length; i++)
+		{
+			for (int j = 0; j < matrix[i].length; j++)
+			{
+				System.out.printf("%.2f ", matrix[i][j]);
+			}
+			System.out.println();
+		}
+	}
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+- **增加了 `printMatrix` 方法**：將打印矩陣的邏輯提取到單獨的方法中，以提高代碼的可讀性和重用性。
+- **增加了 `isIdentityMatrix` 方法**：將檢查單位矩陣的邏輯提取到單獨的方法中，以提高代碼的可讀性和重用性。
+- **修正了縮排和格式**：在某些地方調整了縮排，使代碼更加一致和易讀。
+
+### 5. 改進建議和反饋
+1. **增加註解**：在程式的關鍵部分增加註解，解釋每個方法的功能和重要變量的用途。
+2. **使用方法提取重複邏輯**：將重複的邏輯提取到單獨的方法中，以提高代碼的可讀性和重用性。
+3. **檢查縮排和格式**：確保整個程式的縮排和格式一致，以提高代碼的可讀性。
+4. **優化逆矩陣計算**：可以考慮使用更通用的方法來計算逆矩陣，而不僅僅限於2x2矩陣。
+
+希望這些建議和反饋能夠幫助您的學生進一步改進他們的程式設計技能。

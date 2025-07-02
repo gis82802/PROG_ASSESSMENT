@@ -1,0 +1,156 @@
+好的，讓我們根據你的標準來評估這份作業。
+
+### 1. 打分 (0-100)
+
+- **備註 (滿分20)**：該程式沒有對其功能的明確說明，缺少對函式的註解說明。分數：5
+- **格式 (滿分25)**：程式碼的縮排和編碼風格基本上是正確的，但有些地方可以改進。分數：20
+- **準確性 (滿分25)**：程式能夠正確計算矩陣相乘的結果，但對於矩陣反轉部分沒有完全實現。分數：20
+- **邏輯 (滿分30)**：程式的邏輯基本正確，但有些地方可以改進，例如矩陣反轉的部分。分數：25
+
+總分：70
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式能夠正確計算矩陣相乘的結果。
+2. 程式碼的縮排和編碼風格基本上是正確的。
+
+**缺點：**
+1. 缺少對程式功能的明確說明和註解。
+2. 矩陣反轉的部分沒有完全實現。
+3. 矩陣相乘的結果在某些情況下可能不正確，例如矩陣的行列數不匹配時沒有處理。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class Hwab {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("請輸入矩陣 A 的行數和列數：");
+        int rowsA = scanner.nextInt();
+        int colsA = scanner.nextInt();
+        int[][] A = new int[rowsA][colsA];
+        System.out.println("請輸入矩陣 A 的元素：");
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                A[i][j] = scanner.nextInt();
+            }
+        }
+        System.out.println("請輸入矩陣 B 的行數和列數：");
+        int rowsB = scanner.nextInt();
+        int colsB = scanner.nextInt();
+        int[][] B = new int[rowsB][colsB];
+        System.out.println("請輸入矩陣 B 的元素：");
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                B[i][j] = scanner.nextInt();
+            }
+        }
+        int[][] C = MatMultiply(A, B);
+        if (C != null) {
+            System.out.println("結果矩陣 C：");
+            for (int[] row : C) {
+                System.out.print("[ ");
+                for (int value : row) {
+                    System.out.print(value + " ");
+                }
+                System.out.println("]");
+            }
+        } else {
+            System.out.println("矩陣 A 和 B 的大小無法完成相乘運算。");
+        }
+
+        System.out.println("請輸入矩陣 D 的元素：");
+        int[][] D = new int[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                D[i][j] = scanner.nextInt();
+            }
+        }
+        double[][] inverseD = intMatrix(D);
+        if (inverseD != null) {
+            System.out.println("反矩陣 D：");
+            for (double[] row : inverseD) {
+                System.out.print("[ ");
+                for (double value : row) {
+                    System.out.print(value + " ");
+                }
+                System.out.println("]");
+            }
+        } else {
+            System.out.println("矩陣 D 不能反轉（行列式為零）");
+        }
+
+        scanner.close();
+    }
+
+    /**
+     * 計算兩個矩陣相乘的結果
+     * @param A 第一個矩陣
+     * @param B 第二個矩陣
+     * @return 相乘結果矩陣，若無法相乘則回傳 null
+     */
+    public static int[][] MatMultiply(int[][] A, int[][] B) {
+        if (A[0].length != B.length) {
+            System.out.println("矩陣大小不匹配，無法相乘。");
+            return null;
+        }
+        int[][] C = new int[A.length][B[0].length];
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < B[0].length; j++) {
+                for (int k = 0; k < A[0].length; k++) {
+                    C[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return C;
+    }
+
+    /**
+     * 計算 2x2 矩陣的反矩陣
+     * @param matrix 2x2 矩陣
+     * @return 反矩陣，若行列式為零則回傳 null
+     */
+    public static double[][] intMatrix(int[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            return null;
+        }
+
+        int a = matrix[0][0];
+        int b = matrix[0][1];
+        int c = matrix[1][0];
+        int d = matrix[1][1];
+
+        int determinant = a * d - b * c;
+
+        if (determinant == 0) {
+            return null;
+        }
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = (double) d / determinant;
+        inverse[0][1] = (double) -b / determinant;
+        inverse[1][0] = (double) -c / determinant;
+        inverse[1][1] = (double) a / determinant;
+
+        return inverse;
+    }
+}
+```
+
+### 4. 改進的部分及原因
+
+1. **添加註解說明**：在 `MatMultiply` 和 `intMatrix` 函式前添加了註解，說明這些函式的功能。
+2. **矩陣相乘的錯誤處理**：在 `MatMultiply` 函式中，當矩陣大小不匹配時，返回 `null` 並打印錯誤信息。
+3. **矩陣反轉的錯誤處理**：在 `intMatrix` 函式中，當矩陣的行列式為零時，返回 `null`。
+4. **程式碼格式**：保持適當的縮排和編碼風格，確保程式碼易讀。
+
+### 5. 改進建議和反饋
+
+1. **添加註解**：在程式碼中添加更多的註解，說明每一步的邏輯和功能，這樣可以讓其他人更容易理解你的程式碼。
+2. **錯誤處理**：在程式中添加更多的錯誤處理，確保程式在各種情況下都能正常運行。
+3. **邏輯檢查**：在進行矩陣運算時，確保邏輯正確，特別是在涉及到矩陣反轉的部分。
+4. **程式碼格式**：保持適當的縮排和編碼風格，確保程式碼易讀。
+
+希望這些建議能夠幫助你的學生改進他們的程式碼。

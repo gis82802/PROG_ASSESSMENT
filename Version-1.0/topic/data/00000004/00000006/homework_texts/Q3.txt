@@ -1,0 +1,1 @@
+reverse digit order of an integer given by the user, e.g., 123->321, 2500->52, and8531->1358.

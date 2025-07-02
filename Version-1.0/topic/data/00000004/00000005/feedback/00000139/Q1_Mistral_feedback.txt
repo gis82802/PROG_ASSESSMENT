@@ -1,0 +1,107 @@
+### 1. 分數
+根據你的標準，這份作業的分數如下：
+
+- 備註 (滿分20)：10
+- 格式 (滿分25)：20
+- 準確性 (滿分25)：15
+- 邏輯 (滿分30)：25
+
+總分：70
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式碼結構清晰，使用了適當的縮排和編碼風格。
+2. 計算直線方程式、歐式距離、曼哈頓距離和Minkowski距離的邏輯基本正確。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明和備註。
+2. 未計算兩個向量的夾角。
+3. 部分變數名稱不夠直觀，如 `m` 和 `b` 可以改為 `slope` 和 `intercept`。
+4. 未處理一些特殊情況，如當 `p` 為0時的Minkowski距離計算。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class LineEquationCalculator {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input the coordinates of two points and the Minkowski distance calculation method
+        System.out.print("Enter x1: ");
+        double x1 = scanner.nextDouble();
+
+        System.out.print("Enter y1: ");
+        double y1 = scanner.nextDouble();
+
+        System.out.print("Enter x2: ");
+        double x2 = scanner.nextDouble();
+
+        System.out.print("Enter y2: ");
+        double y2 = scanner.nextDouble();
+
+        System.out.print("Enter Minkowski p (default 2 for Euclidean): ");
+        double p = scanner.nextDouble();
+
+        // Calculate results
+        calculateResults(x1, y1, x2, y2, p);
+    }
+
+    // Calculate linear equation and distances
+    private static void calculateResults(double x1, double y1, double x2, double y2, double p) {
+        // Check if the line is vertical
+        if (x1 == x2) {
+            System.out.println("Equation: x = " + x1);
+        } else {
+            // Calculate slope and intercept
+            double slope = (y2 - y1) / (x2 - x1);
+            double intercept = y1 - slope * x1;
+
+            // Output linear equation
+            System.out.printf("Equation: y = %.2fx + %.2f%n", slope, intercept);
+        }
+
+        // Calculate Euclidean distance
+        double euclideanDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+        // Calculate Manhattan distance
+        double manhattanDistance = Math.abs(x2 - x1) + Math.abs(y2 - y1);
+
+        // Calculate Minkowski distance
+        if (p == 0) {
+            System.out.println("Minkowski distance is undefined for p = 0");
+        } else {
+            double minkowskiDistance = Math.pow(Math.pow(Math.abs(x2 - x1), p) + Math.pow(Math.abs(y2 - y1), p), 1 / p);
+            System.out.printf("Minkowski Distance: %.2f (p=%.1f)%n", minkowskiDistance, p);
+        }
+
+        // Calculate the angle between the two vectors
+        double dotProduct = x1 * x2 + y1 * y2;
+        double magnitude1 = Math.sqrt(x1 * x1 + y1 * y1);
+        double magnitude2 = Math.sqrt(x2 * x2 + y2 * y2);
+        double cosAngle = dotProduct / (magnitude1 * magnitude2);
+        double angle = Math.acos(cosAngle);
+
+        // Display results
+        System.out.printf("Euclidean Distance: %.2f%n", euclideanDistance);
+        System.out.printf("Manhattan Distance: %.2f%n", manhattanDistance);
+        System.out.printf("Angle between vectors: %.2f radians%n", angle);
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **變數名稱**：將 `m` 和 `b` 改為 `slope` 和 `intercept`，使變數名稱更直觀。
+2. **Minkowski距離計算**：添加了對 `p` 為0的情況的處理，因為Minkowski距離在 `p` 為0時是未定義的。
+3. **向量夾角計算**：增加了計算兩個向量夾角的邏輯，這是原程式碼中未處理的部分。
+
+### 5. 改進建議和反饋
+
+1. **備註**：在程式碼中添加註釋，說明每個部分的功能和計算邏輯。
+2. **變數名稱**：確保變數名稱直觀且具描述性，這樣可以提高程式碼的可讀性。
+3. **特殊情況處理**：考慮並處理所有可能的特殊情況，如 `p` 為0的情況。
+4. **功能完整性**：確保程式碼完成所有要求的功能，如計算兩個向量的夾角。
+5. **測試**：在不同的輸入情況下測試程式碼，確保其正確性和穩定性。

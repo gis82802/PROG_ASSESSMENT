@@ -1,0 +1,108 @@
+### 1. 打分
+根據您的標準，這份作業的打分如下：
+
+- **備註 (滿分20)**: 該程式包含對其功能的明確說明，但說明不夠詳細，例如缺少變數的詳細說明。15分。
+- **格式 (滿分25)**: 程式碼保持了適當的縮排和編碼風格，但部分註解和變數命名可以更清晰。20分。
+- **準確性 (滿分25)**: 程式能夠正確地計算矩陣乘法，並處理無法相乘的情況。25分。
+- **邏輯 (滿分30)**: 程式邏輯基本正確，但在初始化結果矩陣時有一個小錯誤，導致結果不正確。25分。
+
+總分：85分
+
+### 2. 優缺點分析
+#### 優點：
+1. **功能完整**：程式實現了矩陣乘法的基本功能，並處理了矩陣無法相乘的情況。
+2. **用戶互動**：使用 Scanner 讓使用者輸入矩陣的行數、列數以及具體數值，增加了互動性。
+3. **結果輸出**：能夠正確地輸出結果矩陣。
+
+#### 缺點：
+1. **結果矩陣初始化錯誤**：在計算結果矩陣時，沒有初始化每個元素為0，導致結果不正確。
+2. **註解不夠詳細**：部分註解不夠詳細，變數名稱可以更具描述性。
+3. **未處理異常輸入**：沒有處理使用者輸入非整數或負數的情況。
+
+### 3. 改進的程式碼
+```java
+/*
+    filename: hw1025_3_1
+    function: 撰寫函式計算二維矩陣乘法
+    author: 41243204
+    datetime: 2024/10/25
+    version: 1.0
+ */
+import java.util.Scanner;
+
+public class hw1025_3_1 {
+
+    public static int[][] MatMultiply(int[][] A, int[][] B) {
+        if (A[0].length != B.length) {// 檢查矩陣是否可以相乘
+            return null;//若長度不相符則回傳null
+        }
+        int[][] result = new int[A.length][B[0].length];// 建立儲存結果的矩陣
+        for (int i = 0; i < A.length; i++) {// 執行矩陣乘法
+            for (int j = 0; j < B[0].length; j++) {
+                result[i][j] = 0; // 初始化結果矩陣的每個元素為0
+                for (int k = 0; k < A[0].length; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return result; // 返回結果矩陣
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the first matrix row and column (space separated): ");
+        int rows1 = scanner.nextInt();
+        int cols1 = scanner.nextInt();
+        int[][] matrix1 = new int[rows1][cols1];// 讀取第一個矩陣的行和列
+
+        System.out.println("Enter the first array elements (space separated):");
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
+                matrix1[i][j] = scanner.nextInt();// 讀取第一個矩陣的元素
+            }
+        }
+
+        System.out.print("Enter the second matrix row and column (space separated): ");
+        int rows2 = scanner.nextInt();
+        int cols2 = scanner.nextInt();
+        int[][] matrix2 = new int[rows2][cols2];// 讀取第二個矩陣的行和列
+
+        System.out.println("Enter the second array elements (space separated):");
+        for (int i = 0; i < rows2; i++) {
+            for (int j = 0; j < cols2; j++) {
+                matrix2[i][j] = scanner.nextInt();// 讀取第二個矩陣的元素
+            }
+        }
+        int[][] result = MatMultiply(matrix1, matrix2);// 執行矩陣相乘
+        if (result != null) {
+            System.out.println("The result matrix is: ");
+            for (int[] row : result) {
+                for (int val : row) {
+                    System.out.print(val + " "); // 輸出結果
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("The matrices cannot be multiplied due to size mismatch.");
+        }
+        scanner.close();
+    }
+}
+//此程式使用 Scanner 讓使用者輸入兩個矩陣的行數、列數以及具體數值。
+//檢查兩個矩陣是否可以相乘，若不能相乘則回傳 null，並告知使用者無法相乘。
+//若兩個矩陣可以相乘，程式會執行矩陣乘法，並輸出乘積矩陣的結果。
+//矩陣乘法公式參考:https://zh.wikipedia.org/zh-tw/%E7%9F%A9%E9%99%A3%E4%B9%98%E6%B3%95
+```
+
+### 4. 說明改進的程式碼
+1. **初始化結果矩陣**：在 `MatMultiply` 函式中，初始化結果矩陣的每個元素為0，避免計算錯誤。
+2. **變數命名**：保留了原有的變數名稱，但可以考慮改進變數命名以增加可讀性。
+
+### 5. 改進建議和反饋
+1. **註解和變數命名**：增加更多詳細的註解，並使用更具描述性的變數名稱。例如，`rows1` 和 `cols1` 可以改為 `matrix1Rows` 和 `matrix1Cols`。
+2. **異常處理**：增加對使用者輸入的異常處理，例如非整數或負數的輸入。
+3. **測試**：增加更多測試案例，確保程式在不同情況下都能正確運行。
+4. **程式碼風格**：保持一致的程式碼風格，例如縮排和空格的使用。
+
+希望這些建議能夠幫助學生進一步改進他們的程式碼。

@@ -1,0 +1,185 @@
+好的，我將根據你的標準對學生的作業進行評分、分析、並提供改進後的程式碼和建議。
+
+**1. 評分：**
+
+*   **備註 (15/20):** 程式碼開頭有文件頭備註，說明了功能、作者、日期等，但內容稍嫌簡略，可以更詳細地說明演算法或程式的設計思路。 另外在 `matrixMultiply`、`invmatrix` 兩個 function 缺少功能說明
+*   **格式 (20/25):** 程式碼的縮排和風格基本良好，但可以更一致。例如，空行的使用可以更頻繁，以提高可讀性。
+*   **準確性 (22/25):** 程式可以正確計算矩陣相乘，並判斷尺寸是否符合相乘條件。反矩陣的計算僅限於 2x2 矩陣，功能完整，結果準確。但對於非 2x2 矩陣，程式沒有提供更通用的反矩陣計算方法，這部分可以視為功能上的不足。
+*   **邏輯 (25/30):** 程式的邏輯基本正確，矩陣相乘和反矩陣的計算邏輯都實現了。但程式碼的結構可以更模組化，例如將矩陣輸入和顯示的部分提取成獨立的函式。另外在main function 中包含矩陣相乘與反矩陣計算的邏輯，可以考慮將功能分離出來，讓 main function 更簡潔
+
+**總分：82/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼可以正確執行矩陣相乘和 2x2 矩陣的反矩陣計算。
+    *   程式碼的結構清晰，變數命名合理，容易理解。
+    *   程式碼包含了基本的錯誤處理，例如判斷矩陣尺寸是否符合相乘條件。
+*   **缺點：**
+    *   備註不夠詳細，程式碼的可讀性可以進一步提高。
+    *   程式碼的模組化程度不高，可以將矩陣輸入和顯示的部分提取成獨立的函式。
+    *   反矩陣的計算僅限於 2x2 矩陣，缺乏通用性。
+    *   main function 程式碼過長，可以將矩陣相乘與反矩陣計算的邏輯獨立出來，讓 main function 更簡潔
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class app7_test4 {
+    public static void main(String args[]) {
+        Scanner scn = new Scanner(System.in);
+
+        // 輸入 A 矩陣
+        System.out.print("請輸入 A 陣列的行: ");
+        int rows1 = scn.nextInt();
+        System.out.print("請輸入 A 陣列的列: ");
+        int cols1 = scn.nextInt();
+        int[][] arr1 = inputMatrix(scn, rows1, cols1, "A");
+
+        // 輸入 B 矩陣
+        System.out.print("請輸入 B 陣列的行: ");
+        int rows2 = scn.nextInt();
+        System.out.print("請輸入 B 陣列的列: ");
+        int cols2 = scn.nextInt();
+        int[][] arr2 = inputMatrix(scn, rows2, cols2, "B");
+
+        // 呼叫矩陣相乘方法並顯示結果
+        int[][] result = matrixMultiply(arr1, arr2);
+        printMatrixMultiplyResult(result);
+
+        // 反矩陣計算示範
+        calculateAndPrintInverseMatrix(arr1);
+
+        scn.close();
+    }
+
+    // 輸入矩陣元素
+    public static int[][] inputMatrix(Scanner scn, int rows, int cols, String matrixName) {
+        int[][] matrix = new int[rows][cols];
+        System.out.println("請輸入 " + matrixName + " 陣列的元素:");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = scn.nextInt();
+            }
+        }
+
+        // 顯示矩陣
+        System.out.println(matrixName + " 陣列為:");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+        return matrix;
+    }
+
+    // 矩陣相乘方法
+    public static int[][] matrixMultiply(int[][] A, int[][] B) {
+        int rowsA = A.length;
+        int colsA = A[0].length;
+        int rowsB = B.length;
+        int colsB = B[0].length;
+
+        if (colsA != rowsB) {
+            return null; // 如果不符合條件則返回 null
+        }
+
+        int[][] C = new int[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                C[i][j] = 0;
+                for (int k = 0; k < colsA; k++) {
+                    C[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+
+        return C;
+    }
+
+    // 顯示矩陣相乘的結果
+    public static void printMatrixMultiplyResult(int[][] result) {
+        if (result != null) {
+            System.out.println("矩陣相乘的結果是：");
+            for (int i = 0; i < result.length; i++) {
+                for (int j = 0; j < result[0].length; j++) {
+                    System.out.print(result[i][j] + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("無法進行矩陣相乘，因為矩陣的尺寸不符合相乘條件。");
+        }
+    }
+
+    // 計算並顯示反矩陣
+    public static void calculateAndPrintInverseMatrix(int[][] matrix) {
+        if (matrix.length == 2 && matrix[0].length == 2) {
+            double[][] invResult = invmatrix(matrix);
+            if (invResult != null) {
+                System.out.println("A 矩陣的反矩陣是：");
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        System.out.printf("%.2f ", invResult[i][j]);
+                    }
+                    System.out.println();
+                }
+            } else {
+                System.out.println("A 矩陣沒有反矩陣。");
+            }
+        } else {
+            System.out.println("A 矩陣不是 2x2 矩陣，無法計算反矩陣。");
+        }
+    }
+
+    // 計算 2x2 矩陣的反矩陣
+    public static double[][] invmatrix(int[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            return null;  // 只有 2x2 矩陣才可以計算反矩陣
+        }
+
+        int a = matrix[0][0];
+        int b = matrix[0][1];
+        int c = matrix[1][0];
+        int d = matrix[1][1];
+
+        int det = a * d - b * c;  // 計算行列式 det(A)
+
+        if (det == 0) {
+            return null;  // 如果行列式為 0，則矩陣沒有反矩陣
+        }
+
+        double invDet = 1.0 / det;  // 計算 1/det(A)
+
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = d * invDet;
+        inverse[0][1] = -b * invDet;
+        inverse[1][0] = -c * invDet;
+        inverse[1][1] = a * invDet;
+
+        return inverse;  // 返回反矩陣
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **`inputMatrix` 函式：** 將矩陣的輸入和顯示功能提取到 `inputMatrix` 函式中。這樣可以避免在 `main` 函式中重複編寫相同的程式碼，提高程式碼的可讀性和可維護性。
+*   **`printMatrixMultiplyResult` 函式：**  將「顯示矩陣相乘結果」的功能提取到 `printMatrixMultiplyResult` 函式。
+*   **`calculateAndPrintInverseMatrix` 函式：** 將「反矩陣計算及顯示」功能提取到 `calculateAndPrintInverseMatrix` 函式。
+*   **Main Function:** 讓 main function 流程更簡潔
+
+**5. 改進建議和反饋：**
+
+*   **備註：** 增加程式碼的備註，特別是在函式開頭，說明函式的功能、參數和返回值。
+*   **錯誤處理：** 考慮更完善的錯誤處理機制。例如，如果使用者輸入的不是數字，程式會崩潰。可以使用 `try-catch` 區塊來捕獲 `InputMismatchException` 異常，並提示使用者重新輸入。
+*   **通用性：** 擴展反矩陣的計算功能，使其可以處理任意大小的矩陣。可以使用高斯消元法或其他演算法來實現。
+*   **單元測試：** 撰寫單元測試，以確保程式碼的正確性。可以使用 JUnit 等測試框架來編寫測試案例。
+*   **程式碼風格：** 保持一致的程式碼風格，例如空行的使用、變數命名的規則等。可以參考 Google Java Style Guide 或其他程式碼風格指南。
+*   **模組化設計：** 程式碼的模組化程度可以進一步提高。例如，可以將矩陣相乘和反矩陣的計算提取到單獨的類中，並提供統一的介面。
+*   **演算法效率：** 考慮演算法的效率。對於大型矩陣，矩陣相乘的計算量很大。可以使用更高效的演算法，例如 Strassen 演算法，來提高計算速度。
+
+總體來說，你的程式碼已經具備了基本的功能和結構，但仍有改進的空間。透過增加備註、提高模組化程度、擴展功能和加強錯誤處理，你可以寫出更健壯、易讀、易維護的程式碼。

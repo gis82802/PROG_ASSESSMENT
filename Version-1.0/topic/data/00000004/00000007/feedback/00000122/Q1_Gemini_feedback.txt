@@ -1,0 +1,97 @@
+好的，教授。我將根據您的標準，對學生的作業進行評分、分析、改進並提供建議。
+
+**1. 作業評分：**
+
+*   **備註 (滿分 20):** 10 分 - 程式碼缺少對程式功能的總體說明，但各部分功能（如輸入、排序、輸出）有簡單註解。
+*   **格式 (滿分 25):** 20 分 - 程式碼縮排基本正確，但變數命名不夠清晰，例如 `big`。`arrmin`、`arrmax`命名尚可。
+*   **準確性 (滿分 25):** 25 分 - 程式能產生正確的排序結果。
+*   **邏輯 (滿分 30):** 25 分 - 程式的排序邏輯雖然正確，但重複使用了相似的排序程式碼(bubble sort)來實現由小到大和由大到小排序，這可以簡化。
+
+**總分：80 分**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼可以正確地讀取使用者輸入的陣列大小和元素。
+    *   程式碼使用複製陣列的方式，在排序時不會改變原始陣列，這是一個好習慣。
+    *   程式碼輸出了排序前和排序後的陣列，方便驗證排序結果。
+    *   `printArray` 函數使程式碼更具可讀性。
+*   **缺點：**
+    *   **缺乏程式功能說明：** 程式缺少對整體功能的說明，使用者難以快速了解程式的作用。
+    *   **變數命名不夠清晰：** `big` 這樣的變數名缺乏意義，應該使用更具描述性的名稱。
+    *   **程式碼重複：** 使用了兩段幾乎完全相同的程式碼來分別實現由小到大和由大到小排序，這導致程式碼冗餘，降低可維護性。
+    *   **排序效率：** 學生使用了氣泡排序，這對於大型陣列來說效率較低。
+    *   **程式碼風格：** 有些地方可以更簡潔，例如可以考慮使用 `Arrays.sort` 搭配 `Collections.reverseOrder` 來簡化排序。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class homework101801 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 程式功能：讀取使用者輸入的整數陣列，然後分別輸出排序前、由小到大排序後、由大到小排序後的陣列
+        int arraySize;
+
+        System.out.println("請輸入陣列大小:");
+        arraySize = scanner.nextInt();
+
+        int[] arr = new int[arraySize];
+
+        System.out.println("請輸入" + arraySize + "個整數：");
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.print("排序前: ");
+        printArray(arr);
+
+        // 由小到大排序
+        int[] arrAsc = arr.clone();
+        Arrays.sort(arrAsc);
+        System.out.print("由小到大排序後: ");
+        printArray(arrAsc);
+
+        // 由大到小排序
+        Integer[] arrDesc = Arrays.stream(arr).boxed().toArray(Integer[]::new); // int[] 轉 Integer[]
+        Arrays.sort(arrDesc, Collections.reverseOrder()); // 使用 Collections.reverseOrder()
+        System.out.print("由大到小排序後: ");
+        printArray(Arrays.stream(arrDesc).mapToInt(Integer::intValue).toArray()); // Integer[] 轉 int[]
+
+        scanner.close();
+    }
+
+    public static void printArray(int[] arr) {
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+**4. 改進說明：**
+
+*   **添加程式功能說明：** 在 `main` 函數開頭添加了程式功能的註解，方便理解程式的目的。
+*   **變數命名：** 將 `big` 改為 `arraySize`，更具描述性。
+*   **簡化排序邏輯：**
+    *   使用 `Arrays.sort()` 進行由小到大排序，避免手動實現氣泡排序。
+    *   使用 `Collections.reverseOrder()` 配合 `Arrays.sort()` 實現由大到小排序。 注意：`Arrays.sort`搭配`Collections.reverseOrder()`不支援int[]，需要轉換成Integer[]，排序完成後再轉回int[]
+*   **保留原有的函數和變數名：** 盡可能保留了原有的函數和變數名，除了 `big` 之外，並維持了程式結構。
+*   **保留優點：** 保留了使用 `clone()` 避免修改原始陣列的優點。
+
+**5. 改進建議和反饋：**
+
+*   **程式功能說明：** 好的程式碼應該具有清晰的自我描述性。在程式的開頭，使用註解說明程式的功能，可以幫助他人更快地理解你的程式碼。
+*   **變數命名：** 選擇有意義的變數名，可以提高程式碼的可讀性。例如，用 `arraySize` 代替 `big`，讓人更容易理解變數的含義。
+*   **程式碼複用：** 避免重複編寫相似的程式碼。如果發現自己寫了兩段非常相似的程式碼，可以考慮將其抽象成一個函數，或者使用更通用的方法來實現。
+*   **熟悉 Java 庫：** Java 提供了許多有用的類和方法，可以簡化你的程式碼。例如，`Arrays.sort()` 是一個非常方便的排序函數。熟悉 Java 庫可以提高你的程式設計效率。
+*   **排序演算法：** 了解不同的排序演算法，並根據實際情況選擇最合適的演算法。氣泡排序雖然簡單易懂，但對於大型陣列來說效率較低。可以考慮使用更高效的排序演算法，例如快速排序或歸併排序。
+*   **資料型態轉換：** 在使用 `Arrays.sort()` 搭配 `Collections.reverseOrder()` 進行由大到小排序時，需要注意資料型態的轉換。這是因為 `Collections.reverseOrder()` 只能用於對象陣列，不能直接用於基本資料型態的陣列。
+*   **程式碼風格：** 保持一致的程式碼風格，例如縮排、空格、命名規範等，可以提高程式碼的可讀性。
+
+總的來說，你的程式碼能夠完成基本的功能，但在可讀性、可維護性和效率方面還有提升空間。通過學習和實踐，你可以寫出更優質的程式碼。

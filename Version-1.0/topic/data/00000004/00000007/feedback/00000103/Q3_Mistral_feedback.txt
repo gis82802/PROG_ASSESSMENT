@@ -1,0 +1,131 @@
+1. **評分**
+
+根據您的標準，這份作業的評分如下：
+
+- **備註** (滿分20)：8分
+  - 該程式缺乏對其功能的明確說明，僅有部分註釋，而且註釋不夠詳細。
+
+- **格式** (滿分25)：20分
+  - 程式碼的縮排和編碼風格基本上是合理的，但部分地方可以更加規範。
+
+- **準確性** (滿分25)：20分
+  - 程式在輸入合法的情況下能夠產生正確的結果，但缺乏對輸入範圍的檢查。
+
+- **邏輯** (滿分30)：25分
+  - 邏輯基本上是正確的，但子矩陣的計算方式有些繁瑣，可以進一步優化。
+
+總分：73分
+
+2. **優缺點分析**
+
+**優點：**
+- 程式碼結構清晰，功能模塊化程度較高。
+- 使用遞迴計算行列式的方法是正確的。
+- 基本的輸入輸出功能實現了。
+
+**缺點：**
+- 缺乏對程式功能的詳細說明。
+- 輸入範圍的檢查不夠完善。
+- 子矩陣的計算方式可以優化，減少不必要的計算。
+
+3. **改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class hw3 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // 輸入矩陣大小 N (1 <= N <= 4)
+        int N = sc.nextInt();
+        if (N < 1 || N > 4) {
+            System.out.println("矩陣大小必須在1到4之間");
+            return;
+        }
+
+        // 輸入矩陣元素
+        int[][] m = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                m[i][j] = sc.nextInt();
+            }
+        }
+
+        // 輸出原矩陣
+        System.out.println("原矩陣:");
+        printMatrix(m, N);
+
+        // 輸入要刪除的行列
+        int r = sc.nextInt() - 1;
+        int c = sc.nextInt() - 1;
+
+        // 構建新矩陣，刪除指定的行列
+        int[][] nm = new int[N - 1][N - 1];
+        for (int i = 0, nr = 0; i < N; i++) {
+            if (i == r) continue;  // 跳過要刪除的行
+            for (int j = 0, nc = 0; j < N; j++) {
+                if (j == c) continue;  // 跳過要刪除的列
+                nm[nr][nc++] = m[i][j];
+            }
+            nr++;
+        }
+
+        // 輸出新矩陣
+        System.out.println("新矩陣:");
+        printMatrix(nm, N - 1);
+
+        // 計算新矩陣的行列式
+        int det = cal(nm, N - 1);
+        System.out.println("新矩陣的行列式值: " + det);
+
+        sc.close();
+    }
+
+    // 矩陣輸出
+    public static void printMatrix(int[][] m, int s) {
+        for (int i = 0; i < s; i++) {
+            for (int j = 0; j < s; j++) {
+                System.out.print(m[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // 計算行列式
+    public static int cal(int[][] m, int s) {
+        if (s == 1) {
+            return m[0][0];
+        } else if (s == 2) {
+            return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+        } else {
+            int det = 0;
+            for (int i = 0; i < s; i++) {
+                int[][] minor = new int[s - 1][s - 1];  // 創建子矩陣
+                for (int j = 1; j < s; j++) {
+                    int col = 0;
+                    for (int k = 0; k < s; k++) {
+                        if (k == i) continue;  // 跳過要刪除的列
+                        minor[j - 1][col++] = m[j][k];  // 填充子矩陣
+                    }
+                }
+                det += Math.pow(-1, i) * m[0][i] * cal(minor, s - 1);  // 遞迴計算行列式
+            }
+            return det;
+        }
+    }
+}
+```
+
+4. **修改說明**
+
+- **增加輸入範圍檢查**：在輸入矩陣大小後，增加了對輸入範圍的檢查，並在範圍不合法時輸出提示信息。
+- **優化子矩陣計算**：在計算子矩陣時，優化了邏輯，減少了不必要的計算。
+- **增加註釋**：在關鍵步驟增加了註釋，使程式碼更易於理解。
+
+5. **改進建議和反饋**
+
+- **增加功能說明**：在程式開頭增加對程式功能的詳細說明，幫助其他人理解程式的目的和功能。
+- **輸入範圍檢查**：在所有輸入步驟後增加範圍檢查，確保輸入的合法性。
+- **優化邏輯**：在計算子矩陣時，盡量減少不必要的計算，提高程式效率。
+- **添加更多註釋**：在關鍵步驟和複雜邏輯處增加註釋，使程式碼更易於理解和維護。

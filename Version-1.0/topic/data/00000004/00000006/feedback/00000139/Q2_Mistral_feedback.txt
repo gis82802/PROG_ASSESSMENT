@@ -1,0 +1,101 @@
+好的，讓我們逐一分析這份作業。
+
+### 1. 打分
+
+- **備註 (20分)**：該程式沒有包含對其功能的明確說明。(0分)
+- **格式 (25分)**：程式碼有基本的縮排，但編碼風格有些不一致，如變數命名和註釋不足。(15分)
+- **準確性 (25分)**：程式能夠正確地判斷是否為well-ordered number，但未能讓使用者輸入數字來檢查。(15分)
+- **邏輯 (30分)**：程式邏輯基本正確，但未能完整實現功能要求。(20分)
+
+總分：50分
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式能夠正確判斷一個數字是否為well-ordered number。
+2. 基本的邏輯和循環結構正確。
+
+**缺點：**
+1. 沒有對程式功能的說明。
+2. 程式碼風格不一致，缺乏註釋。
+3. 未能實現讓使用者輸入數字來檢查的功能。
+4. 未能將計算well-ordered number數量的部分與判斷單一數字是否為well-ordered number的部分分開。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class WellOrderedNumber {
+
+    /**
+     * 判斷一個數字是否為well-ordered number
+     * @param number 要判斷的數字
+     * @return 是否為well-ordered number
+     */
+    public static boolean isWellOrdered(int number) {
+        int prevDigit = 10;
+
+        while (number > 0) {
+            int currentDigit = number % 10;
+            number /= 10;
+
+            if (currentDigit >= prevDigit) {
+                return false;
+            }
+            prevDigit = currentDigit;
+        }
+        return true;
+    }
+
+    /**
+     * 計算100000以內的well-ordered number數量
+     * @return well-ordered number的數量
+     */
+    public static int countWellOrderedNumbers() {
+        int count = 0;
+
+        for (int number = 1; number <= 100000; number++) {
+            if (isWellOrdered(number)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 讓使用者輸入一個數字來檢查是否為well-ordered number
+        System.out.print("請輸入一個數字來檢查是否為well-ordered number: ");
+        int inputNumber = scanner.nextInt();
+        if (isWellOrdered(inputNumber)) {
+            System.out.println(inputNumber + " 是一個well-ordered number.");
+        } else {
+            System.out.println(inputNumber + " 不是一個well-ordered number.");
+        }
+
+        // 計算100000以內的well-ordered number數量
+        int wellOrderedCount = countWellOrderedNumbers();
+        System.out.println("100000以內的well-ordered number數量: " + wellOrderedCount);
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **添加註釋**：為每個方法添加註釋，說明其功能。
+2. **分離邏輯**：將計算well-ordered number數量的部分分離到一個單獨的方法`countWellOrderedNumbers`中，使程式結構更清晰。
+3. **增加使用者輸入功能**：在`main`方法中添加讓使用者輸入數字來檢查是否為well-ordered number的功能。
+4. **變數命名**：將變數名稱改為更具描述性的名稱，如`count`代替`i`，`inputNumber`代替`number`。
+
+### 5. 改進建議和反饋
+
+1. **註釋和說明**：在程式碼中添加詳細的註釋和說明，讓他人更容易理解程式的功能和邏輯。
+2. **模組化設計**：將不同的功能分離到不同的方法中，使程式結構更清晰，易於維護和擴展。
+3. **完整實現功能**：確保程式完整實現所有功能要求，包括讓使用者輸入數字來檢查是否為well-ordered number。
+4. **一致的編碼風格**：保持一致的編碼風格，如變數命名和縮排，使程式碼更易讀。
+
+希望這些建議能幫助你的學生改進他們的程式碼。如果有任何其他問題或需要進一步的幫助，請隨時告訴我。

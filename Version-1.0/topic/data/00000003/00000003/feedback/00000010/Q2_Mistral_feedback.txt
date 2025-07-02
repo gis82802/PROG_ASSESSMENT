@@ -1,0 +1,88 @@
+好的，根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分
+- **備註 (20分)**：程式包含對其功能的明確說明，雖然簡短但清晰。18分。
+- **格式 (25分)**：程式碼縮排和編碼風格基本適當，但有些地方可以改進。20分。
+- **準確性 (25分)**：程式能夠正確計算2x2矩陣的反矩陣。25分。
+- **邏輯 (30分)**：程式邏輯基本正確，但在處理某些情況（如矩陣不可逆）時缺乏驗證。25分。
+
+**總分：88分**
+
+### 2. 優缺點分析
+**優點：**
+1. 程式能夠正確計算2x2矩陣的反矩陣。
+2. 程式碼結構清晰，功能簡單明瞭。
+3. 使用了適當的數學公式來計算反矩陣。
+
+**缺點：**
+1. 沒有處理矩陣不可逆的情況（即行列式為0）。
+2. 變數命名不夠直觀，如 `a1`, `a2`, `a3`, `a4` 可以改為更有意義的名稱。
+3. 輸入數據時沒有進行驗證，可能會導致程式崩潰。
+
+### 3. 改進的程式碼
+```java
+/*
+	資工二乙	41243202	林沛慧
+	功能：輸出反矩陣
+*/
+import java.util.Scanner;
+
+public class hw3_b
+{
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		int [][] matrix = new int [2][2];
+		double [][] invMatrix;
+		System.out.print("請輸入一個2*2二維矩陣的內容：");
+		for(int i = 0 ; i < 2 ; i++)
+			for(int j = 0 ; j < 2 ; j++)
+				matrix[i][j] = sc.nextInt();
+		invMatrix = invMatrix(matrix);
+		if (invMatrix != null) {
+			System.out.println("此矩陣的逆矩陣是：");
+			for (int i = 0; i < 2; i++){
+				for (int j = 0; j < 2; j++)
+					System.out.printf("%.2f ", invMatrix[i][j]);
+				System.out.println();
+			}
+		} else {
+			System.out.println("此矩陣不可逆。");
+		}
+	}
+
+	public static double [][] invMatrix(int matrix[][])
+	{
+		int a = matrix[0][0];
+		int b = matrix[0][1];
+		int c = matrix[1][0];
+		int d = matrix[1][1];
+		int determinant = a * d - b * c;
+
+		if (determinant == 0) {
+			return null; // 矩陣不可逆
+		}
+
+		double [][] invMatrix = new double [2][2];
+		invMatrix[0][0] = (double)d / determinant;
+		invMatrix[0][1] = (double)-b / determinant;
+		invMatrix[1][0] = (double)-c / determinant;
+		invMatrix[1][1] = (double)a / determinant;
+
+		return invMatrix;
+	}
+}
+```
+
+### 4. 修改部分及原因
+1. **變數命名改進**：將 `a1`, `a2`, `a3`, `a4` 改為 `a`, `b`, `c`, `d`，使變數名稱更具意義。
+2. **處理矩陣不可逆情況**：在計算行列式後，檢查是否為0，如果是則返回 `null`，並在主程式中檢查返回值是否為 `null`。
+3. **輸入數據驗證**：雖然這次未加入完整的輸入驗證，但在主程式中檢查返回值是否為 `null`，避免程式崩潰。
+
+### 5. 改進建議和反饋
+1. **變數命名**：請使用更具意義的變數名稱，這樣可以提高程式的可讀性和可維護性。
+2. **錯誤處理**：在程式中加入錯誤處理機制，特別是對於矩陣不可逆的情況。
+3. **輸入驗證**：對輸入的數據進行驗證，確保輸入的數據是有效的。
+4. **註解**：在程式中添加更多的註解，解釋關鍵步驟和邏輯，這樣可以幫助其他人更好地理解程式。
+
+希望這些建議能夠幫助學生進一步改進他們的程式設計技能。

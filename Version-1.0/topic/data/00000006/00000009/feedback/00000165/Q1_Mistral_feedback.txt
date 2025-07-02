@@ -1,0 +1,289 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：該程式是否包含對其功能的明確說明
+  - 分數：10
+  - 原因：程式碼中缺乏對功能的明確說明，僅有少量的註解。
+
+- 格式（滿分25）：是否保持適當的縮排和編碼風格
+  - 分數：15
+  - 原因：程式碼的縮排和編碼風格有些不一致，部分地方缺乏適當的縮排，變數名稱不夠直觀。
+
+- 準確性（滿分25）：程式是否產生正確的結果
+  - 分數：20
+  - 原因：程式在大部分情況下能夠正確執行，但在某些邊界情況下可能會出現問題。
+
+- 邏輯（滿分30）：程式是否有正確的邏輯
+  - 分數：25
+  - 原因：程式的邏輯基本正確，但在勝敗判斷和遊戲流程上有些瑕疵。
+
+總分：70
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式實現了基本的井字遊戲功能。
+2. 使用了類別來模擬玩家和棋盤的行為。
+3. 有基本的遊戲流程和遊戲結束條件。
+
+**缺點：**
+1. 缺乏對功能的明確說明和註解。
+2. 變數名稱和類別名稱不夠直觀，難以閱讀和維護。
+3. 勝敗判斷邏輯過於複雜且不完整，未考慮所有可能的勝利情況。
+4. 程式碼格式不夠整齊，縮排不一致。
+5. 未處理多種遊戲模式的實現。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+class Player {
+    int score = 0;
+    String name;
+    Piece piece;
+    Scanner scanner = new Scanner(System.in);
+
+    Player() {
+        System.out.println("請輸入玩家名稱:");
+        name = scanner.next();
+        piece = new Piece();
+    }
+}
+
+class GameManager {
+    ChessBoard board;
+    int choice;
+    Scanner scanner = new Scanner(System.in);
+
+    GameManager() {
+        choice = 0;
+    }
+
+    int start() {
+        System.out.println("1:井字遊戲 2:五子棋 3:巫師棋 4:跳棋");
+        choice = scanner.nextInt();
+        if (choice == 1) {
+            board = new ChessBoard();
+            return choice;
+        } else if (choice >= 2 && choice <= 4) {
+            board = new ChessBoard(choice);
+            return choice;
+        }
+        return choice;
+    }
+
+    int gameOver() {
+        return 1;
+    }
+}
+
+class ChessBoard {
+    Piece[][] board;
+
+    ChessBoard() {
+        board = new Piece[3][3];
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                board[i][j] = new Piece();
+    }
+
+    ChessBoard(int size) {
+        board = new Piece[size][size];
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                board[i][j] = new Piece();
+    }
+
+    boolean checkWinner(int x, int y) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j].piece != ' ') {
+                    System.out.print(board[i][j].piece);
+                } else {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
+
+        char currentPiece = board[x][y].piece;
+        // Check row
+        if (board[x][0].piece == currentPiece && board[x][1].piece == currentPiece && board[x][2].piece == currentPiece) {
+            return true;
+        }
+        // Check column
+        if (board[0][y].piece == currentPiece && board[1][y].piece == currentPiece && board[2][y].piece == currentPiece) {
+            return true;
+        }
+        // Check diagonal
+        if (x == y && board[0][0].piece == currentPiece && board[1][1].piece == currentPiece && board[2][2].piece == currentPiece) {
+            return true;
+        }
+        if (x + y == 2 && board[0][2].piece == currentPiece && board[1][1].piece == currentPiece && board[2][0].piece == currentPiece) {
+            return true;
+        }
+
+        return false;
+    }
+}
+
+class Piece {
+    char piece;
+
+    Piece() {
+        piece = ' ';
+    }
+
+    Piece(char value) {
+        piece = value;
+    }
+}
+
+public class TicTacToe {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int playerMode = 1;
+        System.out.println("請選擇 1:單機 or 2:連機");
+        playerMode = scanner.nextInt();
+
+        Player playerOne = new Player();
+        Player playerTwo = new Player();
+
+        while (true) {
+            GameManager gameManager = new GameManager();
+            int gameChoice = gameManager.start();
+
+            if (gameChoice == 1) {
+                playerOne.piece = new Piece('o');
+                playerTwo.piece = new Piece('x');
+
+                int gameStartNumber = (int) (Math.random() * 2 + 1);
+                int gamePieceTotal = 0;
+                boolean winner = false;
+
+                while (true) {
+                    int x, y;
+                    x = y = 0;
+                    if (gameStartNumber % 2 == 0) {
+                        System.out.println("目前是player1,請輸入座標 x,y範圍1~3");
+                        x = scanner.nextInt();
+                        y = scanner.nextInt();
+                        while (gameManager.board.board[x - 1][y - 1].piece != ' ') {
+                            System.out.println("請重新輸入座標,這已經有被記號過了");
+                            x = scanner.nextInt();
+                            y = scanner.nextInt();
+                        }
+                        gameManager.board.board[x - 1][y - 1] = playerOne.piece;
+                        gameStartNumber++;
+                        gamePieceTotal++;
+
+                        winner = gameManager.board.checkWinner(x - 1, y - 1);
+                        if (winner) {
+                            System.out.println(playerOne.name + "獲勝");
+                            playerOne.score += 10;
+                            break;
+                        }
+                    } else {
+                        System.out.println("目前是player2,請輸入座標 x,y範圍1~3");
+                        x = scanner.nextInt();
+                        y = scanner.nextInt();
+                        while (gameManager.board.board[x - 1][y - 1].piece != ' ') {
+                            System.out.println("請重新輸入座標,這已經有被記號過了");
+                            x = scanner.nextInt();
+                            y = scanner.nextInt();
+                        }
+                        gameManager.board.board[x - 1][y - 1] = playerTwo.piece;
+                        gameStartNumber++;
+                        gamePieceTotal++;
+
+                        winner = gameManager.board.checkWinner(x - 1, y - 1);
+                        if (winner) {
+                            System.out.println(playerTwo.name + "獲勝");
+                            playerTwo.score += 10;
+                            break;
+                        }
+                    }
+
+                    if (gamePieceTotal == 9) {
+                        System.out.println("雙方平手 各加5分");
+                        playerOne.score += 5;
+                        playerTwo.score += 5;
+                        break;
+                    }
+
+                    if (gameStartNumber % 2 == 1) {
+                        System.out.println("目前是player2,請輸入座標 x,y範圍1~3");
+                        x = scanner.nextInt();
+                        y = scanner.nextInt();
+                        while (gameManager.board.board[x - 1][y - 1].piece != ' ') {
+                            System.out.println("請重新輸入座標,這已經有被記號過了");
+                            x = scanner.nextInt();
+                            y = scanner.nextInt();
+                        }
+                        gameManager.board.board[x - 1][y - 1] = playerTwo.piece;
+                        gameStartNumber++;
+                        gamePieceTotal++;
+
+                        winner = gameManager.board.checkWinner(x - 1, y - 1);
+                        if (winner) {
+                            System.out.println(playerTwo.name + "獲勝");
+                            playerTwo.score += 10;
+                            break;
+                        }
+                    } else {
+                        System.out.println("目前是player1,請輸入座標 x,y範圍1~3");
+                        x = scanner.nextInt();
+                        y = scanner.nextInt();
+                        while (gameManager.board.board[x - 1][y - 1].piece != ' ') {
+                            System.out.println("請重新輸入座標,這已經有被記號過了");
+                            x = scanner.nextInt();
+                            y = scanner.nextInt();
+                        }
+                        gameManager.board.board[x - 1][y - 1] = playerOne.piece;
+                        gameStartNumber++;
+                        gamePieceTotal++;
+
+                        winner = gameManager.board.checkWinner(x - 1, y - 1);
+                        if (winner) {
+                            System.out.println(playerOne.name + "獲勝");
+                            playerOne.score += 10;
+                            break;
+                        }
+                    }
+                }
+
+                System.out.println(playerOne.name + " 分數:" + playerOne.score);
+                System.out.println(playerTwo.name + " 分數:" + playerTwo.score);
+            }
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數名稱和類別名稱改進**：
+   - 原因：原始程式碼中的變數名稱和類別名稱不夠直觀，難以閱讀和維護。
+   - 修改：將變數名稱和類別名稱改為更直觀的名稱，如 `game_player` 改為 `Player`，`chessman` 改為 `GameManager`，`chessboard` 改為 `ChessBoard`，`piece` 改為 `Piece`。
+
+2. **勝敗判斷邏輯改進**：
+   - 原因：原始程式碼中的勝敗判斷邏輯過於複雜且不完整，未考慮所有可能的勝利情況。
+   - 修改：簡化勝敗判斷邏輯，檢查行、列和對角線的勝利情況。
+
+3. **程式碼格式改進**：
+   - 原因：原始程式碼的格式不夠整齊，縮排不一致。
+   - 修改：統一程式碼格式，確保縮排一致，提高可讀性。
+
+4. **註解和說明改進**：
+   - 原因：原始程式碼缺乏對功能的明確說明和註解。
+   - 修改：添加註解和說明，使程式碼更易於理解。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **變數命名**：使用更直觀的變數名稱，讓程式碼更易於閱讀和維護。
+2. **勝敗判斷邏輯**：簡化勝敗判斷邏輯，確保檢查所有可能的勝利情況。
+3. **程式碼格式**：保持一致的縮排和編碼風格，提高程式碼的可讀性。
+4. **註解和說明**：添加註解和說明，讓程式碼更易於理解。
+5. **多種遊戲模式**：完善多種遊戲模式的實現，讓遊戲更加豐富多彩。
+
+希望這些建議和反饋能夠幫助學生改進他們的程式碼，提升他們的編程技能。

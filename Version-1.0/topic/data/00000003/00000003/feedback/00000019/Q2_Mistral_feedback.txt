@@ -1,0 +1,142 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- 備註（滿分20）：15
+- 格式（滿分25）：20
+- 準確性（滿分25）：20
+- 邏輯（滿分30）：25
+
+總分：80
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. **功能完整**：程式能夠正確地計算2x2矩陣的反矩陣，並驗證結果是否正確。
+2. **詳細的備註**：程式中有一些註解，幫助理解代碼的功能。
+3. **邏輯正確**：使用高斯-喬丹消元法來計算反矩陣，邏輯正確。
+
+**缺點：**
+1. **格式問題**：部分代碼的縮排和編碼風格不夠一致。
+2. **備註不夠詳細**：某些部分缺乏詳細的註解，特別是高斯-喬丹消元法的步驟。
+3. **變數命名**：某些變數名稱不夠直觀，如 `augmentedMatrix` 可以更具體地命名為 `extendedMatrix`。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class MatInverse {
+
+    public static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            for (double value : row) {
+                System.out.printf("%8.4f ", value);
+            }
+            System.out.println();
+        }
+    }
+
+    public static double[][] invertMatrix(double[][] matrix) {
+        int n = matrix.length;
+        double[][] extendedMatrix = new double[n][2 * n];
+
+        // 初始化擴展矩陣 (原始矩陣 | 單位矩陣)
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(matrix[i], 0, extendedMatrix[i], 0, n);
+            extendedMatrix[i][i + n] = 1; // 對角線為1
+        }
+
+        // 高斯-喬丹消元法
+        for (int i = 0; i < n; i++) {
+            double diagElement = extendedMatrix[i][i];
+            if (Math.abs(diagElement) < 1e-10) {
+                throw new ArithmeticException("矩陣不可逆");
+            }
+            for (int j = 0; j < 2 * n; j++) {
+                extendedMatrix[i][j] /= diagElement; // 將對角線元素化為1
+            }
+
+            for (int k = 0; k < n; k++) {
+                if (k != i) {
+                    double factor = extendedMatrix[k][i];
+                    for (int j = 0; j < 2 * n; j++) {
+                        extendedMatrix[k][j] -= factor * extendedMatrix[i][j]; // 消元
+                    }
+                }
+            }
+        }
+
+        double[][] inverseMatrix = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(extendedMatrix[i], n, inverseMatrix[i], 0, n);
+        }
+
+        return inverseMatrix;
+    }
+
+    public static double[][] readMatrix(Scanner scanner) {
+        System.out.println("請輸入矩陣的行/列數 (方陣)：");
+        int n = scanner.nextInt();
+
+        double[][] matrix = new double[n][n];
+        System.out.println("請輸入矩陣的元素 (以空格分隔)：");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        return matrix;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 讀取矩陣
+        double[][] A = readMatrix(scanner);
+
+        try {
+            // 計算矩陣的逆
+            double[][] inverse = invertMatrix(A);
+            System.out.println("矩陣的逆矩陣是：");
+            printMatrix(inverse);
+
+            // 進行矩陣乘法
+            double[][] identity = multiplyMatrices(A, inverse);
+            System.out.println("矩陣 A 和其逆矩陣的乘積是：");
+            printMatrix(identity);
+        } catch (ArithmeticException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static double[][] multiplyMatrices(double[][] A, double[][] B) {
+        int n = A.length;
+        double[][] result = new double[n][n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < n; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名**：將 `augmentedMatrix` 改為 `extendedMatrix`，以更清楚地表示這是一個擴展的矩陣。
+2. **註解補充**：在高斯-喬丹消元法的步驟中添加了更多的註解，以幫助理解每一步的操作。
+3. **格式一致性**：調整了部分代碼的縮排和格式，使其更加一致和易讀。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **增加註解**：在關鍵步驟和複雜邏輯中添加更多的註解，幫助其他人理解代碼。
+2. **變數命名**：使用更具描述性的變數名稱，使代碼更易讀和維護。
+3. **格式一致性**：保持代碼的縮排和格式一致，這樣有助於提高代碼的可讀性和可維護性。
+
+**反饋：**
+你的程式邏輯和功能都非常好，能夠正確地計算反矩陣並驗證結果。不過，在備註、格式和變數命名方面還有一些可以改進的地方。希望你能夠在未來的作業中注意這些細節，這樣可以提高代碼的質量和可讀性。繼續保持好的邏輯和功能實現！

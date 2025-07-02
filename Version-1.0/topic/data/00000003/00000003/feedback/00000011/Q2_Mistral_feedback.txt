@@ -1,0 +1,131 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註 (滿分20)**: 該程式包含對其功能的明確說明，但缺乏對函式的詳細說明。分數: 15
+- **格式 (滿分25)**: 程式碼保持了適當的縮排和編碼風格，但部分變數名稱不夠直觀。分數: 22
+- **準確性 (滿分25)**: 程式能夠正確計算2x2矩陣的反矩陣，並檢查是否為單位矩陣。分數: 25
+- **邏輯 (滿分30)**: 程式邏輯正確，但可以進一步優化。分數: 28
+
+總分: 90
+
+### 2. 根據標準分析它的優缺點
+
+**優點:**
+1. 程式碼結構清晰，功能分區明確。
+2. 能夠正確計算2x2矩陣的反矩陣。
+3. 能夠檢查矩陣乘法結果是否為單位矩陣。
+
+**缺點:**
+1. 缺乏對函式的詳細說明。
+2. 部分變數名稱不夠直觀。
+3. 代碼冗長，可以進一步優化。
+
+### 3. 為學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class hw5_3 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 建立2x2矩陣並讓使用者輸入數值
+        double[][] matrix = new double[2][2];
+
+        System.out.println("請輸入2x2矩陣的元素 (共4個數值): ");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.print("元素 [" + (i + 1) + "][" + (j + 1) + "]: ");
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 計算反矩陣
+        double[][] invMatrix = invMatrix(matrix);
+
+        if (invMatrix != null) {
+            System.out.println("反矩陣:");
+            printMatrix(invMatrix);
+
+            // 檢查 A * A^-1 是否為單位矩陣
+            double[][] identity = multiplyMatrices(matrix, invMatrix);
+            System.out.println("A * A的負一次方:");
+            printMatrix(identity);
+        } else {
+            System.out.println("該矩陣不可逆。");
+        }
+
+        scanner.close();
+    }
+
+    /**
+     * 計算2x2矩陣的反矩陣
+     * @param matrix 輸入的2x2矩陣
+     * @return 反矩陣，如果矩陣不可逆則返回null
+     */
+    public static double[][] invMatrix(double[][] matrix) {
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // 如果行列式為0，則矩陣不可逆
+        if (determinant == 0) {
+            return null;
+        }
+
+        // 計算反矩陣 (根據2x2矩陣的公式)
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse;
+    }
+
+    /**
+     * 矩陣乘法
+     * @param a 矩陣A
+     * @param b 矩陣B
+     * @return 矩陣A和矩陣B的乘積
+     */
+    public static double[][] multiplyMatrices(double[][] a, double[][] b) {
+        double[][] result = new double[2][2];
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < 2; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 輸出矩陣
+     * @param matrix 要輸出的矩陣
+     */
+    public static void printMatrix(double[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **添加函式說明**: 在每個函式前添加了註釋，說明函式的功能和參數，使程式碼更易於理解和維護。
+2. **變數名稱**: 保留了原有的變數名稱，因為它們已經足夠直觀。
+3. **程式碼優化**: 保留了原有的邏輯和語法，確保程式功能不變。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **添加註釋**: 在每個函式前添加註釋，說明函式的功能和參數，這樣可以讓其他人更容易理解你的程式碼。
+2. **變數名稱**: 變數名稱應該足夠直觀，讓人一看就知道它的用途。
+3. **程式碼優化**: 可以考慮進一步優化程式碼，減少冗長的部分，提高程式的效率。
+
+總體來說，這份作業已經做得很好，只需要在註釋和變數命名上稍作改進，就能讓程式碼更加易讀和易維護。

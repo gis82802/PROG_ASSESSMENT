@@ -1,0 +1,220 @@
+好的，我將根據您的標準對學生的作業進行評估、分析、並提供改進建議。
+
+**1. 作業評分：**
+
+*   **備註 (滿分 20)：** 10 分
+    *   程式碼缺乏對整體功能的說明。各個函式的功能尚可透過程式碼推斷，但沒有程式碼層級以外的描述，整體可讀性降低。
+*   **格式 (滿分 25)：** 20 分
+    *   程式碼縮排基本正確，但變數命名不夠直觀（例如 An, Am, Bn, Bm，容易混淆）。
+*   **準確性 (滿分 25)：** 23 分
+    *   `MatMultiply` 函式可以正確計算矩陣乘法。
+    *   `invMatrix` 在計算逆矩陣時，使用了整數除法 `d / det`，這會導致精度損失，尤其是在 `det` 無法整除 `d` 的情況下。
+    *   `invMatrix` 判斷矩陣是否為2x2的邏輯有誤，導致永遠回傳null。
+*   **邏輯 (滿分 30)：** 25 分
+    *   `MatMultiply` 函式的邏輯正確。
+    *   `invMatrix` 函式計算逆矩陣的邏輯基本正確，但存在上述的精度問題。
+    *   `main` 函式中的輸入和調用邏輯基本合理，但缺少對錯誤輸入的處理。例如，如果使用者輸入非數字，程式會崩潰。
+
+**總分：10 + 20 + 23 + 25 = 78 分**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼結構清晰，`MatMultiply` 函式實現正確。
+    *   使用了 `for-each` 迴圈來顯示矩陣，簡潔易讀。
+*   **缺點：**
+    *   缺乏程式碼註解，可讀性較差。
+    *   變數命名不夠直觀。
+    *   `invMatrix` 函式存在精度問題，應該使用浮點數進行除法。
+    *   `invMatrix` 判斷矩陣是否為2x2的邏輯有誤。
+    *   缺少輸入驗證，程式不夠健壯。
+    *   程式碼功能不夠完整，只做了基本的功能測試，缺少必要的異常處理和邊界條件處理。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class J_1018_03 {
+	/**
+     * 顯示矩陣的內容。如果矩陣為 null，則顯示 "null"。
+     *
+     * @param matrix 要顯示的矩陣
+     */
+	public static void displayMatrix(int matrix[][]){
+		System.out.println();
+		if(matrix == null){
+			System.out.println("null");
+			return;
+		}
+		for(int row[] : matrix){
+			for(int value : row){
+				System.out.printf("%4d ",value);
+			}
+			System.out.println();
+		}
+	}
+	
+	/**
+     * 計算兩個矩陣的乘積。
+     *
+     * @param matrixA 第一個矩陣
+     * @param matrixB 第二個矩陣
+     * @param rowsA   第一個矩陣的行數
+     * @param colsA   第一個矩陣的列數
+     * @param rowsB   第二個矩陣的行數
+     * @param colsB   第二個矩陣的列數
+     * @return 兩個矩陣的乘積，如果無法相乘則返回 null
+     */
+	public static int[][] MatMultiply(int matrixA[][], int matrixB[][], int rowsA,int colsA,int rowsB,int colsB){
+		if(colsA != rowsB) return null;
+		
+		int ans[][] = new int[rowsA][colsB];
+		for(int i=0;i<rowsA;i++){
+			for(int j=0;j<colsB;j++){
+				ans[i][j] = 0;
+				for(int k=0;k<colsA;k++){
+					ans[i][j] += matrixA[i][k] * matrixB[k][j];
+				}
+			}
+		}
+		return ans;
+	}
+	
+	/**
+     * 計算 2x2 矩陣的逆矩陣。
+     *
+     * @param matrix 要計算逆矩陣的 2x2 矩陣
+     * @return 逆矩陣，如果矩陣不是 2x2 或不可逆，則返回 null
+     */
+	public static double[][] invMatrix(int matrix[][]){
+		if(matrix.length != 2 || matrix[0].length != 2){
+			System.out.println("error in invMatrix: Matrix must be 2x2.");
+			return null;
+		}
+		
+		int a = matrix[0][0]; int b = matrix[0][1];
+		int c = matrix[1][0]; int d = matrix[1][1];
+		int det = (a*d) - (b*c);
+		
+		if(det == 0){
+			System.out.println("This matrix not have inverse matrix.");
+			return null;
+		}
+		double inv[][] = {
+			{(double)d / det, (double)-b / det},
+			{(double)-c / det, (double)a / det}
+		};
+		return inv;
+	}
+	
+	public static void main(String[] args){
+		Scanner sn = new Scanner(System.in);
+		try {
+			System.out.print("input matrixA size (rows cols):");
+			int rowsA = sn.nextInt();
+			int colsA = sn.nextInt();
+			System.out.print("input matrixB size (rows cols):");
+			int rowsB = sn.nextInt();
+			int colsB = sn.nextInt();
+			//System.out.println("A:"+An+" "+Am+" B:"+Bn+" "+Bm);
+			int matrixA[][] = new int[rowsA][colsA];
+			int matrixB[][] = new int[rowsB][colsB];
+			System.out.print("input matrixA:");
+			for(int i=0;i<rowsA;i++){
+				for(int j=0;j<colsA;j++){
+					matrixA[i][j] = sn.nextInt();
+				}
+			}
+			System.out.print("input matrixB:");
+			for(int i=0;i<rowsB;i++){
+				for(int j=0;j<colsB;j++){
+					matrixB[i][j] = sn.nextInt();
+				}
+			}
+
+			//(a)
+			int result[][] = MatMultiply(matrixA,matrixB,rowsA,colsA,rowsB,colsB);
+			displayMatrix(result);
+			
+			//(b)
+			if(rowsA == 2 && colsA == 2){
+				double invA[][] = invMatrix(matrixA);
+				System.out.println("\nmatrixA's invMatrix:");
+				if(invA != null){
+				    for(double row[] : invA){
+                        for(double value : row){
+                            System.out.printf("%8.4f ",value);
+                        }
+                        System.out.println();
+                    }
+
+					System.out.println("\nCheck calculation:");
+					int check[][] = MatMultiply(matrixA, new doubleToInt(invA), 2, 2, 2, 2);
+					displayMatrix(check);
+				}
+			}
+		}catch(java.util.InputMismatchException e){
+            System.out.println("Error: Invalid input. Please enter integers only.");
+        } finally {
+        	sn.close();
+		}
+
+		
+		
+		/* print matrixA and matrixB.
+		for(int i=0;i<An;i++){
+			for(int j=0;j<Am;j++){
+				System.out.print(mA[i][j]);
+				if(j+1 < Am)System.out.print(" ");
+			}
+			System.out.print("\n");
+		}
+		for(int i=0;i<Bn;i++){
+			for(int j=0;j<Bm;j++){
+				System.out.print(mB[i][j]);
+				if(j+1 < Bm)System.out.print(" ");
+			}
+			System.out.print("\n");
+		}*/
+	}
+	
+	public static int[][] doubleToInt(double[][] doubleMatrix) {
+        if (doubleMatrix == null) {
+            return null;
+        }
+
+        int rows = doubleMatrix.length;
+        int cols = doubleMatrix[0].length;
+        int[][] intMatrix = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                intMatrix[i][j] = (int) doubleMatrix[i][j]; // 顯式轉換
+            }
+        }
+
+        return intMatrix;
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **增加程式碼註解：** 為每個函式和關鍵程式碼段添加了註解，說明其功能和作用，提高可讀性。
+*   **修改變數命名：** 將 `An`, `Am`, `Bn`, `Bm` 修改為 `rowsA`, `colsA`, `rowsB`, `colsB`，更清晰地表達變數的含義。
+*   **修正`invMatrix`判斷矩陣是否為2x2的邏輯：** 判斷式加入`matrix[0].length != 2`判斷式。
+*   **修正 `invMatrix` 精度問題：** 將 `invMatrix` 函式的返回類型改為 `double[][]`，並將除法運算改為浮點數除法，避免精度損失。同時修改main方法中顯示invMatrix的程式碼，使其可以正常顯示double。
+*   **加入輸入驗證：** 在 `main` 函式中，使用 `try-catch` 塊捕獲 `InputMismatchException` 異常，當使用者輸入非數字時，提示錯誤信息，避免程式崩潰。
+*   **新增 doubleToInt 函式:** 因為MatMultiply只接受int，因此新增函式將double轉換為int。
+
+**5. 改進建議和反饋：**
+
+*   **程式碼風格：** 保持良好的程式碼風格，包括縮排、命名、註解等，這有助於提高程式碼的可讀性和可維護性。
+*   **錯誤處理：** 在程式碼中加入更多的錯誤處理機制，例如檢查矩陣是否為空、檢查輸入是否合法等，使程式更加健壯。
+*   **單元測試：** 編寫單元測試來驗證每個函式的正確性，確保程式碼的質量。
+*   **模組化：** 將程式碼拆分成更小的模組，每個模組負責一個特定的功能，提高程式碼的重用性和可測試性。
+*   **泛型：** 可以考慮使用泛型來使 `MatMultiply` 函式支持不同類型的矩陣元素，例如 `float` 或 `double`。
+*   **查閱API文件:** 可以多查閱java api文件，找到更適合的寫法。
+
+總之，學生的程式碼基本功能實現正確，但存在一些可改進的地方。通過增加註解、修改命名、處理精度問題、加入輸入驗證等方式，可以顯著提高程式碼的質量和可維護性。希望學生能夠繼續努力，不斷提升程式設計能力。

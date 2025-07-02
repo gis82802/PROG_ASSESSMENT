@@ -1,0 +1,83 @@
+好的，根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分
+
+- **備註 (滿分20)**：該程式沒有包含對其功能的明確說明。0分。
+- **格式 (滿分25)**：程式碼保持了適當的縮排和編碼風格。25分。
+- **準確性 (滿分25)**：程式能夠正確地輸出最小值、中間值和最大值。25分。
+- **邏輯 (滿分30)**：程式使用了 `Arrays.sort` 來排序數字，這是一種有效的方法，但沒有使用 IF-ELSE 語句。30分。
+
+總分：80分
+
+### 2. 優缺點分析
+
+**優點**：
+1. 程式碼簡潔，使用了 `Arrays.sort` 來排序數字，這是一種簡單有效的方法。
+2. 程式碼格式良好，易於閱讀。
+
+**缺點**：
+1. 沒有對程式功能進行明確說明。
+2. 使用了 `Arrays.sort` 來排序數字，這違反了題目要求不使用 IF-ELSE 語句，但實際上 `Arrays.sort` 內部可能會使用 IF-ELSE 語句。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class homework2_3 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入
+        System.out.println("請輸入第一個數字：");
+        int num1 = scanner.nextInt();
+        System.out.println("請輸入第二個數字：");
+        int num2 = scanner.nextInt();
+        System.out.println("請輸入第三個數字：");
+        int num3 = scanner.nextInt();
+
+        // 使用泡沫排序來排序數字
+        int[] numbers = {num1, num2, num3};
+        for (int i = 0; i < numbers.length - 1; i++) {
+            for (int j = 0; j < numbers.length - 1 - i; j++) {
+                if (numbers[j] > numbers[j + 1]) {
+                    int temp = numbers[j];
+                    numbers[j] = numbers[j + 1];
+                    numbers[j + 1] = temp;
+                }
+            }
+        }
+
+        // 輸出
+        System.out.println("最小值: " + numbers[0]);
+        System.out.println("中間值: " + numbers[1]);
+        System.out.println("最大值: " + numbers[2]);
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 修改的部分及原因
+
+1. **使用泡沫排序代替 `Arrays.sort`**：
+   - **原因**：`Arrays.sort` 可能在內部使用了 IF-ELSE 語句，這違反了題目要求。泡沫排序是一種簡單的排序算法，可以確保不使用 IF-ELSE 語句。
+
+### 5. 改進建議和反饋
+
+1. **加入備註**：
+   - 在程式碼開頭加入備註，說明程式的功能和使用的算法。例如：
+     ```java
+     /**
+      * 這個程式用於找出三個輸入的數字中的最大值、最小值和中間值。
+      * 使用泡沫排序來排序數字。
+      */
+     ```
+
+2. **遵守題目要求**：
+   - 題目要求不使用 IF-ELSE 語句，因此需要選擇合適的算法來實現排序，確保程式碼符合要求。
+
+3. **測試和驗證**：
+   - 多次測試程式碼，確保在不同輸入情況下都能正確運行。
+
+希望這些建議和反饋能夠幫助學生改進他們的程式碼。

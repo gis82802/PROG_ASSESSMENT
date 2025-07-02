@@ -1,0 +1,101 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 評分
+- **備註 (20分)**：該程式沒有包含對其功能的明確說明。(0分)
+- **格式 (25分)**：程式碼的縮排和編碼風格基本適當，但部分變數命名不夠直觀。(20分)
+- **準確性 (25分)**：程式的 `invMatrix` 函式實際上是計算矩陣的轉置，而不是反矩陣。(0分)
+- **邏輯 (30分)**：程式邏輯有誤，計算的是矩陣的轉置而不是反矩陣。(0分)
+
+總分：20分
+
+### 2. 分析優缺點
+**優點：**
+1. 程式碼結構清晰，易於理解。
+2. 使用了適當的迴圈結構來讀取和顯示矩陣。
+
+**缺點：**
+1. 沒有對程式功能進行明確說明。
+2. `invMatrix` 函式實際上計算的是矩陣的轉置，而不是反矩陣。
+3. 部分變數命名不夠直觀，例如 `arrA` 和 `arr`。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class Java10_25_1
+{
+    public static void main(String[] args)
+    {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter rows and columns of first matrix: ");
+        int rowsA = scanner.nextInt();
+        int colsA = scanner.nextInt();
+
+        if (rowsA != 2 || colsA != 2) {
+            System.out.println("The matrix must be 2x2.");
+            return;
+        }
+
+        double[][] A = new double[rowsA][colsA];
+
+        System.out.println("Enter elements of first matrix:");
+        for (int i = 0; i < rowsA; i++)
+        {
+            for (int j = 0; j < colsA; j++)
+            {
+                A[i][j] = scanner.nextDouble();
+            }
+        }
+
+        double[][] result = invMatrix(A);
+
+        if (result == null) {
+            System.out.println("The matrix is not invertible.");
+        } else {
+            System.out.println("Result matrix:");
+            for (int i = 0; i < result.length; i++)
+            {
+                for (int j = 0; j < result[i].length; j++)
+                {
+                    System.out.print(result[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+
+        scanner.close();
+    }
+
+    public static double[][] invMatrix(double[][] matrix)
+    {
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        if (determinant == 0) {
+            return null; // 矩陣不可逆
+        }
+
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse;
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+1. **變數類型修改**：將矩陣元素類型從 `int` 改為 `double`，因為反矩陣的元素可能是小數。
+2. **矩陣大小檢查**：添加檢查以確保輸入的矩陣是 2x2 的。
+3. **反矩陣計算**：修改 `invMatrix` 函式，使其計算 2x2 矩陣的反矩陣，並檢查矩陣是否可逆。
+4. **結果顯示**：添加檢查以確保矩陣可逆，並在不可逆時顯示相應的訊息。
+
+### 5. 改進建議和反饋
+1. **功能說明**：在程式開頭添加註解，說明程式的功能和使用方法。
+2. **變數命名**：使用更直觀的變數名稱，例如 `matrix` 而不是 `arrA`。
+3. **錯誤處理**：添加更多的錯誤處理，例如輸入的矩陣大小不正確時的提示。
+4. **邏輯檢查**：在計算反矩陣時，確保矩陣的行列式不為零，否則矩陣不可逆。
+
+希望這些建議能夠幫助學生改進他們的程式碼。

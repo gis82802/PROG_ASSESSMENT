@@ -1,0 +1,159 @@
+### 1. 打分
+根據你的標準，這份作業的分數如下：
+- 備註(滿分20)：15 (程式有基本的說明，但缺乏詳細的功能描述)
+- 格式(滿分25)：20 (縮排和編碼風格基本適當，但缺乏一些基本的註釋和文檔)
+- 準確性(滿分25)：20 (程式能夠正確計算薪資，但缺乏對員工信息的顯示)
+- 邏輯(滿分30)：25 (邏輯基本正確，但缺乏對請假天數的處理)
+
+總分：80
+
+### 2. 分析優缺點
+#### 優點：
+1. 程式結構清晰，使用了適當的繼承和多態機制。
+2. 基本功能實現，能夠計算不同類型員工的薪資。
+
+#### 缺點：
+1. 缺乏詳細的功能說明和註釋。
+2. 沒有實現 `displayEmployeeInfo` 方法，無法顯示員工信息。
+3. 沒有處理請假天數對薪資的影響。
+4. `calculatePay` 方法的輸出不夠清晰，缺乏員工名稱和類型的顯示。
+5. 沒有計算總薪資。
+
+### 3. 改進的程式碼
+```java
+/*
+ * name: CHEN YUN YAO
+ * studentID: 41043207
+ * Functions : Employee
+ * Date : 2023/03/14
+ * filename : HW2.java
+ */
+
+public class HW2 {
+    public static void main(String[] args){
+        Company A = new Company();
+        A.addEmployee("A", 1);
+        A.addEmployee("B", 2);
+        A.addEmployee("C", 3);
+        A.calculateTotalPay();
+    }
+}
+
+class Company{
+    Employee[] employee;
+    int n;
+
+    Company(){
+        employee = new Employee[100];
+        n = 0;
+    }
+
+    public void addEmployee(String name, int type){
+        switch(type){
+            case 1:
+                HourlyEmployee a = new HourlyEmployee(name, 20);
+                employee[n] = a;
+                break;
+            case 2:
+                SalaryEmployee b = new SalaryEmployee(name,2);
+                employee[n] = b;
+                break;
+            case 3:
+                CommissionEmployee c = new CommissionEmployee(name, 3);
+                employee[n] = c;
+                break;
+        }
+        n++;
+    }
+
+    public void calculateTotalPay(){
+        int totalPay = 0;
+        for(int i = 0; i < n; i++){
+            employee[i].displayEmployeeInfo();
+            int pay = employee[i].calculatePay();
+            totalPay += pay;
+        }
+        System.out.println("Total Pay: " + totalPay);
+    }
+}
+
+class Employee{
+    String name;
+
+    public int calculatePay(){
+        return 0;
+    }
+
+    public void displayEmployeeInfo(){
+        System.out.println("Employee Name: " + name);
+    }
+}
+
+class HourlyEmployee extends Employee{
+    int hourlyRate = 179;
+    int hoursWorked;
+
+    HourlyEmployee(String name, int hoursWorked){
+        this.name = name;
+        this.hoursWorked = hoursWorked;
+    }
+
+    @Override
+    public int calculatePay() {
+        int pay = hourlyRate * hoursWorked;
+        System.out.println("Hourly Employee Pay: " + pay);
+        return pay;
+    }
+}
+
+class SalaryEmployee extends Employee{
+    int monthlySalary = 35000;
+    int daysWorked = 22;
+    int leaveDays;
+
+    SalaryEmployee(String name, int leaveDays){
+        this.name = name;
+        this.leaveDays = leaveDays;
+    }
+
+    @Override
+    public int calculatePay() {
+        int pay = monthlySalary - (leaveDays * (monthlySalary / daysWorked));
+        System.out.println("Salary Employee Pay: " + pay);
+        return pay;
+    }
+}
+
+class CommissionEmployee extends Employee{
+    int commissionSalary = 28000;
+    int daysWorked = 22;
+    int leaveDays;
+
+    CommissionEmployee(String name, int leaveDays){
+        this.name = name;
+        this.leaveDays = leaveDays;
+    }
+
+    @Override
+    public int calculatePay() {
+        int pay = commissionSalary - (leaveDays * (commissionSalary / daysWorked));
+        System.out.println("Commission Employee Pay: " + pay);
+        return pay;
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+1. **實現 `displayEmployeeInfo` 方法**：在 `Employee` 類中實現了 `displayEmployeeInfo` 方法，以顯示員工的名稱。
+2. **計算請假天數的影響**：在 `SalaryEmployee` 和 `CommissionEmployee` 類中，修改 `calculatePay` 方法，考慮請假天數對薪資的影響。
+3. **增加總薪資計算**：在 `Company` 類中增加了 `calculateTotalPay` 方法，計算並顯示所有員工的總薪資。
+4. **改進輸出信息**：在 `calculatePay` 方法中增加了對薪資的詳細輸出信息，包括員工類型和薪資金額。
+
+### 5. 改進建議和反饋
+1. **增加詳細的功能說明**：在程式碼開頭增加對功能的詳細說明，幫助理解程式的目的和功能。
+2. **增加註釋**：在關鍵部分增加註釋，解釋程式的邏輯和功能。
+3. **處理請假天數**：在計算薪資時考慮請假天數的影響，使計算更加準確。
+4. **顯示員工信息**：實現 `displayEmployeeInfo` 方法，顯示員工的基本信息。
+5. **計算總薪資**：在主程式中增加對總薪資的計算和顯示，展示公司一個月的薪資支出。
+
+希望這些建議和反饋能夠幫助你的學生改進他們的程式設計技能。

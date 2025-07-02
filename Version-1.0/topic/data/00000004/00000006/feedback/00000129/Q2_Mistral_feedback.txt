@@ -1,0 +1,78 @@
+好的，讓我們逐步完成這五個要求。
+
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註 (20分)**：該程式沒有包含對其功能的明確說明。0分。
+- **格式 (25分)**：縮排和編碼風格有些問題，例如變數命名不夠直觀，缺乏空行和註釋，程式碼結構不夠清晰。15分。
+- **準確性 (25分)**：程式能夠正確判斷是否為well-ordered number，但未完成第二部分（計算100000以下的well-ordered number數量）。15分。
+- **邏輯 (30分)**：程式邏輯基本正確，但有些地方可以更簡潔和高效。20分。
+
+總分：50分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式能夠正確判斷是否為well-ordered number。
+2. 基本的循環和條件判斷邏輯是正確的。
+
+**缺點：**
+1. 沒有包含對程式功能的明確說明。
+2. 變數命名不夠直觀，程式碼結構不夠清晰。
+3. 未完成第二部分的要求（計算100000以下的well-ordered number數量）。
+4. 程式邏輯可以更簡潔和高效。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+public class hw2_1 {
+
+    public static void main(String[] args) {
+        // 判斷10000以下的well-ordered number
+        for (int i = 1; i <= 10000; i++) {
+            if (isWellOrdered(i)) {
+                System.out.println(i + " is well-ordered");
+            }
+        }
+
+        // 計算100000以下的well-ordered number數量
+        int count = 0;
+        for (int i = 1; i < 100000; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+        System.out.println("There are " + count + " well-ordered numbers under 100000.");
+    }
+
+    // 判斷一個數是否為well-ordered number
+    public static boolean isWellOrdered(int number) {
+        String numStr = Integer.toString(number);
+        for (int i = 0; i < numStr.length() - 1; i++) {
+            if (numStr.charAt(i) >= numStr.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **添加註釋和說明**：在程式開頭和關鍵部分添加了註釋，說明程式功能和邏輯。
+2. **改進變數命名**：改進了變數命名，使其更直觀，例如將`z`改為`i`，`n`改為`number`等。
+3. **提取邏輯到方法中**：將判斷well-ordered number的邏輯提取到`isWellOrdered`方法中，使程式碼更模組化和可讀。
+4. **完成第二部分的要求**：添加了計算100000以下的well-ordered number數量的邏輯。
+5. **簡化邏輯**：使用字符串操作來判斷數字是否為well-ordered number，簡化了原有的邏輯。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **添加註釋和說明**：在程式碼中添加註釋，說明程式功能和關鍵步驟，這樣可以讓其他人更容易理解你的程式碼。
+2. **變數命名**：使用更直觀的變數命名，讓程式碼更易讀。
+3. **模組化**：將重複使用的邏輯提取到方法中，使程式碼更模組化和可維護。
+4. **完成所有要求**：確保程式碼完成所有要求，例如這次作業的第二部分。
+5. **簡化邏輯**：嘗試使用更簡潔和高效的方法來實現功能，例如使用字符串操作來判斷well-ordered number。
+
+**反饋：**
+你的程式碼基本實現了判斷well-ordered number的功能，但還有一些改進的空間。希望你能夠在未來的作業中注意這些改進建議，這樣可以寫出更高質量的程式碼。

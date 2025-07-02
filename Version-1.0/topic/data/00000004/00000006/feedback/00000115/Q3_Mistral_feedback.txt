@@ -1,0 +1,108 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+
+- **備註 (滿分20)**: 該程式包含了對其功能的明確說明，但缺乏更多的詳細說明，例如程式的輸入輸出範例和邏輯說明。分數：15
+- **格式 (滿分25)**: 程式碼格式基本合理，但可以改進一些細節，例如變數命名和註釋。分數：20
+- **準確性 (滿分25)**: 程式在大部分情況下能夠產生正確的結果，但未考慮負數的情況。分數：20
+- **邏輯 (滿分30)**: 程式邏輯基本正確，但未處理負數和零的情況。分數：20
+
+總分：75
+
+### 2. 分析優缺點
+
+**優點**:
+1. 程式結構清晰，邏輯簡單易懂。
+2. 使用了適當的迴圈來反轉數字。
+3. 有基本的註釋說明程式功能。
+
+**缺點**:
+1. 未考慮負數的情況。
+2. 變數命名可以更具描述性。
+3. 註釋不夠詳細，缺乏對邏輯的詳細說明。
+4. 未處理輸入為零的情況。
+
+### 3. 改進的程式碼
+
+```java
+/*
+    filename: hw4_3
+    function: 反轉數字排列
+    author: 41243204
+    datetime: 2024/10/11
+    version: 1.0
+*/
+import java.util.Scanner;
+
+public class hw4_3 {
+    public static int reverse(int num) {
+        int reversedNum = 0;
+        boolean isNegative = num < 0;
+
+        if (isNegative) {
+            num = -num; // 將負數轉為正數處理
+        }
+
+        while (num > 0) {
+            int digit = num % 10; // 取出最後一位
+            reversedNum = reversedNum * 10 + digit; // 將當前的反轉結果*10後加上這個數字
+            num /= 10; // 去掉最後一位數字
+        }
+
+        return isNegative ? -reversedNum : reversedNum;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("輸入一個整數: ");
+        int inputNum = scanner.nextInt();
+
+        if (inputNum == 0) {
+            System.out.println("此數反轉後是: 0");
+        } else {
+            int reversedNum = reverse(inputNum);
+            System.out.println("此數反轉後是: " + reversedNum); // 輸出結果
+        }
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **處理負數**:
+   - 在 `reverse` 方法中加入了對負數的處理。如果輸入是負數，首先將其轉為正數進行反轉，最後再將結果轉為負數。
+   ```java
+   boolean isNegative = num < 0;
+   if (isNegative) {
+       num = -num;
+   }
+   ```
+
+2. **處理零**:
+   - 在 `main` 方法中加入了對零的處理。如果輸入是零，直接輸出零。
+   ```java
+   if (inputNum == 0) {
+       System.out.println("此數反轉後是: 0");
+   }
+   ```
+
+3. **改進註釋**:
+   - 增加了對邏輯的詳細說明，使註釋更具描述性。
+
+### 5. 改進建議和反饋
+
+1. **考慮邊界情況**:
+   - 在編寫程式時，應該考慮所有可能的邊界情況，例如負數、零等。
+
+2. **變數命名**:
+   - 變數命名應該更具描述性，例如 `reversedNum` 可以改為 `reversedNumber`。
+
+3. **詳細註釋**:
+   - 註釋應該更詳細，特別是對於邏輯的說明，這樣可以幫助其他人更好地理解程式。
+
+4. **測試**:
+   - 應該進行充分的測試，確保程式在各種情況下都能正確運行。
+
+希望這些建議能夠幫助您的學生改進他們的程式設計技能。

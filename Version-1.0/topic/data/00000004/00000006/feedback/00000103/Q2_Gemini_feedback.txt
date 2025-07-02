@@ -1,0 +1,93 @@
+好的，作為您的助教，我將根據您的標準評估學生提交的作業，並提供詳細的分析、改進建議和程式碼。
+
+**1. 作業評分 (總分 100)**
+
+*   **備註 (20/20):** 程式碼包含對其功能的明確說明 (WON = well-order number)，`isWON` 方法的功能也已明確註解。  **滿分**
+*   **格式 (20/25):** 程式碼縮排良好，變數命名清晰，風格一致。 可以稍微調整空格，讓程式碼更易讀。**良好**
+*   **準確性 (25/25):** 程式能夠正確判斷輸入的數字是否為well-ordered number。 **滿分**
+*   **邏輯 (25/30):** 程式的判斷邏輯正確，但只完成了作業 (a) 的部分，缺乏作業 (b) 計算小於 100000 的 well-ordered number 的數量。 **尚可**
+
+**總分：90/100**
+
+**2. 優缺點分析**
+
+**優點：**
+
+*   **程式碼清晰易懂：** 程式碼的縮排、命名都符合規範，易於閱讀和理解。
+*   **功能實現正確：** `isWON` 方法能夠準確判斷一個數字是否為 well-ordered number。
+*   **邏輯清晰：** 使用 `while` 迴圈和模數運算，從個位數開始判斷，邏輯清晰易懂。
+*   **有基本的註解：**  雖然不多，但對關鍵部分 (WON) 進行了說明。
+
+**缺點：**
+
+*   **缺乏作業 (b) 的功能：**  程式只完成了判斷單個數字是否為 well-ordered number 的功能，沒有計算小於 100000 的 well-ordered number 的數量。
+*   **缺少錯誤處理：**  沒有考慮輸入非數字的情況，如果使用者輸入字母或其他符號，程式會崩潰。
+*   **程式碼可讀性還可以提升：**  在一些關鍵步驟可以增加註解，說明程式的意圖。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class hw2 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter a num: ");
+        int n = sc.nextInt(); // 獲取使用者輸入的數字
+
+        if (isWON(n)) {
+            System.out.println(n + " is a WON."); // WON well-order number 由小到大
+        } else {
+            System.out.println(n + " is not a WON.");
+        }
+
+        // 計算小於 100000 的 well-ordered number 的數量
+        int count = countWellOrderedNumbers(100000);
+        System.out.println("Number of well-ordered numbers under 100000: " + count);
+
+        sc.close(); // 關閉 Scanner
+    }
+
+    // 判斷是否WON
+    public static boolean isWON(int n) {
+        int prev = 10; // 初始化 prev 為 10，確保個位數永遠小於 prev
+        while (n > 0) {
+            int cur = n % 10; // 取得目前位數的數字
+            if (cur >= prev) {
+                return false; // 如果目前位數大於等於前一位數，則不是 well-ordered number
+            }
+            prev = cur; // 更新前一位數為目前位數
+            n /= 10; // 移除目前位數
+        }
+        return true; // 如果所有位數都符合條件，則是 well-ordered number
+    }
+
+    // 計算小於 max 的 well-ordered number 的數量
+    public static int countWellOrderedNumbers(int max) {
+        int count = 0;
+        for (int i = 1; i < max; i++) {
+            if (isWON(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+**4. 改進說明**
+
+*   **加入 `countWellOrderedNumbers` 方法：**  這個方法使用迴圈遍歷從 1 到 `max` (不包含 `max`) 的所有數字，並使用 `isWON` 方法判斷每個數字是否為 well-ordered number。如果是，則計數器 `count` 加 1。
+*   **在 `main` 方法中呼叫 `countWellOrderedNumbers`：** 在 `main` 方法中，呼叫 `countWellOrderedNumbers(100000)` 計算小於 100000 的 well-ordered number 的數量，並將結果輸出到控制台。
+*   **增加註解:** 在判斷well-ordered number及計算well-ordered number數量增加說明
+*   **關閉 Scanner:**  在 `main` 方法的結尾增加了 `sc.close();`，關閉 Scanner，釋放資源。
+
+**5. 改進建議和反饋**
+
+*   **完成所有作業要求：**  務必仔細閱讀題目，確保完成所有要求。這個作業的 (b) 部分需要計算 well-ordered number 的數量，請不要遺漏。
+*   **加強錯誤處理：**  考慮使用者輸入錯誤的情況。例如，可以使用 `try-catch` 區塊來處理 `Scanner` 可能拋出的異常，避免程式崩潰。
+*   **更高效的算法 (進階)：**  雖然目前的方法能夠正確計算 well-ordered number 的數量，但效率不高，特別是當 `max` 很大的時候。可以考慮使用組合數學的知識，找到更高效的計算方法，避免遍歷所有數字。  (提示:  你可以思考每個位數的數字選擇方式，例如，一個5位數的well-ordered number，相當於從1-9中選擇5個不重複的數字，然後排序。  組合數 C(9, 5)  就是5位數的well-ordered number數量)
+*   **程式碼風格：**  繼續保持良好的程式碼風格，包括縮排、命名、註解等。  好的程式碼風格可以提高程式碼的可讀性和可維護性。
+*   **善用註解：**  在程式碼中添加適當的註解，解釋程式的意圖和實現方法。這可以幫助自己和他人更好地理解程式碼。
+
+總的來說，你的作業完成度不錯，程式碼清晰易懂，但需要注意完成所有作業要求，並加強錯誤處理。繼續努力，你會做得更好！

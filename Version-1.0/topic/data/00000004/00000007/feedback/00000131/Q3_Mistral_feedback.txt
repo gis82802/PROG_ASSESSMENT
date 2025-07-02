@@ -1,0 +1,108 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註 (滿分20)：15分
+  - 程式包含了基本的說明，但缺乏詳細的功能說明。
+- 格式 (滿分25)：20分
+  - 程式碼的縮排和編碼風格基本合理，但有些地方可以改進。
+- 準確性 (滿分25)：20分
+  - 程式在某些情況下能夠產生正確的結果，但有些邏輯錯誤。
+- 邏輯 (滿分30)：20分
+  - 程式的邏輯有一些錯誤，特別是在處理最大值和最小值的部分。
+
+總分：75分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式碼結構清晰，基本的輸入和輸出操作正確。
+2. 使用了適當的迴圈和條件判斷。
+
+**缺點：**
+1. 程式碼缺乏詳細的註解，功能說明不夠明確。
+2. 邏輯錯誤：在處理最大值和最小值的部分，邏輯有誤。
+3. 變數命名不夠直觀，例如 `iNum` 可以改成更有意義的名稱。
+4. 重複的邏輯：兩次遍歷數組來找最大值和最小值，可以優化。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+filename:java1018_3
+function: Given an array arr, replace every element in that array with the greatest element among the elements to its right, and replace the last element with -1.
+author:41243232
+date:2024/10/18
+version:jdk23
+*/
+
+import java.util.Scanner;
+
+public class java1018_3 {
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        int arrayLength = 0;
+        System.out.print("input length : ");
+        arrayLength = scn.nextInt();
+        int[] originalArray = new int[arrayLength];
+        int[] resultArray = new int[arrayLength];
+
+        System.out.print("input : ");
+        // 輸入數組
+        for (int i = 0; i < originalArray.length; i++) {
+            originalArray[i] = scn.nextInt();
+        }
+
+        // 找到每個元素右邊的最大值
+        for (int i = 0; i < originalArray.length - 1; i++) {
+            int maxRight = originalArray[i + 1];
+            for (int j = i + 1; j < originalArray.length; j++) {
+                if (maxRight < originalArray[j]) {
+                    maxRight = originalArray[j];
+                }
+            }
+            resultArray[i] = maxRight;
+        }
+        resultArray[resultArray.length - 1] = -1;
+
+        // 輸出結果
+        System.out.println(" ");
+        System.out.print("result : ");
+        for (int i = 0; i < resultArray.length; i++) {
+            if (i == resultArray.length - 1) {
+                System.out.print(resultArray[i]);
+            } else {
+                System.out.print(resultArray[i] + " , ");
+            }
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名：**
+   - 將 `iNum` 改為 `arrayLength` 和 `maxRight`，使變數名稱更具描述性。
+
+2. **註解和說明：**
+   - 增加了更詳細的註解，說明程式的功能和每個步驟的目的。
+
+3. **邏輯修正：**
+   - 修正了找最大值的邏輯，確保每個元素右邊的最大值被正確找到。
+
+4. **優化邏輯：**
+   - 移除了重複的邏輯，只保留了找最大值的部分，因為題目只要求找最大值。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **變數命名：**
+   - 請確保變數名稱具有描述性，這樣可以提高程式的可讀性和可維護性。
+
+2. **註解和說明：**
+   - 請在程式碼中添加更多的註解，說明每個步驟的目的和功能，這樣可以幫助其他人理解你的程式。
+
+3. **邏輯檢查：**
+   - 在寫完程式後，請仔細檢查邏輯，確保每個步驟都正確無誤。可以使用一些簡單的測試案例來驗證程式的正確性。
+
+4. **優化邏輯：**
+   - 請注意程式的效率，避免重複的操作和不必要的計算。
+
+希望這些建議能夠幫助你改進程式，提升成績！

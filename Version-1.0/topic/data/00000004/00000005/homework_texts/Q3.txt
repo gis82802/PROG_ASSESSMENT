@@ -1,0 +1,1 @@
+write a program to find the max, min, and middle values of three input values. Note that IF-ELSE is not allowed in your program.

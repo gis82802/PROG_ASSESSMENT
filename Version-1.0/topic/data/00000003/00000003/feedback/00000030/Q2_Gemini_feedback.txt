@@ -1,0 +1,167 @@
+好的，我將根據您的標準對這份作業進行評分、分析、提供改進程式碼和建議。
+
+**1. 評分 (總分 100)**
+
+*   **備註 (滿分 20):** 15 分
+    *   程式碼功能有說明，但主要在函式名稱上體現，缺乏對整個程式流程的註解。
+*   **格式 (滿分 25):** 23 分
+    *   程式碼縮排良好，風格一致。但可以考慮在各個函式間加入空行，增加可讀性。
+*   **準確性 (滿分 25):** 15 分
+    *   程式碼**部分**正確。程式可以輸入兩個矩陣，並判斷相乘結果是否為單位矩陣。但**沒有計算反矩陣**，而是讓使用者輸入兩個矩陣來判斷是否為反矩陣。違反題目要求。
+*   **邏輯 (滿分 30):** 20 分
+    *   程式邏輯基本正確，實現了矩陣相乘和單位矩陣驗證。 但**缺少計算反矩陣的核心邏輯**，只完成了驗證部分。
+
+**總分: 73 分**
+
+**2. 優缺點分析**
+
+*   **優點：**
+    *   程式碼結構清晰，函式劃分合理（`multiplyMatrices`、`isIdentityMatrix`、`inputMatrix`）。
+    *   縮排和命名規範良好，易於閱讀。
+    *   程式碼可以運行，並能判斷兩個矩陣是否互為反矩陣(通過判斷相乘是否為單位矩陣)。
+*   **缺點：**
+    *   **沒有實現計算反矩陣的功能（`invMatrix` 函式缺失）**，只完成了題目驗證部分。這是最主要的問題，也是準確性分數低的主要原因。
+    *   備註不足，缺乏對程式整體流程和關鍵步驟的說明。
+    *   輸入矩陣 B 時，沒有說明是輸入矩陣 A 的反矩陣，容易讓使用者誤解。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class app7_2 {
+
+    // 矩陣相乘 (僅處理 2x2 矩陣)
+    public static double[][] multiplyMatrices(double[][] A, double[][] B) {
+        double[][] result = new double[2][2];
+
+        // 計算 A * B
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                result[i][j] = A[i][0] * B[0][j] + A[i][1] * B[1][j];
+            }
+        }
+
+        return result;
+    }
+
+    // 驗證是否為單位矩陣 (2x2)
+    public static boolean isIdentityMatrix(double[][] matrix) {
+        double[][] identity = {{1, 0}, {0, 1}};
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                // 允許浮點數誤差
+                if (Math.abs(matrix[i][j] - identity[i][j]) > 1e-6) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // 計算 2x2 矩陣的反矩陣
+    public static double[][] invMatrix(double[][] matrix) {
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // 檢查行列式是否為 0
+        if (determinant == 0) {
+            System.out.println("矩陣不可逆，行列式為 0。");
+            return null; // 返回 null 表示矩陣不可逆
+        }
+
+        double[][] invMatrix = new double[2][2];
+        invMatrix[0][0] = matrix[1][1] / determinant;
+        invMatrix[0][1] = -matrix[0][1] / determinant;
+        invMatrix[1][0] = -matrix[1][0] / determinant;
+        invMatrix[1][1] = matrix[0][0] / determinant;
+
+        return invMatrix;
+    }
+
+    // 輸入 2x2 矩陣
+    public static double[][] inputMatrix(Scanner scanner, String name) {
+        double[][] matrix = new double[2][2];
+        System.out.println("輸入矩陣 " + name + " 的 2x2 元素:");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrix[i][j] = scanner.nextDouble(); // 使用nextDouble
+            }
+        }
+        return matrix;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入矩陣 A
+        double[][] A = inputMatrix(scanner, "A");
+
+        // 計算矩陣 A 的反矩陣
+        double[][] invA = invMatrix(A);
+
+        // 判斷反矩陣是否計算成功
+        if (invA != null) {
+            System.out.println("矩陣 A 的反矩陣為：");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.print(invA[i][j] + " ");
+                }
+                System.out.println();
+            }
+
+            // 驗證 A * invA 是否為單位矩陣
+            double[][] result = multiplyMatrices(A, invA);
+
+            System.out.println("驗證 A * invA 是否為單位矩陣:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.print(result[i][j] + " ");
+                }
+                System.out.println();
+            }
+            if (isIdentityMatrix(result)) {
+                System.out.println("驗證成功，矩陣 A 和它的反矩陣相乘為單位矩陣。");
+            } else {
+                System.out.println("驗證失敗，矩陣 A 和它的反矩陣相乘不是單位矩陣。");
+            }
+        }
+
+        scanner.close();
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **`invMatrix(double[][] matrix)` 函式：**
+    *   這是**新增的函式**，用於計算 2x2 矩陣的反矩陣。
+    *   首先計算矩陣的行列式 (determinant)。
+    *   如果行列式為 0，表示矩陣不可逆，返回 `null`。
+    *   如果行列式不為 0，根據公式計算反矩陣的各個元素。
+*   **`main` 函式：**
+    *   修改了輸入部分，現在只輸入矩陣 A。
+    *   呼叫 `invMatrix` 函式計算 A 的反矩陣。
+    *   呼叫 `multiplyMatrices` 函式計算 A 和 invA 的乘積。
+    *   呼叫 `isIdentityMatrix` 函式驗證乘積是否為單位矩陣。
+    *   新增了對反矩陣計算結果是否為 `null` 的判斷，處理矩陣不可逆的情況。
+    *   新增了列印反矩陣的功能
+*   **`inputMatrix(Scanner scanner, String name)` 函式：**
+    *   修改了`matrix[i][j] = scanner.nextInt();`為`matrix[i][j] = scanner.nextDouble();`，使用`nextDouble()`來讀取輸入，因為反矩陣可能包含浮點數。
+*   **`multiplyMatrices(double[][] A, double[][] B)` 函式：**
+    *   修改了`int[][]`為`double[][]`，因為反矩陣可能包含浮點數。
+*   **`isIdentityMatrix(double[][] matrix)` 函式：**
+    *   修改了`int[][]`為`double[][]`，因為反矩陣可能包含浮點數。
+    *   修改了判斷方式，從直接比較相等改為判斷差的絕對值是否小於一個很小的數（`1e-6`）。 這是因為浮點數運算可能存在誤差，直接比較可能導致錯誤的結果。
+
+**5. 改進建議和反饋**
+
+*   **核心功能：** 作業的核心是實現 `invMatrix` 函式，計算反矩陣。請務必確保該函式能夠正確計算 2x2 矩陣的反矩陣。
+*   **資料型別：** 反矩陣可能包含浮點數，因此建議使用 `double` 型別儲存矩陣元素。
+*   **浮點數比較：** 由於浮點數運算可能存在誤差，比較兩個浮點數是否相等時，不要直接使用 `==`，而是判斷它們的差的絕對值是否小於一個很小的數（例如 `1e-6`）。
+*   **錯誤處理：** 考慮矩陣不可逆的情況（行列式為 0），並在 `invMatrix` 函式中進行處理，例如返回 `null` 或拋出異常。
+*   **備註：** 增加備註，說明程式的整體流程、各個函式的功能以及關鍵步驟的原理。
+*   **測試：** 編寫測試案例，驗證程式碼的正確性。 尤其是邊界情況和特殊情況（例如行列式為 0 的矩陣）。
+*   **程式碼風格：** 保持良好的程式碼風格，包括縮排、命名規範和適當的空行。
+
+總體來說，你的程式碼結構清晰，風格良好。 主要問題是缺少計算反矩陣的核心功能。 在改進後的程式碼中，我補充了該功能，並修改了資料型別和比較方式，以處理浮點數運算可能存在的誤差。請仔細閱讀修改說明，並在以後的作業中注意這些問題。

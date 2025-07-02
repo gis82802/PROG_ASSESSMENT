@@ -1,0 +1,108 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+- **備註（滿分20）**: 10
+  - 該程式包含了對其功能的簡略說明，但未包含更多詳細的說明，如變數的用途、函式的作用等。
+- **格式（滿分25）**: 15
+  - 程式碼的縮排和編碼風格基本上是適當的，但有些地方可以更加一致，例如變數命名和註解的位置。
+- **準確性（滿分25）**: 5
+  - 程式目前的邏輯和結果都是錯誤的，無法正確計算矩陣相乘的結果。
+- **邏輯（滿分30）**: 10
+  - 程式的邏輯有嚴重問題，例如矩陣相乘的條件判斷和計算方式都是錯誤的。
+
+總分：40
+
+### 2. 分析優缺點
+**優點：**
+- 程式碼結構清晰，基本上能夠理解其意圖。
+- 使用了適當的輸入方式來獲取矩陣的內容。
+
+**缺點：**
+- 矩陣相乘的條件判斷錯誤，應該是檢查第一個矩陣的列數是否等於第二個矩陣的行數。
+- 矩陣相乘的計算方式錯誤，應該是檢查每個元素的計算方式。
+- 函式的返回類型和參數設計不合理，應該返回二維數組而不是單一整數。
+- 缺乏詳細的註解和說明。
+
+### 3. 改進的程式碼
+```java
+/*
+	資工二乙	41243202	林沛慧
+	功能：輸入兩個二維陣列，並印出相乘後的結果
+*/
+import java.util.Scanner;
+
+public class hw3_a
+{
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("請輸入兩個二維矩陣：");
+		System.out.print("第一個是幾行幾列的矩陣：");
+		int x1 = sc.nextInt();
+		int y1 = sc.nextInt();
+		int [][] a = new int [x1][y1];
+		System.out.print("請輸入內容：");
+		for(int i = 0 ; i < x1 ; i++)
+			for(int j = 0 ; j < y1 ; j++)
+				a[i][j] = sc.nextInt();
+		System.out.print("第二個是幾行幾列的矩陣：");
+		int x2 = sc.nextInt();
+		int y2 = sc.nextInt();
+		int [][] b = new int [x2][y2];
+		System.out.print("請輸入內容：");
+		for(int i = 0 ; i < x2 ; i++)
+			for(int j = 0 ; j < y2 ; j++)
+				b[i][j] = sc.nextInt();
+		int[][] result = matmultiply(a, b, x1, x2, y1, y2);
+		if (result != null) {
+			System.out.println("相乘後的結果：");
+			for(int i = 0 ; i < result.length ; i++)
+			{
+				for(int j = 0 ; j < result[0].length ; j++)
+				{
+					System.out.print(result[i][j] + " ");
+				}
+				System.out.println();
+			}
+		} else {
+			System.out.println("矩陣無法相乘");
+		}
+	}
+
+	public static int[][] matmultiply(int a[][], int b[][], int x1, int x2, int y1, int y2)
+	{
+		if(y1 != x2)
+		{
+			return null;
+		}
+		int[][] result = new int[x1][y2];
+		for(int i = 0 ; i < x1 ; i++)
+		{
+			for(int j = 0 ; j < y2 ; j++)
+			{
+				int sum = 0;
+				for(int k = 0 ; k < y1 ; k++)
+				{
+					sum += a[i][k] * b[k][j];
+				}
+				result[i][j] = sum;
+			}
+		}
+		return result;
+	}
+}
+```
+
+### 4. 說明改進的程式碼
+- **修改函式返回類型**：將 `matmultiply` 函式的返回類型從 `int` 改為 `int[][]`，以便返回相乘後的矩陣。
+- **修正矩陣相乘條件**：檢查第一個矩陣的列數是否等於第二個矩陣的行數，而不是檢查兩個矩陣的行列數是否相等。
+- **修正矩陣相乘計算方式**：使用三重迴圈來正確計算矩陣相乘的結果。
+- **增加結果輸出**：在主函式中增加對結果矩陣的輸出。
+
+### 5. 改進建議和反饋
+- **詳細的註解**：建議在程式碼中增加更多詳細的註解，說明每一部分的功能和變數的用途。
+- **變數命名**：變數命名應該更加直觀，例如 `x1` 可以改為 `rowsA`，`y1` 可以改為 `colsA`，以便更容易理解。
+- **測試和驗證**：建議在程式完成後進行多次測試，確保程式在不同輸入情況下都能正確運行。
+- **代碼風格**：保持一致的代碼風格，例如縮排、空格和註解的位置，以提高代碼的可讀性。
+
+希望這些建議能夠幫助學生改進他們的程式設計能力。

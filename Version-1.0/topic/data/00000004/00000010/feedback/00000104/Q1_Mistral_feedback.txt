@@ -1,0 +1,118 @@
+### 1. 打分
+- **備註(滿分20)**: 該程式沒有包含對其功能的明確說明，可以在程式碼中添加註釋來說明每個函式的功能。分數：5
+- **格式(滿分25)**: 整體格式和縮排還算合理，但在某些地方可以更加清晰。分數：20
+- **準確性(滿分25)**: 程式能夠正確地計算矩陣相乘和逆矩陣，但逆矩陣的實現只適用於2x2矩陣。分數：20
+- **邏輯(滿分30)**: 邏輯基本正確，但逆矩陣的實現可以更通用。分數：25
+
+總分：70
+
+### 2. 優缺點分析
+**優點**:
+1. 程式能夠正確地計算矩陣相乘。
+2. 逆矩陣的計算對於2x2矩陣是正確的。
+3. 程式結構清晰，函式分工明確。
+
+**缺點**:
+1. 缺乏註釋，不利於理解和維護。
+2. 逆矩陣的計算只適用於2x2矩陣，不具通用性。
+3. 部分變數命名不夠直觀，可以更具描述性。
+
+### 3. 改進的程式碼
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        double [][] mat1 = {{1, 2}, {3, 4}};
+        double [][] mat2 = {{2, 0}, {1, 2}};
+
+        double [][] result = matMultiply(mat1, mat2);
+        if (result != null) {
+            for (double[] row : result) {
+                for (double val : row) {
+                    System.out.print(val + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("Matrix multiplication is not possible.");
+        }
+
+        double [][] mat3 = {{4, 7}, {2, 6}};
+        double [][] inverse = inverseMatrix(mat3);
+        if (inverse != null) {
+            for (double[] row : inverse) {
+                for (double val : row) {
+                    System.out.print(val + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("Matrix is not invertible.");
+        }
+    }
+
+    /**
+     * 計算兩個矩陣的乘積
+     * @param mat1 第一個矩陣
+     * @param mat2 第二個矩陣
+     * @return 乘積結果矩陣，如果無法相乘則返回 null
+     */
+    public static double [][] matMultiply(double [][] mat1, double [][] mat2) {
+        int r1 = mat1.length;
+        int c1 = mat1[0].length;
+        int r2 = mat2.length;
+        int c2 = mat2[0].length;
+
+        if (c1 != r2) {
+            return null;
+        }
+
+        double [][] result = new double[r1][c2];
+        for (int i = 0; i < r1; i++) {
+            for (int j = 0; j < c2; j++) {
+                for (int k = 0; k < c1; k++) {
+                    result[i][j] += mat1[i][k] * mat2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 計算2x2矩陣的逆矩陣
+     * @param mat 2x2矩陣
+     * @return 逆矩陣，如果無法求逆則返回 null
+     */
+    public static double [][] inverseMatrix(double [][] mat) {
+        if (mat.length != 2 || mat[0].length != 2) {
+            return null;
+        }
+
+        double deter = mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+        if (deter == 0) {
+            return null;
+        }
+
+        double [][] inverse = new double[2][2];
+        inverse[0][0] = mat[1][1] / deter;
+        inverse[0][1] = -mat[0][1] / deter;
+        inverse[1][0] = -mat[1][0] / deter;
+        inverse[1][1] = mat[0][0] / deter;
+        return inverse;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+1. **添加註釋**: 在每個函式前添加了註釋，說明函式的功能和參數。這有助於理解和維護程式碼。
+2. **變數命名**: 保留了原有的變數名稱，因為它們已經足夠直觀。
+3. **保留優點**: 保留了程式碼的結構和邏輯，確保程式的正確性。
+
+### 5. 改進建議和反饋
+1. **添加註釋**: 請在每個函式前添加註釋，說明函式的功能和參數。這有助於其他人理解和維護你的程式碼。
+2. **逆矩陣的通用性**: 目前的逆矩陣計算只適用於2x2矩陣，建議研究並實現更通用的逆矩陣算法（如高斯消元法），以適用於更大尺寸的矩陣。
+3. **變數命名**: 雖然目前的變數命名已經足夠直觀，但在未來的程式碼中，請盡量使用具描述性的變數名稱，以提高程式碼的可讀性。
+4. **錯誤處理**: 可以考慮在程式中添加更多的錯誤處理，例如檢查輸入矩陣是否為空或是否為正方形矩陣。
+
+希望這些建議能夠幫助你進一步改進你的程式碼。继续加油！

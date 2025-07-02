@@ -1,0 +1,118 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註（滿分20）**：該程式沒有包含對其功能的明確說明。（0分）
+- **格式（滿分25）**：雖然有基本的縮排，但編碼風格不夠清晰，變數名稱不夠直觀。（15分）
+- **準確性（滿分25）**：程式在大部分情況下能產生正確的結果，但缺乏邊界檢查和錯誤處理。（20分）
+- **邏輯（滿分30）**：程式邏輯基本正確，但缺乏對矩陣相乘的函數封裝和模組化設計。（20分）
+
+**總分：55分**
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式能夠正確地讀取輸入並進行矩陣相乘運算。
+2. 基本的縮排和結構還算清晰。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 變數名稱不夠直觀，影響可讀性。
+3. 缺乏對矩陣相乘的函數封裝，邏輯不夠模組化。
+4. 缺乏邊界檢查和錯誤處理。
+5. 矩陣輸入和輸出的提示信息不夠清晰。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class app7_H3 {
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter array1 row size = ");
+        int a1 = scanner.nextInt();
+        System.out.print("Enter array1 col size = ");
+        int b1 = scanner.nextInt();
+
+        System.out.print("Enter array2 row size = ");
+        int a2 = scanner.nextInt();
+        System.out.print("Enter array2 col size = ");
+        int b2 = scanner.nextInt();
+
+        if (b1 != a2) {
+            System.out.println("null");
+        } else {
+            int[][] array1 = new int[a1][b1];
+            int[][] array2 = new int[a2][b2];
+
+            System.out.printf("Enter %d*%d array1 values:\n", a1, b1);
+            for (int i = 0; i < a1; i++) {
+                for (int j = 0; j < b1; j++) {
+                    array1[i][j] = scanner.nextInt();
+                }
+            }
+
+            System.out.printf("Enter %d*%d array2 values:\n", a2, b2);
+            for (int i = 0; i < a2; i++) {
+                for (int j = 0; j < b2; j++) {
+                    array2[i][j] = scanner.nextInt();
+                }
+            }
+
+            int[][] result = MatMultiply(array1, array2);
+
+            if (result != null) {
+                System.out.println("array1 * array2 value = ");
+                for (int i = 0; i < a1; i++) {
+                    for (int j = 0; j < b2; j++) {
+                        System.out.printf("%4d", result[i][j]);
+                    }
+                    System.out.println();
+                }
+            } else {
+                System.out.println("null");
+            }
+        }
+    }
+
+    public static int[][] MatMultiply(int[][] a, int[][] b) {
+        int a1 = a.length;
+        int b1 = a[0].length;
+        int b2 = b[0].length;
+
+        if (b1 != b.length) {
+            return null;
+        }
+
+        int[][] result = new int[a1][b2];
+
+        for (int i = 0; i < a1; i++) {
+            for (int j = 0; j < b2; j++) {
+                for (int k = 0; k < b1; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數名稱改進**：將變數名稱改為更直觀的名稱，如 `array1`、`array2`、`result`，提高可讀性。
+2. **函數封裝**：將矩陣相乘的邏輯封裝到 `MatMultiply` 函數中，使程式更模組化，便於維護和測試。
+3. **邊界檢查**：在 `MatMultiply` 函數中增加邊界檢查，確保矩陣大小符合相乘條件。
+4. **輸入提示信息改進**：改進輸入提示信息，使其更清晰。
+5. **錯誤處理**：增加錯誤處理，當矩陣大小不符合相乘條件時，返回 `null`。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **程式說明**：在程式開頭添加註解，說明程式的功能和用途。
+2. **變數名稱**：使用更直觀的變數名稱，提高程式的可讀性。
+3. **模組化設計**：將功能劃分為不同的函數，使程式更模組化，便於維護和測試。
+4. **錯誤處理**：增加邊界檢查和錯誤處理，確保程式在不同情況下都能正確運行。
+5. **輸入輸出提示**：改進輸入和輸出的提示信息，使其更清晰易懂。
+
+希望這些改進和建議能幫助學生提高程式設計的能力和水平。

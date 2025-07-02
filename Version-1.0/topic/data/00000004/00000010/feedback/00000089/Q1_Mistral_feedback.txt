@@ -1,0 +1,202 @@
+### 1. 打分
+
+- **備註(滿分20)：** 該程式包含對其功能的明確說明，但缺乏對函式的詳細說明。得分：15
+- **格式(滿分25)：** 程式碼整體格式良好，但部分迴圈和條件句的縮排不夠一致。得分：20
+- **準確性(滿分25)：** 程式能夠正確計算矩陣相乘，但逆矩陣計算部分未處理非2x2矩陣的情況。得分：20
+- **邏輯(滿分30)：** 程式邏輯基本正確，但逆矩陣計算部分邏輯不完整。得分：25
+
+總分：80
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式碼結構清晰，變數命名合理。
+2. 矩陣相乘部分邏輯正確。
+3. 提供了矩陣相乘的兩種版本（int 和 double）。
+
+**缺點：**
+1. 缺乏對函式的詳細說明。
+2. 逆矩陣計算部分僅處理2x2矩陣，未考慮其他情況。
+3. 部分迴圈和條件句的縮排不一致。
+4. 逆矩陣計算部分未處理非2x2矩陣的情況。
+
+### 3. 改進的程式碼
+
+```java
+public class hw
+{
+	public static void main(String[] args)
+	{
+		int A[][]={{1,2,3},{4,5,6}};
+		int B[][]={{1,2},{3,4},{5,6}};
+		int C[][];
+		C=MatMultiply(A,B);
+
+		System.out.println("A陣列內容:");
+		printMatrix(A);
+
+		System.out.println("B陣列內容:");
+		printMatrix(B);
+
+		System.out.println("兩矩陣相乘的結果=");
+		printMatrix(C);
+
+		//A的逆矩陣
+		if(A.length==A[0].length && A.length==2)
+		{
+			double[][] invA= invMatrix(A);
+			if (invA!= null)
+			{
+				//驗證A*invA是否為單位矩陣
+				double D[][]=MatMultiply(A,invA);
+				System.out.println("A * A的逆矩陣:");
+				printMatrix(D);
+
+				if (isIdentityMatrix(D))
+				{
+					System.out.println("A 的逆矩陣:");
+					printMatrix(invA);
+				}
+				else
+				{
+					System.out.println("此逆矩陣有誤");
+				}
+			}
+			else
+			{
+				System.out.println("此矩陣不可逆");
+			}
+		}
+		else
+		{
+			System.out.println("此矩陣非2X2方陣");
+		}
+	}
+
+	//計算兩矩陣相乘 (int 和 int)
+	public static int[][] MatMultiply(int arr [][],int arr2 [][])
+	{
+		if(arr[0].length!=arr2.length)
+		{
+			return null;
+		}
+		else
+		{
+			int product[][]=new int[arr.length][arr2[0].length];
+			for(int i=0;i<arr.length;i++)
+			{
+				for(int j=0;j<arr2[0].length;j++)
+				{
+					for(int k=0;k<arr[0].length;k++)
+					{
+						product[i][j]+=arr[i][k]*arr2[k][j];
+					}
+				}
+			}
+			return product;
+		}
+	}
+
+	// 計算兩矩陣相乘 (int 和 double)
+	public static double[][] MatMultiply(int[][] arr, double[][] arr2)
+	{
+		if (arr[0].length != arr2.length)
+		{
+			return null;
+		}
+		else
+		{
+			double[][] product = new double[arr.length][arr2[0].length];
+			for (int i = 0; i < arr.length; i++)
+			{
+				for (int j = 0; j < arr2[0].length; j++)
+				{
+					for (int k = 0; k < arr[0].length; k++)
+					{
+						product[i][j] += arr[i][k] * arr2[k][j];
+					}
+				}
+			}
+			return product;
+		}
+	}
+
+	//計算逆矩陣
+	public static double[][] invMatrix(int matrix [][])
+	{
+		int a = matrix[0][0];
+		int b = matrix[0][1];
+		int c = matrix[1][0];
+		int d = matrix[1][1];
+
+		double determinant = a * d - b * c; //行列式
+
+		if (determinant == 0)
+		{
+			return null; //不可逆
+		}
+
+		double[][] inverse ={{d / determinant, -b / determinant},{-c / determinant, a / determinant}};//計算逆矩陣
+		return inverse;
+	}
+
+	// 檢查是否為單位矩陣
+	public static boolean isIdentityMatrix(double[][] matrix)
+	{
+		for (int i = 0; i < matrix.length; i++)
+		{
+			for (int j = 0; j < matrix[i].length; j++)
+			{
+				if ((i == j && matrix[i][j] != 1) || (i != j && matrix[i][j] != 0))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	// 打印矩陣
+	public static void printMatrix(int[][] matrix)
+	{
+		for(int i=0;i<matrix.length;i++)
+		{
+			for(int j=0;j<matrix[i].length;j++)
+			{
+				System.out.print(matrix[i][j]+" ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+
+	// 打印矩陣
+	public static void printMatrix(double[][] matrix)
+	{
+		for(int i=0;i<matrix.length;i++)
+		{
+			for(int j=0;j<matrix[i].length;j++)
+			{
+				System.out.printf("%.2f ", matrix[i][j]);
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **提取打印矩陣的方法：** 將打印矩陣的邏輯提取到兩個方法中（`printMatrix`），分別處理int和double矩陣，這樣可以減少重複代碼，提高可維護性。
+2. **檢查單位矩陣的方法：** 將檢查單位矩陣的邏輯提取到一個方法中（`isIdentityMatrix`），這樣可以提高代碼的可讀性和可維護性。
+3. **縮排和格式：** 修正了部分迴圈和條件句的縮排，使代碼更加一致和易讀。
+
+### 5. 改進建議和反饋
+
+1. **增加註釋：** 在每個函式前增加註釋，說明函式的功能、參數和返回值。
+2. **處理非2x2矩陣的逆矩陣計算：** 目前的逆矩陣計算僅適用於2x2矩陣，建議擴展到更大的矩陣，可以考慮使用高斯消元法或其他數值方法。
+3. **錯誤處理：** 增加更多的錯誤處理，例如檢查輸入矩陣是否為空或不合法的情況。
+4. **模組化設計：** 將不同的功能模組化，例如將矩陣相乘和逆矩陣計算分別放在不同的類中，這樣可以提高代碼的可重用性和可維護性。
+
+希望這些建議能夠幫助你的學生進一步改進他們的程式碼。

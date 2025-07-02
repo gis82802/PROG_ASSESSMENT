@@ -1,0 +1,117 @@
+好的，我將根據您的標準對這份作業進行評分、分析、提供改進程式碼和建議。
+
+**1. 作業評分 (總分：100)**
+
+*   **備註 (20/20):** 程式碼包含對功能的說明，但集中在Part a， Part b沒有對應的說明，但整体來說說明明確。(給予滿分)
+*   **格式 (15/25):**  程式碼縮排大致正確，但變數命名有些隨意(例如: a, b, Max)，程式碼可讀性有待加強。(給予15分)
+*   **準確性 (20/25):** Part (a) 的判斷基本正確，但是如果輸入的數字是個位數，會判斷錯誤。Part (b)的判斷邏輯存在錯誤，計算出來的結果不正確。 (給予20分)
+*   **邏輯 (15/30):** Part (a) 的判斷邏輯基本正確，但存在邊界條件的bug。 Part (b) 的邏輯明顯有問題，沒有考慮到如何有效率地產生well-ordered number，而是採用暴力搜尋，效率極低，且邏輯判斷不完整。(給予15分)
+
+**總分：70/100**
+
+**2. 作業優缺點分析**
+
+*   **優點：**
+    *   程式碼結構清晰，將問題分解為兩個部分(a)和(b)。
+    *   Part (a) 的判斷邏輯思路簡單直接，易於理解。
+    *   使用了 `Scanner` 類別來獲取使用者輸入，並且有相應的輸出提示。
+
+*   **缺點：**
+    *   **變數命名不規範：** 變數命名不夠直觀，`a`，`b`，`Max` 等名稱難以理解其含義。
+    *   **可讀性差：** 程式碼中缺少必要的註釋，降低了可讀性。
+    *   **邊界條件處理不完整：** Part (a) 對於個位數的輸入判斷錯誤。
+    *   **Part (b) 效率極低：**  使用暴力搜尋的方法效率極低，當數字範圍擴大時，程式執行時間將難以接受。
+    *   **Part (b) 邏輯錯誤：** Part (b)的邏輯存在問題，導致計算結果不正確。
+    *   **程式碼風格不一致：**  `if(a>b)` 後面的語句有時使用大括號，有時不使用，不夠一致。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class hw2_1011 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        long num, digit, prevDigit;
+        long maxNumber = 100000;
+        long wellOrderedCount = 0;
+
+        // Part (a): 判斷使用者輸入的數字是否為 well-ordered number
+        System.out.print("(a)\n請輸入數字:");
+        num = scanner.nextInt();
+
+        boolean isWellOrdered = true;
+        if (num < 10) { // 個位數都是 well-ordered number
+            System.out.println("是well-ordered number");
+        } else {
+            prevDigit = num % 10; // 取最後一位
+            num /= 10;
+            while (num > 0) {
+                digit = num % 10;
+                if (prevDigit <= digit) { // 如果不是 strictly increasing
+                    isWellOrdered = false;
+                    System.out.println("不是well-ordered number");
+                    break;
+                }
+                prevDigit = digit;
+                num /= 10;
+            }
+            if (isWellOrdered) {
+                System.out.println("是well-ordered number");
+            }
+        }
+
+        System.out.println("-------------------------\n(b)");
+
+        // Part (b): 計算 100000 內 well-ordered number 的個數
+        //  直接計算，因為well-ordered number的個數不多。
+        for (int i = 1; i < maxNumber; i++) {
+            if (isWellOrderedNumber(i)) {
+                wellOrderedCount++;
+            }
+        }
+
+        System.out.println("100000內有" + wellOrderedCount + "個well-ordered number");
+        scanner.close();
+    }
+
+    // 輔助函數：判斷一個數字是否為 well-ordered number
+    public static boolean isWellOrderedNumber(long number) {
+        if (number < 10) {
+            return true;
+        }
+
+        long digit = number % 10;
+        number /= 10;
+        while (number > 0) {
+            long prevDigit = number % 10;
+            if (digit <= prevDigit) {
+                return false;
+            }
+            digit = prevDigit;
+            number /= 10;
+        }
+        return true;
+    }
+}
+```
+
+**4. 改進說明**
+
+*   **變數命名：** 將 `a`，`b` 改為 `digit`，`prevDigit`，`Max` 改為 `maxNumber`，`sum` 改為 `wellOrderedCount`，增加程式碼的可讀性。
+*   **個位數判斷：** 在 Part (a) 中，添加了對個位數的判斷，因為個位數本身就是 well-ordered number。
+*   **簡化Part(a)的邏輯：** 使用boolean變數來表示是否為Well-Ordered，避免邏輯上的混淆。
+*   **Part (b) 邏輯重寫：** 將Part b的程式碼邏輯大幅度修改，使用一個迴圈來迭代所有數字，並使用一個單獨的函式`isWellOrderedNumber`來判斷數字是否為well-ordered number，使程式碼可讀性更高。
+*   **增加輔助函式：** 增加 `isWellOrderedNumber` 輔助函式，將判斷邏輯封裝起來，提高程式碼的可讀性和可維護性。
+*   **關閉 Scanner：** 添加 `scanner.close()` 關閉 scanner，釋放資源。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格：** 養成良好的程式碼風格，保持一致的縮排和命名規範，增加程式碼的可讀性。
+*   **變數命名：**  選擇有意義的變數名稱，以便於理解程式碼的邏輯。
+*   **註釋：** 添加必要的註釋，解釋程式碼的功能和邏輯。
+*   **邊界條件：** 在編寫程式碼時，要考慮各種邊界條件，確保程式在任何情況下都能正常工作。
+*   **演算法效率：**  在解決問題時，要考慮演算法的效率，選擇合適的演算法，避免使用低效的演算法。
+*   **模組化：**  將程式碼分解為多個函式或類別，提高程式碼的可讀性和可維護性。
+
+總體來說，學生的程式碼基本完成了題目的要求，但存在一些需要改進的地方。通過這次作業，希望學生能夠更加重視程式碼的規範性、可讀性和效率，並養成良好的編碼習慣。

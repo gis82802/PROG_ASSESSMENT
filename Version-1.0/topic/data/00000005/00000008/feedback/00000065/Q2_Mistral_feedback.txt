@@ -1,0 +1,140 @@
+### 1. 打分
+- 備註(滿分20)：10
+- 格式(滿分25)：15
+- 準確性(滿分25)：25
+- 邏輯(滿分30)：25
+
+總分：75
+
+### 2. 分析優缺點
+#### 優點：
+1. 程式能夠正確計算和顯示每個員工的薪水。
+2. 使用了繼承和多型的概念，展示了面向物件程式設計的基本原則。
+
+#### 缺點：
+1. 缺乏對程式功能的明確說明和備註。
+2. 程式碼格式和編碼風格有些不一致，例如變數命名和空格使用不夠規範。
+3. 邏輯部分雖然正確，但可以更加清晰和簡潔。
+
+### 3. 改進的程式碼
+```java
+/*
+ * name:楊峻朋
+ * 學號:41043229
+ * 班級:資二乙
+ * 功能說明：建立一父類別 "Employee"(員工) 具有二個成員函示 "calculatePay" 和 "displayEmployeeInfo"。
+ *           建立繼承此父類別的子類別： "HourlyEmployee"(時薪員工), "SalaryEmployee"(正式員工), 和 "CommissionEmployee"(合約員工)，
+ *           這三個子類別都會改寫(override) 成員函式 "calculatePay"，並依照其計薪方式計算月薪資。
+ *           在主程式建立一個公司的物件，裡面包含這三種員工，計算這間公司一個月要發多少薪水來展示其功能。
+ *           注意：這三種員工的物件要儲存在同一個陣列內。
+ */
+public class b {
+    public static void main(String[] args) {
+        Company co = new Company();
+        co.showAllEmployeesPay();
+    }
+}
+
+class Employee {
+    protected int money = 0;
+    protected String name;
+
+    void calculatePay() {
+        // 預設實現，子類別需要覆寫
+    }
+
+    void displayEmployeeInfo() {
+        System.out.println(name);
+    }
+
+    void show() {
+        displayEmployeeInfo();
+        System.out.println("薪水: " + money);
+    }
+}
+
+class HourlyEmployee extends Employee {
+    private int hour;
+    private static final int HOUR_MONEY = 50;
+
+    public HourlyEmployee(int hour, String name) {
+        this.hour = hour;
+        this.name = name;
+    }
+
+    @Override
+    void calculatePay() {
+        money = hour * HOUR_MONEY;
+    }
+}
+
+class SalaryEmployee extends Employee {
+    private int days;
+    private static final int BASE = 1000;
+    private static final int DAYS_MONEY = 1000;
+
+    public SalaryEmployee(int days, String name) {
+        this.days = days;
+        this.name = name;
+    }
+
+    @Override
+    void calculatePay() {
+        money = BASE + days * DAYS_MONEY;
+    }
+}
+
+class CommissionEmployee extends Employee {
+    private int month;
+    private static final int MONTH_MONEY = 3000;
+
+    public CommissionEmployee(int month, String name) {
+        this.month = month;
+        this.name = name;
+    }
+
+    @Override
+    void calculatePay() {
+        money = month * MONTH_MONEY;
+    }
+}
+
+class Company {
+    private Employee[] employees = new Employee[3];
+
+    public Company() {
+        employees[0] = new HourlyEmployee(10, "Tom");
+        employees[1] = new SalaryEmployee(10, "Jerry");
+        employees[2] = new CommissionEmployee(10, "Jeff");
+    }
+
+    private void calculatePay(int i) {
+        employees[i].calculatePay();
+    }
+
+    private void show(int i) {
+        calculatePay(i);
+        employees[i].show();
+    }
+
+    public void showAllEmployeesPay() {
+        for (int i = 0; i < employees.length; i++) {
+            show(i);
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼
+1. **增加備註**：在程式開頭加入對程式功能的明確說明。
+2. **變數命名和常數**：將靜態變數改為常數，並使用更具描述性的變數名稱。
+3. **格式和編碼風格**：統一變數命名風格，並增加空格以提高可讀性。
+4. **主程式簡化**：將顯示所有員工薪水的邏輯封裝在 `Company` 類別中的 `showAllEmployeesPay` 方法內，使主程式更簡潔。
+
+### 5. 改進建議和反饋
+1. **增加備註**：在每個類別和方法前面增加註解，說明其功能和用途。
+2. **格式一致性**：保持一致的縮排和命名風格，增加程式碼的可讀性。
+3. **封裝和簡化**：將重複的邏輯封裝到方法中，使主程式更簡潔和易於理解。
+4. **使用常數**：對於固定的數值，使用 `static final` 常數，這樣可以避免魔術數字（magic numbers），增加程式碼的可讀性和維護性。
+
+希望這些建議能夠幫助學生進一步提升程式碼質量和可讀性。

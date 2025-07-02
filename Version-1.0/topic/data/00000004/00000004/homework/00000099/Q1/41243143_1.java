@@ -1,0 +1,32 @@
+public class work2
+{
+	public static void main (String args[]) throws Exception
+	{
+		for(;;){
+		System.out.print("\b");
+		System.out.print("|");
+		Thread.sleep(100);
+		System.out.print("\b");
+		System.out.print("/");
+		Thread.sleep(100);
+		System.out.print("\b");
+		System.out.print("-");
+		Thread.sleep(100);
+		System.out.print("\b");
+		System.out.print("\\");
+		Thread.sleep(100);
+		System.out.print("\b");
+		System.out.print("|");
+		Thread.sleep(100);
+		System.out.print("\b");
+		System.out.print("/");
+		Thread.sleep(100);
+		System.out.print("\b");
+		System.out.print("-");
+		Thread.sleep(100);
+		System.out.print("\b");
+		System.out.print("\\");
+		Thread.sleep(100);
+		}
+	}
+}

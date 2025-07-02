@@ -1,0 +1,157 @@
+好的，我將根據您的標準對學生的作業進行評分、分析並提供改進建議。
+
+**1. 作業評分 (總分：100)**
+
+*   **備註 (滿分 20)：** 18 分
+    *   程式碼開頭沒有說明檔案功能。
+*   **格式 (滿分 25)：** 23 分
+    *   程式碼縮排良好，變數命名可讀性高，但可以考慮將幻數(magic number)移除。
+*   **準確性 (滿分 25)：** 24 分
+    *   程式在大部分情況下能夠正確計算反矩陣，但在行列式非常接近於零時，可能會因為浮點數精度問題導致計算結果不夠準確。
+*   **邏輯 (滿分 30)：** 28 分
+    *   程式邏輯清晰，反矩陣計算和驗證的步驟都正確。但驗證單位矩陣時，因為浮點數精度問題判斷不夠精確。
+
+**總分：93 分**
+
+**2. 優缺點分析**
+
+*   **優點：**
+    *   程式碼結構清晰，易於閱讀。
+    *   程式邏輯正確，能夠計算反矩陣並進行驗證。
+    *   程式碼包含了必要的錯誤處理（行列式為零的情況）。
+    *   使用了有意義的函式名稱，例如`invMatrix`, `multiplyMatrices`, `printMatrix`。
+*   **缺點：**
+    *   缺少程式功能說明，提高可讀性。
+    *   在驗證單位矩陣時，沒有考慮到浮點數精度問題，可能導致判斷錯誤。
+    *   程式中存在“魔術數字”（例如 `2` 用於表示矩陣大小），降低了程式碼的可維護性。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class hw5_3 {
+    private static final int MATRIX_SIZE = 2; // 定義矩陣大小
+    private static final double EPSILON = 1e-6; // 定義浮點數比較的容差值
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 建立2x2矩陣並讓使用者輸入數值
+        double[][] matrix = new double[MATRIX_SIZE][MATRIX_SIZE];
+
+        System.out.println("請輸入2x2矩陣的元素 (共4個數值): ");
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            for (int j = 0; j < MATRIX_SIZE; j++) {
+                System.out.print("元素 [" + (i + 1) + "][" + (j + 1) + "]: ");
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 計算反矩陣
+        double[][] invMatrix = invMatrix(matrix);
+
+        if (invMatrix != null) {
+            System.out.println("反矩陣:");
+            printMatrix(invMatrix);
+
+            // 檢查 A * A^-1 是否為單位矩陣
+            double[][] identity = multiplyMatrices(matrix, invMatrix);
+            System.out.println("A * A的負一次方:");
+            printMatrix(identity);
+
+            // 驗證結果是否為單位矩陣
+            if (isIdentityMatrix(identity)) {
+                System.out.println("驗證成功: A * A^-1 是單位矩陣。");
+            } else {
+                System.out.println("驗證失敗: A * A^-1 不是單位矩陣。");
+            }
+        } else {
+            System.out.println("該矩陣不可逆。");
+        }
+
+        scanner.close();
+    }
+
+    // 計算2x2矩陣的反矩陣
+    public static double[][] invMatrix(double[][] matrix) {
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // 如果行列式為0，則矩陣不可逆
+        if (Math.abs(determinant) < EPSILON) { // 使用容差判斷行列式是否接近於零
+            return null;
+        }
+
+        // 計算反矩陣 (根據2x2矩陣的公式)
+        double[][] inverse = new double[MATRIX_SIZE][MATRIX_SIZE];
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse;
+    }
+
+    // 矩陣乘法
+    public static double[][] multiplyMatrices(double[][] a, double[][] b) {
+        double[][] result = new double[MATRIX_SIZE][MATRIX_SIZE];
+
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            for (int j = 0; j < MATRIX_SIZE; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < MATRIX_SIZE; k++) {
+                    result[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // 輸出矩陣
+    public static void printMatrix(double[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.printf("%.2f ", matrix[i][j]); // 格式化輸出，保留兩位小數
+            }
+            System.out.println();
+        }
+    }
+
+    // 判斷矩陣是否為單位矩陣（考慮浮點數精度）
+    public static boolean isIdentityMatrix(double[][] matrix) {
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            for (int j = 0; j < MATRIX_SIZE; j++) {
+                if (i == j) {
+                    if (Math.abs(matrix[i][j] - 1) > EPSILON) {
+                        return false;
+                    }
+                } else {
+                    if (Math.abs(matrix[i][j]) > EPSILON) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **定義常數 `MATRIX_SIZE`：** 將矩陣大小 `2` 定義為常數 `MATRIX_SIZE`，提高程式碼的可讀性和可維護性。如果需要修改矩陣大小，只需修改 `MATRIX_SIZE` 的值即可。
+*   **定義常數 `EPSILON`：** 引入 `EPSILON` 用於浮點數比較，解決浮點數精度問題。
+*   **修改行列式判斷：** 在 `invMatrix` 函式中，使用 `Math.abs(determinant) < EPSILON` 判斷行列式是否接近於零，而不是直接判斷是否等於零。
+*   **添加 `isIdentityMatrix` 函式：** 添加 `isIdentityMatrix` 函式，用於判斷矩陣是否為單位矩陣。該函式考慮了浮點數精度，使用 `Math.abs(matrix[i][j] - 1) < EPSILON` 判斷對角線元素是否接近於 1，使用 `Math.abs(matrix[i][j]) < EPSILON` 判斷非對角線元素是否接近於 0。
+*   **格式化輸出：** 在 `printMatrix` 函式中使用 `System.out.printf("%.2f ", matrix[i][j])` 格式化輸出，保留兩位小數，使輸出結果更易於閱讀。
+*   **添加驗證結果輸出：** 在 `main` 函式中，添加對 `isIdentityMatrix` 函式返回值的判斷，並輸出驗證結果。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格：** 程式碼風格良好，但可以進一步提高程式碼的可讀性和可維護性。例如，可以將程式碼分成多個小函式，每個函式負責一個特定的任務。
+*   **錯誤處理：** 程式碼包含了必要的錯誤處理，但在行列式非常接近於零時，可能會因為浮點數精度問題導致計算結果不夠準確。可以考慮使用數值分析庫來提高計算精度。
+*   **單元測試：** 建議編寫單元測試，驗證程式碼的正確性。
+*   **程式功能說明：** 建議在檔案最上面加上程式功能說明，提高可讀性。
+
+總體來說，學生的作業完成度很高，程式碼結構清晰，邏輯正確。通過本次修改，程式碼的可讀性、可維護性和準確性都得到了提高。

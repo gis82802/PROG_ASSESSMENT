@@ -1,0 +1,159 @@
+### 1. 打分（0-100）
+- 備註 (20分)：15
+- 格式 (25分)：20
+- 準確性 (25分)：20
+- 邏輯 (30分)：25
+
+**總分：80**
+
+### 2. 優缺點分析
+#### 優點：
+1. **功能完整**：程式實現了矩陣相乘和2x2矩陣求逆兩個功能。
+2. **輸入處理**：使用 `Scanner` 類來讀取用戶輸入，操作方便。
+3. **基本結構清晰**：程式結構清晰，函數分工明確。
+
+#### 缺點：
+1. **備註不足**：程式缺乏對功能的明確說明和註釋。
+2. **格式問題**：部分代碼縮排不一致，影響可讀性。
+3. **準確性問題**：矩陣求逆部分的計算有誤，應該使用浮點數而不是整數。
+4. **邏輯問題**：矩陣相乘函數未檢查矩陣大小是否匹配，應該在函數內部進行檢查。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class hw3 {
+    // 反矩陣函數
+    public static double[][] invMatrix(int a1[][]) {
+        // 檢查行列式
+        int a = a1[0][0];
+        int b = a1[0][1];
+        int c = a1[1][0];
+        int d = a1[1][1];
+
+        int determinant = a * d - b * c;
+
+        if (determinant == 0) {
+            System.out.println("該矩陣不可逆。");
+            return null; // 返回 null 表示無反矩陣
+        }
+
+        // 計算反矩陣
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = (double) d / determinant; // d / (ad - bc)
+        inverse[0][1] = (double) -b / determinant; // -b / (ad - bc)
+        inverse[1][0] = (double) -c / determinant; // -c / (ad - bc)
+        inverse[1][1] = (double) a / determinant; // a / (ad - bc)
+
+        return inverse;
+    }
+
+    // 矩陣相乘函數
+    public static int[][] MatMultply(int a[][], int b[][]) {
+        int m1 = a.length;        // 第一個矩陣的行數
+        int n1 = a[0].length;     // 第一個矩陣的列數
+        int n2 = b[0].length;     // 第二個矩陣的列數
+
+        // 檢查矩陣大小是否匹配
+        if (n1 != b.length) {
+            return null; // 返回 null 表示無法相乘
+        }
+
+        int c[][] = new int[m1][n2];
+
+        for (int i = 0; i < m1; i++) {
+            for (int j = 0; j < n2; j++) {
+                c[i][j] = 0;
+                for (int k = 0; k < n1; k++) {
+                    c[i][j] += a[i][k] * b[k][j]; // 矩陣相乘計算
+                }
+            }
+        }
+        return c; // 返回結果矩陣
+    }
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        System.out.println("功能矩陣相乘:");
+
+        // 輸入第一個矩陣
+        System.out.print("輸入第一個矩陣大小 m x n: ");
+        int m1 = scn.nextInt();
+        int n1 = scn.nextInt();
+        int[][] a = new int[m1][n1];
+        System.out.print("輸入第一個矩陣內容: ");
+        for (int i = 0; i < m1; i++) {
+            for (int j = 0; j < n1; j++) {
+                a[i][j] = scn.nextInt();
+            }
+        }
+
+        // 輸入第二個矩陣
+        System.out.print("輸入第二個矩陣大小 m x n: ");
+        int m2 = scn.nextInt();
+        int n2 = scn.nextInt();
+        int[][] b = new int[m2][n2];
+        System.out.print("輸入第二個矩陣內容: ");
+        for (int i = 0; i < m2; i++) {
+            for (int j = 0; j < n2; j++) {
+                b[i][j] = scn.nextInt();
+            }
+        }
+
+        int result[][] = MatMultply(a, b);
+        if (result == null) {
+            System.out.println("null");
+        } else {
+            System.out.println("結果矩陣:");
+            for (int i = 0; i < m1; i++) {
+                for (int j = 0; j < n2; j++) {
+                    System.out.print(result[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+
+        System.out.println("功能反矩陣2 x 2:");
+        // 輸入反矩陣
+        int[][] a1 = new int[2][2];
+        System.out.print("輸入矩陣內容: ");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                a1[i][j] = scn.nextInt();
+            }
+        }
+
+        // 計算反矩陣
+        double[][] inverse = invMatrix(a1);
+        if (inverse != null) {
+            System.out.println("反矩陣:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.print(inverse[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+
+        scn.close();
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **反矩陣計算**：
+   - **修改**：將反矩陣的計算結果使用 `double` 類型來存儲，避免整數除法導致的誤差。
+   - **原因**：矩陣求逆的計算結果通常是浮點數，使用整數會導致結果不準確。
+
+2. **矩陣相乘檢查**：
+   - **修改**：在 `MatMultply` 函數內部添加檢查，確保第一個矩陣的列數等於第二個矩陣的行數。
+   - **原因**：確保矩陣相乘的前提條件，避免無效操作。
+
+### 5. 改進建議和反饋
+1. **註釋**：在每個函數和重要步驟前添加註釋，說明該函數的功能和步驟的作用。
+2. **格式**：保持一致的縮排和編碼風格，提高代碼的可讀性。
+3. **數據類型**：在需要精確計算的地方使用適當的數據類型，如 `double` 而不是 `int`。
+4. **錯誤處理**：在函數內部添加錯誤處理，確保函數在異常情況下能夠正確返回結果。
+5. **測試**：多進行測試，確保程式在不同情況下都能夠正確運行。
+
+希望這些建議能夠幫助你的學生改進他們的程式設計能力。

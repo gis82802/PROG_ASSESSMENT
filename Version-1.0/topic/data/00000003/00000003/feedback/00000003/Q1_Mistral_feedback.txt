@@ -1,0 +1,159 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：10分
+  - 該程式沒有包含對其功能的明確說明，缺乏註釋。
+
+- 格式（滿分25）：20分
+  - 整體格式還算整齊，但有些地方可以改進，例如變數命名和註釋。
+
+- 準確性（滿分25）：25分
+  - 程式能夠正確地計算矩陣相乘的結果。
+
+- 邏輯（滿分30）：25分
+  - 程式邏輯基本正確，但在一些地方可以更優化，例如初始化矩陣元素的值。
+
+總分：80分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式能夠正確地計算矩陣相乘的結果。
+2. 使用了適當的迴圈結構來處理矩陣相乘的運算。
+3. 對於矩陣維度不匹配的情況有處理。
+
+**缺點：**
+1. 缺乏註釋，沒有對程式功能進行明確說明。
+2. 變數命名不夠直觀，例如 `rows1` 和 `cols1` 可以改為 `matrix1Rows` 和 `matrix1Cols`。
+3. 矩陣元素初始化時沒有給定初始值，可能會導致錯誤。
+4. 在 `MatMultiply` 方法中，`result[i][j]` 初始值應該是 0，但程式碼中沒有明確初始化。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+// (a) 矩陣相乘
+import java.util.Scanner;
+
+public class MatrixMultiplication {
+    /**
+     * 矩陣相乘方法
+     * @param matrix1 第一個矩陣
+     * @param matrix2 第二個矩陣
+     * @return 相乘結果矩陣，若無法相乘則返回 null
+     */
+    public static double[][] MatMultiply(double[][] matrix1, double[][] matrix2) {
+        if (matrix1 == null || matrix2 == null ||
+            matrix1.length == 0 || matrix2.length == 0 ||
+            matrix1[0].length != matrix2.length) {
+            return null;
+        }
+
+        int matrix1Rows = matrix1.length;
+        int matrix1Cols = matrix1[0].length;
+        int matrix2Cols = matrix2[0].length;
+
+        double[][] result = new double[matrix1Rows][matrix2Cols];
+
+        for (int i = 0; i < matrix1Rows; i++) {
+            for (int j = 0; j < matrix2Cols; j++) {
+                result[i][j] = 0; // 初始化結果矩陣的元素為 0
+                for (int k = 0; k < matrix1Cols; k++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 輸入矩陣元素方法
+     * @param scanner Scanner 物件
+     * @param rows 矩陣的行數
+     * @param cols 矩陣的列數
+     * @return 輸入的矩陣
+     */
+    private static double[][] inputMatrix(Scanner scanner, int rows, int cols) {
+        double[][] matrix = new double[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.printf("請輸入 [%d][%d] 位置的元素: ", i+1, j+1);
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+        return matrix;
+    }
+
+    /**
+     * 印出矩陣方法
+     * @param matrix 要印出的矩陣
+     */
+    private static void printMatrix(double[][] matrix) {
+        if (matrix == null) {
+            System.out.println("NULL");
+            return;
+        }
+        for (double[] row : matrix) {
+            for (double num : row) {
+                System.out.printf("%.2f\t", num);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("請輸入第一個矩陣的維度：");
+            System.out.print("列數: ");
+            int matrix1Rows = scanner.nextInt();
+            System.out.print("行數: ");
+            int matrix1Cols = scanner.nextInt();
+
+            System.out.println("\n請輸入第二個矩陣的維度：");
+            System.out.print("列數: ");
+            int matrix2Rows = scanner.nextInt();
+            System.out.print("行數: ");
+            int matrix2Cols = scanner.nextInt();
+
+            System.out.println("\n請輸入第一個矩陣的元素：");
+            double[][] matrix1 = inputMatrix(scanner, matrix1Rows, matrix1Cols);
+
+            System.out.println("\n請輸入第二個矩陣的元素：");
+            double[][] matrix2 = inputMatrix(scanner, matrix2Rows, matrix2Cols);
+
+            System.out.println("\n第一個矩陣：");
+            printMatrix(matrix1);
+
+            System.out.println("\n第二個矩陣：");
+            printMatrix(matrix2);
+
+            System.out.println("\n相乘結果：");
+            printMatrix(MatMultiply(matrix1, matrix2));
+
+        } catch (Exception e) {
+            System.out.println("NULL");
+        } finally {
+            scanner.close();
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **增加註釋**：在每個方法前增加註釋，說明方法的功能和參數。
+2. **變數命名**：將 `rows1` 和 `cols1` 改為 `matrix1Rows` 和 `matrix1Cols` 等，使變數命名更直觀。
+3. **初始化矩陣元素**：在 `MatMultiply` 方法中，初始化 `result[i][j]` 為 0，避免潛在的錯誤。
+4. **格式優化**：保持適當的縮排和編碼風格，使程式碼更易讀。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **加強註釋**：在每個方法和重要的程式碼段落前加上註釋，說明其功能和用途。
+2. **變數命名**：使用更直觀的變數命名，提高程式碼的可讀性。
+3. **初始化變數**：在使用變數之前，確保其已被正確初始化。
+4. **錯誤處理**：在捕捉例外時，可以輸出更具體的錯誤信息，方便調試。
+5. **測試**：多進行測試，確保程式在不同情況下都能正確運行。
+
+希望這些建議能幫助學生進一步提升他們的程式設計能力。

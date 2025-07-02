@@ -1,0 +1,117 @@
+好的，我將根據您的標準對學生的作業進行評分和分析，並提供改進建議和代碼。
+
+**1. 評分：**
+
+*   **備註 (滿分 20)：** 12 分
+    *   雖然程式碼開頭有備註，但描述過於簡略，沒有充分說明程式的各個部分，例如各距離公式的具體功能。
+*   **格式 (滿分 25)：** 20 分
+    *   程式碼縮排基本正確，但變數宣告可以更整齊，程式碼中System.out.println(); import java.util.Scanner; Scanner sc = new Scanner(system.in); int x = sc.nextInt; throws Exxception Thread.sleep(x); Math.pow(x,2.0); Math.squt(x); 不應出現。
+*   **準確性 (滿分 25)：** 23 分
+    *   計算直線方程式、歐式距離、曼哈頓距離和向量夾角的公式都是正確的。
+    *   程式碼輸出「切比雪夫距離」，但程式碼實際上計算的是「切比雪夫距離」而不是「Minkowski 距離」。
+*   **邏輯 (滿分 30)：** 25 分
+    *   程式的整體邏輯正確，能夠按照題目要求計算各種距離和向量夾角。
+    *   沒有處理使用者輸入錯誤的狀況，例如使用者輸入非數字。
+    *   程式碼可讀性可以更好，例如將計算公式部分封裝成獨立的函式。
+
+**總分：80 分**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼能夠正確計算題目要求的各種距離和向量夾角。
+    *   程式碼結構清晰，容易理解。
+    *   程式碼使用了適當的變數名稱。
+*   **缺點：**
+    *   備註不足，沒有充分說明程式的功能。
+    *   程式碼格式可以更整齊。
+    *   沒有處理使用者輸入錯誤的狀況。
+    *   程式碼可讀性可以更好，例如將計算公式部分封裝成獨立的函式。
+    *   計算切比雪夫距離但輸出切比雪夫距離
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class app4_2 {
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        int x1, y1, x2, y2, a, b, c;
+        double dis, tmp;
+
+        // 使用者輸入
+        System.out.print("請輸入x1座標:");
+        x1 = sc.nextInt();
+        System.out.print("請輸入y1座標:");
+        y1 = sc.nextInt();
+        System.out.print("請輸入x2座標:");
+        x2 = sc.nextInt();
+        System.out.print("請輸入y2座標:");
+        y2 = sc.nextInt();
+
+        // 計算直線方程式(ax+by+c=0)
+        a = y2 - y1;
+        b = x1 - x2;
+        c = x2 * y1 - x1 * y2;
+        System.out.println("(" + x1 + "," + y1 + ") 和 (" + x2 + "," + y2 + ") 的直線方程式為:" + a + "x +" + b + "y +" + c + " = 0");
+
+        // 計算歐式距離(點到點距離)
+        dis = euclideanDistance(x1, y1, x2, y2);
+        System.out.println("(" + x1 + "," + y1 + ") 和 (" + x2 + "," + y2 + ") 的歐式距離為:" + dis);
+
+        // 計算曼哈頓距離
+        dis = manhattanDistance(x1, y1, x2, y2);
+        System.out.println("(" + x1 + "," + y1 + ") 和 (" + x2 + "," + y2 + ") 的曼哈頓距離為:" + dis);
+
+        // 計算切比雪夫距離
+        dis = chebyshevDistance(x1, y1, x2, y2);
+        System.out.println("(" + x1 + "," + y1 + ") 和 (" + x2 + "," + y2 + ") 的切比雪夫距離為:" + dis);
+
+        // 計算兩向量夾角
+        double angle = vectorAngle(x1, y1, x2, y2);
+        System.out.println("(" + x1 + "," + y1 + ") 和 (" + x2 + "," + y2 + ") 的向量夾角為: " + angle + " 度");
+
+        sc.close();
+    }
+
+    // 歐式距離計算
+    public static double euclideanDistance(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    // 曼哈頓距離計算
+    public static double manhattanDistance(int x1, int y1, int x2, int y2) {
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+    }
+
+    // 切比雪夫距離計算
+    public static double chebyshevDistance(int x1, int y1, int x2, int y2) {
+        return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+    }
+
+    // 向量夾角計算
+    public static double vectorAngle(int x1, int y1, int x2, int y2) {
+        double tmp = (x1 * x2 + y1 * y2) / (Math.sqrt(x1 * x1 + y1 * y1) * Math.sqrt(x2 * x2 + y2 * y2));
+        tmp = Math.max(-1.0, Math.min(1.0, tmp));
+        return Math.toDegrees(Math.acos(tmp));
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **程式碼結構化：** 將計算歐式距離、曼哈頓距離、切比雪夫距離和向量夾角的部分分別提取成獨立的函式。這樣可以提高程式碼的可讀性和可維護性。
+*   **資源釋放：** 添加 `sc.close()` 關閉 Scanner 物件，避免資源洩漏。
+*   **程式碼註釋：** 在每個函式前添加了簡短的註釋，說明其功能。
+
+**5. 改進建議和反饋：**
+
+*   **備註：** 繼續加強程式碼的備註，說明程式的各個部分的功能，例如各個函式的參數和返回值。
+*   **錯誤處理：** 考慮添加錯誤處理機制，例如使用 `try-catch` 區塊處理使用者輸入錯誤的狀況，例如使用者輸入非數字。
+*   **單元測試：** 編寫單元測試，驗證程式碼的正確性。
+*   **程式碼風格：** 繼續保持良好的程式碼風格，例如適當的縮排和變數命名。
+*   **Minkowski距離:** 加入Minkowski距離的計算，並確保輸出結果正確。
+
+總體來說，學生的作業完成情況良好，能夠正確計算題目要求的各種距離和向量夾角。但仍有改進的空間，例如加強備註、添加錯誤處理機制和編寫單元測試。

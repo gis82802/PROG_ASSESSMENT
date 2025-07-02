@@ -1,0 +1,169 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：15分
+  - 說明：程式碼包含了對其功能的一些說明，但不夠詳細，缺乏對邏輯和功能的進一步解釋。
+
+- 格式（滿分25）：20分
+  - 說明：程式碼的縮排和編碼風格基本符合標準，但有些地方的註解和變數命名可以更清晰。
+
+- 準確性（滿分25）：25分
+  - 說明：程式在執行過程中能夠產生正確的結果，符合題目要求。
+
+- 邏輯（滿分30）：20分
+  - 說明：程式的邏輯基本正確，但有些地方可以優化，例如減少重複的代碼和改進數據結構。
+
+總分：80分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. **功能完整**：程式實現了所有要求的功能，包括新增產品、減少產品、新增數量、減少數量和計算庫存價值。
+2. **基本結構清晰**：類別和方法的設計基本符合物件導向程式設計的概念。
+3. **基本功能正確**：程式能夠正確地執行各項操作，並輸出正確的結果。
+
+**缺點：**
+1. **註解不夠詳細**：雖然有一些註解，但對於邏輯和功能的解釋不夠詳細。
+2. **變數命名不夠直觀**：有些變數名稱不夠直觀，容易引起混淆。
+3. **重複代碼**：有些操作的代碼重複過多，可以通過方法抽象來減少重複。
+4. **數據結構不夠靈活**：使用固定大小的陣列來存儲產品，不夠靈活。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+* Filename : j41043152_Ex10_01.java
+* Function : 建立一個類別 "Inventory"(庫存) 具有屬性像是：產品名稱、數量、價格，
+             並且提供成員函式可以讓使用者新增產品、減少產品、新增數量、減少數量、以及計算整個庫存的價值。在主程式中建立二個庫存物件，分別給飲料店、以及3C手機店可以記錄其庫存。
+* Author   : 許書和 41043152
+* DateTime : 2023/3/14
+* Version  : 1.0
+*/
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class j41043152_Ex10_01 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Inventory drinkshop = new Inventory();
+        drinkshop.addProduct(new Product("Tea", 10, 10));
+        drinkshop.addProduct(new Product("Milk", 20, 30));
+        drinkshop.showAllProducts();
+
+        System.out.println("Removing Milk");
+        drinkshop.removeProduct("Milk");
+        drinkshop.showAllProducts();
+
+        System.out.println("新增數量+10");
+        drinkshop.changeAmount("Tea", 10);
+        drinkshop.showAllProducts();
+
+        System.out.println("減少數量-5");
+        drinkshop.changeAmount("Tea", -5);
+        drinkshop.showAllProducts();
+
+        Inventory phoneshop = new Inventory();
+        phoneshop.addProduct(new Product("iPhone", 100, 20000));
+        phoneshop.addProduct(new Product("Sony X", 53, 10000));
+        phoneshop.showAllProducts();
+
+        System.out.println("Removing iPhone");
+        phoneshop.removeProduct("iPhone");
+        phoneshop.showAllProducts();
+
+        System.out.println("新增數量+100");
+        phoneshop.changeAmount("Sony X", 100);
+        phoneshop.showAllProducts();
+
+        System.out.println("減少數量-50");
+        phoneshop.changeAmount("Sony X", -50);
+        phoneshop.showAllProducts();
+    }
+}
+
+class Inventory {
+    private ArrayList<Product> products;
+
+    Inventory() {
+        products = new ArrayList<>();
+    }
+
+    void addProduct(Product product) {
+        products.add(product);
+    }
+
+    void removeProduct(String productName) {
+        products.removeIf(product -> product.getName().equals(productName));
+    }
+
+    void changeAmount(String productName, int amount) {
+        for (Product product : products) {
+            if (product.getName().equals(productName)) {
+                product.changeAmount(amount);
+                break;
+            }
+        }
+    }
+
+    void showAllProducts() {
+        for (Product product : products) {
+            product.showProduct();
+        }
+    }
+}
+
+class Product {
+    private String name;
+    private int amount;
+    private int price;
+
+    Product(String name, int amount, int price) {
+        this.name = name;
+        this.amount = amount;
+        this.price = price;
+    }
+
+    String getName() {
+        return name;
+    }
+
+    void showProduct() {
+        System.out.println("\tProduct: " + name + " amount: " + amount + " price: " + price + " \n\tTotal price: " + calculatePrice());
+    }
+
+    void changeAmount(int num) {
+        amount += num;
+    }
+
+    int calculatePrice() {
+        return amount * price;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **使用ArrayList代替陣列**：
+   - 原因：陣列的大小固定，不夠靈活。使用ArrayList可以動態調整大小，更適合存儲不定數量的產品。
+
+2. **改進產品的新增和移除方法**：
+   - 原因：原來的新增和移除方法不夠直觀，並且操作重複。使用ArrayList的add和removeIf方法可以更簡潔地實現這些功能。
+
+3. **改進變數命名**：
+   - 原因：原來的變數命名不夠直觀，例如objProduct。改為products更符合Java的命名規範，並且更容易理解。
+
+4. **改進showProduct方法**：
+   - 原因：原來的showProduct方法需要遍歷所有產品，現在改為遍歷ArrayList中的所有產品，更簡潔。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **增加註解**：在每個方法和重要的代碼段落中增加註解，解釋其功能和邏輯。
+2. **變數命名**：使用更直觀的變數名稱，例如使用products代替objProduct。
+3. **減少重複代碼**：將重複的操作抽象成方法，減少重複代碼，提高程式的可讀性和可維護性。
+4. **使用更靈活的數據結構**：使用ArrayList或其他動態數據結構來存儲產品，提高程式的靈活性。
+
+**反饋：**
+- 你的程式已經實現了所有要求的功能，這是非常好的開始。
+- 在未來的作業中，請注意增加註解，使用更直觀的變數名稱，並且嘗試減少重複代碼，這樣可以提高程式的可讀性和可維護性。
+- 考慮使用更靈活的數據結構，例如ArrayList，來存儲產品，這樣可以更靈活地管理庫存。

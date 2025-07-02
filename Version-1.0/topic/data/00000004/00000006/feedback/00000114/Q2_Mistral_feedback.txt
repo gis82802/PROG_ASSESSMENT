@@ -1,0 +1,79 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+- **備註 (20/20)**：該程式包含對其功能的明確說明，代碼中有註釋說明每個部分的功能。
+- **格式 (20/25)**：代碼整體格式良好，但在某些地方可以更一致，例如在方法內部的註釋和空行使用。
+- **準確性 (25/25)**：程式能夠正確判斷用戶輸入的數字是否為 well-ordered number，並且計算 1 到 100000 之間的 well-ordered numbers 的數量。
+- **邏輯 (30/30)**：程式的邏輯正確，能夠準確判斷和計算 well-ordered numbers。
+
+總分：95
+
+### 2. 分析優缺點
+**優點：**
+1. 程式功能完整，能夠正確判斷和計算 well-ordered numbers。
+2. 代碼結構清晰，使用了適當的方法和變數名稱。
+3. 有註釋說明程式的功能和邏輯。
+
+**缺點：**
+1. 格式上有些地方可以更一致，例如方法內部的註釋和空行使用。
+2. 可以進一步優化 `countWellOrderedNumbers` 方法的效率。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class wellordered {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // (a) 判斷用戶輸入的數字是否為 well-ordered number
+        System.out.print("請輸入一個數字: ");
+        int userInput = scanner.nextInt();
+
+        if (isWellOrdered(userInput)) {
+            System.out.println(userInput + " 是一個有序數字 (well-ordered number)。");
+        } else {
+            System.out.println(userInput + " 不是一個有序數字 (well-ordered number)。");
+        }
+
+        // (b) 計算 1 到 100000 之間有多少個 well-ordered numbers
+        int count = countWellOrderedNumbers(100000);
+        System.out.println("在 1 到 100000 之間有 " + count + " 個有序數字 (well-ordered numbers)。");
+    }
+
+    // (a) 判斷一個數字是否為 well-ordered number
+    public static boolean isWellOrdered(int num) {
+        String numStr = Integer.toString(num); // 將數字轉為字串以便逐位檢查
+        for (int i = 0; i < numStr.length() - 1; i++) {
+            if (numStr.charAt(i) >= numStr.charAt(i + 1)) {
+                return false; // 如果任意一位不滿足遞增條件，則返回 false
+            }
+        }
+        return true; // 全部位數滿足遞增條件則返回 true
+    }
+
+    // (b) 計算 1 到 max 範圍內有多少個 well-ordered numbers
+    public static int countWellOrderedNumbers(int max) {
+        int count = 0;
+        for (int i = 1; i <= max; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+1. **格式調整**：在方法內部添加了更多的空行和註釋，使代碼更易讀。
+2. **方法名稱**：保持原有的方法名稱和變數名稱，因為它們已經足夠直觀。
+3. **優化建議**：雖然這次沒有進行效率優化，但在未來可以考慮使用更高效的算法來計算 well-ordered numbers，例如使用動態規劃或數學方法。
+
+### 5. 改進建議和反饋
+1. **格式一致性**：請注意在方法內部保持一致的註釋和空行使用，這樣可以提高代碼的可讀性。
+2. **效率優化**：雖然目前的方法能夠正確計算結果，但可以考慮優化 `countWellOrderedNumbers` 方法的效率，例如使用動態規劃來減少重複計算。
+3. **測試驗證**：建議增加更多的測試案例來驗證程式的正確性，特別是邊界條件和特殊情況。
+
+希望這些建議能夠幫助學生進一步改進他們的程式設計技能。

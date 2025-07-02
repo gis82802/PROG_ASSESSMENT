@@ -1,0 +1,91 @@
+好的，教授，我將根據您的標準，詳細評估並提供修改建議。
+
+**1. 作業評分 (0-100)**
+
+*   **備註 (滿分20):** 18 分。程式碼中包含了對 `reverseNumber` 函數功能的明確說明，但在 `main` 函數中缺少對整體程式功能的簡要描述，例如：程式的目的和輸入/輸出。
+*   **格式 (滿分25):** 23 分。程式碼縮排良好，易於閱讀。命名也基本符合規範。但可以考慮在函數和主函數之間添加空行，提高可讀性。
+*   **準確性 (滿分25):** 25 分。程式可以正確反轉正整數，符合題目要求。
+*   **邏輯 (滿分30):** 28 分。程式邏輯清晰，使用 `while` 迴圈和取餘數 `%` 運算符高效地反轉數字。但沒有處理負數輸入的情況，負數反轉後會丟失符號。
+
+**總分：94 分**
+
+**2. 優缺點分析**
+
+*   **優點:**
+    *   程式碼簡潔易懂，邏輯清晰。
+    *   `reverseNumber` 函數實現了數字反轉的核心功能。
+    *   縮排和命名規範良好，可讀性高。
+    *   使用模數運算和除法實現反轉，效率較高。
+
+*   **缺點:**
+    *   缺少對程式整體功能的描述性備註。
+    *   沒有考慮負數輸入的情況。如果輸入負數，反轉後的結果會丟失負號。
+    *   沒有處理溢出的情況。如果反轉後的數字超出 `int` 範圍，會產生錯誤的結果。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class hw10113 {
+    public static void main(String[] args) {
+        // 這個程式可以反轉使用者輸入的整數的數字順序.
+        // 例如: 123 -> 321, 2500 -> 52, 8531 -> 1358
+        Scanner scanner = new Scanner(System.in);
+
+        // 取得使用者輸入的數字
+        System.out.print("Enter an integer: ");
+        int number = scanner.nextInt();
+
+        // 反轉數字並顯示結果
+        int reversed = reverseNumber(number);
+        System.out.println("Reversed number: " + reversed);
+    }
+
+    // 反轉數字的順序
+    public static int reverseNumber(int number) {
+        int reversed = 0;
+        int sign = 1; // 紀錄正負號
+
+        if (number < 0) {
+            sign = -1;
+            number = -number; // 將負數轉換為正數處理
+        }
+
+        while (number != 0) {
+            int digit = number % 10; // 取得當前位數字
+
+            // 檢查是否溢出
+            if (reversed > Integer.MAX_VALUE / 10 || (reversed == Integer.MAX_VALUE / 10 && digit > 7)) {
+                System.out.println("Overflow detected!");
+                return 0; // 返回0表示溢出
+            }
+            if (reversed < Integer.MIN_VALUE / 10 || (reversed == Integer.MIN_VALUE / 10 && digit < -8)) {
+                System.out.println("Underflow detected!");
+                return 0; // 返回0表示溢出
+            }
+
+            reversed = reversed * 10 + digit; // 將該位數字加到反轉後的數字上
+            number /= 10; // 移除當前位數字
+        }
+        return reversed * sign; // 返回反轉後的數字，帶上正負號
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **`main` 函數的備註:** 在 `main` 函數中添加了程式功能的整體描述，讓程式的用途更清晰。
+*   **負數處理:** 在 `reverseNumber` 函數中，首先判斷輸入數字的正負號，並將負數轉換為正數進行處理。最後，將反轉後的結果乘以正負號，以保留原來的正負號。
+*   **溢出檢查:** 在 `while` 迴圈中，添加了對溢出的檢查。在每次計算 `reversed = reversed * 10 + digit` 之前，檢查 `reversed` 是否接近 `Integer.MAX_VALUE` 或 `Integer.MIN_VALUE`。如果接近，且加上 `digit` 後會超出範圍，則返回 0 表示溢出，並輸出錯誤訊息。這裡假設溢出後，希望程式返回0。如果需要其他的錯誤處理機制，請修改此處。
+
+**5. 改進建議和反饋**
+
+*   **備註:** 即使程式碼看似簡單，也應包含足夠的備註，說明程式的功能、輸入、輸出和任何特殊情況。良好的備註可以大大提高程式碼的可讀性和可維護性。
+*   **錯誤處理:** 考慮所有可能的輸入情況，並添加相應的錯誤處理機制。例如，本程式中添加了對負數和溢出的處理。
+*   **單元測試:** 編寫單元測試來驗證程式的正確性。單元測試可以幫助您及早發現和修復錯誤。
+*   **程式碼風格:** 繼續保持良好的程式碼風格，包括縮排、命名規範和適當的空行。
+
+**總結:**
+
+學生的作業整體而言寫得不錯，邏輯清晰，程式碼易於閱讀。但需要注意備註的完整性、錯誤處理以及程式碼的健壯性。經過修改後的程式碼，可以處理負數輸入，並檢查溢出，提高了程式的實用性和可靠性。希望學生能繼續努力，寫出更高品質的程式碼。

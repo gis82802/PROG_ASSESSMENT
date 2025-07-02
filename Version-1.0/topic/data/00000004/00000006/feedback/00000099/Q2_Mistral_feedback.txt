@@ -1,0 +1,80 @@
+1. **打分（0-100）**
+   - 備註（滿分20）：15
+   - 格式（滿分25）：18
+   - 準確性（滿分25）：20
+   - 邏輯（滿分30）：22
+   - **總分：75**
+
+2. **優缺點分析**
+   - **優點**：
+     - 程式能夠正確判斷輸入的數字是否為 well-ordered number。
+     - 能夠正確計算 0 到 100000 之間的 well-ordered numbers 的數量。
+     - 程式碼結構清晰，變數名稱易於理解。
+   - **缺點**：
+     - 備註部分不夠詳細，缺乏對程式功能的明確說明。
+     - 程式碼中有一些重複的邏輯，可以進一步優化。
+     - 變數 `ans` 的使用不夠明確，可以用更直觀的變數名稱。
+     - 未處理輸入為負數或非數字的情況。
+
+3. **改進的程式碼**
+```java
+import java.util.Scanner; // 導入 Scanner 類，用於讀取使用者輸入
+
+public class WellOrdered { // 定義類 WellOrdered
+    public static void main(String args[]) { // 主方法
+        Scanner sc = new Scanner(System.in); // 創建 Scanner 物件以讀取使用者輸入
+        System.out.println("請輸入一個數字:");
+        String n = sc.next(); // 讀取輸入的數字，作為字符串
+
+        System.out.println("(a)"); // 輸出部分 (a) 的標題
+        boolean isWellOrdered = isWellOrderedNumber(n); // 檢查輸入的數字是否為 well-ordered number
+        if (isWellOrdered) {
+            System.out.println(n + " is a well-ordered number");
+        } else {
+            System.out.println(n + " is not a well-ordered number");
+        }
+
+        System.out.println("(b)"); // 輸出部分 (b) 的標題
+        int num = countWellOrderedNumbers(100000); // 計算 0 到 100000 的 well-ordered numbers 的數量
+        System.out.println("1~100000 have " + num + " well-ordered numbers.");
+
+        sc.close(); // 關閉 Scanner 物件，釋放資源
+    }
+
+    // 方法：檢查一個數字是否為 well-ordered number
+    public static boolean isWellOrderedNumber(String n) {
+        for (int i = 0; i < n.length() - 1; i++) {
+            if (n.charAt(i) >= n.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 方法：計算 0 到 max 之間的 well-ordered numbers 的數量
+    public static int countWellOrderedNumbers(int max) {
+        int count = 0;
+        for (int i = 0; i <= max; i++) {
+            String n = String.valueOf(i);
+            if (isWellOrderedNumber(n)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+4. **說明改進的程式碼**
+   - **修改部分及原因**：
+     - 新增了 `isWellOrderedNumber` 方法，用於檢查一個數字是否為 well-ordered number，避免重複邏輯。
+     - 新增了 `countWellOrderedNumbers` 方法，用於計算 0 到指定數字之間的 well-ordered numbers 的數量，提高程式碼的可重用性。
+     - 使用 `boolean` 類型變數 `isWellOrdered` 替代 `int ans`，使變數名稱更直觀。
+     - 新增了輸入提示，提升使用者體驗。
+
+5. **改進建議和反饋**
+   - 在程式開頭添加詳細的註釋，說明程式的功能和使用方法。
+   - 考慮處理輸入為負數或非數字的情況，增加程式的健壯性。
+   - 將重複的邏輯抽取為方法，提高程式碼的可讀性和可維護性。
+   - 使用更直觀的變數名稱，讓程式碼更易於理解。
+   - 可以考慮將程式模組化，將不同的功能分離到不同的方法中，提升程式的結構性。

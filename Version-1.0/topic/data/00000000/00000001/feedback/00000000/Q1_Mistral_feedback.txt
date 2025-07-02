@@ -1,0 +1,182 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註 (20/20)**：程式包含了對其功能的明確說明，每個方法都有註解說明其功能。
+- **格式 (20/25)**：程式碼大致保持了適當的縮排和編碼風格，但有些地方可以改進。
+- **準確性 (25/25)**：程式能夠產生正確的結果。
+- **邏輯 (25/30)**：程式邏輯基本正確，但有些地方可以優化。
+
+**總分：90/100**
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式碼結構清晰，每個方法都有明確的功能。
+2. 使用了例外處理來確保矩陣維度匹配。
+3. 程式能夠正確執行矩陣的加法、減法、乘法和純量乘法。
+
+**缺點：**
+1. 格式方面，有些地方的縮排不夠整齊。
+2. 矩陣乘法的實現中，初始化結果矩陣時沒有將元素初始化為0，這可能會導致錯誤。
+3. 純量乘法的方法名稱 `scalarMultiply` 可以更具體一些。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+// MyMatrix.java
+class MyMatrix {
+    private int rows, cols;
+    private int[][] matrix;
+
+    // 建構子，初始化矩陣大小
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        matrix = new int[rows][cols];
+    }
+
+    // 設定矩陣值
+    public void setMatrix(int[][] values) {
+        if (values.length != rows || values[0].length != cols) {
+            throw new IllegalArgumentException("Matrix dimensions do not match.");
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = values[i][j];
+            }
+        }
+    }
+
+    // 取得矩陣值
+    public int[][] getMatrix() {
+        return matrix;
+    }
+
+    // 印出矩陣
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // 矩陣加法
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for addition.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣減法
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for subtraction.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣乘法
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Matrix dimensions must match for multiplication.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                result.matrix[i][j] = 0; // 初始化結果矩陣元素為0
+                for (int k = 0; k < this.cols; k++) {
+                    result.matrix[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // 矩陣與純量的乘法
+    public MyMatrix multiplyByScalar(int scalar) {
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+}
+
+// 主程式
+public class H11 {
+    public static void main(String[] args) {
+        // 建立兩個2x2矩陣
+        MyMatrix matrix1 = new MyMatrix(2, 2);
+        MyMatrix matrix2 = new MyMatrix(2, 2);
+
+        // 設定矩陣1的值
+        matrix1.setMatrix(new int[][]{{1, 2}, {3, 4}});
+        // 設定矩陣2的值
+        matrix2.setMatrix(new int[][]{{5, 6}, {7, 8}});
+
+        // 印出矩陣1
+        System.out.println("Matrix 1:");
+        matrix1.printMatrix();
+
+        // 印出矩陣2
+        System.out.println("Matrix 2:");
+        matrix2.printMatrix();
+
+        // 矩陣加法
+        System.out.println("Matrix 1 + Matrix 2:");
+        MyMatrix resultAdd = matrix1.add(matrix2);
+        resultAdd.printMatrix();
+
+        // 矩陣減法
+        System.out.println("Matrix 1 - Matrix 2:");
+        MyMatrix resultSubtract = matrix1.subtract(matrix2);
+        resultSubtract.printMatrix();
+
+        // 矩陣乘法
+        System.out.println("Matrix 1 * Matrix 2:");
+        MyMatrix resultMultiply = matrix1.multiply(matrix2);
+        resultMultiply.printMatrix();
+
+        // 純量乘法
+        int scalar = 2;
+        System.out.println("Matrix 1 * Scalar " + scalar + ":");
+        MyMatrix resultScalarMultiply = matrix1.multiplyByScalar(scalar);
+        resultScalarMultiply.printMatrix();
+
+        System.out.println("Matrix 2 * Scalar " + scalar + ":");
+        MyMatrix resultScalarMultiply2 = matrix2.multiplyByScalar(scalar);
+        resultScalarMultiply2.printMatrix();
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **矩陣乘法的初始化**：在矩陣乘法的方法中，初始化結果矩陣時將元素設為0，以避免未初始化的元素導致錯誤。
+2. **純量乘法的方法名稱**：將 `scalarMultiply` 改為 `multiplyByScalar`，使方法名稱更具體，更容易理解。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. 在矩陣乘法的方法中，初始化結果矩陣時應將元素設為0，以避免未初始化的元素導致錯誤。
+2. 方法名稱應當盡量具體，以便其他人能夠快速理解其功能。例如，`scalarMultiply` 可以改為 `multiplyByScalar`。
+3. 保持程式碼的縮排和格式一致，這樣可以提高程式碼的可讀性。
+
+**反饋：**
+你的程式碼結構清晰，功能實現正確，這是非常好的。但在一些細節上還可以進一步改進，例如矩陣乘法中的初始化問題和方法名稱的具體化。這些改進可以使你的程式碼更加健壯和易讀。繼續保持你的優秀工作，並注意這些細節，你會變得更加出色！

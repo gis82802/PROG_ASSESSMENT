@@ -1,0 +1,114 @@
+### 1. 打分
+根據您的標準，這份作業的分數如下：
+
+- **備註(滿分20)：** 該程式包含對其功能的明確說明，但缺乏對成員函式功能的詳細說明。分數：15/20
+- **格式(滿分25)：** 程式碼的縮排和編碼風格基本符合規範，但部分地方可以更加整齊。分數：20/25
+- **準確性(滿分25)：** 程式產生正確的結果，但在新增產品和減少產品的邏輯上有重複。分數：20/25
+- **邏輯(滿分30)：** 程式邏輯基本正確，但有一些冗餘的函式。分數：25/30
+
+總分：80/100
+
+### 2. 優缺點分析
+**優點：**
+1. 程式碼結構清晰，易於理解。
+2. 成員函式基本實現了所需的功能。
+3. 主程式中成功創建了兩個庫存物件並進行了操作。
+
+**缺點：**
+1. `add_product` 和 `add_quantity` 函式功能相同，導致冗餘。
+2. `sub_product` 和 `sub_quantity` 函式功能相同，導致冗餘。
+3. 缺乏對成員函式功能的詳細說明。
+4. 部分地方的縮排和編碼風格可以更加整齊。
+
+### 3. 改進的程式碼
+```java
+/*
+(1)建立一個類別 "Inventory"(庫存) 具有屬性像是：產品名稱、數量、價格，
+並且提供成員函式可以讓使用者新增產品、減少產品、新增數量、減少數量、
+以及計算整個庫存的價值。
+在主程式中建立二個庫存物件，
+分別給飲料店、以及3C手機店可以記錄其庫存。
+2023/03/14
+41043203
+ */
+
+class Inventory
+{
+    private String name;
+    private int quantity;
+    private double price;
+
+    public Inventory(String name, int quantity, double price)
+    {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    /**
+     * 新增產品數量
+     * @param quantity 新增的數量
+     */
+    public void add_product(int quantity)
+    {
+        this.quantity += quantity;
+    }
+
+    /**
+     * 減少產品數量
+     * @param quantity 減少的數量
+     */
+    public void sub_product(int quantity)
+    {
+        if(this.quantity - quantity >= 0)
+            this.quantity -= quantity;
+    }
+
+    /**
+     * 計算整個庫存的價值
+     * @return 庫存的總價值
+     */
+    public double total()
+    {
+        return this.quantity * this.price;
+    }
+
+    //========================================================================================
+    //main
+    public static void main(String[] args)
+    {
+        Inventory drink_shop = new Inventory("drink", 100, 10);
+        Inventory phone_shop = new Inventory("phone", 200, 20);
+
+        System.out.println("drink shop original total = " + drink_shop.total());
+        System.out.println("phone shop original total = " + phone_shop.total());
+
+        drink_shop.add_product(30);
+        drink_shop.sub_product(40);
+
+        phone_shop.add_product(10);
+        phone_shop.sub_product(20);
+
+        System.out.println("====================================================");
+        System.out.println("drink shop change total = " + drink_shop.total());
+        System.out.println("phone shop change total = " + phone_shop.total());
+    }
+}
+```
+
+### 4. 改進的程式碼修改部分及原因
+1. **移除冗餘函式：**
+   - 移除了 `add_quantity` 和 `sub_quantity` 函式，因為它們與 `add_product` 和 `sub_product` 功能相同。
+   - 原因：避免程式碼冗餘，提高程式碼的可讀性和維護性。
+
+2. **新增函式說明：**
+   - 為 `add_product`、`sub_product` 和 `total` 函式新增了詳細說明。
+   - 原因：提高程式碼的可讀性和可維護性，讓其他開發者更容易理解這些函式的功能。
+
+### 5. 改進建議和反饋
+1. **避免冗餘：** 在設計類別和方法時，應該避免功能重複的方法，保持程式碼的簡潔和高效。
+2. **詳細說明：** 為每個成員函式添加詳細的說明，這樣可以讓其他開發者更容易理解和使用你的程式碼。
+3. **格式整齊：** 保持程式碼的縮排和編碼風格一致，這樣可以提高程式碼的可讀性。
+4. **邏輯檢查：** 在減少產品數量時，確保不會出現負數，這樣可以避免邏輯錯誤。
+
+希望這些建議能夠幫助學生提高程式碼質量和編程技能。

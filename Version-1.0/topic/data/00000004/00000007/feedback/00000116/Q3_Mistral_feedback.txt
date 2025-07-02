@@ -1,0 +1,94 @@
+1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：0
+  - 程式沒有包含對其功能的明確說明。
+
+- 格式（滿分25）：15
+  - 程式格式基本上保持適當的縮排和編碼風格，但部分地方可以改進，例如變數名稱和方法命名可以更具描述性。
+
+- 準確性（滿分25）：0
+  - 程式並未實現題目要求的功能，即替換數組中的每個元素為右邊最大的元素，並將最後一個元素替換為-1。
+
+- 邏輯（滿分30）：0
+  - 程式邏輯與題目要求無關，未實現替換數組元素的功能。
+
+總分：15
+
+2. 根據我的標準分析它的優缺點
+
+優點：
+- 程式格式基本上保持適當的縮排和編碼風格。
+
+缺點：
+- 程式沒有對其功能的明確說明。
+- 程式未實現題目要求的功能。
+- 變數名稱和方法命名不夠直觀。
+
+3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class ex3 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("請輸入數組的長度 (0 < n <= 20): ");
+        int n = sc.nextInt();
+
+        if (n <= 0 || n > 20) {
+            System.out.println("輸入的數字不在範圍內，請重新輸入！");
+            return;
+        }
+
+        int[] arr = new int[n];
+        System.out.print("請輸入 " + n + " 個數字 (每個數字小於100000): ");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        int[] result = replaceWithMaxToRight(arr);
+        for (int num : result) {
+            System.out.print(num + " ");
+        }
+    }
+
+    public static int[] replaceWithMaxToRight(int[] arr) {
+        int n = arr.length;
+        int[] result = new int[n];
+        int max = -1;
+
+        for (int i = n - 1; i >= 0; i--) {
+            if (i == n - 1) {
+                result[i] = -1;
+            } else {
+                if (arr[i + 1] > max) {
+                    max = arr[i + 1];
+                }
+                result[i] = max;
+            }
+        }
+
+        return result;
+    }
+}
+```
+
+4. 說明改進的程式碼有修改的部分及原因
+
+- 修改了主方法 `main`，使其能夠讀取數組並調用新的方法 `replaceWithMaxToRight` 來實現題目要求的功能。
+- 新增了方法 `replaceWithMaxToRight`，該方法實現了將數組中的每個元素替換為右邊最大的元素，並將最後一個元素替換為-1。
+- 修改了變數名稱和方法命名，使其更具描述性。
+
+5. 為學生提供改進建議和反饋
+
+建議：
+- 在提交作業時，應該包含對程式功能的明確說明，這樣可以幫助別人理解你的程式。
+- 確保程式實現了題目要求的功能，並且邏輯正確。
+- 變數名稱和方法命名應該具有描述性，這樣可以提高程式的可讀性。
+- 保持適當的縮排和編碼風格，這樣程式會更容易閱讀和維護。
+
+反饋：
+- 你的程式格式基本上保持適當的縮排和編碼風格，這是一個優點。
+- 你的程式未實現題目要求的功能，這是一個需要改進的地方。
+- 你的變數名稱和方法命名不夠直觀，這也是需要改進的地方。
+- 希望你能夠根據這些建議進行改進，提高你的程式設計能力。

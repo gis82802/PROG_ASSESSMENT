@@ -1,0 +1,195 @@
+### 1. 打分
+根據您的標準，這份作業的分數如下：
+
+- 備註(滿分20)：15
+  - 該程式包含了一些對其功能的說明，但不夠詳細，且有些地方缺乏註釋。
+
+- 格式(滿分25)：15
+  - 程式的縮排和編碼風格有些地方不夠一致，特別是類別名稱和變數命名不夠直觀。
+
+- 準確性(滿分25)：20
+  - 程式能夠產生正確的結果，但在處理邏輯上有些地方不夠完善。
+
+- 邏輯(滿分30)：20
+  - 程式的邏輯基本正確，但在某些地方有改進空間，例如搜尋產品的邏輯和刪除產品的邏輯。
+
+總分：70
+
+### 2. 優缺點分析
+**優點：**
+1. 程式能夠正確地新增、刪除、增加和減少產品數量，並計算庫存價值。
+2. 使用了物件導向的設計，將產品和庫存分別封裝在不同的類別中。
+
+**缺點：**
+1. 類別名稱和變數命名不夠直觀，例如 `mInventory` 應該改為 `Main`，`Smarphone3C` 應該改為 `smartphoneShop`。
+2. 搜尋產品的邏輯有問題，應該使用 `equals` 方法來比較字串而不是 `==`。
+3. 刪除產品的邏輯有問題，應該檢查是否找到產品後再進行刪除操作。
+4. 缺乏詳細的註釋，特別是在關鍵步驟上。
+
+### 3. 改進的程式碼
+```java
+/**
+ * Inventory
+ */
+public class Main {
+    public static void main(String[] args) {
+        Inventory beverageShop = new Inventory();
+        Inventory smartphoneShop = new Inventory();
+
+        System.out.println("beverageShop --------------------------------------------");
+        System.out.println("New product: blacktea");
+        beverageShop.newProduct("blacktea", 20, 10);
+        System.out.println("Add product blacktea: 5");
+        beverageShop.addProduct("blacktea", 5);
+        System.out.println("Total value: " + beverageShop.totalValue());
+        System.out.println("Total product blacktea: " + beverageShop.totalProduct("blacktea"));
+        System.out.println("Subtract product: 1");
+        beverageShop.subProduct("blacktea", 1);
+        System.out.println("Total value: " + beverageShop.totalValue());
+        System.out.println("Total product blacktea: " + beverageShop.totalProduct("blacktea"));
+        beverageShop.delProduct("blacktea");
+
+        System.out.println("smartphoneShop --------------------------------------------");
+        System.out.println("New product: iphone");
+        smartphoneShop.newProduct("iphone", 20, 10);
+        System.out.println("Add product iphone: 5");
+        smartphoneShop.addProduct("iphone", 5);
+        System.out.println("Total value: " + smartphoneShop.totalValue());
+        System.out.println("Total product iphone: " + smartphoneShop.totalProduct("iphone"));
+        System.out.println("Subtract product: 1");
+        smartphoneShop.subProduct("iphone", 1);
+        System.out.println("Total value: " + smartphoneShop.totalValue());
+        System.out.println("Total product iphone: " + smartphoneShop.totalProduct("iphone"));
+        smartphoneShop.delProduct("iphone");
+    }
+}
+
+class Inventory {
+    private int capacity;
+    private Product[] products;
+
+    public Inventory() {
+        capacity = 0;
+        products = new Product[10]; // 初始容量為10
+    }
+
+    public void newProduct(String name, int price, int quantity) {
+        if (capacity < products.length) {
+            products[capacity] = new Product(name, price, quantity);
+            capacity++;
+        } else {
+            System.out.println("Inventory is full.");
+        }
+    }
+
+    public int searchProduct(String name) {
+        for (int i = 0; i < capacity; i++) {
+            if (products[i].getName().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void delProduct(String name) {
+        int index = searchProduct(name);
+        if (index != -1) {
+            for (int i = index; i < capacity - 1; i++) {
+                products[i] = products[i + 1];
+            }
+            products[capacity - 1] = null;
+            capacity--;
+        }
+    }
+
+    public void subProduct(String name, int quantity) {
+        int index = searchProduct(name);
+        if (index != -1) {
+            products[index].subQuantity(quantity);
+        }
+    }
+
+    public void addProduct(String name, int quantity) {
+        int index = searchProduct(name);
+        if (index != -1) {
+            products[index].addQuantity(quantity);
+        }
+    }
+
+    public int totalProduct(String name) {
+        int index = searchProduct(name);
+        if (index != -1) {
+            return products[index].getValue();
+        }
+        return 0;
+    }
+
+    public int totalValue() {
+        int total = 0;
+        for (int i = 0; i < capacity; i++) {
+            total += products[i].getValue();
+        }
+        return total;
+    }
+
+    class Product {
+        private String name;
+        private int price;
+        private int quantity;
+
+        public Product(String name, int price, int quantity) {
+            this.name = name;
+            this.price = price;
+            this.quantity = quantity;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getValue() {
+            return quantity * price;
+        }
+
+        public void addQuantity(int quantity) {
+            this.quantity += quantity;
+        }
+
+        public void subQuantity(int quantity) {
+            this.quantity -= quantity;
+        }
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **類別名稱和變數命名**：
+   - 將 `mInventory` 改為 `Main`，`Smarphone3C` 改為 `smartphoneShop`，使名稱更直觀。
+   - 將 `cap` 改為 `capacity`，`Products` 改為 `products`，使變數名稱更具描述性。
+
+2. **搜尋產品的邏輯**：
+   - 使用 `equals` 方法來比較字串，而不是 `==`，因為 `==` 比較的是物件的引用，而不是內容。
+
+3. **刪除產品的邏輯**：
+   - 修改刪除產品的邏輯，檢查是否找到產品後再進行刪除操作，並調整數組的大小。
+
+4. **註釋**：
+   - 增加註釋，特別是在關鍵步驟上，使程式更易於理解。
+
+### 5. 改進建議和反饋
+1. **命名規範**：
+   - 請遵循Java的命名規範，類別名稱使用PascalCase（例如 `Main`），變數名稱使用camelCase（例如 `capacity`）。
+
+2. **註釋**：
+   - 請在關鍵步驟上增加註釋，使程式更易於理解和維護。
+
+3. **邏輯檢查**：
+   - 在進行搜尋和刪除操作時，請確保邏輯正確，避免出現錯誤。
+
+4. **數組大小管理**：
+   - 考慮使用動態數組（例如 `ArrayList`）來管理產品，避免手動調整數組大小。
+
+5. **錯誤處理**：
+   - 增加錯誤處理，例如在新增產品時檢查庫存是否已滿，在刪除產品時檢查產品是否存在。
+
+希望這些建議能夠幫助您的學生改進他們的程式設計技能。

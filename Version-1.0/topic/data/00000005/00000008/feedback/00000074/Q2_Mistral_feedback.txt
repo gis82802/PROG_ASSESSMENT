@@ -1,0 +1,170 @@
+### 1. 打分 (0-100)
+- 備註(滿分20)：0
+- 格式(滿分25)：15
+- 準確性(滿分25)：25
+- 邏輯(滿分30)：20
+
+總分：60
+
+### 2. 分析優缺點
+**優點：**
+1. 程式能夠正確執行基本功能，如新增產品、刪除產品、修改數量和計算總價值。
+2. 陣列大小動態調整的邏輯實現得不錯。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明和備註。
+2. 程式碼格式不夠整齊，縮排和編碼風格有待改進。
+3. 邏輯部分有些地方可以優化，例如在刪除產品時，直接將最後一個元素覆蓋到要刪除的位置，這樣會導致陣列中的元素順序混亂。
+4. 程式碼中有一些魔法數字（如 `capacity=2`），應該使用常數來替代。
+5. 變數命名不夠直觀，例如 `heap` 可以改名為 `size` 更為直觀。
+
+### 3. 改進的程式碼
+```java
+/*
+ 姓名:顏嘉福
+ 學號:41043251
+ 功能:倉庫管理系統
+ */
+class app3_14_1
+{
+    public static void main (String args[])
+    {
+        Inventory inventoryA = new Inventory();
+        Inventory inventoryB = new Inventory();
+
+        inventoryA.newProduct("12", 30, 100);
+        inventoryA.newProduct("13", 20, 150);
+        inventoryA.newProduct("14", 20, 200);
+
+        inventoryA.show();
+        System.out.println("刪除12");
+        inventoryA.reduceProduct("12");
+        inventoryA.show();
+        System.out.println("減少13數量");
+        inventoryA.newAmount("13", 10, false);
+        inventoryA.show();
+        System.out.println("總價值: " + inventoryA.account());
+
+        inventoryB.newProduct("21", 30, 100);
+        inventoryB.newProduct("22", 30, 100);
+        inventoryB.newProduct("23", 30, 100);
+        inventoryB.show();
+        System.out.println("總價值: " + inventoryB.account());
+    }
+}
+
+class Data
+{
+    String name;
+    int amount;
+    int price;
+
+    Data(String name, int amount, int price)
+    {
+        this.name = name;
+        this.amount = amount;
+        this.price = price;
+    }
+}
+
+class Inventory
+{
+    private static final int INITIAL_CAPACITY = 2;
+    private Data[] array;
+    private int size = 0;
+
+    Inventory()
+    {
+        array = new Data[INITIAL_CAPACITY];
+    }
+
+    void newProduct(String name, int amount, int price)
+    {
+        if (size == array.length)
+        {
+            changeSize();
+        }
+        array[size++] = new Data(name, amount, price);
+    }
+
+    void reduceProduct(String name)
+    {
+        if (size == 0)
+        {
+            System.out.println("沒有庫存");
+            return;
+        }
+        for (int i = 0; i < size; i++)
+        {
+            if (array[i].name.equals(name))
+            {
+                for (int j = i; j < size - 1; j++)
+                {
+                    array[j] = array[j + 1];
+                }
+                array[--size] = null;
+                break;
+            }
+        }
+    }
+
+    void newAmount(String name, int amount, boolean isIncrease)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            if (array[i].name.equals(name))
+            {
+                if (isIncrease)
+                {
+                    array[i].amount += amount;
+                }
+                else
+                {
+                    array[i].amount -= amount;
+                }
+                break;
+            }
+        }
+    }
+
+    int account()
+    {
+        int total = 0;
+        for (int i = 0; i < size; i++)
+        {
+            total += array[i].amount * array[i].price;
+        }
+        return total;
+    }
+
+    private void changeSize()
+    {
+        int newCapacity = array.length * 2;
+        Data[] newArray = new Data[newCapacity];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
+    }
+
+    void show()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            System.out.println("產品名稱: " + array[i].name + "  數量: " + array[i].amount + "  價格: " + array[i].price);
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+1. **改進變數命名**：將 `heap` 改為 `size`，使變數名稱更為直觀。
+2. **使用常數**：將 `capacity=2` 改為 `private static final int INITIAL_CAPACITY = 2`，使用常數來替代魔法數字。
+3. **改進刪除產品的邏輯**：在刪除產品時，將後續元素向前移動一位，而不是直接覆蓋最後一個元素，這樣可以保持陣列中的元素順序不變。
+4. **改進格式**：添加了一些空行和縮排，使程式碼更加易讀。
+5. **改進備註**：添加了對程式功能的說明備註。
+
+### 5. 改進建議和反饋
+1. **添加更多備註**：在程式碼中添加更多的備註，說明每個方法的功能和變數的用途。
+2. **使用更直觀的變數名稱**：變數名稱應該能夠直觀地表達其用途，例如 `heap` 改為 `size`。
+3. **保持一致的編碼風格**：保持一致的縮排和編碼風格，使程式碼更加易讀和維護。
+4. **考慮使用集合類**：如果需要更靈活的數據結構，可以考慮使用 Java 的集合類，如 `ArrayList`，來替代陣列。
+5. **測試和調試**：多進行測試和調試，確保程式在各種情況下都能正確運行。

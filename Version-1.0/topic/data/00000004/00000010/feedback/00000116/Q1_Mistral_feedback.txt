@@ -1,0 +1,173 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：15
+- 格式（滿分25）：22
+- 準確性（滿分25）：25
+- 邏輯（滿分30）：25
+
+**總分：87**
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. **準確性**：程式能夠正確地計算矩陣乘法和2x2矩陣的逆矩陣。
+2. **邏輯**：程式的邏輯清晰，矩陣乘法和逆矩陣的計算都符合數學定義。
+
+**缺點：**
+1. **備註**：缺乏對程式功能的詳細說明，雖然有一些註解，但不夠全面。
+2. **格式**：有些地方的縮排和編碼風格不夠一致，雖然整體上還算整潔，但有些地方可以改進。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+public class ex3 {
+
+    // Function to multiply two matrices
+    public static double[][] MatMultiply(double[][] A, double[][] B) {
+        int rowsA = A.length;
+        int colsA = A[0].length;
+        int rowsB = B.length;
+        int colsB = B[0].length;
+
+        // If the matrices cannot be multiplied, return null
+        if (colsA != rowsB) {
+            return null;
+        }
+
+        // Initialize result matrix
+        double[][] result = new double[rowsA][colsB];
+
+        // Perform matrix multiplication
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                result[i][j] = 0; // Initialize each element to 0
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // Function to calculate the inverse of a 2x2 matrix
+    public static double[][] invMatrix(double[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            throw new IllegalArgumentException("Matrix must be 2x2");
+        }
+
+        double det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // If the determinant is zero, return null (no inverse)
+        if (det == 0) {
+            return null;
+        }
+
+        // Calculate the inverse matrix
+        double[][] inv = new double[2][2];
+        inv[0][0] = matrix[1][1] / det;
+        inv[0][1] = -matrix[0][1] / det;
+        inv[1][0] = -matrix[1][0] / det;
+        inv[1][1] = matrix[0][0] / det;
+
+        return inv;
+    }
+
+    // Function to verify if the inverse matrix is correct
+    public static boolean verifyInvMatrix(double[][] matrix) {
+        double[][] inv = invMatrix(matrix);
+        if (inv == null) {
+            return false;
+        }
+
+        double[][] identity = MatMultiply(matrix, inv);
+
+        // Check if the result is the identity matrix
+        if (identity != null) {
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if (i == j && Math.abs(identity[i][j] - 1) > 1e-9) {
+                        return false;
+                    } else if (i != j && Math.abs(identity[i][j]) > 1e-9) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // Function to print a matrix
+    public static void printMatrix(String name, double[][] matrix) {
+        System.out.println(name + " = ");
+        for (double[] row : matrix) {
+            for (double value : row) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        // Test matrix multiplication
+        double[][] A = {
+                {1, 2},
+                {3, 4}
+        };
+        double[][] B = {
+                {2, 0},
+                {1, 2}
+        };
+
+        // Print matrices A and B before multiplication
+        printMatrix("Matrix A", A);
+        printMatrix("Matrix B", B);
+
+        double[][] result = MatMultiply(A, B);
+        if (result != null) {
+            printMatrix("A * B", result);
+        } else {
+            System.out.println("Matrices cannot be multiplied");
+        }
+
+        // Test inverse matrix
+        double[][] matrix = {
+                {4, 7},
+                {2, 6}
+        };
+
+        // Print matrix before calculating the inverse
+        printMatrix("Matrix to be inverted", matrix);
+
+        double[][] inverse = invMatrix(matrix);
+        if (inverse != null) {
+            printMatrix("Inverse matrix", inverse);
+        } else {
+            System.out.println("Matrix has no inverse");
+        }
+
+        // Verify the inverse matrix
+        if (verifyInvMatrix(matrix)) {
+            System.out.println("Inverse matrix is correct");
+        } else {
+            System.out.println("Inverse matrix is incorrect");
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **初始化結果矩陣的元素**：在 `MatMultiply` 函式中，初始化結果矩陣的每個元素為0。這是因為在原程式碼中，結果矩陣的元素沒有被初始化，可能會導致錯誤的結果。
+2. **註解**：增加了一些註解，使程式碼更容易理解。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加註解**：在每個函式的開頭增加註解，說明函式的功能和參數的含義。這有助於其他人理解你的程式碼。
+2. **初始化變數**：在使用變數之前，確保它們已經被初始化。這可以避免一些難以追蹤的錯誤。
+3. **測試和驗證**：除了已有的測試，可以增加更多的測試案例，特別是邊界條件和異常情況。這有助於確保程式在各種情況下都能正常運行。
+4. **格式一致性**：保持程式碼的格式一致，特別是縮排和空格的使用。這有助於提高程式碼的可讀性。
+
+希望這些建議能幫助你改進你的程式碼，並在未來的作業中取得更好的成績。

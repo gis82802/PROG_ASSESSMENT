@@ -1,0 +1,109 @@
+好的，我將根據您的標準對學生的作業進行評估、分析並提供改進建議。
+
+**1. 作業評分：**
+
+*   **備註 (20/20):** 程式碼包含了對程式功能的明確說明，每個函式都有註解解釋其作用。
+*   **格式 (23/25):** 程式碼縮排良好，命名風格一致，易於閱讀。但可以在一些地方添加空行，以提高可讀性。例如，在 `main` 函數中不同功能的程式碼塊之間添加空行。
+*   **準確性 (25/25):** 程式能夠正確判斷一個數字是否為 well-ordered number，也能正確計算小於100000的 well-ordered number 的個數。
+*   **邏輯 (28/30):** 程式邏輯清晰，`isWellOrdered` 函數的實現方式巧妙。但 `countWellOrderedNumbersBelow` 函數的效率可以進一步提高。
+
+**總分：96/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   **可讀性高：**程式碼結構清晰，縮排良好，註釋完整，易於理解。
+    *   **功能完整：**程式完成了題目要求的兩個功能：判斷 well-ordered number 和計數。
+    *   **正確性高：**程式能夠正確判斷 well-ordered number，並且計算結果正確。
+    *   `isWellOrdered` 函數的實現使用 `previousDigit` 初始化為10，簡潔巧妙。
+*   **缺點：**
+    *   **效率較低：**`countWellOrderedNumbersBelow` 函數使用迴圈遍歷所有數字，時間複雜度較高，效率較低。題目(b)可以使用排列組合來解決。
+    *   可以進一步利用 well-ordered number 的特性來優化計數過程。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class hw10112 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // (a) 檢查使用者輸入的數字是否為 well-ordered number
+        System.out.print("Enter a number: ");
+        int number = scanner.nextInt();
+        if (isWellOrdered(number)) {
+            System.out.println(number + " is a well-ordered number.");
+        } else {
+            System.out.println(number + " is not a well-ordered number.");
+        }
+
+        // (b) 計算小於100000的 well-ordered number 的個數
+        int count = countWellOrderedNumbersBelow(100000);
+        System.out.println("There are " + count + " well-ordered numbers below 100000.");
+    }
+
+    // 檢查一個數字是否為 well-ordered number
+    public static boolean isWellOrdered(int number) {
+        int previousDigit = 10;  // 初始化前一位數字為 10，確保每一位數字都小於前一位數
+        while (number > 0) {
+            int currentDigit = number % 10;
+            if (currentDigit >= previousDigit) {
+                return false; // 若當前位數字大於或等於前一位數字，則非 well-ordered
+            }
+            previousDigit = currentDigit; // 更新前一位數字
+            number /= 10; // 去掉當前位數字
+        }
+        return true;
+    }
+
+    // 計算小於 limit 的 well-ordered number 個數
+    public static int countWellOrderedNumbersBelow(int limit) {
+        // 因為 well-ordered number 的 digits 必須嚴格遞增，所以 digits 不能重複
+        // 因此，小於 100000 的 well-ordered numbers，其 digits 最大為 5 位數
+        // 且每個 digit 必須介於 1 ~ 9。 相當於從 9 個 digits 中取出 1 ~ 5 個 digits 的組合數
+        // C(9, 1) + C(9, 2) + C(9, 3) + C(9, 4) + C(9, 5)
+
+        int count = 0;
+        count += combinations(9, 1);
+        count += combinations(9, 2);
+        count += combinations(9, 3);
+        count += combinations(9, 4);
+        count += combinations(9, 5);
+
+        return count;
+    }
+
+    // 計算組合數 C(n, k)
+    public static int combinations(int n, int k) {
+        if (k < 0 || k > n) {
+            return 0;
+        }
+        if (k == 0 || k == n) {
+            return 1;
+        }
+        if (k > n / 2) {
+            k = n - k;
+        }
+        int result = 1;
+        for (int i = 1; i <= k; ++i) {
+            result = result * (n - i + 1) / i;
+        }
+        return result;
+    }
+}
+```
+
+**4. 改進說明：**
+
+*   **`countWellOrderedNumbersBelow` 函數：** 原來的迴圈遍歷改為使用組合數計算。因為 well-ordered number 的每一位數字都嚴格遞增，所以其數字不能重複。 小於 100000 的 well-ordered number 最多有 5 位數字，因此相當於從 1-9 這 9 個數字中，選取 1-5 個數字的組合數。
+*   **新增 `combinations` 函數：** 用於計算組合數 C(n, k)。
+
+**5. 改進建議和反饋：**
+
+*   **程式碼風格：** 整體程式碼風格良好，但可以在 `main` 函數中，對不同功能的程式碼塊之間添加空行，以提高可讀性。
+*   **演算法效率：** 能夠思考並嘗試使用更高效的演算法來解決問題，例如使用組合數學來解決計數問題。
+*   **數學知識：** 程式設計不僅僅是程式碼的編寫，也需要一定的數學基礎。在解決問題時，可以嘗試運用數學知識來簡化問題，提高效率。
+*   **多樣解法：** 題目(b)可以使用動態規劃來解決。
+
+總體而言，學生的作業完成度很高，程式碼品質良好，展現了紮實的 Java 基礎和良好的編程習慣。建議學生在今後的學習中，更加注重演算法效率的提升，並嘗試運用數學知識來解決實際問題。

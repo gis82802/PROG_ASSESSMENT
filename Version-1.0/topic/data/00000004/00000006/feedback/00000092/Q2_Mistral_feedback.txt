@@ -1,0 +1,92 @@
+好的，請根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分
+#### 備註 (滿分20)：
+該程式沒有包含對其功能的明確說明。缺乏註釋和說明。
+- 分數：5
+
+#### 格式 (滿分25)：
+程式的縮排和編碼風格基本適當，但缺乏一致性和規範性。
+- 分數：20
+
+#### 準確性 (滿分25)：
+程式可以判斷一個數字是否為well-ordered number，但未實現計算100000以下的well-ordered number的數量。
+- 分數：15
+
+#### 邏輯 (滿分30)：
+程式邏輯基本正確，但缺乏完整性，未考慮到所有情況。
+- 分數：20
+
+#### 總分：
+60
+
+### 2. 分析優缺點
+#### 優點：
+1. 程式能夠正確判斷一個數字是否為well-ordered number。
+2. 基本的縮排和編碼風格適當。
+
+#### 缺點：
+1. 缺乏註釋和說明，讓人難以理解程式的功能。
+2. 未實現計算100000以下的well-ordered number的數量。
+3. 邏輯不完整，未考慮到所有情況。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class Pi2 {
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        System.out.println("輸入一個數字:");
+        int num = scn.nextInt();
+
+        if (isWellOrdered(num)) {
+            System.out.println("well-ordered number");
+        } else {
+            System.out.println("is not a well-ordered number");
+        }
+
+        int count = countWellOrderedNumbersUnder(100000);
+        System.out.println("100000以下的well-ordered number的數量: " + count);
+    }
+
+    // 判斷一個數字是否為well-ordered number
+    public static boolean isWellOrdered(int num) {
+        int lastDigit = 10; // 初始值設為10，因為任何數字的位數都小於10
+        while (num > 0) {
+            int currentDigit = num % 10;
+            if (currentDigit >= lastDigit) {
+                return false;
+            }
+            lastDigit = currentDigit;
+            num /= 10;
+        }
+        return true;
+    }
+
+    // 計算100000以下的well-ordered number的數量
+    public static int countWellOrderedNumbersUnder(int limit) {
+        int count = 0;
+        for (int i = 1; i < limit; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+1. **添加註釋**：增加註釋以說明程式的功能和每個函數的用途。
+2. **分離邏輯**：將判斷well-ordered number的邏輯和計算well-ordered number的數量分離到不同的函數中，提高程式的可讀性和可維護性。
+3. **完整性**：實現了計算100000以下的well-ordered number的數量。
+4. **邏輯修正**：修正了判斷well-ordered number的邏輯，確保每個數字的位數都小於前一位數。
+
+### 5. 改進建議和反饋
+1. **添加註釋**：在程式中添加適當的註釋，說明程式的功能和每個函數的用途，讓他人更容易理解和維護程式。
+2. **模組化設計**：將不同的功能分離到不同的函數中，提高程式的可讀性和可維護性。
+3. **完整性**：確保程式實現了所有需求，包括判斷一個數字是否為well-ordered number和計算100000以下的well-ordered number的數量。
+4. **邏輯檢查**：仔細檢查程式的邏輯，確保其正確性和完整性。
+
+希望這些建議能夠幫助您的學生改進他們的程式設計技能。如果有任何其他問題，請隨時告訴我。

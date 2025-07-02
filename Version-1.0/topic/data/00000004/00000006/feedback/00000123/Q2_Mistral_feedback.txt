@@ -1,0 +1,78 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- 備註（滿分20）：0
+- 格式（滿分25）：20
+- 準確性（滿分25）：25
+- 邏輯（滿分30）：25
+
+總分：70
+
+### 2. 根據標準分析它的優缺點
+
+#### 優點：
+1. **準確性**：程式能夠正確判斷使用者輸入的數字是否為well-ordered number，並且能夠正確計算10000以下的well-ordered number的數量。
+2. **邏輯**：程式的邏輯基本正確，能夠完成題目要求的功能。
+
+#### 缺點：
+1. **備註**：程式碼中完全沒有備註，這對於理解程式碼和維護性來說是一個很大的缺點。
+2. **格式**：雖然縮排和基本編碼風格是正確的，但變數名稱和函數名稱不夠直觀，例如`flag`和`ans`。
+3. **重複代碼**：判斷一個數字是否為well-ordered number的邏輯在兩個地方重複出現，這違反了DRY（Don't Repeat Yourself）原則。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class hw2 {
+
+    // 檢查一個數字是否為well-ordered number
+    public static boolean isWellOrdered(String number) {
+        for (int i = 0; i < number.length() - 1; i++) {
+            if (number.charAt(i) >= number.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String args[]) {
+        String userInput;
+        Scanner sc = new Scanner(System.in);
+        System.out.print("請輸入一個數字：");
+        userInput = sc.next();
+
+        // 檢查使用者輸入的數字是否為well-ordered number
+        if (isWellOrdered(userInput)) {
+            System.out.println(userInput + " 是一個 well-ordered number.");
+        } else {
+            System.out.println(userInput + " 不是一個 well-ordered number.");
+        }
+
+        System.out.println("##############################");
+
+        // 計算10000以下的well-ordered number的數量
+        int count = 0;
+        for (int k = 1; k <= 10000; k++) {
+            if (isWellOrdered(Integer.toString(k))) {
+                count++;
+            }
+        }
+        System.out.println("10000以下的well-ordered number的數量是：" + count);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **新增備註**：在程式碼中新增了備註，說明每個函數和重要步驟的作用，這有助於理解和維護程式碼。
+2. **重構邏輯**：將判斷一個數字是否為well-ordered number的邏輯提取到一個單獨的方法`isWellOrdered`中，這樣可以避免代碼重複，並且使程式碼更具可讀性。
+3. **變數名稱**：將變數名稱`s`改為`userInput`，`flag`改為`isWellOrdered`，`ans`改為`count`，使變數名稱更具描述性。
+4. **輸出提示**：在讀取使用者輸入時新增了提示信息，使程式更友好。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **添加備註**：請在程式碼中添加適當的備註，說明每個函數和重要步驟的作用，這有助於理解和維護程式碼。
+2. **避免代碼重複**：對於相同的邏輯，請提取到單獨的方法中，這樣可以避免代碼重複，並且使程式碼更具可讀性。
+3. **變數名稱**：請使用具描述性的變數名稱，這有助於理解程式碼。
+4. **格式化輸出**：在輸出結果時，請考慮添加一些描述性的信息，使輸出更具可讀性。
+5. **測試和驗證**：請確保程式在各種輸入情況下都能正確運行，並且進行徹底的測試和驗證。

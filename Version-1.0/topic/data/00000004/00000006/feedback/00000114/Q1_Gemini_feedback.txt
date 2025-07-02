@@ -1,0 +1,96 @@
+好的，我將根據您的標準對學生的作業進行評分、分析，並提供改進的程式碼和建議。
+
+**1. 評分：**
+
+*   **備註 (20/20):** 程式碼包含清晰的註解，解釋了每個部分的功能和目的，非常好。
+*   **格式 (23/25):** 程式碼的縮排和編碼風格基本良好，易於閱讀。 唯在findMinTermsForPi 方法中的while迴圈條件可讀性稍差，可以提取成變數
+*   **準確性 (25/25):** 程式碼在給定的條件下產生了正確的結果。
+*   **邏輯 (28/30):** 程式碼的邏輯清晰正確，使用了迴圈和條件語句來計算 pi 的近似值，並找到了滿足特定精度的最小項數。在findMinTermsForPi 方法中，迴圈條件可以直接判斷誤差是否小於目標值，減少程式的執行次數
+
+**總分：96/100**
+
+**2. 優缺點分析：**
+
+**優點：**
+
+*   **程式碼結構良好：** 程式碼被合理地分解為不同的方法，如 `calculatePi` 和 `findMinTermsForPi`，提高了程式碼的可讀性和可維護性。
+*   **註解清晰：** 程式碼中包含了詳細的註解，解釋了每個部分的功能，方便他人理解。
+*   **程式碼準確：** 程式碼能夠正確地計算 pi 的近似值，並找到滿足特定精度的最小項數。
+*   **易於理解：** 程式碼的邏輯清晰，易於理解和修改。
+
+**缺點：**
+
+*   **`findMinTermsForPi` 方法的效率可以進一步提高:** 在`findMinTermsForPi`方法中, 計算pi值是在迴圈中進行, 每次迴圈都需要重新計算pi值, 如果將pi值的計算放在迴圈外面, 每次迴圈只需要更新pi值, 可以提高程式的效率。
+*   **while迴圈可讀性差:** 在`findMinTermsForPi`方法中, while迴圈可讀性稍差，可以提取成變數
+
+**3. 改進的程式碼：**
+
+```java
+public class Pi {
+
+    public static void main(String[] args) {
+        // (a) 計算當 i = 10000, 20000,..., 到 100000 時的 pi 值
+        System.out.println("Part (a):");
+        for (int i = 10000; i <= 100000; i += 10000) {
+            double pi = calculatePi(i);
+            System.out.printf("Approximation of Pi after %d terms: %.10f%n", i, pi);
+        }
+
+        // (b) 找到使得 pi 接近 3.14159 的最小項數
+        System.out.println("\nPart (b):");
+        double targetPi = 3.14159;
+        int minTerms = findMinTermsForPi(targetPi);
+        System.out.printf("Minimum terms needed to approximate Pi to %.5f: %d terms%n", targetPi, minTerms);
+    }
+
+    // 計算 pi 的近似值
+    public static double calculatePi(int iterations) {
+        double pi = 0.0;
+        for (int i = 0; i < iterations; i++) {
+            if (i % 2 == 0) {
+                pi += 1.0 / (2 * i + 1);
+            } else {
+                pi -= 1.0 / (2 * i + 1);
+            }
+        }
+        pi *= 4; // 最後乘以 4 得到 π 的近似值
+        return pi;
+    }
+
+    // 找到使得 pi 接近目標值的最小項數
+    public static int findMinTermsForPi(double targetPi) {
+        double pi = 0.0;
+        int terms = 0;
+        double currentPi = 0.0;
+        double tolerance = 0.00001;
+        boolean isWithinTolerance = false;
+
+        while (!isWithinTolerance) {
+            if (terms % 2 == 0) {
+                pi += 1.0 / (2 * terms + 1);
+            } else {
+                pi -= 1.0 / (2 * terms + 1);
+            }
+            currentPi = pi * 4;
+            isWithinTolerance = Math.abs(currentPi - targetPi) < tolerance;
+            terms++;
+        }
+        return terms; // 返回項數
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **`findMinTermsForPi` 方法的while迴圈條件修改:** 將 `while (true)` 修改為 `while (!isWithinTolerance)`，增加程式可讀性
+*   **`findMinTermsForPi` 方法的程式碼修改:** 新增區域變數`currentPi`、`tolerance`、`isWithinTolerance`，將數值提取出來，增加程式可讀性
+
+**5. 改進建議和反饋：**
+
+*   **程式碼風格：** 總體而言，你的程式碼風格良好，但可以更加注意一些細節，例如在方法中添加一些空行，使程式碼更加易於閱讀。
+*   **演算法效率：** 在尋找最小項數時，你的程式碼使用了迴圈來逐步逼近目標值。雖然這種方法是可行的，但可能不是最有效率的。可以考慮使用二分搜尋等更高效的演算法來加速尋找過程。
+*   **異常處理：** 你的程式碼沒有考慮到一些潛在的異常情況，例如輸入的 `iterations` 為負數時。可以添加一些異常處理的程式碼，使程式更加健壯。
+*   **單元測試：** 為了驗證程式碼的正確性，可以編寫一些單元測試。單元測試可以幫助你及早發現程式碼中的錯誤，並確保程式碼在修改後仍然能夠正常工作。
+*   **程式碼複用：** 你的 `calculatePi` 方法在兩個不同的地方被呼叫。可以考慮將這個方法提取到一個單獨的類中，以便在其他地方複用。
+
+總的來說，你的程式碼寫得很好，展現了你對 Java 程式設計的紮實理解。通過進一步學習和實踐，你可以不斷提高你的程式設計技能。

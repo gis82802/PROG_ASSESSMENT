@@ -1,0 +1,1 @@
+calculate the distance between a 2D data point and a line. user can input the line and the data point.

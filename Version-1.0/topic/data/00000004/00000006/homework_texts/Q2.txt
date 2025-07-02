@@ -1,0 +1,2 @@
+(a) A number is called a well-ordered number if all of its digits are strictly increasing from left to right. For example, 258 (2<5<8) is a well-ordered number. Write a program to determine a user input number whether it is a well-ordered number.
+(b)Determine how many well-ordered number under 100000.

@@ -1,0 +1,84 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- 備註(滿分20)：15
+- 格式(滿分25)：15
+- 準確性(滿分25)：10
+- 邏輯(滿分30)：15
+
+總分：55
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式包含基本的功能說明。
+2. 使用了適當的縮排和基本的編碼風格。
+
+**缺點：**
+1. 備註部分缺乏對程式邏輯的詳細說明。
+2. 程式邏輯有誤，無法正確判斷是否為well-ordered number。
+3. 程式未能完成所有要求，缺少計算100000以下well-ordered number的數量。
+4. 變數命名不夠直觀。
+
+### 3. 為學生提供改進的程式碼
+
+```java
+/*
+filename:hw1011_2b
+function: Check if a number is a well-ordered number and count well-ordered numbers under 100000
+author:41243232
+date:2024/10/11
+version:jdk23
+*/
+import java.util.Scanner;
+
+public class hw1011_2b {
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        System.out.print("input num (1~100000): ");
+        int inputNum = scn.nextInt();
+
+        if (isWellOrderedNumber(inputNum)) {
+            System.out.println(inputNum + " is a well-ordered number");
+        } else {
+            System.out.println(inputNum + " is not a well-ordered number");
+        }
+
+        int count = 0;
+        for (int i = 1; i < 100000; i++) {
+            if (isWellOrderedNumber(i)) {
+                count++;
+            }
+        }
+        System.out.println("There are " + count + " well-ordered numbers under 100000.");
+    }
+
+    public static boolean isWellOrderedNumber(int num) {
+        int prevDigit = -1; // Initialize to a value less than any digit
+        while (num > 0) {
+            int currentDigit = num % 10;
+            if (currentDigit <= prevDigit) {
+                return false;
+            }
+            prevDigit = currentDigit;
+            num /= 10;
+        }
+        return true;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **拆分功能**：將判斷well-ordered number的邏輯拆分到一個單獨的方法`isWellOrderedNumber`中，使程式更具可讀性和可維護性。
+2. **變數命名**：將變數名稱改為更直觀的名稱，如`inputNum`和`prevDigit`，使程式更易於理解。
+3. **邏輯修正**：修正了判斷well-ordered number的邏輯，確保每個數字的位數都被正確比較。
+4. **計算well-ordered number的數量**：增加了計算100000以下well-ordered number數量的功能。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加備註**：在程式中增加更多的備註，解釋每一部分的功能和邏輯。
+2. **使用方法**：將重複使用的邏輯拆分到方法中，使程式更具模組化。
+3. **變數命名**：使用更直觀的變數名稱，使程式更易於理解和維護。
+4. **測試**：在提交作業前，進行充分的測試，確保程式能夠正確處理所有可能的輸入情況。
+5. **完整性**：確保程式完成了所有要求的功能，包括判斷一個數字是否為well-ordered number和計算100000以下well-ordered number的數量。

@@ -1,0 +1,212 @@
+好的，我將根據您的標準對黃培峰同學的作業進行評分、分析、並提供改進建議。
+
+**1. 評分 (總分：80/100)**
+
+*   **備註 (18/20):** 程式碼開頭有對功能和方法進行描述，但對 `reverseMatrix` 函式的描述不夠完整，可以更明確的指出其功能是計算2x2矩陣的反矩陣。
+*   **格式 (22/25):** 程式碼縮排良好，易於閱讀。變數命名基本合理，但可以更具描述性。
+*   **準確性 (20/25):** 矩陣相乘的邏輯正確，能產生正確的結果。反矩陣的計算邏輯也正確，但輸出格式略有不足，應考慮使用 `DecimalFormat` 或其他方式確保一致的格式。
+*   **邏輯 (20/30):** `matrixMult` 函式沒有回傳值，與題目要求不符。`reverseMatrix` 函式應明確限定輸入為 2x2 矩陣，並在函式內部進行輸入驗證。主函式流程可以更清晰，將矩陣輸入和計算反矩陣的邏輯分離。
+
+**2. 優缺點分析**
+
+**優點：**
+
+*   程式碼結構清晰，縮排良好，易於閱讀。
+*   包含了對程式功能的描述。
+*   矩陣相乘和反矩陣計算的核心邏輯正確。
+*   使用了適當的迴圈結構來處理矩陣運算。
+
+**缺點：**
+
+*   `matrixMult` 函式不符合題目要求，沒有回傳值。
+*   `reverseMatrix` 函式的通用性不足，僅限於2x2矩陣。
+*   程式碼缺少輸入驗證，例如：矩陣的維度是否為正數。
+*   `reverseMatrix` 函式沒有處理矩陣為 `null` 的情況。
+*   主函數的邏輯略顯混亂，輸入和計算耦合在一起。
+*   程式沒有將 `reverseMatrix` 所輸入的一維陣列轉換為二維陣列。
+*   備註資訊不足，可以加入作者、撰寫時間等資訊。
+*   輸出訊息不夠友好，缺少必要的提示資訊。
+
+**3. 改進的程式碼**
+
+```java
+package October.oct_25;
+
+import java.util.Scanner;
+import java.util.Arrays;
+
+/**
+ * 41243145 黃培峰
+ * @author 黃培峰
+ * @version 1.0
+ * @since 2023-10-26
+ * Description:
+ * 1. 輸入2個矩陣，並輸出矩陣相乘結果
+ * 
+ * Functionality:
+ * - MatMultiply(): 輸入矩陣1和的行及列及矩陣陣列，並輸出相乘後結果，回傳相乘後的矩陣
+ * - reverseMatrix(): 輸入2x2矩陣，輸出反矩陣
+ * 
+ */
+public class Hw03 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        // 輸入第一個矩陣
+        System.out.print("請輸入第一個矩陣的行數與列數 (中間空格隔開): ");
+        int rows1 = input.nextInt();
+        int cols1 = input.nextInt();
+
+        // 輸入驗證
+        if (rows1 <= 0 || cols1 <= 0) {
+            System.out.println("矩陣的行數和列數必須為正數！");
+            input.close();
+            return;
+        }
+
+        int[][] matrix1 = new int[rows1][cols1];
+        System.out.println("請輸入第一個矩陣 (用空格隔開或換行): ");
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
+                matrix1[i][j] = input.nextInt();
+            }
+        }
+
+        // 輸入第二個矩陣
+        System.out.print("請輸入第二個矩陣的行數與列數 (中間空格隔開): ");
+        int rows2 = input.nextInt();
+        int cols2 = input.nextInt();
+
+        // 輸入驗證
+        if (rows2 <= 0 || cols2 <= 0) {
+            System.out.println("矩陣的行數和列數必須為正數！");
+            input.close();
+            return;
+        }
+
+        int[][] matrix2 = new int[rows2][cols2];
+        System.out.println("請輸入第二個矩陣 (用空格隔開或換行): ");
+        for (int i = 0; i < rows2; i++) {
+            for (int j = 0; j < cols2; j++) {
+                matrix2[i][j] = input.nextInt();
+            }
+        }
+
+        // 矩陣相乘
+        int[][] resultMatrix = MatMultiply(matrix1, matrix2);
+
+        if (resultMatrix == null) {
+            System.out.println("這兩個矩陣不能相乘");
+        } else {
+            System.out.println("矩陣相乘的結果是：");
+            printMatrix(resultMatrix);
+        }
+
+
+        // 輸入2x2矩陣並計算其反矩陣
+        System.out.println("請輸入一個2x2矩陣 (按行輸入，用空格隔開): ");
+        int[] matrix = new int[4];
+        for (int i = 0; i < 4; i++) {
+            matrix[i] = input.nextInt();
+        }
+        int[][] matrix2x2 = {{matrix[0], matrix[1]}, {matrix[2], matrix[3]}};
+        System.out.println("輸入的2x2矩陣為:");
+        printMatrix(matrix2x2);
+
+        // 計算反矩陣
+        reverseMatrix(matrix2x2);
+
+
+        input.close();
+    }
+
+    /**
+     *  將二個二維矩陣相乘，並且計算此二矩陣相乘的結果後回傳給呼叫者。
+     * PS. 若此二個矩陣的大小無法完成相乘運算，則函式回傳 null
+     * @param matrix1 第一個矩陣
+     * @param matrix2 第二個矩陣
+     * @return 矩陣相乘的結果，若無法相乘則返回 null
+     */
+    public static int[][] MatMultiply(int[][] matrix1, int[][] matrix2) {
+        if (matrix1[0].length != matrix2.length) {
+            return null;
+        }
+
+        int rows1 = matrix1.length;
+        int cols1 = matrix1[0].length;
+        int rows2 = matrix2.length;
+        int cols2 = matrix2[0].length;
+
+        int[][] result = new int[rows1][cols2];
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                for (int k = 0; k < cols1; k++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 輸出輸入矩陣之反矩陣，若det = 0則表示無反矩陣
+     * 限定輸入為 2x2 矩陣
+     * @param matrix 2x2 矩陣
+     */
+    public static void reverseMatrix(int[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2 || matrix[1].length != 2) {
+            System.out.println("輸入的不是2x2矩陣，無法計算反矩陣！");
+            return;
+        }
+
+        int determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        if (determinant == 0) {
+            System.out.println("反矩陣不存在");
+        } else {
+            double invDet = 1.0 / determinant;
+            System.out.printf("反矩陣為:\n");
+            System.out.printf("%.3f %.3f\n", matrix[1][1] * invDet, -matrix[0][1] * invDet);
+            System.out.printf("%.3f %.3f\n", -matrix[1][0] * invDet, matrix[0][0] * invDet);
+        }
+    }
+
+    /**
+     * 列印矩陣
+     * @param matrix 要列印的矩陣
+     */
+    public static void printMatrix(int[][] matrix) {
+        for (int[] row : matrix) {
+            System.out.println(Arrays.toString(row));
+        }
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **`MatMultiply` 函式：**
+    *   修改為回傳 `int[][]` 類型的矩陣。
+    *   如果矩陣無法相乘，回傳 `null`。
+    *   使用傳入的矩陣作為參數，而非行、列的數值。
+    *   增加 `javadoc` 說明。
+*   **`reverseMatrix` 函式：**
+    *   添加輸入驗證，檢查輸入是否為 2x2 矩陣。
+    *   輸入改為二維陣列。
+*   **`main` 函式：**
+    *   程式碼開頭添加作者、版本等資訊。
+    *   將輸入矩陣的邏輯與計算分離，使程式碼更清晰。
+    *   添加輸入驗證，確保矩陣維度為正數。
+    *   在 `reverseMatrix` 之前，將一維陣列轉換為二維陣列。
+    *   添加 `printMatrix()` 函式，統一矩陣的輸出格式。
+    *   使用 `Arrays.toString()` 輸出陣列，提升可讀性。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格：** 繼續保持良好的縮排和程式碼風格。可以學習使用更進階的 IDE 功能，例如自動格式化程式碼。
+*   **輸入驗證：** 養成良好的輸入驗證習慣，避免程式出現意外錯誤。例如，可以檢查輸入的數字是否在合理範圍內。
+*   **錯誤處理：** 考慮使用 `try-catch` 區塊來處理可能發生的異常，例如 `InputMismatchException`。
+*   **函式設計：** 盡量讓函式的功能單一，提高程式碼的可重用性和可測試性。
+*   **單元測試：** 學習編寫單元測試，確保程式碼的正確性。
+*   **Javadoc：** 多寫javadoc，方便其他程式設計師了解你的程式碼，也方便自己日後回顧。
+
+總體來說，黃培峰同學的作業完成度不錯，基本掌握了矩陣運算的相關知識。通過本次修改，希望能夠幫助他進一步提升程式設計水平。

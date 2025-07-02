@@ -1,0 +1,135 @@
+好的，我將根據您的標準對學生的程式碼進行評估和改進。
+
+**1. 作業評分 (滿分100)**
+
+*   **備註 (15/20):** 程式碼有包含功能說明，但可以更詳細說明程式碼的整體邏輯。
+*   **格式 (22/25):** 程式碼縮排良好，風格一致，易於閱讀。可以稍微調整部分程式碼的間距，使其更清晰。
+*   **準確性 (18/25):** 程式碼對於判斷well-ordered數字的基本功能是正確的，但是缺少判斷負數的功能，且迴圈結束判斷條件有誤，導致部分well-ordered數字會被誤判。
+*   **邏輯 (20/30):** 程式碼邏輯基本正確，使用迴圈來判斷每一位數是否遞增，但判斷迴圈結束的邏輯有瑕疵，且缺少判斷負數的功能。
+
+**總分：75/100**
+
+**2. 優缺點分析**
+
+*   **優點：**
+    *   程式碼結構清晰，易於閱讀。
+    *   使用了`Scanner`類來獲取使用者輸入，互動性良好。
+    *   使用了迴圈來迭代數字的每一位數。
+    *   邏輯結構大致正確。
+
+*   **缺點：**
+    *   **缺少負數判斷:** 程式碼沒有考慮負數的情況，負數不應被判斷為well-ordered number。
+    *   **迴圈結束判斷條件有誤:** 當數字為well-ordered number時，`temp`最終會變成0，程式碼會輸出"該數字是 well-ordered"，但如果數字不是well-ordered number，迴圈會因為`currentDigit > previousDigit`而break，此時`temp`不一定是0，程式碼依然會輸出"該數字是 well-ordered"。
+    *   **缺少題目(b)的解法:** 程式碼只有解決題目(a)，缺少題目(b)的解法。
+    *   **備註不足:** 程式碼備註只有簡單描述，沒有詳細說明邏輯和演算法。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class ch5_2 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int number;
+
+        while (true) {
+            System.out.print("輸入要檢測的數字(輸入0停止): ");
+            number = scanner.nextInt();
+
+            if (number == 0) {
+                System.out.println("跳出程式");
+                break;
+            }
+
+            if (number < 0) {
+                System.out.println("該數字不是 well-ordered (負數)");
+                continue;
+            }
+
+            int previousDigit = 10;  // 設置初始值為10，因為任何數字都會小於10
+            int temp = number;       // 使用 `temp` 來保存 `number`，以免直接修改原始值
+            boolean isWellOrdered = true; // 增加一個標記來記錄是否well-ordered
+
+            // 判斷數字是否為well-ordered
+            while (temp > 0) {
+                int currentDigit = temp % 10; // 提取最右邊的數字
+
+                // 如果當前位數大於或等於上一位數，則輸出並跳出內部循環
+                if (currentDigit >= previousDigit) {
+                    System.out.println("該數字不是 well-ordered");
+                    isWellOrdered = false;
+                    break;
+                }
+
+                // 更新前一位數，繼續處理下一位
+                previousDigit = currentDigit;
+                temp = temp / 10;  // 移除最右邊的數字
+            }
+
+            // 如果成功遍歷到最後，且isWellOrdered為true，則表示該數字是 well-ordered
+            if (temp == 0 && isWellOrdered) {
+                System.out.println("該數字是 well-ordered");
+            }
+        }
+
+        //計算小於100000的well-ordered數字的數量
+        int count = countWellOrderedNumbers(100000);
+        System.out.println("小於100000的well-ordered數字的數量: " + count);
+
+        scanner.close();
+    }
+
+    //計算小於max的well-ordered數字的數量
+    public static int countWellOrderedNumbers(int max) {
+        int count = 0;
+        for (int i = 1; i < max; i++) {
+            if (isWellOrdered(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    //判斷數字是否為well-ordered
+    public static boolean isWellOrdered(int number) {
+        if (number < 0) {
+            return false;
+        }
+
+        int previousDigit = 10;
+        int temp = number;
+
+        while (temp > 0) {
+            int currentDigit = temp % 10;
+
+            if (currentDigit >= previousDigit) {
+                return false;
+            }
+
+            previousDigit = currentDigit;
+            temp /= 10;
+        }
+
+        return true;
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **增加負數判斷:** 在迴圈開始前，增加了`if (number < 0)`的判斷，如果數字小於0，則輸出"該數字不是 well-ordered (負數)"，並使用`continue`跳過本次迴圈。
+*   **迴圈結束判斷修正:** 增加了一個`isWellOrdered`變數，預設為`true`，如果迴圈中發現有不符合well-ordered的數字，則將`isWellOrdered`設為`false`。迴圈結束後，只有當`temp == 0`且`isWellOrdered == true`時，才輸出"該數字是 well-ordered"。
+*   **增加`countWellOrderedNumbers`和`isWellOrdered`函式:** 將判斷數字是否為well-ordered的邏輯提取到`isWellOrdered`函式中，方便重複使用。新增`countWellOrderedNumbers`函式，用於計算小於指定數字的well-ordered數字的數量。
+*   **增加了題目(b)的解法:** 使用`countWellOrderedNumbers`函式計算小於100000的well-ordered數字的數量，並輸出結果。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格:** 整體程式碼風格良好，但可以增加一些空行，使程式碼更易於閱讀。例如，在迴圈前後增加空行。
+*   **變數命名:** 變數命名基本清晰，但可以考慮使用更具描述性的變數名稱，例如將`temp`改為`remainingNumber`。
+*   **功能完善:** 程式碼缺少負數判斷，應增加判斷負數的功能。
+*   **程式碼備註:** 應增加程式碼備註，詳細說明程式碼的邏輯和演算法。例如，可以在迴圈開始前，說明迴圈的作用是判斷每一位數是否遞增。
+*   **程式碼重用:** 可以將判斷數字是否為well-ordered的邏輯提取到一個單獨的函式中，方便重複使用。
+*   **題目完整性:** 應解決題目(b)，提供計算小於100000的well-ordered數字的數量的解法。
+
+總體來說，學生的程式碼基礎良好，但需要注意細節和邊界情況的處理。通過本次作業的修改和反饋，希望學生能夠更好地理解程式設計的要點，並在今後的學習中不斷進步。

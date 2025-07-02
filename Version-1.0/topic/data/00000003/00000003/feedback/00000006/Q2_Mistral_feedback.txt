@@ -1,0 +1,101 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分（0-100）
+
+- **備註（滿分20）**：該程式沒有包含對其功能的明確說明，因此得分為0。
+- **格式（滿分25）**：程式的縮排和編碼風格基本適當，但變數名稱和函式名稱不夠直觀，得分為20。
+- **準確性（滿分25）**：程式能夠計算2x2矩陣的反矩陣，但沒有驗證結果是否正確，得分為20。
+- **邏輯（滿分30）**：程式的邏輯基本正確，但沒有考慮到矩陣的行列式為零的情況，得分為25。
+
+總分：65
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式能夠正確計算2x2矩陣的反矩陣。
+2. 基本的縮排和編碼風格適當。
+
+**缺點：**
+1. 沒有對程式功能的說明。
+2. 變數名稱和函式名稱不夠直觀。
+3. 沒有驗證計算結果是否正確。
+4. 沒有考慮到矩陣的行列式為零的情況。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+class hw10253b {
+    // 計算2x2矩陣的反矩陣
+    public static float[][] invMatrix(float[][] matrix) {
+        float determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        if (determinant == 0) {
+            throw new ArithmeticException("矩陣的行列式為零，無法求反矩陣");
+        }
+        float inverseDeterminant = 1 / determinant;
+        float temp = matrix[0][0];
+        matrix[0][0] = matrix[1][1] * inverseDeterminant;
+        matrix[1][1] = temp * inverseDeterminant;
+        matrix[0][1] = -matrix[0][1] * inverseDeterminant;
+        matrix[1][0] = -matrix[1][0] * inverseDeterminant;
+        return matrix;
+    }
+
+    // 驗證反矩陣是否正確
+    public static boolean verifyInverse(float[][] matrix, float[][] inverseMatrix) {
+        float[][] identityMatrix = new float[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                identityMatrix[i][j] = matrix[i][0] * inverseMatrix[0][j] + matrix[i][1] * inverseMatrix[1][j];
+            }
+        }
+        return identityMatrix[0][0] == 1 && identityMatrix[0][1] == 0 && identityMatrix[1][0] == 0 && identityMatrix[1][1] == 1;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        float[][] matrix = new float[2][2];
+        System.out.println("請輸入矩陣內數值(2x2矩陣)：");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.print("Matrix[" + i + "][" + j + "]=");
+                matrix[i][j] = sc.nextFloat();
+            }
+        }
+        try {
+            float[][] inverseMatrix = invMatrix(matrix);
+            System.out.println("反矩陣：");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.print(inverseMatrix[i][j] + " ");
+                }
+                System.out.println();
+            }
+            if (verifyInverse(matrix, inverseMatrix)) {
+                System.out.println("反矩陣驗證成功。");
+            } else {
+                System.out.println("反矩陣驗證失敗。");
+            }
+        } catch (ArithmeticException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **函式名稱**：將函式 `A` 改名為 `invMatrix`，以更清楚地表達其功能。
+2. **行列式檢查**：在計算反矩陣之前，檢查矩陣的行列式是否為零，如果為零則拋出異常。
+3. **驗證反矩陣**：增加了 `verifyInverse` 函式來驗證反矩陣是否正確。
+4. **變數名稱**：將變數名稱改為更直觀的名稱，如 `determinant` 和 `inverseDeterminant`。
+5. **異常處理**：在主程式中加入了異常處理，以處理行列式為零的情況。
+
+### 5. 改進建議和反饋
+
+1. **註釋和說明**：在程式開頭加入對程式功能的詳細說明，並在關鍵步驟加入註釋。
+2. **變數命名**：使用更具描述性的變數名稱，使程式更易讀。
+3. **邏輯檢查**：在計算反矩陣之前，檢查矩陣的行列式是否為零，以避免不必要的計算。
+4. **驗證結果**：增加驗證反矩陣的步驟，確保計算結果正確。
+5. **異常處理**：在程式中加入異常處理，以應對可能出現的異常情況。

@@ -1,0 +1,141 @@
+### 1. 打分
+根據您的標準，以下是這份作業的分數：
+
+- **備註 (20分)**：該程式未包含對其功能的明確說明。0分。
+- **格式 (25分)**：雖然有基本的縮排，但編碼風格不夠清晰，變數命名不夠直觀。15分。
+- **準確性 (25分)**：程式能夠產生正確的結果，但有些部分的實現方式不夠理想。20分。
+- **邏輯 (30分)**：程式邏輯基本正確，但在某些地方有改進空間。25分。
+
+總分：60分
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式能夠正確地新增產品、減少產品、新增數量、減少數量，並計算總庫存價值。
+2. 基本的縮排和結構還算清晰。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 變數命名不夠直觀，例如 `n_size`、`c_size`、`p_size` 等。
+3. 移除產品的邏輯不夠優化，使用了多餘的數組複製操作。
+4. 沒有處理數組越界和其他異常情況。
+
+### 3. 改進的程式碼
+
+```java
+/*
+資工二甲 41043114 吳俊憲
+hw1
+ver 1.0.0
+*/
+
+class Inventory {
+    private int productCount = 0;
+    private String[] productNames = new String[100];
+    private int[] productCounts = new int[100];
+    private int[] productPrices = new int[100];
+
+    // 新增產品
+    void addProduct(String name, int count, int price) {
+        productNames[productCount] = name;
+        productCounts[productCount] = count;
+        productPrices[productCount] = price;
+        productCount++;
+    }
+
+    // 移除產品
+    void removeProduct(int index) {
+        if (index < 0 || index >= productCount) {
+            System.out.println("Index out of bounds");
+            return;
+        }
+        for (int i = index; i < productCount - 1; i++) {
+            productNames[i] = productNames[i + 1];
+            productCounts[i] = productCounts[i + 1];
+            productPrices[i] = productPrices[i + 1];
+        }
+        productCount--;
+    }
+
+    // 增加數量
+    void addCount(int index, int count) {
+        if (index < 0 || index >= productCount) {
+            System.out.println("Index out of bounds");
+            return;
+        }
+        productCounts[index] += count;
+    }
+
+    // 減少數量
+    void reduceCount(int index, int count) {
+        if (index < 0 || index >= productCount) {
+            System.out.println("Index out of bounds");
+            return;
+        }
+        if (productCounts[index] >= count) {
+            productCounts[index] -= count;
+        } else {
+            System.out.println("Not enough stock to reduce");
+        }
+    }
+
+    // 計算總庫存價值
+    int calculateTotalValue() {
+        int sum = 0;
+        for (int i = 0; i < productCount; i++) {
+            sum += productCounts[i] * productPrices[i];
+        }
+        return sum;
+    }
+}
+
+public class hw1 {
+    public static void main(String[] args) {
+        Inventory drinks = new Inventory();
+        Inventory phone = new Inventory();
+
+        drinks.addProduct("Green_tea", 20, 25);
+        drinks.addProduct("Red_tea", 20, 25);
+        System.out.println("飲料店總庫存價值:" + drinks.calculateTotalValue());
+
+        drinks.reduceCount(0, 10);
+        System.out.println("飲料店總庫存價值(減少'Green_tea'數量後):" + drinks.calculateTotalValue());
+
+        drinks.addCount(1, 20);
+        System.out.println("飲料店總庫存價值(增加'Red_tea'數量後):" + drinks.calculateTotalValue());
+
+        drinks.removeProduct(0);
+        System.out.println("飲料店總庫存價值(移除'Green_tea'產品後):" + drinks.calculateTotalValue());
+
+        phone.addProduct("phone1", 10, 15000);
+        phone.addProduct("phone2", 10, 20000);
+        System.out.println("3C手機店總庫存價值:" + phone.calculateTotalValue());
+
+        phone.reduceCount(0, 5);
+        System.out.println("3C手機店總庫存價值(減少'phone1'數量後):" + phone.calculateTotalValue());
+
+        phone.addCount(1, 10);
+        System.out.println("3C手機店總庫存價值(增加'phone2'數量後):" + phone.calculateTotalValue());
+
+        phone.removeProduct(0);
+        System.out.println("3C手機店總庫存價值(移除'phone1'產品後):" + phone.calculateTotalValue());
+    }
+}
+```
+
+### 4. 修改部分及原因
+
+1. **變數命名**：更改變數名稱以提高可讀性。例如，`n_size` 改為 `productCount`，`name` 改為 `productNames`，`count` 改為 `productCounts`，`price` 改為 `productPrices`。
+2. **移除產品的邏輯**：改進移除產品的邏輯，避免不必要的數組複製操作，直接將後面的元素向前移動。
+3. **索引檢查**：在增加數量、減少數量和移除產品時，增加索引檢查以避免越界錯誤。
+4. **函式命名**：將函式名稱改為更符合 Java 命名慣例，例如 `add_product` 改為 `addProduct`。
+
+### 5. 改進建議和反饋
+
+1. **註釋和文檔**：添加註釋和文檔來說明程式的功能和各個函式的用途。
+2. **異常處理**：增加異常處理來處理可能出現的錯誤，例如數組越界和數量不足的情況。
+3. **變數命名**：使用更直觀的變數名稱來提高程式的可讀性。
+4. **邏輯優化**：在移除產品時，優化邏輯以避免不必要的數組複製操作。
+5. **測試**：增加更多的測試案例來驗證程式的正確性和穩定性。
+
+希望這些建議能幫助學生改進他們的程式設計技巧。

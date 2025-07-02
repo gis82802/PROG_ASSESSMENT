@@ -1,0 +1,242 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註(滿分20)：10
+- 格式(滿分25)：15
+- 準確性(滿分25)：15
+- 邏輯(滿分30)：20
+
+總分：60
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式能夠實現基本的井字棋遊戲功能，包括玩家與電腦的對戰和玩家之間的對戰。
+2. 程式結構清晰，基本邏輯正確。
+3. 使用了面向對象的設計，將棋盤、玩家和遊戲分別設計為不同的類別。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明，備註部分不夠詳細。
+2. 程式碼格式不規範，縮排和編碼風格不一致。
+3. 部分邏輯可以進一步優化，例如隨機生成位置的邏輯可以更簡潔。
+4. 變數命名不夠直觀，部分變數名稱不容易理解其用途。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Random;
+import java.util.Scanner;
+
+class TicTacToe extends ChessBoard {
+    Scanner sc = new Scanner(System.in);
+    int gameState;
+    int winner;
+    int firstSeq;
+    int count = 0;
+    int seq;
+    int flag = 0;
+
+    public TicTacToe() {
+        gameState = 0;
+        winner = 0;
+    }
+
+    int cpRandomPos() {
+        int pos;
+        do {
+            pos = (int) (Math.random() * 9) + 1;
+        } while (bdState[pos - 1] != 0);
+        return pos;
+    }
+
+    void start(Player p1, Player p2) {
+        if (p1.sequence == 1) {
+            firstSeq = 1;
+            seq = 2;
+            System.out.printf("P1, ");
+        } else if (p2.sequence == 1) {
+            firstSeq = 2;
+            seq = 1;
+            System.out.printf("P2, ");
+        }
+        gameContinue(p1, p2);
+    }
+
+    void gameContinue(Player p1, Player p2) {
+        int pos = 0;
+        System.out.println("Please enter the position:");
+        while (count < 9) {
+            Player currentPlayer = (seq == 1) ? p1 : p2;
+            if (currentPlayer.character == 1 && seq == 1) {
+                pos = cpRandomPos();
+                System.out.println("P2's position:" + pos);
+            } else {
+                pos = sc.nextInt();
+            }
+
+            if (bdState[pos - 1] != 0) {
+                System.out.println("This position has already been used.\nPlease enter another position:");
+                continue;
+            }
+
+            if (seq == 1) {
+                board[(pos - 1) / 3][(pos - 1) % 3] = "X";
+                bdState[pos - 1] = 1;
+                seq = 2;
+            } else {
+                board[(pos - 1) / 3][(pos - 1) % 3] = "O";
+                bdState[pos - 1] = 2;
+                seq = 1;
+            }
+            count++;
+            show();
+
+            if (checkGameOver() > 0) {
+                checkWinner(seq);
+                break;
+            } else {
+                if (seq == 2) {
+                    System.out.printf("P1, ");
+                } else {
+                    System.out.printf("P2, ");
+                }
+                System.out.println("Please enter the position:");
+            }
+        }
+    }
+
+    int checkGameOver() {
+        int[] winningPositions = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+        for (int i = 0; i < 3; i++) {
+            if (bdState[i * 3] == bdState[i * 3 + 1] && bdState[i * 3 + 1] == bdState[i * 3 + 2] && bdState[i * 3] > 0) {
+                gameState = bdState[i * 3];
+                return gameState;
+            }
+            if (bdState[i] == bdState[i + 3] && bdState[i + 3] == bdState[i + 6] && bdState[i] > 0) {
+                gameState = bdState[i];
+                return gameState;
+            }
+        }
+        if (bdState[0] == bdState[4] && bdState[4] == bdState[8] && bdState[0] > 0) {
+            gameState = bdState[0];
+            return gameState;
+        }
+        if (bdState[2] == bdState[4] && bdState[4] == bdState[6] && bdState[2] > 0) {
+            gameState = bdState[2];
+            return gameState;
+        }
+        if (count == 9) {
+            gameState = 9;
+        } else {
+            gameState = 0;
+        }
+        return gameState;
+    }
+
+    void checkWinner(int seq) {
+        if (checkGameOver() == 9) {
+            System.out.println("Draw.");
+        } else if (checkGameOver() > 0 && firstSeq == 2) {
+            System.out.println("P2 Win.");
+        } else if (checkGameOver() > 0 && firstSeq == 1) {
+            System.out.println("P1 Win.");
+        }
+    }
+}
+
+class ChessBoard {
+    String board[][] = new String[3][3];
+    int bdState[] = new int[9];
+
+    public ChessBoard() {
+        for (int i = 0; i < 9; i++) {
+            bdState[i] = 0;
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = " ";
+            }
+        }
+    }
+
+    void show() {
+        System.out.println("Chessboard state.");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%s", board[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+
+class Player {
+    int character;
+    int sequence;
+
+    Player() {
+    }
+
+    Player(int ch, int seq) {
+        character = ch;
+        sequence = seq;
+    }
+}
+
+public class Java0307 {
+    public static void main(String[] args) {
+        ChessBoard cb = new ChessBoard();
+        TicTacToe game = new TicTacToe();
+        Player player1, player2;
+        int computer = 1;
+        int human = 2;
+
+        System.out.printf("Please select mode.\n");
+        System.out.printf("1. Player vs Computer.\n");
+        System.out.printf("2. Player vs Player.\n");
+        Scanner sc = new Scanner(System.in);
+        int mode = sc.nextInt();
+        int seq = (int) (Math.random() * 50) + 1;
+        int seq2 = (int) (Math.random() * 50) + 1;
+        if (seq > seq2) {
+            seq = 1;
+            seq2 = 2;
+            System.out.println("P1 first.");
+        } else {
+            seq = 2;
+            seq2 = 1;
+            System.out.println("P2 first.");
+        }
+        while (true) {
+            if (mode == 1) {
+                player1 = new Player(human, seq);
+                player2 = new Player(computer, seq2);
+                break;
+            } else if (mode == 2) {
+                player1 = new Player(human, seq);
+                player2 = new Player(human, seq2);
+                break;
+            } else {
+                System.out.println("Have not this selection. Please select again.");
+                mode = sc.nextInt();
+            }
+        }
+        cb.show();
+        game.start(player1, player2);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名**：將變數名稱改為更直觀的命名，例如 `firstSeq` 代替 `firstseq`，`gameState` 代替 `gamestate` 等，以提高程式碼的可讀性。
+2. **隨機生成位置的邏輯**：優化隨機生成位置的邏輯，使用 `do-while` 迴圈確保生成的位置未被使用。
+3. **遊戲繼續邏輯**：將 `gamecontinue` 方法改為 `gameContinue`，並將遊戲繼續的邏輯簡化，減少重複的檢查。
+4. **檢查遊戲結束的邏輯**：優化 `checkGameOver` 方法，使用迴圈檢查所有可能的勝利條件，減少重複的檢查。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加備註**：在程式碼中增加更多的備註，說明每個方法和重要變數的功能，以便其他人能夠更容易理解程式碼。
+2. **格式規範**：保持一致的縮排和編碼風格，使程式碼更易讀和維護。
+3. **變數命名**：使用直觀的變數名稱，避免使用不易理解的縮寫。
+4. **邏輯簡化**：在邏輯檢查時，尽量使用迴圈和簡潔的條件判斷，減少重複的檢查和代碼。
+5. **持續學習**：多閱讀和學習其他優秀的程式碼，了解更多的設計模式和最佳實踐，以提高自己的程式設計能力。

@@ -1,0 +1,114 @@
+好的，我將根據您的標準評估學生的作業，並提供修改建議和反饋。
+
+**1. 分數：**
+
+*   **備註(滿分20)：** 5/20  程式碼沒有任何備註，缺乏對程式功能的說明。
+*   **格式(滿分25)：** 15/25  程式碼縮排基本正確，但變數命名不夠直觀，影響可讀性。
+*   **準確性(滿分25)：** 15/25  對於某些數字可以正確判斷，但是當數字為個位數時會出錯，且程式只判斷是否為well-ordered number，未解決題目第二部分。
+*   **邏輯(滿分30)：** 15/30  程式邏輯基本正確，但存在一些缺陷，例如，沒有考慮個位數的情況。
+
+**總分：50/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼基本結構清晰，使用 `while` 迴圈提取數字， `for` 迴圈進行判斷，思路正確。
+    *   使用了 `Scanner` 類獲取使用者輸入，基本功能完整。
+*   **缺點：**
+    *   **缺少註釋：** 程式碼缺乏註釋，難以理解程式的功能和實現細節。
+    *   **變數命名不規範：** 變數名 `x`, `a`, `b`, `c` 不夠直觀，讓人難以理解其用途。
+    *   **邏輯錯誤：** 程式碼沒有考慮個位數的情況，如果輸入個位數，程式會誤判。
+    *   **題目未完成：** 程式只判斷是否為well-ordered number，未解決題目第二部分。
+    *   **程式碼可讀性差：** 由於變數命名和缺乏註釋，程式碼可讀性較差。
+    *   **陣列大小固定：** 陣列 `x` 的大小固定為 5，限制了輸入數字的位數。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class homework3_3 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("請輸入一個數字: ");
+        int inputNumber = scanner.nextInt();
+
+        // 將數字存儲到陣列中，digits[0]存儲個位數，digits[1]存儲十位數，以此類推
+        int[] digits = new int[10]; // 假設最大位數為 10，可以根據需要調整
+        int digitCount = 0; // 記錄數字的位數
+
+        int tempNumber = inputNumber;
+        while (tempNumber != 0) {
+            digits[digitCount] = tempNumber % 10;
+            digitCount++;
+            tempNumber /= 10;
+        }
+
+        // 判斷是否為 well-ordered number
+        boolean isWellOrdered = true;
+        for (int i = 1; i < digitCount; i++) {
+            if (digits[i - 1] <= digits[i]) { // 修改判斷條件
+                isWellOrdered = false;
+                break;
+            }
+        }
+
+        // 輸出結果
+        if (isWellOrdered) {
+            System.out.println("是 well-ordered number");
+        } else {
+            System.out.println("不是 well-ordered number");
+        }
+
+        //計算小於100000的well-ordered number數量
+        int wellOrderedCount = calculateWellOrderedNumbers(100000);
+        System.out.println("小於 100000 的 well-ordered numbers 數量: " + wellOrderedCount);
+
+        scanner.close();
+    }
+
+    //計算小於maxNumber的well-ordered number數量
+    public static int calculateWellOrderedNumbers(int maxNumber) {
+        int count = 0;
+        for (int i = 1; i < maxNumber; i++) {
+            if (isWellOrderedNumber(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    //判斷number是否為well-ordered number
+    public static boolean isWellOrderedNumber(int number) {
+        String numStr = String.valueOf(number);
+        for (int i = 1; i < numStr.length(); i++) {
+            if (numStr.charAt(i - 1) >= numStr.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **變數命名：** 將 `x`, `a`, `b`, `c` 等變數名改為更具描述性的名稱，如 `digits`, `digitCount`, `isWellOrdered`, `inputNumber` 等，以提高程式碼可讀性。
+*   **註釋：** 增加了程式碼註釋，解釋程式的功能和實現細節。
+*   **邏輯修正：** 修改了判斷條件，如果 `digits[i - 1] <= digits[i]`，則說明不是 well-ordered number。
+*   **陣列大小：** 增加了 `digits` 陣列的大小，使其可以處理更大的數字。
+*   **個位數判斷：** 個位數也判斷為well-ordered number。
+*   **完成題目：** 增加了 `calculateWellOrderedNumbers` 函數，用於計算小於100000的well-ordered number數量。
+*   **程式結構：** 將程式碼分成更小的函數，提高程式碼的可維護性。
+
+**5. 改進建議和反饋：**
+
+*   **註釋習慣：**  養成良好的程式碼註釋習慣，對程式的功能、變數的用途、重要的邏輯進行說明，方便自己和他人理解程式碼。
+*   **變數命名：**  使用有意義的變數名，可以提高程式碼的可讀性。
+*   **邏輯思維：**  仔細考慮各種情況，避免邏輯錯誤。
+*   **程式碼風格：**  保持一致的程式碼風格，例如縮排、空格等，使程式碼更易讀。
+*   **模組化：**  將程式碼分成更小的函數，提高程式碼的可維護性。
+*   **測試：**  編寫測試程式，驗證程式的正確性。
+*   **多練習：**  多做練習，提高程式設計能力。
+
+總體來說，學生的程式碼基本完成了作業的要求，但存在一些缺點。通過修改，程式碼的可讀性、可維護性和正確性都得到了提高。希望學生能夠吸取教訓，繼續努力，提高程式設計水平。

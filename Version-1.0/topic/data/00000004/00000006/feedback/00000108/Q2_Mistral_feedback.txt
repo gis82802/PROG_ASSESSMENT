@@ -1,0 +1,76 @@
+好的，讓我們根據您的標準對這份作業進行評分和分析。
+
+### 1. 打分
+- **備註 (20分)**：該程式沒有包含對其功能的明確說明。 (0分)
+- **格式 (25分)**：程式的縮排和編碼風格基本適當，但有些地方可以改進。 (20分)
+- **準確性 (25分)**：程式能夠正確判斷一個數字是否為well-ordered number。 (25分)
+- **邏輯 (30分)**：程式邏輯基本正確，但有些地方可以優化。 (25分)
+
+總分：70分
+
+### 2. 優缺點分析
+**優點：**
+1. 程式能夠正確判斷一個數字是否為well-ordered number。
+2. 基本的縮排和編碼風格適當。
+
+**缺點：**
+1. 沒有包含對程式功能的說明。
+2. 變數名稱不夠直觀，例如 `sn` 和 `val`。
+3. 沒有實現(b)部分的要求，即計算100000以下的well-ordered number的數量。
+4. 部分邏輯可以優化，例如在處理數字的順序時可以更簡潔。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class J_1011_01 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入並判斷是否為well-ordered number
+        System.out.print("Enter a number: ");
+        int inputNumber = scanner.nextInt();
+        if (isWellOrderedNumber(inputNumber)) {
+            System.out.printf("%d is a well-ordered number.\n", inputNumber);
+        } else {
+            System.out.printf("%d is not a well-ordered number.\n", inputNumber);
+        }
+
+        // 計算100000以下的well-ordered number的數量
+        int count = 0;
+        for (int i = 1; i < 100000; i++) {
+            if (isWellOrderedNumber(i)) {
+                count++;
+            }
+        }
+        System.out.printf("There are %d well-ordered numbers under 100000.\n", count);
+    }
+
+    // 判斷一個數字是否為well-ordered number
+    public static boolean isWellOrderedNumber(int number) {
+        int previousDigit = -1;
+        while (number > 0) {
+            int currentDigit = number % 10;
+            if (currentDigit <= previousDigit) {
+                return false;
+            }
+            previousDigit = currentDigit;
+            number /= 10;
+        }
+        return true;
+    }
+}
+```
+
+### 4. 修改的部分及原因
+1. **變數名稱**：將 `sn` 改為 `scanner`，將 `val` 改為 `previousDigit`，使變數名稱更直觀。
+2. **新增功能**：新增計算100000以下的well-ordered number的數量的功能。
+3. **邏輯優化**：將判斷well-ordered number的邏輯獨立成一個方法 `isWellOrderedNumber`，提高程式的可讀性和可維護性。
+
+### 5. 改進建議和反饋
+1. **加入註釋**：在程式中加入註釋，說明程式的功能和主要邏輯。
+2. **變數命名**：使用更直觀的變數名稱，讓程式更易讀。
+3. **功能完整性**：確保程式滿足所有要求，包括計算100000以下的well-ordered number的數量。
+4. **邏輯優化**：將重複的邏輯獨立成方法，提高程式的可讀性和可維護性。
+
+希望這些改進建議能夠幫助學生提高程式設計的能力。

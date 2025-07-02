@@ -1,0 +1,51 @@
+public class hw1_0927 {
+	public static void main(String[] args){
+		char ch1 ='潘';
+		char ch2 ='彥';
+		char ch3 ='愷';
+		char ch4 ='國';
+		char ch5 ='立';
+		char ch6 ='虎';
+		char ch7 ='尾';
+		char ch8 ='科';
+		char ch9 ='技';
+		char ch10='大';
+		char ch11='學';
+		int i=java.lang.Integer.MAX_VALUE;
+		int j=java.lang.Integer.MAX_VALUE;
+		int x,y;
+		x=i-ch1;
+		y=j-x;
+		System.out.println(ch1+" ("+y+")");
+		x=i-ch2;
+		y=j-x;
+		System.out.println(ch2+" ("+y+")");
+		x=i-ch3;
+		y=j-x;
+		System.out.println(ch3+" ("+y+")");
+		x=i-ch4;
+		y=j-x;
+		System.out.println(ch4+" ("+y+")");
+		x=i-ch5;
+		y=j-x;
+		System.out.println(ch5+" ("+y+")");
+		x=i-ch6;
+		y=j-x;
+		System.out.println(ch6+" ("+y+")");
+		x=i-ch7;
+		y=j-x;
+		System.out.println(ch7+" ("+y+")");
+		x=i-ch8;
+		y=j-x;
+		System.out.println(ch8+" ("+y+")");
+		x=i-ch9;
+		y=j-x;
+		System.out.println(ch9+" ("+y+")");
+		x=i-ch10;
+		y=j-x;
+		System.out.println(ch10+" ("+y+")");
+		x=i-ch11;
+		y=j-x;
+		System.out.println(ch11+" ("+y+")");
+	}
+}

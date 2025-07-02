@@ -1,0 +1,132 @@
+好的，我將按照您的標準對學生的作業進行評分、分析、改進並提供反饋。
+
+**1. 評分：**
+
+*   **備註 (15/20)：** 程式碼有簡要的說明，但可以更詳細地描述 `invMatrix` 函式的功能和目的。
+*   **格式 (20/25)：** 程式碼縮排基本正確，但變數宣告和程式碼間距可以更一致。
+*   **準確性 (25/25)：** 程式碼在給定的 2x2 矩陣輸入下，能正確計算反矩陣。
+*   **邏輯 (25/30)：** 反矩陣的計算邏輯正確，但缺少對輸入矩陣是否可逆（行列式是否為零）的判斷，且沒有驗證反矩陣的過程。
+
+**總分：85/100**
+
+**2. 優缺點分析：**
+
+**優點：**
+
+*   **準確性：** 程式碼能正確計算出 2x2 矩陣的反矩陣（在可逆的情況下）。
+*   **程式碼結構：** 使用獨立的 `invMatrix` 函式，使程式碼更模組化。
+*   **可讀性：** 程式碼整體可讀性尚可，變數名稱簡單易懂。
+
+**缺點：**
+
+*   **缺少備註：** 程式碼缺乏足夠的備註，特別是 `invMatrix` 函式的目的、輸入和輸出，以及反矩陣計算公式的說明。
+*   **缺乏輸入驗證：** 沒有檢查輸入的矩陣是否為 2x2。
+*   **缺少行列式為零的判斷：** 程式碼沒有檢查行列式是否為零，如果行列式為零，矩陣不可逆，程式會出錯。
+*   **缺少驗證：** 沒有驗證計算出的反矩陣是否正確（A * A⁻¹ 是否等於單位矩陣）。
+*   **格式一致性：** 程式碼格式可以更統一，例如變數宣告和程式碼塊之間的間距。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+import java.util.Arrays; // 引入 Arrays 類別
+
+public class hw1025_3_2 {
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+
+        System.out.println("輸入2*2矩陣A內容:");
+        double[][] A = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                A[i][j] = scn.nextDouble(); // 使用nextDouble()以允許小數
+            }
+        }
+
+        double[][] result = invMatrix(A);
+
+        if (result != null) {
+            System.out.println("A反矩陣為:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.print(result[i][j] + "  ");
+                }
+                System.out.println();
+            }
+
+            // 驗證反矩陣
+            System.out.println("驗證 A * A^(-1) 是否為單位矩陣:");
+            double[][] identity = multiplyMatrices(A, result);
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.print(identity[i][j] + "  ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("矩陣不可逆，無法計算反矩陣。");
+        }
+    }
+
+    /**
+     * 計算2x2矩陣的反矩陣
+     * @param A1 2x2矩陣
+     * @return 反矩陣，如果矩陣不可逆則返回null
+     */
+    public static double[][] invMatrix(double[][] A1) {
+        double a = A1[0][0];
+        double b = A1[0][1];
+        double c = A1[1][0];
+        double d = A1[1][1];
+
+        double dt = a * d - b * c; // 計算行列式
+
+        if (dt == 0) {
+            System.out.println("行列式為0，矩陣不可逆。");
+            return null; // 如果行列式為0，返回null
+        }
+
+        double[][] r = {{d / dt, -b / dt}, {-c / dt, a / dt}};
+
+        return r;
+    }
+
+    /**
+     * 矩陣乘法 (用於驗證)
+     * @param A 矩陣A
+     * @param B 矩陣B
+     * @return 矩陣A*B
+     */
+    public static double[][] multiplyMatrices(double[][] A, double[][] B) {
+        double[][] result = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **使用 `nextDouble()` 讀取輸入：** 原程式碼使用 `nextInt()`，這限制了輸入只能是整數。改為 `nextDouble()` 可以接受小數，更通用。
+*   **新增行列式判斷：** 在 `invMatrix` 函式中，計算行列式 `dt`，如果 `dt` 為 0，則矩陣不可逆，輸出提示訊息並返回 `null`。 這樣可以避免除以 0 的錯誤。
+*   **新增反矩陣驗證：** 新增 `multiplyMatrices` 函式計算兩個矩陣的乘積，並在 `main` 函式中計算 `A * A⁻¹`，將結果輸出，驗證反矩陣計算的正確性。
+*   **備註：** 為 `invMatrix` 函式添加了更詳細的備註，說明了函數的功能、參數和返回值。
+*   **錯誤處理：** 如果`invMatrix`返回null，在main函式中會顯示矩陣不可逆的訊息。
+* **使用Arrays類別:** 引入 java.util.Arrays 類別讓程式碼更簡潔
+
+**5. 改進建議和反饋：**
+
+*   **備註習慣：** 養成良好的備註習慣，在每個函式和關鍵程式碼段添加說明，方便自己和他人理解程式碼。
+*   **輸入驗證：** 驗證所有輸入的有效性，例如，檢查輸入的矩陣是否為 2x2。
+*   **錯誤處理：** 考慮程式碼可能出現的錯誤情況，並進行適當的處理，例如，處理矩陣不可逆的情況。
+*   **程式碼風格：** 保持一致的程式碼風格，例如，變數宣告和程式碼塊之間的間距，可以提高程式碼的可讀性。
+*   **單元測試：** 學習編寫單元測試，可以自動化驗證程式碼的正確性。
+*   **模組化設計：** 繼續保持良好的模組化設計習慣，將不同的功能劃分為獨立的函式，提高程式碼的可維護性。
+
+總體而言，這份作業展示了學生對 Java 程式設計和矩陣運算的理解。 透過這次的修正，希望能讓學生了解到寫出更健壯、更易讀的程式碼需要考慮的面向。

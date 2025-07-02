@@ -1,0 +1,188 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註(滿分20)**: 15分
+  - 說明了程式的基本功能，但缺乏對函式具體行為的詳細描述。
+
+- **格式(滿分25)**: 20分
+  - 縮排和編碼風格基本正確，但有些地方可以改進，例如變數命名和函式命名。
+
+- **準確性(滿分25)**: 20分
+  - 程式基本能夠產生正確的結果，但有些邊界情況未處理。
+
+- **邏輯(滿分30)**: 25分
+  - 邏輯基本正確，但有些地方可以改進，例如矩陣相乘的檢查和反矩陣的計算。
+
+總分：80分
+
+### 2. 根據標準分析它的優缺點
+
+**優點**:
+1. 程式基本能夠完成矩陣相乘和反矩陣的計算。
+2. 使用了標準的輸入輸出方法，讓用戶可以方便地輸入數據。
+3. 基本的縮排和編碼風格正確。
+
+**缺點**:
+1. 矩陣相乘函式應該回傳結果而不是直接輸出。
+2. 反矩陣函式應該回傳結果而不是直接輸出。
+3. 變數命名和函式命名可以更加直觀。
+4. 缺乏對邊界情況的處理，例如負數或過大的矩陣。
+5. 缺乏對函式具體行為的詳細描述。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/**
+ * 41243145 黃培峰
+ *
+ * Description:
+ * 1.輸入2個矩陣，並輸出矩陣相乘結果
+ * 2.計算2x2矩陣的反矩陣
+ *
+ * Functionality:
+ * - matMultiply(): 輸入矩陣1和矩陣2，回傳相乘後的結果或null
+ * - reverseMatrix(): 輸入2x2矩陣，回傳反矩陣或null
+ *
+ */
+
+package October.oct_25;
+
+import java.util.Scanner;
+
+public class Hw03 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        // 輸入第一個矩陣
+        System.out.print("請輸入第一個矩陣的行與列 (中間空格隔開): ");
+        int rows1 = input.nextInt();
+        int cols1 = input.nextInt();
+        int[][] matrix1 = new int[rows1][cols1];
+        System.out.println("請輸入第一個矩陣 (用空格隔開或換行): ");
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
+                matrix1[i][j] = input.nextInt();
+            }
+        }
+
+        // 輸入第二個矩陣
+        System.out.print("請輸入第二個矩陣的行與列 (中間空格隔開): ");
+        int rows2 = input.nextInt();
+        int cols2 = input.nextInt();
+        int[][] matrix2 = new int[rows2][cols2];
+        System.out.println("請輸入第二個矩陣 (用空格隔開或換行): ");
+        for (int i = 0; i < rows2; i++) {
+            for (int j = 0; j < cols2; j++) {
+                matrix2[i][j] = input.nextInt();
+            }
+        }
+
+        // 矩陣相乘
+        int[][] result = matMultiply(matrix1, matrix2);
+        if (result != null) {
+            System.out.println("矩陣相乘結果為:");
+            for (int[] row : result) {
+                for (int element : row) {
+                    System.out.print(element + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("矩陣無法相乘");
+        }
+
+        // 輸入2x2矩陣並計算其反矩陣
+        System.out.println("請輸入一個2x2矩陣: ");
+        int[][] matrix2x2 = new int[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrix2x2[i][j] = input.nextInt();
+            }
+        }
+
+        // 計算反矩陣
+        double[][] inverseMatrix = reverseMatrix(matrix2x2);
+        if (inverseMatrix != null) {
+            System.out.println("反矩陣為:");
+            for (double[] row : inverseMatrix) {
+                for (double element : row) {
+                    System.out.printf("%.3f ", element);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("反矩陣不存在");
+        }
+
+        input.close();
+    }
+
+    /**
+     * 矩陣相乘，若無法相乘則回傳null
+     */
+    public static int[][] matMultiply(int[][] matrix1, int[][] matrix2) {
+        int rows1 = matrix1.length;
+        int cols1 = matrix1[0].length;
+        int rows2 = matrix2.length;
+        int cols2 = matrix2[0].length;
+
+        if (cols1 != rows2) {
+            return null;
+        } else {
+            int[][] result = new int[rows1][cols2];
+            for (int i = 0; i < rows1; i++) {
+                for (int j = 0; j < cols2; j++) {
+                    for (int k = 0; k < cols1; k++) {
+                        result[i][j] += matrix1[i][k] * matrix2[k][j];
+                    }
+                }
+            }
+            return result;
+        }
+    }
+
+    /**
+     * 輸出輸入矩陣之反矩陣，若det = 0則回傳null
+     */
+    public static double[][] reverseMatrix(int[][] matrix) {
+        int determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        if (determinant == 0) {
+            return null;
+        } else {
+            double invDet = 1.0 / determinant;
+            double[][] inverse = new double[2][2];
+            inverse[0][0] = matrix[1][1] * invDet;
+            inverse[0][1] = -matrix[0][1] * invDet;
+            inverse[1][0] = -matrix[1][0] * invDet;
+            inverse[1][1] = matrix[0][0] * invDet;
+            return inverse;
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **函式命名和變數命名**:
+   - 將 `matrixMult` 改為 `matMultiply`，使函式名稱更直觀。
+   - 將 `reverse_matrix` 改為 `reverseMatrix`，使函式名稱符合Java命名規範。
+
+2. **函式回傳值**:
+   - 修改 `matMultiply` 和 `reverseMatrix` 函式，使其回傳結果而不是直接輸出。這樣可以更靈活地處理結果。
+
+3. **輸入輸出處理**:
+   - 修改主程式中的輸入輸出處理，使其更加清晰和易於理解。
+
+4. **邊界檢查**:
+   - 增加對矩陣相乘的邊界檢查，確保無法相乘的情況下回傳null。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議**:
+1. **詳細說明**: 在程式開頭詳細說明每個函式的功能和行為，幫助其他人理解程式。
+2. **命名規範**: 遵循Java命名規範，使變數和函式名稱更加直觀和易於理解。
+3. **邊界處理**: 增加對邊界情況的處理，例如矩陣尺寸不匹配或反矩陣不存在的情況。
+4. **模組化**: 將功能模組化，使每個函式只負責一個具體的任務，提高程式的可維護性和可讀性。
+5. **輸入輸出分離**: 將輸入輸出處理與計算邏輯分離，使程式更加靈活和易於測試。
+
+**反饋**:
+總體來說，這份作業已經能夠完成基本的矩陣相乘和反矩陣計算，但在細節處理和程式結構上還有改進空間。希望你能夠根據這些建議進一步改進你的程式，讓它更加專業和可靠。

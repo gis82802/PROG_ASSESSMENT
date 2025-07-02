@@ -1,0 +1,153 @@
+好的，根據您的標準，我將對這份作業進行評估，並提供改進建議。
+
+**1. 作業評分：**
+
+*   **備註 (20/20):** 程式碼包含明確的函數說明和程式功能描述，例如invMatrix 函數的功能註解完善。
+*   **格式 (23/25):** 程式碼縮排良好，變數命名也算清晰，但可以更簡潔。例如可以使用`final`修飾不會被修改的變數。
+*   **準確性 (25/25):** 程式可以正確計算2x2矩陣的反矩陣。
+*   **邏輯 (28/30):** 程式的整體邏輯沒有問題，包括處理不可逆矩陣的情況。可以增加驗證反矩陣的邏輯。
+
+**總分：96/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   **程式碼清晰易懂：** 程式碼縮排整齊，結構清晰，易於閱讀。
+    *   **函數功能明確：** `invMatrix` 函數的功能單一，實現了計算2x2矩陣的反矩陣。
+    *   **異常處理：** 程式碼包含了異常處理，可以處理不可逆矩陣的情況，增加了程式的健壯性。
+    *   **註解完善：** 程式碼中的註解清晰地解釋了函數的功能和程式的邏輯。
+*   **缺點：**
+    *   **缺少驗證：** 程式缺少對反矩陣計算結果的驗證。也就是題目中要求的(a)驗證(b)的結果是否正確。
+    *   **main函數略長：** `main` 函數中的輸入、計算和輸出可以考慮拆分成多個函數，增加程式碼的可讀性。
+    *   **缺乏單位矩陣的驗證機制：** 雖然已經能計算反矩陣，但缺乏與原始矩陣相乘後驗證結果是否為單位矩陣的機制。
+    *   **只支援2x2矩陣：** 功能過於局限，雖然題目要求如此，但可以考慮擴展到支持更高維度的矩陣（作為一個額外的挑戰）。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class ch7_1_2 {
+
+    // 矩陣求逆函數 (僅針對2x2矩陣)
+    public static double[][] invMatrix(double[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            throw new IllegalArgumentException("僅支持2x2矩陣的逆矩陣計算");
+        }
+
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // 檢查行列式是否為零（不可逆）
+        if (determinant == 0) {
+            throw new IllegalArgumentException("該矩陣不可逆");
+        }
+
+        // 計算逆矩陣
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse;
+    }
+
+    // 矩陣乘法
+    public static double[][] multiplyMatrix(double[][] matrixA, double[][] matrixB) {
+        int rowsA = matrixA.length;
+        int colsA = matrixA[0].length;
+        int colsB = matrixB[0].length;
+
+        double[][] result = new double[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // 創建單位矩陣
+    public static double[][] createIdentityMatrix(int size) {
+        double[][] identityMatrix = new double[size][size];
+        for (int i = 0; i < size; i++) {
+            identityMatrix[i][i] = 1.0;
+        }
+        return identityMatrix;
+    }
+
+    // 驗證反矩陣
+    public static boolean verifyInverse(double[][] matrix, double[][] inverse) {
+        double[][] product = multiplyMatrix(matrix, inverse);
+        double[][] identityMatrix = createIdentityMatrix(matrix.length);
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (Math.abs(product[i][j] - identityMatrix[i][j]) > 1e-6) { // 允許小的浮點數誤差
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入2x2矩陣
+        System.out.println("請輸入一個2x2矩陣的元素：");
+        double[][] matrix = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 計算反矩陣並輸出
+        try {
+            double[][] inverse = invMatrix(matrix);
+
+            // 顯示反矩陣
+            System.out.println("反矩陣結果:");
+            for (int i = 0; i < inverse.length; i++) {
+                for (int j = 0; j < inverse[0].length; j++) {
+                    System.out.printf("%.2f ", inverse[i][j]);
+                }
+                System.out.println();
+            }
+
+            // 驗證反矩陣
+            boolean isValidInverse = verifyInverse(matrix, inverse);
+            System.out.println("反矩陣驗證結果: " + isValidInverse);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        scanner.close();
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **新增 `multiplyMatrix` 函數：**  用於計算兩個矩陣的乘積。這是驗證反矩陣的基礎。
+*   **新增 `createIdentityMatrix` 函數：**  用於創建指定大小的單位矩陣。
+*   **新增 `verifyInverse` 函數：**  用於驗證計算出的反矩陣是否正確。它將原始矩陣和反矩陣相乘，然後檢查結果是否是單位矩陣。由於浮點數運算可能存在誤差，這裡使用了 `Math.abs(product[i][j] - identityMatrix[i][j]) > 1e-6` 來允許一個小的誤差範圍。
+*   **在 `main` 函數中調用 `verifyInverse` 函數：**  計算出反矩陣後，調用 `verifyInverse` 函數來驗證結果，並將驗證結果輸出到控制台。
+
+**5. 改進建議和反饋：**
+
+*   **繼續加強對邊界條件的處理：**  雖然程式碼已經處理了不可逆矩陣的情況，但可以考慮增加對輸入矩陣的有效性驗證（例如，檢查輸入是否是數字）。
+*   **嘗試擴展功能：**  作為一個額外的挑戰，可以嘗試將 `invMatrix` 函數擴展到支持更高維度的矩陣。這需要使用更複雜的算法，例如高斯消元法。
+*   **程式碼風格：**  雖然程式碼的縮排和變數命名都比較規範，但可以進一步優化，例如使用更有意義的變數名。
+*   **模組化：** 嘗試將程式碼拆分成更小的、更易於管理和測試的模組，例如將矩陣的輸入、計算和輸出分離到不同的函數中。
+*   **加入單元測試:** 使用JUnit等框架，為invMatrix, multiplyMatrix等函數撰寫單元測試，確保程式碼的正確性。
+
+總的來說，這是一份不錯的作業。程式碼清晰易懂，實現了基本的功能，並且考慮了異常處理。通過增加驗證功能和進一步優化程式碼風格，可以使程式碼更加完善和健壯。

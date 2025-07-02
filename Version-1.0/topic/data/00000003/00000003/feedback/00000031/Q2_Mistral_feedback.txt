@@ -1,0 +1,122 @@
+根據您的標準，以下是對這份作業的評分和分析：
+
+### 評分
+1. **備註 (滿分20)**：15
+   - 程式包含了一些對功能的說明，但缺乏詳細的注釋來說明每個步驟的目的。
+
+2. **格式 (滿分25)**：20
+   - 縮排和編碼風格基本合理，但有些地方可以更一致，例如空格和換行。
+
+3. **準確性 (滿分25)**：20
+   - 程式在大部分情況下能夠產生正確的結果，但在處理浮點數精度時可能會有問題。
+
+4. **邏輯 (滿分30)**：25
+   - 程式邏輯基本正確，但在處理矩陣乘積和浮點數精度時可以更精確。
+
+**總分**：80
+
+### 優缺點分析
+**優點**：
+1. 程式結構清晰，功能模塊化，適當地使用了方法來分隔不同的功能。
+2. 基本功能實現正確，能夠計算2x2矩陣的反矩陣並驗證結果。
+
+**缺點**：
+1. 缺乏詳細的注釋來說明每個步驟的目的。
+2. 矩陣乘積方法中的浮點數精度問題可能會導致結果不準確。
+3. 輸入和輸出的格式可以更一致和美觀。
+
+### 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class hw3_b {
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入2x2矩陣的內容
+        System.out.println("請輸入 2x2 矩陣的內容: ");
+        double[][] matrix = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 計算矩陣的反矩陣
+        double[][] inverseMatrix = MatInverse(matrix);
+
+        if (inverseMatrix == null) {
+            System.out.println("該矩陣沒有反矩陣。行列式為 0。");
+        } else {
+            System.out.println("矩陣的反矩陣為：");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f ", inverseMatrix[i][j]);
+                }
+                System.out.println();
+            }
+
+            // 驗證：計算原矩陣和反矩陣的乘積
+            double[][] identity = MatMultiply(matrix, inverseMatrix);
+            System.out.println("原矩陣與反矩陣相乘的結果（應為單位矩陣）：");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f ", identity[i][j]);
+                }
+                System.out.println();
+            }
+        }
+
+        scanner.close();
+    }
+
+    // 計算2x2矩陣的反矩陣
+    public static double[][] MatInverse(double[][] matrix) {
+        double a = matrix[0][0];
+        double b = matrix[0][1];
+        double c = matrix[1][0];
+        double d = matrix[1][1];
+
+        double det = a * d - b * c; // 計算行列式
+
+        if (det == 0) {
+            return null; // 行列式為0，沒有反矩陣
+        }
+
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = d / det;
+        inverse[0][1] = -b / det;
+        inverse[1][0] = -c / det;
+        inverse[1][1] = a / det;
+
+        return inverse;
+    }
+
+    // 計算矩陣乘積的方法（2x2與2x2矩陣）
+    public static double[][] MatMultiply(double[][] matrix, double[][] inverseMatrix) {
+        double[][] result = new double[2][2];
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < 2; k++) {
+                    result[i][j] += matrix[i][k] * inverseMatrix[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+}
+```
+
+### 修改的部分及原因
+1. **變數類型修改**：將矩陣的元素類型從 `int` 改為 `double`，以更精確地處理浮點數運算。
+2. **輸入處理**：將 `Scanner` 的 `nextInt` 改為 `nextDouble`，以適應浮點數輸入。
+3. **矩陣乘積方法**：將 `MatMultiply` 方法的參數類型從 `int[][]` 改為 `double[][]`，以更精確地處理浮點數運算。
+
+### 改進建議和反饋
+1. **增加詳細注釋**：在每個主要步驟和方法中增加詳細的注釋，以便更好地理解程式的功能和邏輯。
+2. **浮點數精度處理**：在進行浮點數運算時，確保使用適當的精度處理方法，以避免精度問題。
+3. **輸入輸出格式**：確保輸入和輸出的格式一致且美觀，例如在輸出矩陣時使用適當的格式化方法。
+4. **測試用例**：增加更多的測試用例，以驗證程式在不同情況下的正確性和穩定性。

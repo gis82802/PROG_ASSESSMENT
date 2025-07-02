@@ -1,0 +1,133 @@
+好的，教授，我將根據您的標準評估這份作業，並提供修改建議。
+
+**1. 作業評分：**
+
+*   **備註 (20分):** 15 分 (程式碼簡潔，但缺乏對 `invMatrix` 函式作用的明確說明，以及如何驗證結果的說明。)
+*   **格式 (25分):** 20 分 (縮排基本正確，但變數命名可以更具描述性，缺少統一的格式風格。例如，`A1` 與 `A` 在命名上不一致。)
+*   **準確性 (25分):** 25 分 (程式能夠正確計算反矩陣。)
+*   **邏輯 (30分):** 25 分 (計算反矩陣的邏輯正確，但沒有驗證反矩陣的邏輯，且輸入的部分使用nextInt，若輸入浮點數會出錯)
+
+**總分： 85 分**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼簡潔，實現了反矩陣的計算功能。
+    *   計算反矩陣的公式使用正確。
+    *   程式碼結構清晰，易於理解。
+
+*   **缺點：**
+    *   **缺乏必要的備註：** `invMatrix` 函式缺少明確的說明，程式的輸入和輸出缺少必要的說明，也沒有說明驗證反矩陣的邏輯。
+    *   **變數命名不夠直觀：** 像是 `A1` 這樣的變數名不够具有描述性，難以理解其含義。
+    *   **缺少錯誤處理：** 沒有檢查行列式是否為 0，如果行列式為 0，則矩陣不可逆，程式會出錯。
+    *   **沒有驗證反矩陣：** 程式沒有驗證計算得到的反矩陣是否正確。
+    *   **輸入限制：** 使用 `nextInt()` 限制了只能輸入整數，無法處理浮點數矩陣。
+    *   **格式不夠一致：** 在程式碼風格上，可以更加統一，例如變數命名、空格使用等。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class hw1025_3_2 {
+
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+
+        System.out.println("輸入 2x2 矩陣 A 的內容 (請輸入浮點數):");
+        double[][] A = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                A[i][j] = scn.nextDouble();  // 修改為nextDouble()以支持浮點數
+            }
+        }
+
+        double[][] result = invMatrix(A);
+
+        if (result != null) { // 判斷反矩陣是否為空
+            System.out.println("A 的反矩陣為:");
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f  ", result[i][j]); // 保留兩位小數
+                }
+                System.out.println();
+            }
+
+            // 驗證反矩陣
+            System.out.println("\n驗證 A * A的反矩陣 是否約等於 單位矩陣:");
+            double[][] identity = multiplyMatrices(A, result);
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    System.out.printf("%.2f  ", identity[i][j]);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("矩陣不可逆，因為行列式為 0。");
+        }
+
+        scn.close(); // 關閉 Scanner
+    }
+
+    /**
+     * 計算 2x2 矩陣的反矩陣。
+     * @param matrix 輸入的 2x2 矩陣
+     * @return 反矩陣，如果矩陣不可逆（行列式為 0），則返回 null。
+     */
+    public static double[][] invMatrix(double[][] matrix) {
+        double a = matrix[0][0];
+        double b = matrix[0][1];
+        double c = matrix[1][0];
+        double d = matrix[1][1];
+
+        double determinant = a * d - b * c;
+
+        if (determinant == 0) {
+            return null; // 矩陣不可逆
+        }
+
+        double[][] inverseMatrix = {{d / determinant, -b / determinant}, {-c / determinant, a / determinant}};
+
+        return inverseMatrix;
+    }
+
+
+    /**
+     * 驗證反矩陣是否正確，計算兩個矩陣的乘積。
+     * @param matrix1 第一個矩陣
+     * @param matrix2 第二個矩陣
+     * @return 兩個矩陣的乘積
+     */
+    public static double[][] multiplyMatrices(double[][] matrix1, double[][] matrix2) {
+        double[][] result = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    result[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **輸入處理：** 將 `scn.nextInt()` 修改為 `scn.nextDouble()`，以支持輸入浮點數矩陣。
+*   **行列式檢查：** 在 `invMatrix` 函式中增加了對行列式的檢查。如果行列式為 0，則矩陣不可逆，函式返回 `null`。
+*   **錯誤處理：** 在 `main` 函式中，判斷 `invMatrix` 的返回值是否為 `null`，並根據結果輸出不同的訊息。
+*   **反矩陣驗證：** 增加了 `multiplyMatrices` 函式來計算矩陣相乘，並在 `main` 函式中驗證 A * A的反矩陣 是否約等於 單位矩陣。
+*   **備註：** 為 `invMatrix` 函式添加了更詳細的備註，說明其作用、參數和返回值。
+*   **格式：** 使用 `System.out.printf("%.2f  ", ...)` 保留兩位小數，使輸出更整潔。
+*   **關閉Scanner：**在main函式的最後關閉Scanner，避免資源洩漏。
+
+**5. 改進建議和反饋：**
+
+*   **備註：** 良好的備註習慣對於程式碼的可讀性和可維護性至關重要。 請務必為每個函式添加清晰的備註，說明其功能、參數和返回值。
+*   **錯誤處理：** 在編寫程式碼時，要考慮各種可能的錯誤情況，並進行適當的處理。 例如，在本例中，需要檢查行列式是否為 0，以避免除以 0 的錯誤。
+*   **驗證：** 驗證程式碼的正確性非常重要。 可以通過編寫單元測試或添加驗證邏輯來確保程式碼按照預期的方式工作。
+*   **變數命名：** 選擇具有描述性的變數名，可以使程式碼更易於理解。
+*   **程式碼風格：** 保持一致的程式碼風格，可以提高程式碼的可讀性。
+
+總體而言，這是一份不錯的作業，展現了學生對 Java 程式設計的基本掌握。 通過添加備註、錯誤處理和驗證邏輯，可以使程式碼更加健壯和可靠。 繼續努力！

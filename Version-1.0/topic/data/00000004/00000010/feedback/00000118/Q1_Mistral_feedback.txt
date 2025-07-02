@@ -1,0 +1,150 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+- **備註 (滿分20)**：該程式缺乏對功能的明確說明。(5/20)
+- **格式 (滿分25)**：縮排和編碼風格基本合理，但可以改進。(20/25)
+- **準確性 (滿分25)**：程式能夠正確地計算矩陣相乘和反矩陣。(25/25)
+- **邏輯 (滿分30)**：程式邏輯基本正確，但有些地方可以優化。(25/30)
+
+**總分**：75/100
+
+### 2. 優缺點分析
+**優點**：
+1. 程式能夠正確地計算矩陣相乘和反矩陣。
+2. 使用了適當的數組和迴圈結構來處理矩陣運算。
+
+**缺點**：
+1. 缺乏對功能的明確說明。
+2. 某些變數名稱和函式名稱不夠直觀。
+3. 矩陣相乘函式中的錯誤處理方式不夠明確。
+4. 反矩陣函式僅限於2x2矩陣，且未處理非2x2矩陣的情況。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class Hwab {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入矩陣 A
+        System.out.println("請輸入矩陣 A 的行數和列數：");
+        int rowsA = scanner.nextInt();
+        int colsA = scanner.nextInt();
+        int[][] A = new int[rowsA][colsA];
+        System.out.println("請輸入矩陣 A 的元素：");
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                A[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 輸入矩陣 B
+        System.out.println("請輸入矩陣 B 的行數和列數：");
+        int rowsB = scanner.nextInt();
+        int colsB = scanner.nextInt();
+        int[][] B = new int[rowsB][colsB];
+        System.out.println("請輸入矩陣 B 的元素：");
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                B[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 計算矩陣相乘
+        int[][] C = MatMultiply(A, B);
+        if (C != null) {
+            System.out.println("結果矩陣 C：");
+            for (int[] row : C) {
+                System.out.print("[ ");
+                for (int value : row) {
+                    System.out.print(value + " ");
+                }
+                System.out.println("]");
+            }
+        } else {
+            System.out.println("矩陣 A 和 B 無法相乘。");
+        }
+
+        // 輸入矩陣 D
+        int[][] D = new int[2][2];
+        System.out.println("請輸入2x2矩陣 D 的元素：");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                D[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 計算反矩陣
+        double[][] inverseD = inverseMatrix(D);
+        if (inverseD != null) {
+            System.out.println("反矩陣 D：");
+            for (double[] row : inverseD) {
+                System.out.print("[ ");
+                for (double value : row) {
+                    System.out.print(value + " ");
+                }
+                System.out.println("]");
+            }
+        } else {
+            System.out.println("矩陣 D 不能反轉（行列式為零）");
+        }
+
+        scanner.close();
+    }
+
+    public static int[][] MatMultiply(int[][] A, int[][] B) {
+        if (A[0].length != B.length) {
+            return null;
+        }
+        int[][] C = new int[A.length][B[0].length];
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < B[0].length; j++) {
+                for (int k = 0; k < A[0].length; k++) {
+                    C[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return C;
+    }
+
+    public static double[][] inverseMatrix(int[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            return null;
+        }
+
+        int a = matrix[0][0];
+        int b = matrix[0][1];
+        int c = matrix[1][0];
+        int d = matrix[1][1];
+
+        int determinant = a * d - b * c;
+
+        if (determinant == 0) {
+            return null;
+        }
+
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = (double) d / determinant;
+        inverse[0][1] = (double) -b / determinant;
+        inverse[1][0] = (double) -c / determinant;
+        inverse[1][1] = (double) a / determinant;
+
+        return inverse;
+    }
+}
+```
+
+### 4. 改進的部分及原因
+1. **錯誤處理**：在 `MatMultiply` 函式中，當矩陣無法相乘時，直接返回 `null`，並在主程式中進行錯誤提示。
+2. **變數名稱**：將 `intMatrix` 改名為 `inverseMatrix`，以便更直觀地表示其功能。
+3. **程式說明**：在主程式中添加了對每個步驟的說明，使程式更易理解。
+4. **輸入矩陣 D**：明確指出需要輸入2x2矩陣，避免混淆。
+
+### 5. 改進建議和反饋
+1. **添加說明**：在程式碼中添加註釋，說明每個函式的功能和使用方法。
+2. **錯誤處理**：在主程式中添加更多的錯誤處理，確保輸入的數據正確。
+3. **變數名稱**：確保變數名稱和函式名稱能夠清楚地表達其功能。
+4. **格式**：保持一致的縮排和編碼風格，使程式碼更易閱讀和維護。
+
+希望這些建議能夠幫助您的學生提高他們的程式設計能力。

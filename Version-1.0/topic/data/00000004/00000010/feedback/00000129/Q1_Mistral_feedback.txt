@@ -1,0 +1,124 @@
+### 1. 打分
+
+- **備註 (滿分20)**: 10
+  - 說明：程式碼中沒有對函式 MatMultiply 的功能進行明確說明。
+
+- **格式 (滿分25)**: 15
+  - 說明：程式碼的縮排和編碼風格基本上是正確的，但有些地方可以改進，例如變數命名和註解。
+
+- **準確性 (滿分25)**: 20
+  - 說明：程式在正確的情況下能夠產生正確的結果，但在處理輸入和輸出時有一些小問題。
+
+- **邏輯 (滿分30)**: 25
+  - 說明：程式的邏輯基本上是正確的，但在處理矩陣乘法的過程中有一些小問題，例如變數命名和輸入輸出的處理。
+
+總分：70
+
+### 2. 分析優缺點
+
+**優點：**
+1. 程式能夠正確地計算兩個矩陣的乘法。
+2. 程式能夠處理矩陣大小不匹配的情況，並回傳 null。
+
+**缺點：**
+1. 程式碼中缺乏對函式 MatMultiply 的說明。
+2. 變數命名不夠直觀，例如 `m` 和 `n` 的重複使用。
+3. 輸入和輸出的處理不夠清晰，例如重複輸入矩陣大小。
+4. 缺乏註解，不利於理解程式碼。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class hw11025 {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int m1, n1, m2, n2;
+
+        // 輸入第一個矩陣的大小
+        System.out.println("輸入第一個矩陣的大小m*n");
+        System.out.print("m = ");
+        m1 = sc.nextInt();
+        System.out.print("n = ");
+        n1 = sc.nextInt();
+
+        // 初始化第一個矩陣
+        int[][] a = new int[m1][n1];
+        System.out.println("輸入第一個矩陣的內容");
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a[i].length; j++) {
+                a[i][j] = sc.nextInt();
+            }
+        }
+
+        // 輸入第二個矩陣的大小
+        System.out.println("輸入第二個矩陣的大小m*n");
+        System.out.print("m = ");
+        m2 = sc.nextInt();
+        System.out.print("n = ");
+        n2 = sc.nextInt();
+
+        // 初始化第二個矩陣
+        int[][] b = new int[m2][n2];
+        System.out.println("輸入第二個矩陣的內容");
+        for (int i = 0; i < b.length; i++) {
+            for (int j = 0; j < b[i].length; j++) {
+                b[i][j] = sc.nextInt();
+            }
+        }
+
+        // 計算矩陣乘法
+        int[][] c = MatMultiply(a, b);
+        if (c != null) {
+            for (int i = 0; i < c.length; i++) {
+                for (int j = 0; j < c[0].length; j++) {
+                    System.out.print(c[i][j] + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("矩陣大小不匹配，無法進行乘法運算。");
+        }
+    }
+
+    /**
+     * 矩陣乘法函式
+     * @param arr 第一個矩陣
+     * @param arr1 第二個矩陣
+     * @return 乘法結果矩陣，若大小不匹配則回傳 null
+     */
+    public static int[][] MatMultiply(int[][] arr, int[][] arr1) {
+        if (arr[0].length != arr1.length) {
+            return null;
+        } else {
+            int[][] c = new int[arr.length][arr1[0].length];
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = 0; j < arr1[0].length; j++) {
+                    for (int k = 0; k < arr[0].length; k++) {
+                        c[i][j] += arr[i][k] * arr1[k][j];
+                    }
+                }
+            }
+            return c;
+        }
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+
+1. **變數命名**：將 `m` 和 `n` 改為 `m1`, `n1`, `m2`, `n2`，以避免重複使用變數名稱，提高可讀性。
+2. **函式說明**：在 `MatMultiply` 函式上方加入註解，說明其功能。
+3. **輸入輸出處理**：修正輸入矩陣內容時的提示語句，避免重複輸入矩陣大小。
+4. **錯誤處理**：在矩陣大小不匹配時，輸出提示信息，提高程式的友善性。
+
+### 5. 改進建議和反饋
+
+1. **增加註解**：在程式碼中增加更多的註解，說明每一部分的功能，特別是邏輯較為複雜的部分。
+2. **變數命名**：使用更具描述性的變數名稱，例如 `row1`, `col1`, `row2`, `col2`，以提高程式碼的可讀性。
+3. **函式說明**：在每個函式上方加入註解，說明函式的功能和參數的意義。
+4. **錯誤處理**：在程式中增加更多的錯誤處理，例如輸入的數值是否合法等，以提高程式的穩定性。
+
+希望這些建議能幫助學生提高程式碼的質量和可讀性。

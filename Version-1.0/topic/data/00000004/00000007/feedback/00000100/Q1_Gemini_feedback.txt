@@ -1,0 +1,96 @@
+好的，溫教授，我將根據您的標準評估學生的作業，並提供改進建議。
+
+**1. 作業評分：**
+
+*   **備註 (20/20):** 程式碼開頭有清晰的專案名稱、作者、描述、功能性和最後編輯日期，備註完整且清晰。
+*   **格式 (23/25):** 縮排良好，程式碼風格一致。`package` 宣告放在檔案頂部是良好的習慣。在 `main` 方法中，變數宣告和程式碼之間存在空行，增強可讀性。略微扣分是因為可以考慮在 ArrayList 宣告時使用 Diamond Operator `<>`，可以省略右側的 `<Integer>`，簡化程式碼。
+*   **準確性 (25/25):** 程式正確執行，產生正確的排序結果。
+*   **邏輯 (28/30):** 程式邏輯清晰易懂，使用 `ArrayList` 存儲輸入，然後使用 `Collections.sort()` 排序，符合題目要求。 缺點是沒有錯誤處理，如果輸入不是整數，程式會崩潰。
+
+**總分：96/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼結構清晰，易於閱讀和理解。
+    *   備註完整，說明程式的功能和使用到的類別。
+    *   使用 `ArrayList` 和 `Collections.sort()` 簡化了程式碼，提高了效率。
+    *   程式正確性高，能夠正確排序使用者輸入的整數陣列。
+
+*   **缺點：**
+    *   **缺乏錯誤處理：** 當使用者輸入非整數時，程式會拋出 `InputMismatchException`，導致程式崩潰。
+    *   **沒有明確說明輸入結束方式：** 雖然備註中提到了 EOF 結束輸入，但程式輸出訊息沒有明確引導使用者。
+    *   **可以使用 Diamond Operator 簡化程式碼：** 在 ArrayList 宣告時使用 Diamond Operator `<>`，可以省略右側的 `<Integer>`。
+
+**3. 改進的程式碼：**
+
+```java
+/**
+ * Project Name: Hw01
+ * Author: 41243144 温博鈞
+ * Description:
+ *      輸入一連串的數字，輸出原始陣列，並輸出排序後的陣列
+ * Functionality:
+ *      - ArrayList<Integer>: 建立動態array
+ *      - Scanner: 建立使用者輸入
+ *      - Collections: 用來排序陣列
+ * 
+ * Last Edit Date: 2024-10-18
+ */
+
+package October.oct_18;
+
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+import java.util.Collections;
+
+public class Hw01 {
+    public static void main(String[] args) {
+        // 建立使用者輸入
+        Scanner input = new Scanner(System.in);
+        // 建立動態陣列
+        ArrayList<Integer> array = new ArrayList<>(); // 使用 Diamond Operator
+
+        System.out.print("請輸入陣列元素(以空格或換行隔開，輸入非數字結束輸入): "); // 更明確的引導訊息
+
+        // 將使用者輸入存到陣列中
+        while(true){
+            try {
+                if(input.hasNextInt()){
+                    array.add(input.nextInt());
+                } else {
+                    break; // 結束迴圈
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("輸入錯誤，請輸入整數。"); // 錯誤訊息
+                input.next(); // 清除錯誤輸入
+            }
+        }
+
+        // 輸出排序前陣列
+        System.out.println("排序前: " + array);
+
+        // 排序陣列後輸出
+        Collections.sort(array);
+        System.out.println("排序後: " + array);
+
+        input.close();
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **錯誤處理：** 使用 `try-catch` 塊來捕獲 `InputMismatchException`，當使用者輸入非整數時，會顯示錯誤訊息，並使用 `input.next()` 清除錯誤的輸入，避免程式崩潰。
+*   **更明確的引導訊息：** 修改了 `System.out.print()` 中的提示訊息，更明確地告知使用者如何結束輸入。
+*   **使用 Diamond Operator：** 在 `ArrayList` 宣告時使用了 Diamond Operator `<>`，簡化程式碼。
+
+**5. 改進建議和反饋：**
+
+*   **加入錯誤處理機制：** 處理可能發生的異常情況，例如使用者輸入非整數時，程式應該能夠給出友善的錯誤提示，而不是直接崩潰。
+*   **更清晰的輸入提示：**  更明確地引導使用者輸入資料，說明輸入結束的方式。
+*   **程式碼風格一致性：**  保持一致的程式碼風格，例如在 `ArrayList` 宣告時使用 Diamond Operator `<>`。
+*   **可讀性：** 程式碼整體可讀性不錯，但可以考慮適當添加空行，使程式碼更易於閱讀。
+
+總體來說，這是一份不錯的作業，程式功能正確，結構清晰。通過加入錯誤處理和改進輸入提示，程式的健壯性和使用者體驗可以得到進一步提升。請繼續保持良好的編碼習慣，並注重程式的細節處理。

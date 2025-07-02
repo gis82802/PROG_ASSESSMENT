@@ -1,0 +1,209 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- 備註（滿分20）：該程式包含對其功能的明確說明，但缺乏一些細節說明，如遊戲規則和玩家交互方式。分數：15
+- 格式（滿分25）：程式碼保持了適當的縮排和編碼風格，但有些地方可以更清晰。分數：20
+- 準確性（滿分25）：程式能夠產生正確的結果，但缺乏平局的判斷。分數：20
+- 邏輯（滿分30）：程式邏輯基本正確，但缺乏平局的判斷和一些邊界檢查。分數：25
+
+總分：80
+
+### 2. 根據我的標準分析它的優缺點
+
+#### 優點：
+1. **功能說明**：程式碼包含了對其功能的基本說明。
+2. **結構清晰**：程式碼結構清晰，類別和方法的分工明確。
+3. **基本功能實現**：實現了井字棋遊戲的基本功能，包括棋盤初始化、棋子放置和遊戲結束檢查。
+
+#### 缺點：
+1. **缺乏平局判斷**：程式碼未考慮平局的情況。
+2. **用戶交互不夠友好**：當用戶輸入非法位置時，提示信息不夠明確。
+3. **邊界檢查不足**：未充分檢查用戶輸入的合法性。
+4. **缺乏詳細說明**：對於遊戲規則和玩家交互方式的說明不夠詳細。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+ * Filename: TicTacToe
+ * Function: Making TicTacToe Game
+ * Author ID: 41143209
+ * Author: Chung Jen, Wang(王忠仁)
+ * Datetime: March 06, 2024
+ * Version: 1.0
+ */
+import java.util.Scanner;
+
+// 棋子
+class Piece {
+    private int row;
+    private int col;
+    private char symbol;
+
+    // constructor
+    public Piece(int row, int col, char symbol) {
+        this.row = row;
+        this.col = col;
+        this.symbol = symbol;
+    }
+
+    //取得橫行的位置
+    public int getRow() {
+        return row;
+    }
+
+    //取得直行的位置
+    public int getCol() {
+        return col;
+    }
+
+    // 取得O或X
+    public char getSymbol() {
+        return symbol;
+    }
+}
+
+// 棋盤
+class ChessBoard {
+    // 使用二維陣列儲存
+    private char[][] board;
+
+    public ChessBoard() {
+        board = new char[3][3];
+        initializeBoard();
+    }
+
+    // 初始化棋盤
+    private void initializeBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = '-';
+            }
+        }
+    }
+
+    // print棋盤
+    public void show() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public boolean placePiece(Piece piece) {
+        int row = piece.getRow();
+        int col = piece.getCol();
+        if (row < 0 || row >= 3 || col < 0 || col >= 3 || board[row][col] != '-') {
+            return false;
+        }
+        board[row][col] = piece.getSymbol();
+        return true;
+    }
+
+    // 檢查是否結束遊戲
+    public boolean checkGameOver() {
+        // 檢查橫行
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] != '-' && board[i][0] == board[i][1] && board[i][0] == board[i][2]) {
+                return true;
+            }
+        }
+        // 檢查直行
+        for (int j = 0; j < 3; j++) {
+            if (board[0][j] != '-' && board[0][j] == board[1][j] && board[0][j] == board[2][j]) {
+                return true;
+            }
+        }
+        // 檢查對角線
+        if (board[0][0] != '-' && board[0][0] == board[1][1] && board[0][0] == board[2][2]) {
+            return true;
+        }
+        if (board[0][2] != '-' && board[0][2] == board[1][1] && board[0][2] == board[2][0]) {
+            return true;
+        }
+        return false;
+    }
+
+    // 檢查是否平局
+    public boolean isDraw() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == '-') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+// 玩家
+class Player {
+    private char symbol;
+
+    public Player(char symbol) {
+        this.symbol = symbol;
+    }
+
+    public char getSymbol() {
+        return symbol;
+    }
+}
+
+public class TicTacToe {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ChessBoard board = new ChessBoard();
+        Player playerA = new Player('X');
+        Player playerB = new Player('O');
+        // 玩家A優先出手
+        Player currentPlayer = playerA;
+
+        board.show();
+
+        while (true) {
+            System.out.println("玩家 " + currentPlayer.getSymbol() + " 回合");
+            System.out.print("輸入位置(橫, 直): ");
+            int row = scanner.nextInt();
+            int col = scanner.nextInt();
+
+            if (row < 0 || row >= 3 || col < 0 || col >= 3) {
+                System.out.println("位置超出範圍，請重新輸入。");
+                continue;
+            }
+
+            Piece piece = new Piece(row, col, currentPlayer.getSymbol());
+            if (board.placePiece(piece)) {
+                board.show();
+                if (board.checkGameOver()) {
+                    System.out.println("玩家 " + currentPlayer.getSymbol() + " 獲勝!");
+                    break;
+                } else if (board.isDraw()) {
+                    System.out.println("遊戲平局!");
+                    break;
+                }
+                currentPlayer = (currentPlayer == playerA) ? playerB : playerA;
+            } else {
+                System.out.println("無效的移動，請重新輸入。");
+            }
+        }
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **增加平局判斷**：在 `ChessBoard` 類別中增加了 `isDraw` 方法，用於檢查是否所有格子都被填滿且沒有勝利者。
+2. **改進用戶交互**：在 `main` 方法中增加了對用戶輸入的邊界檢查，並給出更明確的提示信息。
+3. **修正遊戲結束判斷**：在遊戲迴圈中增加了對平局的判斷，並在遊戲結束時給出相應的提示信息。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加詳細說明**：在程式碼開頭增加更多詳細的說明，包括遊戲規則和玩家交互方式。
+2. **改進用戶交互**：提供更友好的用戶提示信息，並對非法輸入進行更詳細的檢查。
+3. **考慮更多邊界情況**：在程式設計中考慮更多的邊界情況，如用戶輸入的合法性檢查。
+4. **平局判斷**：在遊戲中考慮平局的情況，並給出相應的提示信息。
+5. **程式碼結構**：保持程式碼結構清晰，類別和方法的分工明確，便於後續的擴展和維護。

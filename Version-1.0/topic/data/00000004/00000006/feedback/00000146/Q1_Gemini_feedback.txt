@@ -1,0 +1,78 @@
+好的，作為您的助教，我將根據您的標準評估學生的作業，並提供修改建議。
+
+**1. 評分 (總分：85/100)**
+
+*   **備註 (18/20):**  程式碼開頭有對功能進行描述，但是描述可以更詳細，例如說明公式來源和程式的整體目標。
+*   **格式 (23/25):** 程式碼有基本的縮排，但變數名稱可以更具描述性，某些行的長度可能超過建議的長度限制。
+*   **準確性 (24/25):** 程式在大部分情況下能產生正確的結果，但在計算最小 i 值的部分可能因為步進值過大 (1000) 而導致結果不夠精確。
+*   **邏輯 (20/30):**  程式的整體邏輯是正確的，但calculatePi函數中計算 pi 的方式略有瑕疵，造成結果略為偏差。在while迴圈內以1000作為單位遞增i，會大幅降低效率。
+
+**2. 優缺點分析**
+
+*   **優點：**
+    *   程式碼結構清晰，分為 `main` 和 `calculatePi` 兩個函數，職責分明。
+    *   使用了 `for` 迴圈來計算不同 i 值下的 pi 值，並使用了 `while` 迴圈來尋找滿足特定精度的最小 i 值。
+    *   輸出的格式清晰易讀。
+*   **缺點：**
+    *   備註不夠完善，缺乏公式的詳細解釋。
+    *   `calculatePi` 函數的計算方式不是完全正確的，導致精度受到影響 (詳細見程式碼修改建議)。
+    *   尋找最小 i 值的 `while` 迴圈步進值太大，可能導致結果不精確，效率也不高。
+    *   變數名稱可以更具描述性，例如 `i` 可以改為 `iterations`，`j` 可以改為 `termIndex`。
+
+**3. 改進的程式碼**
+
+```java
+public class owoblue_java08 {
+    public static void main(String[] args) {
+		System.out.println("已知 Leibniz 公式 pi = 4 * (1 - 1/3 + 1/5 - 1/7 + 1/9 - ...)");
+		System.out.println("本程式計算當 i = 10000, 20000, ..., 100000 時，使用 Leibniz 公式計算出的 pi 值，並尋找要達到 pi ≈ 3.14159 所需的最小 i 值。");
+
+        for (int iterations = 10000; iterations <= 100000; iterations += 10000) {
+            double pi = calculatePi(iterations);
+            System.out.printf("i = %d, pi=%.5f%n", iterations, pi);
+        }
+
+        double targetPi = 3.14159;
+        double tolerance = 0.00001;
+        int iterations = 0;
+        double pi = 0.0;
+
+        while (Math.abs(pi - targetPi) >= tolerance) {
+            iterations++; // 每次迭代增加1
+            pi = calculatePi(iterations);
+        }
+
+        System.out.printf("若要得到 pi=3.14159, 最小的i值約為 %d%n", iterations);
+    }
+
+    public static double calculatePi(int iterations) {
+        double sum = 0.0;
+        for (int termIndex = 0; termIndex < iterations; termIndex++) { // 更改為小於iterations
+            sum += Math.pow(-1, termIndex) / (2.0 * termIndex + 1); // 使用 Math.pow 計算 (-1)^j
+        }
+        return 4 * sum;
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **`main` 函數：**
+    *   修改了 `while` 迴圈中 `i` 的更新方式，將 `i += 1000` 改為 `i++`。原因：原來的步進值過大，會導致找到的 i 值不夠精確，也影響效率。每次遞增 1 可以更準確地找到符合精度的最小 i 值。
+    *   將System.out.printf("若要得到 pi=3.14159,最小的i值約為 %d", i, pi); 中的pi刪除，因為此時不需要顯示 pi 值。
+*   **`calculatePi` 函數：**
+    *   將 `for` 迴圈的條件從 `j <= i` 修改為 `j < i`。原因：原來的程式碼在迴圈結束時會多計算一項，導致精度略有偏差。迴圈的目的是計算前 i 項的和，因此迴圈的條件應為 `j < i`。
+    *   將 `(j % 2 == 0 ? 1.0 : -1.0)` 修改為 `Math.pow(-1, termIndex)`。原因：更簡潔易懂，也更準確地表達了正負號交替的邏輯。使用 `Math.pow(-1, termIndex)` 可以直接計算 (-1) 的 `termIndex` 次方，避免了使用三元運算符的複雜性。
+    *   將 `2 * j + 1` 修改為 `2.0 * termIndex + 1`。原因：確保計算結果是浮點數，避免整數除法導致的精度損失。
+*   **變數名稱：**
+    *   將 `i` 改為 `iterations`，將 `j` 改為 `termIndex`。原因：使變數名稱更具描述性，增加程式碼的可讀性。
+
+**5. 改進建議和反饋**
+
+*   **備註：** 在程式碼的開頭添加更詳細的備註，說明公式的來源（Leibniz 公式）和程式的整體目標。 良好的備註可以幫助其他開發者更容易理解程式碼的功能和用途。
+*   **變數命名：** 儘量使用具有描述性的變數名稱，例如 `iterations` 代替 `i`，`termIndex` 代替 `j`。這可以提高程式碼的可讀性和可維護性。
+*   **精度：** 考慮使用更高精度的数据类型（例如 `BigDecimal`）来计算 pi 值，尤其是在需要非常高的精度时。
+*   **效率：** 可以嘗試使用其他更快的計算 pi 值的演算法，例如 Chudnovsky 演算法。
+*   **程式碼風格：** 保持一致的縮排和編碼風格，遵循 Java 的命名慣例。
+
+總的來說，學生的程式碼整體結構清晰，邏輯正確，但在細節方面還有改進的空間。 通過這次作業，學生可以學習到如何編寫更清晰、更準確、更有效率的程式碼。

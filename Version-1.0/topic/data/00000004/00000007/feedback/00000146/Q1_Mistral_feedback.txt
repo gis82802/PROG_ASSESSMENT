@@ -1,0 +1,142 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- 備註（滿分20）：10
+  - 該程式缺乏對其功能的明確說明。
+
+- 格式（滿分25）：15
+  - 縮排和編碼風格不夠整齊，部分代碼塊缺乏縮排。
+
+- 準確性（滿分25）：15
+  - 排序部分的結果正確，但後續的替代部分有錯誤。
+
+- 邏輯（滿分30）：15
+  - 排序邏輯正確，但替代部分的邏輯有誤。
+
+總分：55
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 基本的排序功能實現正確。
+2. 使用 `Scanner` 類來讀取用戶輸入。
+
+**缺點：**
+1. 缺乏對程式功能的明確說明。
+2. 代碼格式不夠整齊，縮排不一致。
+3. 替代部分的邏輯有誤，未能正確實現最大值和最小值替代。
+4. 變數命名不夠直觀，難以理解其用途。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class owoblue_java11 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("請輸入一維陣列的內數字(陣列大小為10):");
+
+        // 讀取陣列
+        int[] array = new int[10];
+        for (int i = 0; i < 10; i++) {
+            array[i] = scanner.nextInt();
+        }
+
+        // 顯示排序前陣列
+        System.out.print("陣列排序前:");
+        for (int i = 0; i < 10; i++) {
+            System.out.printf("%d ", array[i]);
+        }
+
+        // 排序陣列
+        for (int i = 0; i < 9; i++) {
+            for (int j = i + 1; j < 10; j++) {
+                if (array[i] < array[j]) {
+                    int temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+            }
+        }
+
+        // 顯示排序後陣列
+        System.out.print("\n陣列排序後:");
+        for (int i = 0; i < 10; i++) {
+            System.out.printf("%d ", array[i]);
+        }
+
+        // 讀取第二個陣列
+        System.out.println("\n請輸入一維陣列的內數字(陣列大小為10):");
+        int[] array2 = new int[10];
+        for (int i = 0; i < 10; i++) {
+            array2[i] = scanner.nextInt();
+        }
+
+        // 最大值替代
+        int[] maxArray = new int[10];
+        for (int i = 0; i < 10; i++) {
+            maxArray[i] = array2[i];
+        }
+        for (int i = 0; i < 9; i++) {
+            for (int j = i + 1; j < 10; j++) {
+                if (maxArray[i] < maxArray[j]) {
+                    maxArray[i] = maxArray[j];
+                }
+            }
+        }
+        maxArray[9] = -1;
+        System.out.print("\n陣列各元素後最大值替代(最後一項為-1):");
+        for (int i = 0; i < 10; i++) {
+            System.out.printf("%d ", maxArray[i]);
+        }
+
+        // 最小值替代
+        int[] minArray = new int[10];
+        for (int i = 0; i < 10; i++) {
+            minArray[i] = array2[i];
+        }
+        for (int i = 0; i < 9; i++) {
+            for (int j = i + 1; j < 10; j++) {
+                if (minArray[i] > minArray[j]) {
+                    minArray[i] = minArray[j];
+                }
+            }
+        }
+        minArray[9] = -1;
+        System.out.print("\n陣列各元素後最小值替代(最後一項為-1):");
+        for (int i = 0; i < 10; i++) {
+            System.out.printf("%d ", minArray[i]);
+        }
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名**：
+   - 將 `arg1`, `arg2`, `arg3`, `arg4` 分別改為 `array`, `array2`, `maxArray`, `minArray`，使變數名稱更具描述性。
+
+2. **格式與縮排**：
+   - 調整代碼格式，使縮排一致，增加可讀性。
+
+3. **邏輯修正**：
+   - 修正最大值和最小值替代部分的邏輯錯誤。原程式碼在替代部分未正確實現最大值和最小值替代，導致結果不正確。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加備註**：
+   - 在程式開頭增加對程式功能的簡要說明，讓讀者能夠快速了解程式的目的和功能。
+
+2. **變數命名**：
+   - 使用具描述性的變數名稱，使程式碼更具可讀性和可維護性。
+
+3. **格式與縮排**：
+   - 保持一致的縮排和編碼風格，使程式碼更易於閱讀和理解。
+
+4. **邏輯檢查**：
+   - 在編寫程式時，仔細檢查邏輯是否正確，特別是在處理數組和數據替代時。
+
+5. **測試與調試**：
+   - 編寫完程式後，進行多次測試，確保程式在各種輸入情況下都能正確運行。
+
+希望這些建議能幫助學生改進程式設計能力。

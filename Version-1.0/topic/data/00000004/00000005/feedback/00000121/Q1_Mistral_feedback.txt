@@ -1,0 +1,116 @@
+### 1. 打分
+根據您的標準，這份作業的分數如下：
+
+- **備註 (滿分20)**: 15
+  - 程式包含了對其功能的說明，但缺乏對某些計算步驟的詳細解釋。
+
+- **格式 (滿分25)**: 20
+  - 程式碼縮排和編碼風格基本上是適當的，但可以進一步改進。
+
+- **準確性 (滿分25)**: 20
+  - 程式大部分計算是正確的，但有些計算方法需要修正。
+
+- **邏輯 (滿分30)**: 25
+  - 程式邏輯基本正確，但在計算向量夾角和切比雪夫距離時有些問題。
+
+總分：80
+
+### 2. 優缺點分析
+
+**優點：**
+1. 程式碼結構清晰，各個計算步驟分開處理。
+2. 使用了適當的數學公式來計算各種距離和向量夾角。
+3. 對垂直線情況進行了處理。
+
+**缺點：**
+1. 缺乏對某些計算步驟的詳細說明。
+2. 計算向量夾角時，內積和向量大小的計算有誤。
+3. 切比雪夫距離的計算方法不正確。
+4. 未計算 Minkowski 距離。
+
+### 3. 改進的程式碼
+
+```java
+import java.util.Scanner; // 引入 Scanner 類別以便從控制台讀取輸入
+
+public class test1 {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in); // 創建 Scanner 物件以讀取用戶輸入
+
+        // 提示用戶輸入第一個點的座標
+        System.out.println("請輸入第一個點的座標 x1, y1:");
+        double x1 = scanner.nextDouble(); // 讀取 x1 座標
+        double y1 = scanner.nextDouble(); // 讀取 y1 座標
+
+        // 提示用戶輸入第二個點的座標
+        System.out.println("請輸入第二個點的座標 x2, y2:");
+        double x2 = scanner.nextDouble(); // 讀取 x2 座標
+        double y2 = scanner.nextDouble(); // 讀取 y2 座標
+
+        // 計算並顯示直線方程式
+        if (x1 != x2) { // 確保不為垂直線
+            double m = (y2 - y1) / (x2 - x1); // 計算斜率 m
+            double b = y1 - m * x1; // 計算截距 b
+            System.out.println("直線方程式為: y = " + m + "x + " + b); // 輸出直線方程式
+        } else {
+            System.out.println("直線方程式為: x = " + x1); // 垂直線情況的提示
+        }
+
+        // 計算歐式距離
+        double euclideanDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        System.out.println("歐式距離: " + euclideanDistance); // 輸出歐式距離
+
+        // 計算曼哈頓距離
+        double manhattanDistance = Math.abs(x2 - x1) + Math.abs(y2 - y1);
+        System.out.println("曼哈頓距離: " + manhattanDistance); // 輸出曼哈頓距離
+
+        // 計算 Minkowski 距離 (p=3)
+        double p = 3;
+        double minkowskiDistance = Math.pow(Math.pow(Math.abs(x2 - x1), p) + Math.pow(Math.abs(y2 - y1), p), 1.0 / p);
+        System.out.println("Minkowski 距離 (p=3): " + minkowskiDistance); // 輸出 Minkowski 距離
+
+        // 計算切比雪夫距離
+        double chebyshevDistance = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+        System.out.println("切比雪夫距離: " + chebyshevDistance); // 輸出切比雪夫距離
+
+        // 計算兩個向量的夾角
+        double dotProduct = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1); // 計算內積
+        double magnitudeA = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)); // 計算向量 A 的大小
+        double magnitudeB = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)); // 計算向量 B 的大小
+        double cosTheta = dotProduct / (magnitudeA * magnitudeB); // 計算 cos(θ)
+        double angle = Math.acos(cosTheta) * (180 / Math.PI); // 將弧度轉換為度數
+        System.out.println("向量夾角 (度數): " + angle); // 輸出向量夾角
+    }
+}
+```
+
+### 4. 說明改進的程式碼
+
+1. **直線方程式**：
+   - 修正了垂直線情況的提示，改為輸出 `x = x1`。
+
+2. **Minkowski 距離**：
+   - 添加了 Minkowski 距離的計算，並設定 `p = 3`。
+
+3. **切比雪夫距離**：
+   - 修正了切比雪夫距離的計算方法。
+
+4. **向量夾角**：
+   - 修正了內積和向量大小的計算方法。
+
+### 5. 改進建議和反饋
+
+1. **詳細說明**：
+   - 在程式碼中添加更多的註釋，解釋每一步的計算方法和公式。
+
+2. **格式**：
+   - 保持一致的縮排和編碼風格，確保程式碼易讀。
+
+3. **邏輯**：
+   - 確保所有計算方法的正確性，特別是向量夾角和距離的計算。
+
+4. **完整性**：
+   - 確保所有要求的功能都已實現，例如 Minkowski 距離的計算。
+
+希望這些建議能幫助學生改進他們的程式碼，並在未來的作業中取得更好的成績。

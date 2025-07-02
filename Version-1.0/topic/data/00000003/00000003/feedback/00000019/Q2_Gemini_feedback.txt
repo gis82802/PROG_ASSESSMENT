@@ -1,0 +1,245 @@
+好的，教授。我將根據您的標準對學生的作業進行評分、分析、改進並提供反饋。
+
+**1. 評分：**
+
+*   **備註 (15/20):** 程式有 `printMatrix`、`invertMatrix` 函數的說明，但主函式 `main` 及其他函數缺少說明，整體說明稍嫌不足。
+*   **格式 (22/25):** 程式碼縮排良好，風格一致，易於閱讀。變數命名大部分情況下清晰，但缺少 final 常數的使用。
+*   **準確性 (23/25):** 程式能夠計算大部分矩陣的逆矩陣，並驗證其結果。但在處理一些特殊矩陣（如行列式接近於0的矩陣）時，可能由於浮點數精度問題而產生誤差。
+*   **邏輯 (25/30):** 程式的邏輯基本正確，使用高斯-喬丹消元法計算逆矩陣，並驗證其結果。但是，高斯消去法對於輸入的限制是方陣，而且需要判斷矩陣是否可逆。另外沒有針對2x2矩陣優化。
+
+**總分：85/100**
+
+**2. 優缺點分析：**
+
+**優點：**
+
+*   **程式碼可讀性高：** 縮排良好，變數命名清晰。
+*   **功能完整：** 實現了矩陣求逆、矩陣乘法和結果驗證。
+*   **異常處理：** 捕獲了矩陣不可逆的異常。
+*   **模組化：** 將不同的功能劃分為獨立的函數。
+
+**缺點：**
+
+*   **缺乏針對2x2矩陣的優化**: `invertMatrix` 函數使用了通用的高斯消去法，沒有針對2x2矩陣進行優化，效率上有所欠缺。
+*   **輸入限制**: 限制輸入必須為方陣，沒有對2x2矩陣做限制
+*   **註釋不足：** 部分函數和程式碼塊缺少註釋，不利於理解程式的意圖。
+*   **浮點數精度問題：** 在處理某些矩陣時，可能由於浮點數精度問題而產生誤差。
+*   **缺乏輸入驗證：** 沒有對使用者輸入的合法性進行驗證，例如矩陣大小是否為正數。
+*   **沒有使用 final 常數**: 可以使用 final 常數來增加程式可讀性，並避免魔法數字。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Scanner;
+
+public class MatInverse {
+
+    private static final double EPSILON = 1e-10; // 浮點數比較的容差值
+
+    /**
+     * 打印矩陣
+     * @param matrix 要打印的矩陣
+     */
+    public static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            for (double value : row) {
+                System.out.printf("%8.4f ", value);
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * 計算 2x2 矩陣的逆矩陣
+     * @param matrix 要計算逆矩陣的 2x2 矩陣
+     * @return 逆矩陣，如果矩陣不可逆則返回 null
+     */
+    public static double[][] invMatrix(double[][] matrix) {
+        // 檢查是否為 2x2 矩陣
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            throw new IllegalArgumentException("矩陣必須是 2x2");
+        }
+
+        double determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        // 檢查行列式是否為 0
+        if (Math.abs(determinant) < EPSILON) {
+            System.out.println("矩陣不可逆");
+            return null;
+        }
+
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] / determinant;
+        inverse[0][1] = -matrix[0][1] / determinant;
+        inverse[1][0] = -matrix[1][0] / determinant;
+        inverse[1][1] = matrix[0][0] / determinant;
+
+        return inverse;
+    }
+    /**
+     * 計算矩陣的逆矩陣
+     * @param matrix 要計算逆矩陣的矩陣
+     * @return 逆矩陣
+     * @throws ArithmeticException 如果矩陣不可逆
+     */
+    public static double[][] invertMatrix(double[][] matrix) {
+        int n = matrix.length;
+        double[][] augmentedMatrix = new double[n][2 * n];
+
+        // 初始化擴展矩陣 (原始矩陣 | 單位矩陣)
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(matrix[i], 0, augmentedMatrix[i], 0, n);
+            augmentedMatrix[i][i + n] = 1; // 對角線為1
+        }
+
+        // 高斯-喬丹消元法
+        for (int i = 0; i < n; i++) {
+            double diagElement = augmentedMatrix[i][i];
+            if (Math.abs(diagElement) < EPSILON) {
+                throw new ArithmeticException("矩陣不可逆");
+            }
+            for (int j = 0; j < 2 * n; j++) {
+                augmentedMatrix[i][j] /= diagElement; // 將對角線元素化為1
+            }
+
+            for (int k = 0; k < n; k++) {
+                if (k != i) {
+                    double factor = augmentedMatrix[k][i];
+                    for (int j = 0; j < 2 * n; j++) {
+                        augmentedMatrix[k][j] -= factor * augmentedMatrix[i][j]; // 消元
+                    }
+                }
+            }
+        }
+
+        double[][] inverseMatrix = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(augmentedMatrix[i], n, inverseMatrix[i], 0, n);
+        }
+
+        return inverseMatrix;
+    }
+
+    /**
+     * 讀取使用者輸入的矩陣
+     * @param scanner Scanner 物件
+     * @return 使用者輸入的矩陣
+     */
+    public static double[][] readMatrix(Scanner scanner) {
+        System.out.println("請輸入矩陣的行/列數 (方陣)：");
+        int n = scanner.nextInt();
+
+        double[][] matrix = new double[n][n];
+        System.out.println("請輸入矩陣的元素 (以空格分隔)：");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        return matrix;
+    }
+
+    /**
+     * 驗證矩陣乘法結果
+     * @param A 原始矩陣
+     * @param B 逆矩陣
+     */
+    public static void verifyInverse(double[][] A, double[][] B) {
+        double[][] identity = multiplyMatrices(A, B);
+        System.out.println("矩陣 A 和其逆矩陣的乘積是：");
+        printMatrix(identity);
+
+        // 檢查結果是否為單位矩陣
+        boolean isIdentity = true;
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < A.length; j++) {
+                double expectedValue = (i == j) ? 1.0 : 0.0;
+                if (Math.abs(identity[i][j] - expectedValue) > EPSILON) {
+                    isIdentity = false;
+                    break;
+                }
+            }
+            if (!isIdentity) {
+                break;
+            }
+        }
+
+        if (isIdentity) {
+            System.out.println("驗證通過：矩陣 A 和其逆矩陣的乘積是單位矩陣。");
+        } else {
+            System.out.println("驗證失敗：矩陣 A 和其逆矩陣的乘積不是單位矩陣。");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 讀取矩陣
+        double[][] A = readMatrix(scanner);
+
+        // 進行2x2矩陣的求逆
+        if (A.length == 2 && A[0].length == 2) {
+             double[][] inverse = invMatrix(A);
+             if (inverse != null) {
+                 System.out.println("矩陣的逆矩陣是：");
+                 printMatrix(inverse);
+                 // 進行矩陣乘法
+                 verifyInverse(A, inverse);
+             }
+        }
+        else{
+            try {
+                // 計算矩陣的逆
+                double[][] inverse = invertMatrix(A);
+                System.out.println("矩陣的逆矩陣是：");
+                printMatrix(inverse);
+
+                // 進行矩陣乘法
+                 verifyInverse(A, inverse);
+            } catch (ArithmeticException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * 計算矩陣乘法
+     * @param A 矩陣 A
+     * @param B 矩陣 B
+     * @return 矩陣 A 和矩陣 B 的乘積
+     */
+    public static double[][] multiplyMatrices(double[][] A, double[][] B) {
+        int n = A.length;
+        double[][] result = new double[n][n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < n; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **新增 `invMatrix` 函數**: 專門計算2x2矩陣的反矩陣，邏輯更簡潔高效。
+*   **增加對2x2矩陣的判斷**: 在 `main` 函數中增加判斷矩陣為2x2的邏輯，如果是則調用 `invMatrix` 函數，否則調用原來的 `invertMatrix` 函數。
+*   **增加註釋：** 為每個函數添加了詳細的註釋，說明其功能、參數和返回值。
+*   **引入 `EPSILON` 常數：** 用於浮點數比較，避免直接使用 `==` 運算符，提高程式的健壯性。
+*   **修改異常處理：** 在 `invMatrix` 函數中，如果行列式為0，則返回 `null`，並在 `main` 函數中進行判斷。
+*   **增加結果驗證：** 在 `main` 函數中，使用 `verifyInverse` 函數驗證矩陣乘法結果是否為單位矩陣，並輸出驗證結果。
+
+**5. 改進建議和反饋：**
+
+*   **程式碼風格：** 程式碼風格良好，但可以嘗試使用更簡潔的語法和更具描述性的變數名。
+*   **演算法：** 可以學習和使用更高效的矩陣求逆演算法，例如LU分解。
+*   **測試：** 編寫單元測試，以驗證程式的正確性。
+*   **使用者體驗：** 可以在程式中添加更多的使用者提示，例如輸入格式說明、錯誤提示等。
+*   **總結：** 總體而言，這是一份不錯的作業。程式碼結構清晰，功能完整，但仍有提升空間。希望你能繼續努力，學習更多關於矩陣運算的知識，並將其應用到實際的程式設計中。
+
+希望這些資訊對您有所幫助！

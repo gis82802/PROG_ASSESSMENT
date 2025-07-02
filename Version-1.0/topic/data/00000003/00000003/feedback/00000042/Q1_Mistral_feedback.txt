@@ -1,0 +1,118 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註 (滿分20)**：該程式包含了對其功能的明確說明，但缺乏詳細的註釋來解釋每一步驟的邏輯。15分。
+- **格式 (滿分25)**：程式碼保持了適當的縮排和編碼風格，但有些地方可以進一步優化，例如變數名稱的命名。20分。
+- **準確性 (滿分25)**：程式能夠正確地執行矩陣乘法，並且在矩陣大小不匹配時回傳 null。25分。
+- **邏輯 (滿分30)**：程式邏輯基本正確，但在矩陣乘法的初始化部分有一個小錯誤，結果矩陣應該在每次內層迴圈開始前重置為0。20分。
+
+總分：80分
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式能夠正確地執行矩陣乘法。
+2. 在矩陣大小不匹配時回傳 null，這是一個良好的錯誤處理機制。
+3. 程式碼結構清晰，易於理解。
+
+**缺點：**
+1. 缺乏詳細的註釋來解釋每一步驟的邏輯。
+2. 變數名稱可以更具描述性，例如 `rows1` 和 `cols1` 可以改為 `matrix1Rows` 和 `matrix1Cols`。
+3. 結果矩陣在初始化時應該重置為0，以避免錯誤的結果。
+
+### 3. 為學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class ch7_1_1 {
+
+    // 矩陣乘法函數
+    public static double[][] MatMultiply(double[][] mat1, double[][] mat2) {
+        int matrix1Rows = mat1.length;
+        int matrix1Cols = mat1[0].length;
+        int matrix2Rows = mat2.length;
+        int matrix2Cols = mat2[0].length;
+
+        // 檢查兩矩陣是否可進行乘法運算
+        if (matrix1Cols != matrix2Rows) {
+            return null; // 若無法乘，返回null
+        }
+
+        // 創建結果矩陣
+        double[][] result = new double[matrix1Rows][matrix2Cols];
+
+        // 執行矩陣乘法
+        for (int i = 0; i < matrix1Rows; i++) {
+            for (int j = 0; j < matrix2Cols; j++) {
+                result[i][j] = 0; // 初始化結果矩陣的元素為0
+                for (int k = 0; k < matrix1Cols; k++) {
+                    result[i][j] += mat1[i][k] * mat2[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入第一個矩陣
+        System.out.println("請輸入第一個矩陣的行數與列數：");
+        int matrix1Rows = scanner.nextInt();
+        int matrix1Cols = scanner.nextInt();
+        double[][] mat1 = new double[matrix1Rows][matrix1Cols];
+
+        System.out.println("請輸入第一個矩陣的元素：");
+        for (int i = 0; i < matrix1Rows; i++) {
+            for (int j = 0; j < matrix1Cols; j++) {
+                mat1[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 輸入第二個矩陣
+        System.out.println("請輸入第二個矩陣的行數與列數：");
+        int matrix2Rows = scanner.nextInt();
+        int matrix2Cols = scanner.nextInt();
+        double[][] mat2 = new double[matrix2Rows][matrix2Cols];
+
+        System.out.println("請輸入第二個矩陣的元素：");
+        for (int i = 0; i < matrix2Rows; i++) {
+            for (int j = 0; j < matrix2Cols; j++) {
+                mat2[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 執行矩陣乘法
+        double[][] product = MatMultiply(mat1, mat2);
+
+        // 輸出結果
+        if (product != null) {
+            System.out.println("矩陣乘法結果:");
+            for (int i = 0; i < product.length; i++) {
+                for (int j = 0; j < product[0].length; j++) {
+                    System.out.printf("%.2f ", product[i][j]);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("這兩個矩陣無法相乘");
+        }
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數名稱改進**：將 `rows1` 和 `cols1` 改為 `matrix1Rows` 和 `matrix1Cols`，使變數名稱更具描述性，易於理解。
+2. **結果矩陣初始化**：在每次內層迴圈開始前重置結果矩陣的元素為0，以避免錯誤的結果。
+3. **增加註釋**：在關鍵步驟增加註釋，解釋每一步驟的邏輯。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **增加註釋**：在程式碼中增加更多的註釋，解釋每一步驟的邏輯，這樣可以讓其他人更容易理解你的程式碼。
+2. **變數命名**：使用更具描述性的變數名稱，這樣可以提高程式碼的可讀性。
+3. **初始化結果矩陣**：在每次內層迴圈開始前重置結果矩陣的元素為0，以避免錯誤的結果。
+4. **錯誤處理**：在矩陣大小不匹配時回傳 null 是一個良好的錯誤處理機制，但可以考慮增加更多的錯誤處理，例如檢查輸入的矩陣是否為空。
+5. **測試**：多進行測試，確保程式在各種情況下都能正確運行。

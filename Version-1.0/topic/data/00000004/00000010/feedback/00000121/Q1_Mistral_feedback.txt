@@ -1,0 +1,142 @@
+好的，根據您的標準，我將對這份作業進行評分並提供改進建議。
+
+### 1. 評分
+- **備註 (滿分20)**: 15
+  - 該程式包含了對其功能的一些說明，但說明不夠明確，缺乏詳細的註釋。
+
+- **格式 (滿分25)**: 20
+  - 程式碼保持了適當的縮排和編碼風格，但有些部分的變數名稱和註釋不夠直觀。
+
+- **準確性 (滿分25)**: 25
+  - 程式能夠正確地計算矩陣相乘和反矩陣，並且在矩陣大小不匹配時回傳 null。
+
+- **邏輯 (滿分30)**: 25
+  - 程式邏輯基本正確，但在某些地方可以進一步優化和改進。
+
+**總分**: 85
+
+### 2. 分析優缺點
+- **優點**:
+  - 程式能夠正確地計算矩陣相乘和反矩陣。
+  - 在矩陣大小不匹配時回傳 null，這是正確的處理方式。
+  - 程式碼結構清晰，易於閱讀和理解。
+
+- **缺點**:
+  - 缺乏詳細的註釋和說明，使得程式碼的可讀性和可維護性較差。
+  - 某些變數名稱不夠直觀，例如 `matrix1` 和 `matrix2` 可以改為 `matA` 和 `matB`。
+  - 在輸入矩陣時，沒有檢查輸入的合法性，例如矩陣必須是 2x2 的。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class hw1 {
+
+    // 矩陣相乘函式
+    public static double[][] MatMultiply(double[][] matA, double[][] matB) {
+        int rowsA = matA.length;
+        int colsA = matA[0].length;
+        int rowsB = matB.length;
+        int colsB = matB[0].length;
+
+        // 檢查矩陣是否可以相乘
+        if (colsA != rowsB) {
+            return null;
+        }
+
+        double[][] result = new double[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += matA[i][k] * matB[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // 反矩陣函式（2x2 矩陣）
+    public static double[][] invMatrix(double[][] matrix) {
+        if (matrix.length != 2 || matrix[0].length != 2) {
+            return null; // 不是 2x2 矩陣
+        }
+
+        double det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        if (det == 0) {
+            return null; // 行列式為零，無法求反矩陣
+        }
+
+        double invDet = 1.0 / det;
+
+        double[][] inverse = new double[2][2];
+        inverse[0][0] = matrix[1][1] * invDet;
+        inverse[0][1] = -matrix[0][1] * invDet;
+        inverse[1][0] = -matrix[1][0] * invDet;
+        inverse[1][1] = matrix[0][0] * invDet;
+
+        return inverse;
+    }
+
+    // 列印矩陣函式
+    public static void printMatrix(double[][] matrix) {
+        if (matrix == null) {
+            System.out.println("無法計算");
+            return;
+        }
+        for (double[] row : matrix) {
+            for (double val : row) {
+                System.out.printf("%10.4f ", val);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入 2x2 矩陣
+        System.out.println("請輸入 2x2 矩陣：");
+        double[][] matrix = new double[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.print("matrix[" + i + "][" + j + "] = ");
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+
+        // 列印輸入的矩陣
+        System.out.println("輸入的矩陣：");
+        printMatrix(matrix);
+
+        // 計算反矩陣
+        double[][] inverseMatrix = invMatrix(matrix);
+        System.out.println("反矩陣：");
+        printMatrix(inverseMatrix);
+
+        // 檢查反矩陣是否正確
+        if (inverseMatrix != null) {
+            double[][] identityMatrix = MatMultiply(matrix, inverseMatrix);
+            System.out.println("矩陣 * 反矩陣：");
+            printMatrix(identityMatrix);
+        }
+
+        scanner.close();
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+- **變數命名**：將 `matrix1` 和 `matrix2` 改為 `matA` 和 `matB`，使變數名稱更直觀。
+- **註釋**：增加了更多的註釋，使程式碼更易於理解。
+- **輸入檢查**：在輸入矩陣時，增加了檢查輸入的合法性，確保矩陣必須是 2x2 的。
+
+### 5. 改進建議和反饋
+- **註釋和說明**：請在程式碼中加入更多的註釋和說明，使程式碼更易於理解和維護。
+- **變數命名**：請使用更直觀的變數名稱，使程式碼更易於閱讀。
+- **輸入檢查**：在輸入矩陣時，請加入檢查輸入的合法性，確保矩陣必須是 2x2 的。
+- **測試**：請進行更多的測試，確保程式在不同的輸入情況下都能正確運行。
+
+希望這些建議能夠幫助您的學生改進他們的程式碼。如果有任何其他問題，請隨時告訴我。

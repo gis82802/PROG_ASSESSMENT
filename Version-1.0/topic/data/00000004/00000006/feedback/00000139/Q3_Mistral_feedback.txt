@@ -1,0 +1,88 @@
+好的，讓我們根據您的標準來評估這份作業。
+
+### 1. 打分
+- **備註 (滿分20)**: 該程式包含了對其功能的明確說明，但缺乏對變數和邏輯的詳細解釋。得分: 15
+- **格式 (滿分25)**: 程式碼保持了適當的縮排和編碼風格，但缺乏一些細節的註解。得分: 20
+- **準確性 (滿分25)**: 程式能夠正確地反轉數字，但未處理負數的情況。得分: 20
+- **邏輯 (滿分30)**: 程式邏輯基本正確，但未考慮到負數的處理。得分: 25
+
+總分: 80
+
+### 2. 分析優缺點
+**優點:**
+- 程式碼結構清晰，適當地使用了函數來分離邏輯。
+- 使用了迴圈來反轉數字，這是正確的方法。
+
+**缺點:**
+- 未處理負數的情況。
+- 缺乏對變數和邏輯的詳細註解。
+- 未考慮到數字反轉後可能超出整數範圍的情況。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class ReverseNumber {
+    public static void main(String[] args) {
+        // Create a Scanner object to take input from the user
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt the user to enter a number
+        System.out.print("Enter a number: ");
+        int number = scanner.nextInt();
+
+        // Call the reverseNumber method to reverse the input number
+        int reversed = reverseNumber(number);
+
+        // Display the reversed number
+        System.out.println("Reversed number: " + reversed);
+
+        // Close the scanner to prevent resource leaks
+        scanner.close();
+    }
+
+    // Method to reverse a given integer number
+    public static int reverseNumber(int num) {
+        int reversed = 0;
+        boolean isNegative = false;
+
+        // Check if the number is negative
+        if (num < 0) {
+            isNegative = true;
+            num = -num;
+        }
+
+        // Loop until all digits of the number are processed
+        while (num != 0) {
+            // Extract the last digit of the number
+            int digit = num % 10;
+
+            // Check for overflow before multiplying
+            if (reversed > (Integer.MAX_VALUE - digit) / 10) {
+                throw new IllegalArgumentException("Reversed number is out of integer range.");
+            }
+
+            // Add the digit to the reversed number after shifting previous digits to the left
+            reversed = reversed * 10 + digit;
+
+            // Remove the last digit from the original number
+            num /= 10;
+        }
+
+        // Return the reversed number, considering the original sign
+        return isNegative ? -reversed : reversed;
+    }
+}
+```
+
+### 4. 說明改進的部分及原因
+- **處理負數**: 新增了一個變數 `isNegative` 來判斷輸入的數字是否為負數，並在反轉後恢復其符號。
+- **檢查溢出**: 在每次反轉數字時，檢查是否會超出整數範圍，以避免溢出錯誤。
+- **詳細註解**: 新增了更多註解，以便更好地理解程式碼的邏輯。
+
+### 5. 改進建議和反饋
+- **處理負數**: 在未來的程式設計中，記得考慮到負數的情況，這樣可以讓程式更加健壯。
+- **檢查溢出**: 在進行數字操作時，特別是涉及到乘法和加法的情況下，應該檢查是否會超出數據類型的範圍。
+- **詳細註解**: 為程式碼新增更多的註解，特別是對於邏輯和變數的解釋，這樣可以讓其他人更容易理解你的程式碼。
+
+希望這些建議能夠幫助你的學生改進他們的程式設計技能。

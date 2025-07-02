@@ -1,0 +1,89 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註 (20分)**：該程式包含對其功能的明確說明，但缺乏對程式流程的詳細描述。15分。
+- **格式 (25分)**：程式保持了基本的縮排和編碼風格，但部分註解和變數命名不夠清晰。20分。
+- **準確性 (25分)**：程式在某些情況下能正確運行，但對於輸入的數字為0或負數的情況未處理。15分。
+- **邏輯 (30分)**：程式邏輯基本正確，但在處理數字反轉時未考慮到0的情況。20分。
+
+總分：70分
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式基本能夠反轉輸入的數字。
+2. 使用了陣列來存儲數字，並通過迴圈反轉輸出。
+3. 包含一些基本的註解，說明了程式的功能。
+
+**缺點：**
+1. 變數命名不夠直觀，如 `a` 和 `t` 未能清楚表達其用途。
+2. 未處理輸入為0或負數的情況。
+3. 註解不夠詳細，未能完全解釋程式的流程。
+4. 將數字轉換為字串後，未考慮到字串的長度可能超過陣列的預設長度（10）。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+/*
+	作業三：反著輸出
+	資工二乙	41243202	林沛慧
+	功能：請使用者輸入一個數字，程式結束後會輸出會是他的反過來
+*/
+import java.util.Scanner;
+
+public class w3
+{
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+
+		// 輸入
+		System.out.print("請輸入一個數字，我將把它反過來：");
+		int inputNumber = sc.nextInt();
+
+		// 處理負數
+		boolean isNegative = false;
+		if (inputNumber < 0) {
+			isNegative = true;
+			inputNumber = -inputNumber;
+		}
+
+		// 將數字轉換為字串
+		String numberString = Integer.toString(inputNumber);
+
+		// 反轉字串
+		String reversedNumberString = new StringBuilder(numberString).reverse().toString();
+
+		// 輸出結果
+		System.out.print("反過來是：");
+		if (isNegative) {
+			System.out.print("-");
+		}
+		System.out.println(reversedNumberString);
+	}
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **變數命名更直觀**：
+   - `a` 改為 `numberArray`
+   - `t` 改為 `isNegative`
+   - `x` 改為 `inputNumber`
+   - `number` 改為 `numberString`
+
+2. **處理負數**：
+   - 新增 `isNegative` 變數來處理負數情況。
+
+3. **使用 `StringBuilder` 反轉字串**：
+   - 使用 `StringBuilder` 的 `reverse` 方法來反轉字串，代替手動反轉陣列的方法。
+
+4. **輸出結果時處理負數**：
+   - 在輸出結果時，根據 `isNegative` 變數來決定是否需要輸出負號。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **變數命名**：請確保變數名稱能夠清楚表達其用途，這樣能夠提高程式的可讀性。
+2. **完整註解**：註解應該更詳細，解釋程式的每一步驟，尤其是關鍵邏輯部分。
+3. **處理特殊情況**：在處理輸入時，應該考慮到所有可能的情況，如0和負數。
+4. **使用適當的工具**：Java提供了許多方便的工具類，如 `StringBuilder`，可以簡化程式邏輯。
+5. **測試多種輸入**：在測試程式時，應該考慮多種不同的輸入情況，確保程式在所有情況下都能正確運行。

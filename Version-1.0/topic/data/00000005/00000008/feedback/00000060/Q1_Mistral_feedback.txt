@@ -1,0 +1,123 @@
+根據您的標準，我將對這份作業進行評分和分析。
+
+### 1. 評分
+- **備註 (滿分20)**：該程式包含對其功能的明確說明，但說明不夠詳細，缺乏對成員函式的具體說明。分數：15
+- **格式 (滿分25)**：程式碼縮排和編碼風格基本遵循，但部分地方可以改進。分數：20
+- **準確性 (滿分25)**：程式在執行過程中有一些邏輯錯誤，特別是在新增產品和計算庫存價值部分。分數：15
+- **邏輯 (滿分30)**：程式的邏輯部分有些錯誤，特別是在新增產品和計算庫存價值部分。分數：20
+
+總分：70
+
+### 2. 優缺點分析
+**優點：**
+1. 程式碼結構清晰，基本實現了庫存管理的功能。
+2. 使用了靜態內部類來實現Inventory類，這是一個不錯的設計選擇。
+3. 提供了基本的庫存管理功能，如新增產品、減少產品、新增數量、減少數量、計算庫存價值。
+
+**缺點：**
+1. 新增產品的邏輯不夠清晰，特別是在處理產品編號時。
+2. 計算庫存價值的邏輯有誤，應該是計算整個庫存的總價值，而不是單個產品的總價值。
+3. 缺乏對使用者輸入的處理，容易導致程式崩潰。
+4. 成員函式的說明不夠詳細，缺乏對參數和返回值的說明。
+5. 程式碼中有一些冗餘的變數和邏輯，可以進一步簡化。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;
+
+public class hw1 {
+    public static void main(String args[]) {
+        Inventory drink = new Inventory(3);
+        Inventory mobile = new Inventory(3);
+
+        drink.newProduct("飲料A", 10, 5);
+        drink.newProduct("飲料B", 15, 7);
+        drink.newProduct("飲料C", 20, 9);
+
+        mobile.newProduct("手機A", 5, 1000);
+        mobile.newProduct("手機B", 3, 1500);
+        mobile.newProduct("手機C", 7, 2000);
+
+        System.out.println("飲料店庫存價值: " + drink.getTotalInventoryValue());
+        System.out.println("3C手機店庫存價值: " + mobile.getTotalInventoryValue());
+    }
+
+    static class Inventory {
+        Scanner scn = new Scanner(System.in);
+        String[] productName;
+        int[] productQuantity;
+        int[] productPrice;
+        int counter = 0;
+
+        public Inventory(int number) {
+            productName = new String[number];
+            productQuantity = new int[number];
+            productPrice = new int[number];
+        }
+
+        public boolean newProduct(String name, int quantity, int price) {
+            if (counter < productName.length) {
+                productName[counter] = name;
+                productQuantity[counter] = quantity;
+                productPrice[counter] = price;
+                counter += 1;
+                return true;
+            }
+            return false;
+        }
+
+        public boolean delProduct(int index) {
+            if (index < counter) {
+                for (int i = index; i < counter - 1; i++) {
+                    productName[i] = productName[i + 1];
+                    productQuantity[i] = productQuantity[i + 1];
+                    productPrice[i] = productPrice[i + 1];
+                }
+                counter -= 1;
+                return true;
+            }
+            return false;
+        }
+
+        public boolean increaseQuantity(int index) {
+            if (index < counter) {
+                productQuantity[index] += 1;
+                return true;
+            }
+            return false;
+        }
+
+        public boolean decreaseQuantity(int index) {
+            if (index < counter && productQuantity[index] > 0) {
+                productQuantity[index] -= 1;
+                return true;
+            }
+            return false;
+        }
+
+        public int getTotalInventoryValue() {
+            int totalValue = 0;
+            for (int i = 0; i < counter; i++) {
+                totalValue += productQuantity[i] * productPrice[i];
+            }
+            return totalValue;
+        }
+    }
+}
+```
+
+### 4. 修改部分及原因
+1. **新增產品的邏輯**：改進了新增產品的邏輯，使其更直觀且易於理解。
+2. **計算庫存價值**：修正了計算庫存價值的邏輯，使其能夠計算整個庫存的總價值。
+3. **刪除產品**：改進了刪除產品的邏輯，使其更簡潔。
+4. **增加和減少數量**：改進了增加和減少數量的邏輯，使其更簡潔。
+5. **主程式中的庫存物件**：增加了3C手機店的庫存物件，並在主程式中進行了初始化和測試。
+
+### 5. 改進建議和反饋
+1. **增加使用者輸入處理**：在新增產品和其他操作中，增加對使用者輸入的處理，避免程式崩潰。
+2. **增加成員函式的說明**：為每個成員函式增加詳細的說明，包括參數和返回值的說明。
+3. **簡化邏輯**：在可能的情況下，簡化邏輯，使程式碼更易於理解和維護。
+4. **增加測試**：在主程式中增加更多的測試，檢查各個功能是否正常運行。
+5. **使用集合**：考慮使用Java的集合（如ArrayList）來管理產品，這樣可以更靈活地管理庫存。
+
+希望這些建議和反饋能夠幫助學生進一步改進他們的程式碼。

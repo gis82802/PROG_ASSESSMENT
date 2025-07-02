@@ -1,0 +1,103 @@
+好的，讓我們根據您的標準對這份作業進行評估和改進。
+
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註（滿分20）**：該程式沒有對其功能進行明確說明，缺乏註釋。（10分）
+- **格式（滿分25）**：整體縮排和編碼風格保持得還不錯，但部分地方可以改進。（20分）
+- **準確性（滿分25）**：程式能夠正確判斷用戶輸入的數字是否為 well-ordered number，並計算小於100000的 well-ordered number 數量。（25分）
+- **邏輯（滿分30）**：程式邏輯基本正確，但可以進一步優化。（25分）
+
+**總分：80分**
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點：**
+1. 程式能夠正確判斷用戶輸入的數字是否為 well-ordered number。
+2. 能夠計算小於100000的 well-ordered number 數量。
+3. 基本的縮排和編碼風格還不錯。
+
+**缺點：**
+1. 缺乏對程式功能的說明和註釋。
+2. 部分變數名稱可以更具描述性。
+3. 計算小於100000的 well-ordered number 數量的邏輯可以進一步優化。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+public class WellOrderedNumber {
+
+    public static void main(String[] args) {
+        // 創建 Scanner 對象用於獲取用戶輸入
+        Scanner scanner = new Scanner(System.in);
+
+        // 提示用戶輸入一個數字
+        System.out.print("請輸入一個數字: ");
+        int number = scanner.nextInt();
+
+        // 關閉 Scanner
+        scanner.close();
+
+        // 檢查用戶輸入的數字是否為 well-ordered number
+        boolean isWellOrdered = isWellOrderedNumber(number);
+
+        // 輸出結果
+        if (isWellOrdered) {
+            System.out.printf("數字 %d 是 well-ordered number%n", number);
+        } else {
+            System.out.printf("數字 %d 不是 well-ordered number%n", number);
+        }
+
+        // 計算小於100000的 well-ordered number 數量
+        int wellOrderedCount = countWellOrderedNumbersUnder100000();
+
+        // 輸出結果
+        System.out.printf("小於100000的well-ordered number數量為: %d%n", wellOrderedCount);
+    }
+
+    /**
+     * 檢查一個數字是否為 well-ordered number
+     * @param number 要檢查的數字
+     * @return 如果是 well-ordered number，返回 true；否則返回 false
+     */
+    public static boolean isWellOrderedNumber(int number) {
+        String numberStr = Integer.toString(number);
+        for (int i = 0; i < numberStr.length() - 1; i++) {
+            if (numberStr.charAt(i) >= numberStr.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 計算小於100000的 well-ordered number 數量
+     * @return well-ordered number 的數量
+     */
+    public static int countWellOrderedNumbersUnder100000() {
+        int count = 0;
+        for (int n = 1; n < 100000; n++) {
+            if (isWellOrderedNumber(n)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **添加註釋**：在程式的關鍵部分添加了註釋，以便更好地理解程式的功能。
+2. **拆分邏輯為方法**：將檢查數字是否為 well-ordered number 的邏輯拆分為 `isWellOrderedNumber` 方法，計算小於100000的 well-ordered number 數量的邏輯拆分為 `countWellOrderedNumbersUnder100000` 方法。這樣可以提高程式的可讀性和可維護性。
+3. **變數命名**：部分變數名稱進行了調整，使其更具描述性。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **添加註釋**：在程式中添加註釋，說明程式的功能和關鍵部分的邏輯，這樣可以幫助其他人更好地理解你的程式。
+2. **拆分邏輯為方法**：將程式的邏輯拆分為不同的方法，這樣可以提高程式的可讀性和可維護性。
+3. **變數命名**：選擇具有描述性的變數名稱，使程式更容易理解。
+4. **優化邏輯**：在計算小於100000的 well-ordered number 數量時，可以考慮使用更高效的算法來優化性能。
+
+希望這些建議和反饋能夠幫助學生進一步提高程式設計的能力。

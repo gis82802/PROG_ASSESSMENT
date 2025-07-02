@@ -1,0 +1,124 @@
+好的，教授，我將根據您的標準對學生的程式碼進行評估和改進。
+
+**1. 評分 (總分：85/100)**
+
+*   **備註 (18/20):** 程式碼包含對功能的描述，但可以更詳細說明判斷well-ordered number的邏輯。
+*   **格式 (22/25):** 程式碼排版良好，縮排一致，但可以考慮在迴圈和條件判斷語句中添加一些空行，增加可讀性。
+*   **準確性 (23/25):** 程式碼能夠產生正確的結果，能判斷一個數字是否為well-ordered number，也能計算出小於100000的well-ordered number的數量。
+*   **邏輯 (22/30):** 程式碼邏輯基本正確，但第二部分計算數量時，可以考慮使用更有效率的算法，而不是暴力遍歷。
+
+**2. 優缺點分析**
+
+*   **優點：**
+    *   程式碼結構清晰，易於理解。
+    *   程式碼使用迴圈和條件判斷，邏輯正確。
+    *   程式碼能夠完成題目要求的功能。
+*   **缺點：**
+    *   備註可以更詳細。
+    *   計算小於100000的well-ordered number的數量時，使用了暴力遍歷，效率較低。
+    *   程式碼可讀性可以稍微加強。
+
+**3. 改進的程式碼**
+
+```java
+import java.util.Scanner;
+
+public class WellOrderedNumber {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("請輸入一個數字: ");
+        int number = scanner.nextInt();
+
+        scanner.close();
+
+        String numberStr = Integer.toString(number);
+
+        // 假設數字是 well-ordered number，初始化為 true
+        boolean isWellOrdered = true;
+
+        // 從第一位數開始，檢查每一位數是否小於後一位
+        for (int i = 0; i < numberStr.length() - 1; i++) {
+            // 比較當前位數與下一位數的大小
+            if (numberStr.charAt(i) >= numberStr.charAt(i + 1)) {
+                isWellOrdered = false; // 如果發現前一位數不小於後一位，設為 false
+                break;
+            }
+        }
+
+        if (isWellOrdered) {
+            System.out.printf("數字 %d 是 well-ordered number%n", number);
+        } else {
+            System.out.printf("數字 %d 不是 well-ordered number%n", number);
+        }
+
+        // 計算小於 100000 的 well-ordered number 數量
+        int wellOrderedCount = calculateWellOrderedCount(100000);
+
+        System.out.printf("小於 100000 的 well-ordered number 數量為: %d%n", wellOrderedCount);
+
+    }
+
+    // 計算小於 maxNumber 的 well-ordered number 數量
+    public static int calculateWellOrderedCount(int maxNumber) {
+        int count = 0;
+        for (int i = 1; i < 10; i++) { // 從一位數開始
+            count += countWellOrdered(i, 0, maxNumber);
+        }
+        return count;
+    }
+
+    // 遞迴計算以 lastDigit 開頭的 well-ordered number 數量
+    private static int countWellOrdered(int lastDigit, int currentNumber, int maxNumber) {
+        int count = 0;
+        if (currentNumber >= maxNumber) {
+            return 0; // 超過範圍，直接返回 0
+        }
+        if (currentNumber > 0) {
+            count++;
+        }
+
+
+        for (int i = lastDigit + 1; i <= 9; i++) {
+            int newNumber = currentNumber * 10 + i;
+            if (newNumber < maxNumber) {
+                count += countWellOrdered(i, newNumber, maxNumber);
+            }
+        }
+        return count;
+    }
+}
+```
+
+**4. 修改說明**
+
+*   **`calculateWellOrderedCount(int maxNumber)` 函式：**
+    *   將計算小於100000的well-ordered number數量的程式碼獨立成一個函式，增加程式碼的模組化程度。
+    *   使用遞迴方式，從一位數開始，逐步增加位數，計算well-ordered number的數量。
+    *   避免了暴力遍歷，提高了計算效率。
+
+*   **`countWellOrdered(int lastDigit, int currentNumber, int maxNumber)` 函式：**
+    *   遞迴函式，`lastDigit`表示上一個數字，`currentNumber`表示當前數字，`maxNumber`為數字上限。
+    *   如果當前數字超過上限，則返回0。
+    *   如果當前數字大於0，則表示找到一個well-ordered number，計數器加1。
+    *   遞迴調用自身，從`lastDigit + 1`開始，逐步增加位數，直到數字超過上限。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格：**
+    *   繼續保持良好的縮排和命名習慣。
+    *   可以在關鍵的程式碼段落添加備註，說明程式碼的功能和邏輯。
+    *   可以使用空行將不同的程式碼塊分開，增加程式碼的可讀性。
+*   **算法優化：**
+    *   在解決問題時，可以嘗試使用更有效率的算法，避免暴力遍歷。
+    *   可以學習一些常用的算法和數據結構，例如遞迴、動態規劃等。
+*   **問題分解：**
+    *   在解決複雜問題時，可以將問題分解成若干個小問題，逐個解決。
+    *   可以使用函式將不同的功能模組化，增加程式碼的可讀性和可維護性。
+*   **備註：**
+    *   本程式碼使用了遞迴的方式，遞迴的深度可能會比較大，如果數字上限非常大，可能會導致堆疊溢出。
+    *   在實際應用中，可以根據具體情況選擇更合適的算法。
+
+總的來說，學生的程式碼完成度較高，邏輯基本正確。通過這次作業，學生可以進一步提高程式碼的可讀性、可維護性和效率。希望這些建議對學生有所幫助！

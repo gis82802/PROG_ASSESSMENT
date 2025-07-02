@@ -1,0 +1,120 @@
+好的，我將根據您的標準對學生的作業進行評分、分析，並提供改進後的程式碼及建議。
+
+**1. 評分：**
+
+*   **備註 (12/20):** 程式碼缺少必要的程式功能說明。
+*   **格式 (20/25):** 程式碼縮排基本正確，但可以更加一致，例如在運算符號周圍添加空格。類別名稱不太規範，應該使用駝峰式命名。
+*   **準確性 (25/25):** 程式碼可以正確排序，並輸出排序前與排序後的結果。
+*   **邏輯 (22/30):** 程式碼使用氣泡排序演算法，邏輯上可行，但使用了位元運算符(`^`)和加減運算符(`+`、`-`)來交換數值，雖然可以達到交換的效果，但可讀性不佳，且位元運算符只適用於整數，可讀性不佳。
+
+**總分：79/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼可以正確讀取輸入，創建陣列，並完成排序功能。
+    *   使用迴圈印出陣列元素，思路清晰。
+
+*   **缺點：**
+    *   缺少程式功能說明的備註。
+    *   類別命名不夠規範。
+    *   使用位元運算符和加減運算符來交換數值，可讀性差。
+    *   程式碼重複性高，排序邏輯重複出現兩次。
+    *   沒有錯誤處理，例如使用者輸入非數字時程式會崩潰。
+
+**3. 改進的程式碼：**
+
+```java
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Hw181 { // 類別名稱改為駝峰式命名
+
+    public static void main(String args[]) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("請輸入陣列的大小: ");
+        int n = sc.nextInt();
+
+        int[] arr = new int[n];
+
+        System.out.print("輸入陣列: ");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        System.out.print("排序前: ");
+        printArray(arr);
+
+        // 排序小到大
+        bubbleSortAscending(arr);
+
+        System.out.print("排序小到大: ");
+        printArray(arr);
+
+        // 排序大到小
+        bubbleSortDescending(arr);
+
+        System.out.print("排序大到小: ");
+        printArray(arr);
+    }
+
+    // 氣泡排序（小到大）
+    public static void bubbleSortAscending(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // 使用標準的交換方式，增加可讀性
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    // 氣泡排序（大到小）
+    public static void bubbleSortDescending(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (arr[j] < arr[j + 1]) {
+                    // 使用標準的交換方式，增加可讀性
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    // 打印陣列
+    public static void printArray(int[] arr) {
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **類別命名：** 將類別名稱 `hw181` 修改為 `Hw181`，符合駝峰式命名規範。
+*   **交換數值：** 將使用位元運算符和加減運算符交換數值的程式碼，修改為使用`temp`變數的標準交換方式，增加可讀性。
+*   **程式碼重複：** 將排序的邏輯提取到單獨的函式 `bubbleSortAscending`和`bubbleSortDescending` 中，減少程式碼重複。
+*   **程式碼重複：** 將印出陣列的邏輯提取到單獨的函式 `printArray` 中，減少程式碼重複。
+*   **增加註解:** 增加程式碼註解，解釋程式碼功能。
+
+**5. 改進建議和反饋：**
+
+*   **程式碼風格：** 繼續保持良好的縮排習慣，並注意在運算符號周圍添加空格，以增加程式碼可讀性。
+*   **變數命名：** 雖然這次保留了原始的變數名稱，但建議在實際開發中，使用更具描述性的變數名稱，例如 `arraySize` 代替 `n`。
+*   **錯誤處理：** 考慮添加錯誤處理機制，例如使用 `try-catch` 語句處理使用者輸入非數字的情況，避免程式崩潰。
+*   **程式碼重構：** 程式碼中存在重複的邏輯，可以嘗試將這些邏輯提取到單獨的函式中，以提高程式碼的可維護性。
+*   **演算法選擇：** 雖然氣泡排序簡單易懂，但在資料量較大時效率較低。可以考慮學習其他排序演算法，例如合併排序、快速排序等，並根據實際情況選擇最合適的演算法。
+* **程式說明:** 養成寫程式說明的好習慣，說明程式的功能、使用方法等。
+
+總體來說，這份作業完成度較高，能夠實現基本的功能。但程式碼風格和可讀性方面還有提升空間。希望你能繼續努力，寫出更優質的程式碼！

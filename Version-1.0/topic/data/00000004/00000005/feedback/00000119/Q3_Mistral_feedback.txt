@@ -1,0 +1,88 @@
+好的，以下是根據您的標準對這份作業的評分和分析：
+
+### 1. 評分
+- **備註（滿分20）**：0
+  - 該程式沒有包含對其功能的明確說明。
+- **格式（滿分25）**：20
+  - 程式碼的縮排和編碼風格基本合理，但有些地方可以改進。
+- **準確性（滿分25）**：15
+  - 程式在某些情況下無法正確產生結果，特別是中間值的計算。
+- **邏輯（滿分30）**：20
+  - 程式的邏輯基本正確，但有些部分可以優化。
+
+**總分**：55
+
+### 2. 優缺點分析
+**優點**：
+1. 使用了三元運算符來避免使用 `if-else` 語句。
+2. 程式碼結構清晰，變數命名直觀。
+
+**缺點**：
+1. 缺乏對程式功能的說明。
+2. 中間值的計算邏輯有誤。
+3. 使用 `char` 類型來表示最大值、最小值和中間值，這樣做不夠直觀。
+4. 初始化變數時使用了靜態值，這些值應該由用戶輸入。
+
+### 3. 改進的程式碼
+```java
+import java.util.Scanner;//import Scanner head
+
+public class app_3
+{
+	public static void main(String args[])
+	{
+		Scanner scanner = new Scanner(System.in);// Create a scanner to read user input
+
+		int a, b, c;// Initialize
+
+		// Input
+		System.out.print("a:"); a = scanner.nextInt();
+		System.out.print("b:"); b = scanner.nextInt();
+		System.out.print("c:"); c = scanner.nextInt();
+
+		//many ternary operations
+		int max = (a > b) ? ((a > c) ? a : ((b > c) ? b : c)) : ((b > c) ? b : ((a > c) ? a : c));
+		System.out.println("max:" + max);
+
+		int min = (a < b) ? ((a < c) ? a : ((b < c) ? b : c)) : ((b < c) ? b : ((a < c) ? a : c));
+		System.out.println("min:" + min);
+
+		int mid = (a > b) ? ((b > c) ? b : ((a > c) ? c : a)) : ((a > c) ? a : ((b > c) ? c : b));
+		System.out.println("mid:" + mid);
+	}
+}
+```
+
+### 4. 修改部分及原因
+1. **初始化變數**：
+   - 原因：應該由用戶輸入，而不是使用靜態值。
+   - 修改：將 `int a=9,b=6,c=3;` 改為 `int a, b, c;`。
+
+2. **變數類型**：
+   - 原因：使用 `char` 類型來表示最大值、最小值和中間值不夠直觀。
+   - 修改：將 `char max, min, mid` 改為 `int max, min, mid`。
+
+3. **中間值的計算邏輯**：
+   - 原因：原始程式碼的中間值計算邏輯有誤。
+   - 修改：修正中間值的計算邏輯，確保正確。
+
+### 5. 改進建議和反饋
+1. **添加註釋**：
+   - 建議：在程式碼開頭添加註釋，說明程式的功能和使用方法。
+   - 示例：
+     ```java
+     /*
+      * 這個程式用於找出三個輸入值中的最大值、最小值和中間值。
+      * 使用三元運算符來避免使用 if-else 語句。
+      */
+     ```
+
+2. **變數命名**：
+   - 建議：變數命名應該更加直觀，避免使用單個字母作為變數名。
+   - 示例：將 `a, b, c` 改為 `value1, value2, value3`。
+
+3. **邏輯檢查**：
+   - 建議：在編寫複雜邏輯時，應該多進行測試，確保邏輯正確。
+   - 示例：可以使用不同的測試數據來驗證程式的正確性。
+
+希望這些建議能夠幫助您的學生改進他們的程式碼。

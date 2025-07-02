@@ -1,0 +1,154 @@
+好的，我將根據您的標準對楊峻朋同學的作業進行評分、分析、提供改進程式碼、說明修改原因以及提供改進建議和反饋。
+
+**1. 評分 (總分：100)**
+
+*   **備註 (滿分 20)：** 5 分 - 程式碼開頭有一些備註，但並未詳細說明程式的功能、設計思路和使用方法。
+*   **格式 (滿分 25)：** 15 分 - 縮排基本正確，但類別命名 (a, phone, beverageshop) 和變數命名 (na, nu, pr, c, n) 不夠直觀，影響程式碼的可讀性。
+*   **準確性 (滿分 25)：** 20 分 - 程式執行結果基本正確，但沒有錯誤處理，例如庫存不足時減少產品數量會導致錯誤。`delitem` 函式未實現。
+*   **邏輯 (滿分 30)：** 20 分 - 程式基本實現了新增產品、修改數量和顯示產品信息的功能，但缺乏刪除產品、計算總價值等功能，且邏輯較為簡單，沒有考慮更多邊界情況。
+
+**總分：60 分**
+
+**2. 優缺點分析**
+
+*   **優點：**
+    *   基本實現了新增產品和修改數量的功能。
+    *   使用了繼承，將 `phone` 和 `beverageshop` 定義為 `inventory` 的子類。
+*   **缺點：**
+    *   **缺乏註釋：**程式碼缺乏必要的註釋，難以理解程式的功能和邏輯。
+    *   **命名不規範：**類別名和變數名不夠直觀，影響程式碼的可讀性。
+    *   **功能不完整：**缺少刪除產品和計算總價值的函式。
+    *   **錯誤處理缺失：**沒有考慮庫存不足等邊界情況。
+    *   **缺乏模組化：** 所有功能都放在一個檔案裡面，程式碼量一大，難以維護。
+
+**3. 改進的程式碼**
+
+```java
+/*
+ * name:楊峻朋
+ * 學號:41043229
+ * 班級:資二乙
+ * 程式功能: 建立庫存管理系統，可以新增產品、減少產品、新增數量、減少數量，並計算總價值。
+ * 使用說明: 建立 Inventory 物件，使用 newitem 新增產品，changenum 修改數量，show 顯示產品資訊，getTotalValue 計算總價值。
+ */
+
+public class a {
+    public static void main(String[] args) {
+        // 建立手機店和飲料店的庫存物件
+        PhoneInventory phoneShop = new PhoneInventory();
+        BeverageShopInventory beverageShop = new BeverageShopInventory();
+
+        // 手機店新增產品
+        phoneShop.newitem("samsung", 10, 1000);
+        phoneShop.newitem("asus", 5, 100);
+        phoneShop.show(0);
+        phoneShop.changenum(0, -5);
+        phoneShop.show(0);
+
+        // 飲料店新增產品
+        beverageShop.newitem("black tea", 5, 10);
+        beverageShop.show(0);
+        beverageShop.changenum(0, 15);
+        beverageShop.show(0);
+
+        // 測試總價值計算
+        System.out.println("手機店總價值: " + phoneShop.getTotalValue());
+        System.out.println("飲料店總價值: " + beverageShop.getTotalValue());
+    }
+}
+
+class Inventory {
+    private String[] name = new String[100]; // 產品名稱
+    private int[] num = new int[100];   // 產品數量
+    private int[] price = new int[100]; // 產品價格
+    private int itemCount = 0;         // 產品數量計數器
+
+    public void newitem(String itemName, int itemNum, int itemPrice) {
+        name[itemCount] = itemName;
+        price[itemCount] = itemPrice;
+        num[itemCount] = itemNum;
+        itemCount++;
+    }
+
+    // 減少產品 (新增)
+    public void delitem(int index) {
+        if (index >= 0 && index < itemCount) {
+            // 將後面的元素往前移動
+            for (int j = index; j < itemCount - 1; j++) {
+                name[j] = name[j + 1];
+                num[j] = num[j + 1];
+                price[j] = price[j + 1];
+            }
+            // 將最後一個元素設為 null 或 0
+            name[itemCount - 1] = null;
+            num[itemCount - 1] = 0;
+            price[itemCount - 1] = 0;
+            itemCount--;
+        } else {
+            System.out.println("無效的索引");
+        }
+    }
+
+    public void changenum(int index, int numberChange) {
+        if (index >= 0 && index < itemCount) {
+            num[index] += numberChange;
+            if (num[index] < 0) {
+                num[index] = 0; // 避免數量變成負數
+                System.out.println("庫存不足，已將數量設為 0");
+            }
+        } else {
+            System.out.println("無效的索引");
+        }
+    }
+
+    public void show(int index) {
+        if (index >= 0 && index < itemCount) {
+            System.out.println("name: " + name[index] + "\nnum:  " + num[index] + "\nprice: " + price[index]);
+        } else {
+            System.out.println("無效的索引");
+        }
+    }
+
+    // 計算總價值 (新增)
+    public int getTotalValue() {
+        int totalValue = 0;
+        for (int j = 0; j < itemCount; j++) {
+            totalValue += num[j] * price[j];
+        }
+        return totalValue;
+    }
+}
+
+// 手機店庫存
+class PhoneInventory extends Inventory {
+}
+
+// 飲料店庫存
+class BeverageShopInventory extends Inventory {
+}
+```
+
+**4. 修改說明**
+
+*   **備註：** 增加了程式碼的備註，說明了類別的功能、設計思路和使用方法，方便理解程式碼。
+*   **類別和變數命名：** 將類別名修改為 `Inventory`, `PhoneInventory`, `BeverageShopInventory`，變數名修改為 `itemName`, `itemNum`, `itemPrice`, `index`, `numberChange`, `itemCount` 等，使其更具描述性。
+*   **功能完善：**
+    *   增加了 `delitem` 函式，用於刪除產品。
+    *   增加了 `getTotalValue` 函式，用於計算庫存總價值。
+*   **錯誤處理：** 在 `changenum` 函式中增加了庫存不足的判斷，避免數量變成負數。
+*   **程式碼結構：**
+    *   保留了原有的繼承結構，但將 `phone` 和 `beverageshop` 類別名更改為 `PhoneInventory` 和 `BeverageShopInventory`，更符合命名規範。
+    *   `itemCount` 用於追蹤陣列中已使用的元素數量，而避免使用類別範圍變數 `i`。
+*   **使用private:**
+    *   將陣列 `name`, `num`, `price` 宣告為 `private` 確保資料封裝性，防止直接從類別外部進行未經授權的訪問。
+
+**5. 改進建議和反饋**
+
+*   **程式碼風格：** 遵循良好的程式碼風格，例如使用有意義的變數名、適當的縮排和註釋，可以提高程式碼的可讀性和可維護性。
+*   **功能擴展：** 可以考慮增加更多的功能，例如搜尋產品、排序產品、匯入/匯出庫存數據等。
+*   **錯誤處理：** 增加更多的錯誤處理，例如檢查輸入的有效性、處理文件讀寫異常等，可以提高程式的健壯性。
+*   **單元測試：** 學習編寫單元測試，可以驗證程式碼的正確性，並在修改程式碼後及時發現問題。
+*   **物件導向設計：** 深入理解物件導向設計的原則，例如封裝、繼承、多型等，可以更好地組織程式碼，提高程式的可擴展性和可重用性。
+*   **模組化：** 可以考慮將程式碼拆分成多個模組，每個模組負責不同的功能，可以提高程式的可維護性。
+
+總體來說，楊峻朋同學的作業基本完成了題目要求，但程式碼風格、功能完整性和錯誤處理方面還有待提高。希望通過這次的修改和建議，能夠幫助他更好地理解物件導向程式設計，並寫出更優質的程式碼。

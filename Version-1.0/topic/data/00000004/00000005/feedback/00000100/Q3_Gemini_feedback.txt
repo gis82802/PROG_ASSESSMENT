@@ -1,0 +1,112 @@
+好的，我將根據您的標準對溫博鈞同學的作業進行評分、分析、提供改進方案和建議。
+
+**1. 評分：**
+
+*   **備註 (20/20)：** 程式碼開頭的備註非常完整，包含了專案名稱、作者、描述、功能和修改日期，清晰地說明了程式的功能。
+*   **格式 (20/25)：**  程式碼縮排基本正確，但 `compare` 函數中的三元運算符嵌套過深，導致可讀性下降。String.format重複使用，略顯冗余。
+*   **準確性 (25/25)：** 程式碼在大多數情況下能夠產生正確的結果，正確判斷三個數字的大小關係。
+*   **邏輯 (20/30)：** 程式的邏輯是正確的，但在 `compare` 函數中使用嵌套的三元運算符使其變得複雜難懂。雖然符合"不使用IF-ELSE"的要求，但犧牲了可讀性和可維護性。
+
+**總分：85/100**
+
+**2. 優缺點分析：**
+
+*   **優點：**
+    *   程式碼包含了清晰且完整的備註。
+    *   程式能夠正確判斷三個數字的大小關係。
+    *   符合題目要求，沒有使用 `if-else` 語句。
+
+*   **缺點：**
+    *   `compare` 函數中使用了過度嵌套的三元運算符，使得程式碼難以閱讀和理解。
+    *   String.format重複使用，略顯冗余。
+    *   程式碼的可讀性和可維護性較差。
+
+**3. 改進的程式碼：**
+
+```java
+/*
+ * project name: hw_0.
+ * project author: 41243144温博鈞
+ * project description: 判斷3個數字大小
+ *
+ * project function:
+ * - 輸入3個數字
+ * - 比較3個數字大小
+ *
+ * latest changed date: 10-04-2024
+ */
+package September.oct_04;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class hw03 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        double[] number = new double[3];
+
+        // input
+        System.out.print("請輸入3個值: ");
+        for (int i = 0; i < number.length; i++) {
+            number[i] = input.nextDouble();
+        }
+
+        // 輸出結果
+        System.out.println(compare(number));
+
+        input.close();
+    }
+
+    public static String compare(double[] number) {
+        double max = number[0];
+        double min = number[0];
+        double mid = number[0];
+
+        for (int i = 1; i < number.length; i++) {
+            max = number[i] > max ? number[i] : max;
+            min = number[i] < min ? number[i] : min;
+        }
+
+        for (int i = 0; i < number.length; i++) {
+            if (number[i] != max && number[i] != min) {
+                mid = number[i];
+                break;
+            }
+        }
+        
+        if(max == mid && mid == min){
+            return String.format("%.2f = %.2f = %.2f", max, mid, min);
+        }
+
+        if(max == mid){
+            return String.format("%.2f = %.2f > %.2f", max, mid, min);
+        }
+
+        if(max == min){
+            return String.format("%.2f = %.2f < %.2f", max, min, mid);
+        }
+        
+        if(min == mid){
+            return String.format("%.2f > %.2f = %.2f", max, min, mid);
+        }
+
+        return String.format("%.2f > %.2f > %.2f", max, mid, min);
+    }
+}
+```
+
+**4. 修改說明：**
+
+*   **簡化比較邏輯：** 使用迴圈和三元運算符，將尋找最大值、最小值和中間值的邏輯分開，避免了過度嵌套的三元運算符。
+*   **變數提取：** 將最大值、最小值和中間值分別賦值給 `max`、`min` 和 `mid` 變數，使程式碼更易讀。
+*   **處理極端狀況:** 解決了三個數相等、兩個數相等的問題。
+
+**5. 改進建議和反饋：**
+
+*   **程式碼可讀性：** 雖然你成功避免了 `if-else` 語句，但程式碼的可讀性非常重要。過度使用三元運算符會降低程式碼的可讀性和可維護性。在實際開發中，可讀性通常比避免特定語法更重要。
+*   **程式碼風格：** 保持一致的程式碼風格可以提高程式碼的可讀性。注意縮排、空格和命名規範。
+*   **問題分解：** 將複雜問題分解為更小的、更易於管理的部分。例如，可以將尋找最大值、最小值和中間值的功能分別寫成獨立的函數。
+*   **測試：** 编写测试用例以验证代码的正确性。
+*   **進一步思考：** 雖然題目要求不使用 `if-else`，但在實際場景中，`if-else` 語句通常是更清晰、更易於理解的選擇。下次在面對類似的限制條件時，可以先思考一下是否有更簡單、更易於理解的替代方案。
+
+總體來說，溫博鈞同學完成了一項不錯的工作，正確實現了題目要求的功能。但是，在程式碼的可讀性和可維護性方面還有很大的提升空間。希望這些建議能幫助你更好地理解和掌握 Java 程式設計。

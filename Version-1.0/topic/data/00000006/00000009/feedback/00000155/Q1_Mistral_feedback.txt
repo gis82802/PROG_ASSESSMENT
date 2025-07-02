@@ -1,0 +1,199 @@
+### 1. 根據我的標準為這份作業打分（0-100）
+
+- **備註(滿分20)**：該程式是否包含對其功能的明確說明
+  - 該程式沒有包含對其功能的明確說明，只有一些基本的註解。分數：10
+
+- **格式(滿分25)**：是否保持適當的縮排和編碼風格
+  - 整體縮排和編碼風格還算合理，但有些地方可以改進。分數：20
+
+- **準確性(滿分25)**：程式是否產生正確的結果
+  - 程式能夠正確運行並產生預期結果。分數：25
+
+- **邏輯(滿分30)**：程式是否有正確的邏輯
+  - 程式邏輯基本正確，但可以更加清晰和模組化。分數：25
+
+**總分**：10 + 20 + 25 + 25 = 80
+
+### 2. 根據我的標準分析它的優缺點
+
+**優點**：
+1. 程式能夠正確運行，並完成井字棋遊戲的基本功能。
+2. 使用了合理的陣列來表示棋盤，並且有基本的輸入驗證。
+3. 遊戲結束條件（勝利和平局）判斷正確。
+
+**缺點**：
+1. 缺乏對程式功能的明確說明和文件。
+2. 程式碼結構不夠模組化，難以擴展和維護。
+3. 變數命名和函式命名不夠直觀，難以理解。
+4. 缺乏類別的設計，不符合題目要求。
+
+### 3. 為我的學生提供改進的程式碼
+
+```java
+import java.util.Scanner;
+
+class ChessBoard {
+    private char[][] board;
+
+    public ChessBoard() {
+        board = new char[3][3];
+        resetBoard();
+    }
+
+    public void resetBoard() {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                board[i][j] = '-';
+    }
+
+    public void displayBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++)
+                System.out.print(board[i][j] + " ");
+            System.out.println();
+        }
+    }
+
+    public boolean placePiece(int row, int col, char player) {
+        if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == '-') {
+            board[row][col] = player;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isFull() {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (board[i][j] == '-')
+                    return false;
+        return true;
+    }
+
+    public boolean isWinner(char player) {
+        return checkRows(player) || checkCols(player) || checkDiagonals(player);
+    }
+
+    private boolean checkRows(char player) {
+        for (int i = 0; i < 3; i++)
+            if (board[i][0] == player && board[i][1] == player && board[i][2] == player)
+                return true;
+        return false;
+    }
+
+    private boolean checkCols(char player) {
+        for (int i = 0; i < 3; i++)
+            if (board[0][i] == player && board[1][i] == player && board[2][i] == player)
+                return true;
+        return false;
+    }
+
+    private boolean checkDiagonals(char player) {
+        return (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+               (board[0][2] == player && board[1][1] == player && board[2][0] == player);
+    }
+}
+
+class Player {
+    public static final char HUMAN = 'X';
+    public static final char COMPUTER = 'O';
+    private char playerType;
+
+    public Player(char playerType) {
+        this.playerType = playerType;
+    }
+
+    public char getPlayerType() {
+        return playerType;
+    }
+}
+
+public class TicTacToe {
+    private ChessBoard chessBoard;
+    private Player currentPlayer;
+
+    public TicTacToe() {
+        chessBoard = new ChessBoard();
+        currentPlayer = new Player(Player.HUMAN);
+    }
+
+    public void startGame() {
+        Scanner scanner = new Scanner(System.in);
+        boolean gameOver = false;
+
+        while (!gameOver) {
+            chessBoard.displayBoard();
+            int[] move = getMove(scanner);
+            if (chessBoard.placePiece(move[0], move[1], currentPlayer.getPlayerType())) {
+                if (chessBoard.isWinner(currentPlayer.getPlayerType())) {
+                    chessBoard.displayBoard();
+                    System.out.println("玩家 " + currentPlayer.getPlayerType() + " 勝利");
+                    gameOver = true;
+                } else if (chessBoard.isFull()) {
+                    chessBoard.displayBoard();
+                    System.out.println("平局");
+                    gameOver = true;
+                } else {
+                    currentPlayer = new Player(currentPlayer.getPlayerType() == Player.HUMAN ? Player.COMPUTER : Player.HUMAN);
+                }
+            } else {
+                System.out.println("無效的移動，請重新輸入。");
+            }
+        }
+        scanner.close();
+    }
+
+    private int[] getMove(Scanner scanner) {
+        int[] move = new int[2];
+        boolean validInput = false;
+        while (!validInput) {
+            System.out.println("輪到玩家 " + currentPlayer.getPlayerType());
+            System.out.print("輸入行 列 (0-2): ");
+            move[0] = scanner.nextInt();
+            move[1] = scanner.nextInt();
+            if (move[0] >= 0 && move[0] < 3 && move[1] >= 0 && move[1] < 3) {
+                validInput = true;
+            } else {
+                System.out.println("請重新輸入");
+            }
+        }
+        return move;
+    }
+
+    public static void main(String[] args) {
+        TicTacToe game = new TicTacToe();
+        game.startGame();
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **棋盤類別（ChessBoard）**：
+   - 新增 `ChessBoard` 類別來管理棋盤的狀態和操作，包括重置棋盤、顯示棋盤、放置棋子、檢查是否勝利等功能。
+   - 這樣可以將棋盤相關的邏輯封裝在一個類別中，提高程式的模組化和可維護性。
+
+2. **玩家類別（Player）**：
+   - 新增 `Player` 類別來表示玩家，並區分人類玩家和電腦玩家。
+   - 這樣可以更清晰地表示玩家的類型，並方便未來擴展（例如增加更多玩家類型）。
+
+3. **主程式類別（TicTacToe）**：
+   - 新增 `TicTacToe` 類別來管理遊戲的主要邏輯，包括開始遊戲、獲取玩家移動等。
+   - 這樣可以將遊戲的主要邏輯封裝在一個類別中，提高程式的結構化和可讀性。
+
+### 5. 為學生提供改進建議和反饋
+
+1. **模組化設計**：
+   - 將程式分為多個類別，每個類別負責特定的功能。這樣可以提高程式的可讀性和可維護性。
+
+2. **變數和函式命名**：
+   - 使用更直觀的變數和函式命名，以便其他人能夠更容易理解程式的功能。
+
+3. **文件和註解**：
+   - 在程式中加入更多的註解和文件，說明每個類別和函式的功能，以便其他人能夠更容易理解和使用你的程式。
+
+4. **輸入驗證**：
+   - 增強輸入驗證，確保玩家輸入的移動是有效的，避免程式崩潰或出現意外行為。
+
+5. **擴展性**：
+   - 考慮未來可能的擴展，例如增加更多玩家類型或遊戲模式，設計程式時應該考慮這些可能性，使程式更具靈活性。

@@ -1,0 +1,153 @@
+### 1. 根據標準為這份作業打分（0-100）
+
+- **備註（滿分20）**：18
+  - 該程式包含對其功能的說明，但說明不夠詳細，缺乏對每個類別和方法的具體描述。
+
+- **格式（滿分25）**：20
+  - 程式碼縮排和編碼風格基本適當，但可以進一步改進，例如增加空行來分隔不同的類別和方法，提高可讀性。
+
+- **準確性（滿分25）**：25
+  - 程式能夠正確計算並展示每個員工的薪資以及公司的總薪資。
+
+- **邏輯（滿分30）**：27
+  - 程式邏輯基本正確，但可以進一步優化，例如在計算薪資時考慮更多的因素，如稅金和保險等。
+
+總分：**90**
+
+### 2. 根據標準分析它的優缺點
+
+**優點：**
+1. 程式結構清晰，使用了面向對象的設計概念，包括繼承和多態。
+2. 每個類別和方法的功能明確，能夠正確計算並展示員工的薪資。
+3. 程式碼縮排和編碼風格基本適當。
+
+**缺點：**
+1. 備註不夠詳細，缺乏對每個類別和方法的具體描述。
+2. 程式碼可讀性可以進一步改進，例如增加空行來分隔不同的類別和方法。
+3. 計算薪資時未考慮更多的因素，如稅金和保險等。
+
+### 3. 為學生提供改進的程式碼
+
+```java
+/*
+    fileName: h2.java
+    function: This program demonstrates the use of inheritance and polymorphism in Java.
+             It creates a parent class "Employee" with two member functions "calculatePay" and "displayEmployeeInfo".
+             It then creates three subclasses: "HourlyEmployee", "SalaryEmployee", and "CommissionEmployee",
+             each overriding the "calculatePay" method to calculate the monthly salary according to their respective pay methods.
+             In the main program, a company object is created containing these three types of employees,
+             and the total monthly salary paid by the company is calculated and displayed.
+    author: 41043246 賴昱銘
+    date: 2023/03/14
+    version: 1.0
+*/
+
+public class h2 {
+    public static void main(String[] args) {
+        Company company = new Company();
+        company.totalPayment();
+    }
+}
+
+class Employee {
+    String name;
+
+    Employee(String name) {
+        this.name = name;
+    }
+
+    double calculatePay() {
+        return 0;
+    }
+
+    void displayEmployeeInfo() {
+        System.out.println("Employee name: " + name + "\tSalary: " + calculatePay());
+    }
+}
+
+class HourlyEmployee extends Employee {
+    int rate;
+    int hours;
+
+    HourlyEmployee(String name, int rate, int hours) {
+        super(name);
+        this.rate = rate;
+        this.hours = hours;
+    }
+
+    @Override
+    double calculatePay() {
+        return rate * hours;
+    }
+}
+
+class SalaryEmployee extends Employee {
+    int salary;
+
+    SalaryEmployee(String name, int salary) {
+        super(name);
+        this.salary = salary;
+    }
+
+    @Override
+    double calculatePay() {
+        return salary;
+    }
+}
+
+class CommissionEmployee extends Employee {
+    double rate, sales;
+
+    CommissionEmployee(String name, double rate, double sales) {
+        super(name);
+        this.rate = rate;
+        this.sales = sales;
+    }
+
+    @Override
+    double calculatePay() {
+        return rate * sales;
+    }
+}
+
+class Company {
+    Employee[] employees;
+
+    Company() {
+        employees = new Employee[3];
+        employees[0] = new HourlyEmployee("Andy", 168, 112);
+        employees[1] = new SalaryEmployee("David", 27000);
+        employees[2] = new CommissionEmployee("Chris", 120000.0, 0.15);
+    }
+
+    void totalPayment() {
+        double payment = 0;
+        for (int i = 0; i < employees.length; i++) {
+            payment += employees[i].calculatePay();
+            employees[i].displayEmployeeInfo();
+        }
+        System.out.println("Company total payment: " + payment);
+    }
+}
+```
+
+### 4. 說明改進的程式碼有修改的部分及原因
+
+1. **增加備註詳細說明**：
+   - 在程式開頭增加了更詳細的說明，讓讀者更容易理解程式的功能和結構。
+
+2. **改進程式碼可讀性**：
+   - 增加空行來分隔不同的類別和方法，提高程式碼的可讀性。
+
+3. **優化計算薪資的邏輯**：
+   - 雖然目前的計算薪資邏輯已經正確，但可以考慮在未來版本中增加稅金和保險等因素。
+
+### 5. 為學生提供改進建議和反饋
+
+**改進建議：**
+1. **增加詳細的備註**：在程式碼中增加更多的註釋，特別是對於每個類別和方法的功能進行詳細說明，這樣可以讓其他人更容易理解你的程式碼。
+2. **提高程式碼可讀性**：在類別和方法之間增加空行，使程式碼更具結構性和可讀性。
+3. **考慮更多因素**：在計算薪資時，可以考慮更多的因素，如稅金和保險等，使程式更符合實際情況。
+
+**反饋：**
+你的程式碼結構清晰，功能實現正確，基本上達到了課程要求。但在一些細節上還可以進一步改進，例如增加詳細的備註和提高程式碼的可讀性。希望你能夠在未來的作業中繼續保持這樣的優點，同時注意改進這些細節。
