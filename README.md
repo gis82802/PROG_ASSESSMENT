@@ -1,1 +1,1 @@
-this project is for automatically assess program code
+PROG_ASSESSMENT
