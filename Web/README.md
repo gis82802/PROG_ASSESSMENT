@@ -15,3 +15,5 @@
 
 sudo chown -R daemon:daemon /opt/lampp/htdocs/topic/data
 sudo chmod -R 775 /opt/lampp/htdocs/topic/data
+
+ls -l /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
