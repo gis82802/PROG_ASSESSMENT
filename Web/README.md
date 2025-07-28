@@ -12,3 +12,6 @@
 
 ## v1.2.2
 - 已實現作業新增額外小題的功能
+
+sudo chown -R daemon:daemon /opt/lampp/htdocs/topic/data
+sudo chmod -R 775 /opt/lampp/htdocs/topic/data
