@@ -1,0 +1,16 @@
+2025-07-28 03:31:29 CMD: "C:\Users\a2004\AppData\Local\Programs\Python\Python313\python.exe" "C:/xampp/htdocs/topic/py/Gemini.py" "00000007" "00000014" "00000002" "1" "41243211_1.java"
+OUTPUT:
+�^���w�x�s�� C:\xampp\htdocs\topic\data\00000007\00000014\feedback\00000002\Q1_Gemini_feedback.txt
+
+2025-07-28 03:31:49 CMD: "C:\Users\a2004\AppData\Local\Programs\Python\Python313\python.exe" "C:/xampp/htdocs/topic/py/Mistral.py" "00000007" "00000014" "00000002" "1" "41243211_1.java"
+OUTPUT:
+�^���w�x�s�� C:\xampp\htdocs\topic\data\00000007\00000014\feedback\00000002\Q1_Mistral_feedback.txt
+
+2025-07-28 03:32:47 CMD: "C:\Users\a2004\AppData\Local\Programs\Python\Python313\python.exe" "C:/xampp/htdocs/topic/py/Gemini.py" "00000007" "00000014" "00000002" "1" "41243211_2.java"
+OUTPUT:
+�^���w�x�s�� C:\xampp\htdocs\topic\data\00000007\00000014\feedback\00000002\Q1_Gemini_feedback.txt
+
+2025-07-28 03:33:05 CMD: "C:\Users\a2004\AppData\Local\Programs\Python\Python313\python.exe" "C:/xampp/htdocs/topic/py/Mistral.py" "00000007" "00000014" "00000002" "1" "41243211_2.java"
+OUTPUT:
+�^���w�x�s�� C:\xampp\htdocs\topic\data\00000007\00000014\feedback\00000002\Q1_Mistral_feedback.txt
+
