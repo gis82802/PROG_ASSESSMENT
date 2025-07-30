@@ -1,0 +1,7 @@
+在畫面中印出一段文字，內容如下:
+NFU is good
+
+【input】
+
+【output】
+NFU is good
