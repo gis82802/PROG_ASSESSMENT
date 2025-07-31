@@ -17,3 +17,9 @@ sudo chown -R daemon:daemon /opt/lampp/htdocs/topic/data
 sudo chmod -R 775 /opt/lampp/htdocs/topic/data
 
 ls -l /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
+
+## v1.2.3
+- 將路徑改為相對路徑，避免移動網頁路徑所造成的錯誤
+- 在Linux中，目前無法成功取得python位置
+- 無法使用批改測資功能(或許是功能被關閉我沒注意到)
+- 於附件""中有說明路徑修改的細項
