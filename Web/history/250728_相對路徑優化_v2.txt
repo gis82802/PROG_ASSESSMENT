@@ -1,0 +1,115 @@
+【該文使用版本v1.2.2作為範例進行修正】
+
+>> C:/xampp/htdocs/topic/homeworkfeedback.php (247) <<
+$filepath = __DIR__ . '/data/' . $row['ClassID'] . "/" . $homeworkID . "/feedback/" . $userid . "/Q{$i}_{$model}_feedback.txt";
+
+【原方案】
+$filepath = "C:/xampp/htdocs/topic/data/" . $row['ClassID'] . "/" . $homeworkID . "/feedback/" . $userid . "/Q{$i}_{$model}_feedback.txt";
+
+========
+
+>> C:/xampp/htdocs/topic/homeworkscoresedit.php (284:285) <<
+$targetPath = __DIR__ . '/../topicbee/data/';
+$codePath     = $targetPath . $hwData['ClassID'] . "/$homeworkID/homework/$sid/Q{$i}/";
+$questionPath = $targetPath . $hwData['ClassID'] . "/$homeworkID/homework_texts/Q{$i}.txt";
+
+【原方案】
+$codePath = "C:/xampp/htdocs/topicbee/data/" . $hwData['ClassID'] . "/$homeworkID/homework/$sid/Q{$i}/";
+$questionPath = "C:/xampp/htdocs/topicbee/data/" . $hwData['ClassID'] . "/$homeworkID/homework_texts/Q{$i}.txt";
+
+========
+
+>> C:/xampp/htdocs/topic/uploadhomework.php (164) <<
+$filepath = __DIR__ . '/data/' . $row['ClassID'] . '/' . $homeworkID . '/homework_texts/Q' . $i . '.txt';
+
+【原方案】
+$filepath = "C:/xampp/htdocs/topic/data/".$row['ClassID']."/".$homeworkID."/homework_texts/Q".$i.".txt";
+
+========
+
+>> C:/xampp/htdocs/topic/php/import_homework.php (192:194) <<
+$pythonPath = 'python';
+$AIPath = __DIR__ . '/../../topicbee/py/';
+$scriptPathGemini  = $AIPath . 'Gemini.py';
+$scriptPathMistral = $AIPath . 'Mistral.py';
+
+if($pythonPath === false) die('找不到目標路徑');
+
+【備案】
+$pythonPath = realpath('C:/Users/user/AppData/Local/Programs/Python/Python313/python.exe');
+$AIPath = __DIR__ . '/../../topicbee/py/';
+$scriptPathGemini  = $AIPath . 'Gemini.py';
+$scriptPathMistral = $AIPath . 'Mistral.py';
+
+if($pythonPath === false) die('找不到目標路徑');
+
+【原方案】
+$pythonPath = "C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python313\\python.exe";
+$scriptPathGemini = "C:\\xampp\\htdocs\\topicbee\\py\\Gemini.py";
+$scriptPathMistral = "C:\\xampp\\htdocs\\topicbee\\py\\Mistral.py";
+
+========
+>> C:/xampp/htdocs/topic/php/uploadhomework.php (9:13) <<
+define('UPLOAD_BASE_DIR', __DIR__ . '/../data/');
+define('JAVA_CLASS_PATH', __DIR__ . '/../java/');
+define('PYTHON_PATH', 'python');
+define('GEMINI_SCRIPT_PATH', __DIR__ . '/../py/Gemini.py');
+define('MISTRAL_SCRIPT_PATH', __DIR__ . '/../py/Mistral.py');
+
+exec('python --version', $output, $returnCode);
+if ($returnCode !== 0) {
+    die("Python not found. Please install Python or set PATH.");
+}
+
+
+【備案】
+define('UPLOAD_BASE_DIR', __DIR__ . '/../data/');
+define('JAVA_CLASS_PATH', __DIR__ . '/../java/');
+define('PYTHON_PATH', 'C:/Users/user/AppData/Local/Programs/Python/Python313/python.exe');
+define('GEMINI_SCRIPT_PATH', __DIR__ . '/../py/Gemini.py');
+define('MISTRAL_SCRIPT_PATH', __DIR__ . '/../py/Mistral.py');
+
+
+【原方案】
+define('UPLOAD_BASE_DIR', __DIR__ . '/../data/');
+define('JAVA_CLASS_PATH', 'C:\\xampp\\htdocs\\topic\\java');
+define('PYTHON_PATH', 'C:\\Users\\user\\AppData\\Local\\Programs\\Python\\Python311\\python.exe');
+define('GEMINI_SCRIPT_PATH', 'C:\\xampp\\htdocs\\topic\\py\\Gemini.py');
+define('MISTRAL_SCRIPT_PATH', 'C:\\xampp\\htdocs\\topic\\py\\Mistral.py');
+
+========
+>> C:/xampp/htdocs/topic/py/Gemini.py (9) <<
+# 使用相對路徑指向../xampp/htdocs/topicbee/py/py_debug.txt
+# 再轉換成絕對路徑做使用
+log_path = os.path.join(os.path.dirname(__file__), '..', '..', 'topicbee', 'py', 'py_debug.txt')
+log_path = os.path.abspath(log_path)
+
+with open(log_path, 'a', encoding='utf-8') as f:
+    for i, arg in enumerate(sys.argv):
+        f.write(f"argv[{i}]: {repr(arg)}\n")
+
+【原方案】
+'''with open('C:\\xampp\\htdocs\\topicbee\\py\\py_debug.txt', 'a', encoding='utf-8') as f:
+    for i, arg in enumerate(sys.argv):
+        f.write(f"argv[{i}]: {repr(arg)}\n")'''
+
+========
+>> C:/xampp/htdocs/topic/py/Gemini.py (66) <<
+# 將 base_path 指向 ../xampp/htdocs/topic/data/ ，再轉為絕對路徑
+base_path = os.path.join(os.path.dirname(__file__), '..', 'data')
+base_path = os.path.abspath(base_path)
+
+【原方案】
+base_path = r"C:\xampp\htdocs\topic\data"
+
+========
+
+>> C:/xampp/htdocs/topic/py/Mistral.py (40) <<
+# 由當前位置指向 ../xampp/htdocs/topic/data/ ，再轉為絕對路徑
+base_path = os.path.join(os.path.dirname(__file__), '..', 'data')
+base_path = os.path.abspath(base_path)
+
+【原方案】
+base_path = r"C:\xampp\htdocs\topic\data"
+
+======================
