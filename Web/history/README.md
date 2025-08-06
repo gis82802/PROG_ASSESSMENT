@@ -27,3 +27,4 @@ ls -l /usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so
 ## v2.0.1
 - 資料庫格式大改
 - 測資批改系統正式上線作用
+- 未來更新報將寫於各版資料夾中
