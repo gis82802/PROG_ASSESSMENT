@@ -10,3 +10,9 @@
   - 重新註解部分未使用之段落(eg. AI批改系統)
   - 新增部分區段的註解說明
   - 將"批改程式系統" 統一更名為 "測資批改系統" "JavaTesterSystem"，縮寫為JTS，又名javaTester。
+
+## v2.0.3
+- 更新"uploadhomework.php"網頁顯示資訊
+  - 區分成功(report)、錯誤(error)訊息，以及測資系統狀態之顯示。
+- 測資批改系統由main_v5.java 更新為 main_v6.java
+- 測資程式系統由main_v6.java 正式命名為JTS_main.java
