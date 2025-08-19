@@ -1,0 +1,118 @@
+根據您的標準，我將為這份作業打分如下：
+
+備註：12/20 (缺少對於程式功能的明確說明)
+格式：20/25 (縮排和編碼風格基本正確，但有些地方可以改善)
+準確性：23/25 (程式產生正確的結果，但有些地方可以優化)
+邏輯：26/30 (程式邏輯基本正確，但有些地方可以改善)
+
+總分：81/100
+
+分析優缺點：
+
+優點：程式實現了矩陣加、減、乘的功能，並且可以正確地產生結果。
+
+缺點：缺少對於程式功能的明確說明，縮排和編碼風格可以改善，程式邏輯可以優化。
+
+以下是改進的程式碼：
+
+```java
+class MyMatrix {
+    private double[][] matrix;
+
+    /**
+     * 設置矩陣
+     * @param matrix 矩陣
+     */
+    public void setMatrix(double[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    /**
+     * 矩陣加法
+     * @param b 矩陣
+     * @return 加法結果
+     */
+    public double[][] add(MyMatrix b) {
+        if (matrix.length != b.matrix.length || matrix[0].length != b.matrix[0].length) {
+            System.out.println("兩矩陣大小不同，無法相加");
+            return null;
+        }
+        double[][] result = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                result[i][j] = matrix[i][j] + b.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // ... (其他方法相同)
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                sb.append(matrix[i][j]).append("\t");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+}
+
+public class hw1213_1 {
+    public static void main(String[] args) {
+        double[][] mA = {{1, 2, 3}, {4, 5, 6}};
+        double[][] mB = {{7, 8, 9}, {10, 11, 12}};
+        double[][] mC = {{1, 2}, {3, 4}, {5, 6}};
+
+        MyMatrix A = new MyMatrix();
+        A.setMatrix(mA);
+        System.out.println("A=");
+        System.out.println(A);
+
+        MyMatrix B = new MyMatrix();
+        System.out.println("B=");
+        B.setMatrix(mB);
+        System.out.println(B);
+
+        MyMatrix C = new MyMatrix();
+        C.setMatrix(mC);
+        System.out.println("C=");
+        System.out.println(C);
+
+        MyMatrix Matrix = new MyMatrix();
+
+        System.out.println("A+B=");
+        Matrix.setMatrix(A.add(B));
+        System.out.println(Matrix);
+
+        System.out.println("A-B=");
+        Matrix.setMatrix(A.sub(B));
+        System.out.println(Matrix);
+
+        System.out.println("A*C=");
+        Matrix.setMatrix(A.mul(C));
+        System.out.println(Matrix);
+
+        System.out.println("4*A=");
+        Matrix.setMatrix(A.mul(4));
+        System.out.println(Matrix);
+    }
+}
+```
+
+改進的程式碼主要進行了以下修改：
+
+* 添加了註釋以說明程式的功能
+* 改善了縮排和編碼風格
+* 優化了程式邏輯
+* 使用 `toString()` 方法以便於輸出矩陣
+
+給學生的建議和反饋：
+
+* 請添加註釋以說明程式的功能
+* 改善縮排和編碼風格以提高程式的可讀性
+* 優化程式邏輯以提高程式的效率
+* 使用 `toString()` 方法以便於輸出矩陣

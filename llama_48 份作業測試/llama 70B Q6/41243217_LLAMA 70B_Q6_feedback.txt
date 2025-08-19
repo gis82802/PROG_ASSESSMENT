@@ -1,0 +1,99 @@
+您好！我已經了解您的要求。我準備好幫助您評估學生的作業，根據您的標準為其打分，分析優缺點，提供改進的程式碼，解釋修改的部分及原因，並提供改進建議和反饋。請提供學生的作業，我將開始評估。
+
+根據您的標準，我將為這份作業打分和分析。
+
+**備註（滿分20）：** 10/20
+這個程式碼缺乏明確的功能說明，但在main方法中有一些輸出訊息可以幫助使用者了解程式的操作。
+
+**格式（滿分25）：** 20/25
+程式碼的縮排和編碼風格基本上是適當的，但有一些地方可以改進，例如在main方法中可以使用空白行分隔不同的操作。
+
+**準確性（滿分25）：** 25/25
+程式碼的邏輯正確，能夠正確地執行矩陣運算。
+
+**邏輯（滿分30）：** 25/30
+程式碼的邏輯基本上是正確的，但有一些地方可以改進，例如在main方法中可以使用更多的錯誤處理機制。
+
+總分：80/100
+
+現在，我將為您的學生提供改進的程式碼和反饋。
+
+**改進的程式碼：**
+```java
+import java.util.Scanner;
+
+class MyMatrix {
+    // ...
+
+    /**
+     * Constructor for MyMatrix
+     * @param rows number of rows
+     * @param cols number of columns
+     */
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new double[rows][cols];
+    }
+
+    // ...
+
+    /**
+     * Add two matrices
+     * @param other the other matrix to add
+     * @return the result of the addition
+     */
+    public MyMatrix add(MyMatrix other) {
+        // ...
+    }
+
+    // ...
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input first matrix
+        System.out.println("Enter the dimensions of the first matrix (rows and columns):");
+        int rows1 = scanner.nextInt();
+        int cols1 = scanner.nextInt();
+        MyMatrix matrix1 = new MyMatrix(rows1, cols1);
+        matrix1.setMatrix(scanner);
+
+        // ...
+
+        try {
+            // Perform operations
+            System.out.println("Matrix 1:");
+            matrix1.printMatrix();
+            System.out.println("Matrix 2:");
+            matrix2.printMatrix();
+
+            // Addition
+            if (rows1 == rows2 && cols1 == cols2) {
+                System.out.println("Result of addition:");
+                MyMatrix additionResult = matrix1.add(matrix2);
+                additionResult.printMatrix();
+            } else {
+                System.out.println("Addition not possible due to dimension mismatch.");
+            }
+
+            // ...
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        scanner.close();
+    }
+}
+```
+**改進的部分：**
+
+* 添加了 JavaDoc 樣式的註釋以說明每個方法的功能。
+* 在 main 方法中添加了錯誤處理機制，以捕捉可能的異常。
+* 使用空白行分隔不同的操作，以提高程式碼的可讀性。
+
+**反饋：**
+
+* 請學生注意添加 JavaDoc 樣式的註釋，以提高程式碼的可讀性和維護性。
+* 在 main 方法中添加錯誤處理機制，以提高程式碼的 robustness。
+* 請學生注意保持適當的縮排和編碼風格，以提高程式碼的可讀性。

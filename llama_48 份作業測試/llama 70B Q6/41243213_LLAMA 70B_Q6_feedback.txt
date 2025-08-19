@@ -1,0 +1,136 @@
+您好！我已經評估了學生的作業程式碼。根據您的標準，我的評分結果如下：
+
+備註（20）：8（缺少明確的功能說明）
+格式（25）：23（縮排和編碼風格良好，但main方法中有多個System.out.println語句）
+準確性（25）：25（程式產生正確的結果）
+邏輯（30）：28（邏輯正確，但可以優化）
+
+總分：84
+
+分析結果：
+優點：程式碼組織良好，邏輯正確，能夠正確地執行矩陣運算。
+缺點：缺少明確的功能說明，main方法中有多個System.out.println語句，邏輯可以優化。
+
+以下是改進的程式碼：
+
+```java
+import java.util.Arrays;
+
+class MyMatrix {
+    private int[][] matrix;
+
+    // Constructor to initialize matrix
+    public MyMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    // Method to add two matrices
+    public static MyMatrix add(MyMatrix m1, MyMatrix m2) {
+        int rows = m1.matrix.length;
+        int cols = m1.matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = m1.matrix[i][j] + m2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // Method to subtract two matrices
+    public static MyMatrix subtract(MyMatrix m1, MyMatrix m2) {
+        int rows = m1.matrix.length;
+        int cols = m1.matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = m1.matrix[i][j] - m2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // Method to multiply two matrices
+    public static MyMatrix multiply(MyMatrix m1, MyMatrix m2) {
+        int rows = m1.matrix.length;
+        int cols = m2.matrix[0].length;
+        int commonDim = m1.matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < commonDim; k++) {
+                    result[i][j] += m1.matrix[i][k] * m2.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // Method to multiply matrix by scalar
+    public MyMatrix scalarMultiply(int scalar) {
+        int rows = this.matrix.length;
+        int cols = this.matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // Method to print matrix content
+    public void printMatrix() {
+        for (int[] row : matrix) {
+            System.out.println(Arrays.toString(row));
+        }
+    }
+
+    // Main method to demonstrate functionality
+    public static void main(String[] args) {
+        int[][] data1 = {
+                { 1, 2, 3 },
+                { 4, 5, 6 },
+                { 7, 8, 9 }
+        };
+        int[][] data2 = {
+                { 9, 8, 7 },
+                { 6, 5, 4 },
+                { 3, 2, 1 }
+        };
+
+        MyMatrix matrix1 = new MyMatrix(data1);
+        MyMatrix matrix2 = new MyMatrix(data2);
+
+        System.out.println("Matrix Operations:");
+        System.out.println("Matrix 1:");
+        matrix1.printMatrix();
+
+        System.out.println("\nMatrix 2:");
+        matrix2.printMatrix();
+
+        System.out.println("\nMatrix Addition:");
+        MyMatrix.add(matrix1, matrix2).printMatrix();
+
+        System.out.println("\nMatrix Subtraction:");
+        MyMatrix.subtract(matrix1, matrix2).printMatrix();
+
+        System.out.println("\nMatrix Multiplication:");
+        MyMatrix.multiply(matrix1, matrix2).printMatrix();
+
+        System.out.println("\nMatrix Scalar Multiplication by 2:");
+        matrix1.scalarMultiply(2).printMatrix();
+    }
+}
+```
+
+改進的程式碼中，我們添加了明確的功能說明，並優化了main方法中的輸出格式。
+
+建議和反饋：
+1. 添加明確的功能說明，以便其他開發者更好地理解程式碼。
+2. 優化main方法中的輸出格式，以便輸出結果更易讀懂。
+3. 考慮添加更多的測試用例，以確保程式碼的正確性。

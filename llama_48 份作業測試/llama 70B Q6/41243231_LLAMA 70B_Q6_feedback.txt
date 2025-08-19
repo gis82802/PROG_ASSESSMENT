@@ -1,0 +1,79 @@
+您好！我已經評估了學生的作業程式碼。以下是根據您的標準的評估結果：
+
+備註（20）：10分。學生的程式碼中缺乏明確的功能說明，例如add、minus和multiplication方法的用途和限制。
+
+格式（25）：20分。學生的程式碼保持了適當的縮排和編碼風格，但有一些小地方可以改進，例如在main方法中可以使用空行分隔不同的操作。
+
+準確性（25）：25分。學生的程式碼可以產生正確的結果，但在矩陣相乘時沒有檢查矩陣的行列是否相同。
+
+邏輯（30）：25分。學生的程式碼有正確的邏輯，但在矩陣相加和相減時可以使用更好的方法，例如使用exception處理錯誤。
+
+總分：80分。
+
+以下是學生的優缺點分析：
+
+優點：
+
+* 程式碼保持了適當的縮排和編碼風格。
+* 矩陣相加、相減和相乘的方法正確地實現了。
+
+缺點：
+
+* 缺乏明確的功能說明。
+* 矩陣相乘時沒有檢查矩陣的行列是否相同。
+* 在main方法中可以使用空行分隔不同的操作。
+
+以下是改進的程式碼：
+```java
+class MyMatrix{
+    // ...
+
+    /**
+     * 矩陣相加
+     * @param mat2 另一個矩陣
+     * @return 相加的結果矩陣
+     */
+    public MyMatrix add(MyMatrix mat2){
+        if(rows != mat2.rows || cols != mat2.cols){
+            throw new RuntimeException("矩陣行列不相同，無法相加");
+        }
+        // ...
+    }
+
+    // ...
+}
+
+public class hw1{
+    public static void main(String[] args){
+        int mat1[][] = {{1, 2, 3}, {4, 5, 6}};
+        int mat2[][] = {{9, 8, 7}, {6, 5, 4}};
+        int mat3[][] = {{9, 8}, {7, 6}, {5, 4}};
+
+        MyMatrix A = new MyMatrix(mat1);
+        MyMatrix B = new MyMatrix(mat2);
+        MyMatrix C = new MyMatrix(mat3);
+
+        System.out.println("Matrix A:"); 
+        A.print();
+        System.out.println("\nMatrix B:"); 
+        B.print();
+        System.out.println("\nMatrix C:"); 
+        C.print();
+
+        System.out.println("\nMatrix A+B:"); 
+        try {
+            A.add(B).print(); 
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+        // ...
+    }
+}
+```
+改進的程式碼中，我們添加了明確的功能說明，並使用exception處理錯誤。在main方法中，我們使用空行分隔不同的操作，提高了程式碼的可讀性。
+
+為學生提供的改進建議和反饋：
+
+* 請添加明確的功能說明，以便其他人更好地理解程式碼。
+* 請使用exception處理錯誤，以避免程式碼中的硬编碼。
+* 請保持適當的縮排和編碼風格，並使用空行分隔不同的操作，以提高程式碼的可讀性。

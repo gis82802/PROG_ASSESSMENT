@@ -1,0 +1,96 @@
+根據您的標準，我將為這份作業打分。
+
+備註（20）：該程式沒有明確說明其功能，因此得分0。
+
+格式（25）：程式保持適當的縮排和編碼風格，因此得分25。
+
+準確性（25）：程式產生正確的結果，因此得分25。
+
+邏輯（30）：程式有正確的邏輯，因此得分30。
+
+總分：80
+
+分析優缺點：
+優點：程式實現了矩陣加法、乘法和純量乘法的功能，邏輯正確。
+缺點：程式沒有明確說明其功能，變數命名不夠直觀。
+
+改進的程式碼：
+```java
+class MyMatrix {
+    private int[][] matrix;
+
+    /**
+     * 建構矩陣
+     * @param inmatrix 矩陣元素
+     */
+    MyMatrix(int[][] inmatrix) {
+        matrix = inmatrix;
+    }
+
+    /**
+     * 矩陣加法
+     * @param m 另一個矩陣
+     * @return 新的矩陣
+     */
+    MyMatrix add(MyMatrix m) {
+        int[][] result = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                result[i][j] = matrix[i][j] + m.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣乘法
+     * @param m 另一個矩陣
+     * @return 新的矩陣
+     */
+    MyMatrix mult(MyMatrix m) {
+        int[][] result = new int[matrix.length][m.matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < matrix[0].length; k++) {
+                    result[i][j] += matrix[i][k] * m.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 純量乘法
+     * @param scalar 純量
+     * @return 新的矩陣
+     */
+    MyMatrix scalarMult(int scalar) {
+        int[][] result = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 顯示矩陣
+     */
+    void print() {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+修改的部分：添加了JavaDoc註釋，變數命名更加直觀。
+
+建議和反饋：
+1. 請添加JavaDoc註釋，以便更好地理解程式的功能。
+2. 請使用更加直觀的變數命名，以提高程式的可讀性。
+3. 請考慮添加更多的測試案例，以確保程式的正確性。

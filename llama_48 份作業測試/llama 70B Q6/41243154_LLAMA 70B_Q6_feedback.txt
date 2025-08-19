@@ -1,0 +1,230 @@
+備註（20）：8（缺少對每個方法的明確說明）
+格式（25）：23（保持適當的縮排和編碼風格，但有些地方的縮排不夠一致）
+準確性（25）：25（程式產生正確的結果）
+邏輯（30）：28（程式的邏輯基本正確，但有些地方可以優化）
+
+總分：84
+
+分析優缺點：
+
+優點：程式的結構清晰，方法名稱明確，使用了適當的縮排和編碼風格。
+
+缺點：缺少對每個方法的明確說明，些地方的縮排不夠一致，邏輯可以優化。
+
+改進的程式碼：
+
+```java
+import java.util.Scanner;
+
+/**
+ * MyMatrix class represents a matrix with operations.
+ */
+class MyMatrix {
+    int[][] Ma;
+    int rows;
+    int cols;
+
+    /**
+     * Constructor to initialize the matrix.
+     * @param a the input matrix
+     */
+    public MyMatrix(int[][] a) {
+        Ma = a;
+        rows = a.length;
+        cols = a[0].length;
+    }
+
+    /**
+     * Adds two matrices.
+     * @param a the second matrix
+     * @return the result matrix
+     */
+    public int[][] add(int[][] a) {
+        if (rows == a.length && cols == a[0].length) {
+            int[][] result = new int[rows][cols];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    result[i][j] = Ma[i][j] + a[i][j];
+                }
+            }
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Subtracts two matrices.
+     * @param a the second matrix
+     * @return the result matrix
+     */
+    public int[][] diff(int[][] a) {
+        if (rows == a.length && cols == a[0].length) {
+            int[][] result = new int[rows][cols];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    result[i][j] = Ma[i][j] - a[i][j];
+                }
+            }
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Multiplies two matrices.
+     * @param a the second matrix
+     * @return the result matrix
+     */
+    public int[][] multply(int[][] a) {
+        if (cols == a.length) {
+            int[][] result = new int[rows][a[0].length];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < a[0].length; j++) {
+                    result[i][j] = 0;
+                    for (int k = 0; k < cols; k++) {
+                        result[i][j] += Ma[i][k] * a[k][j];
+                    }
+                }
+            }
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Calculates the determinant of a matrix.
+     * @param a the input matrix
+     * @return the determinant value
+     */
+    public int determinant(int[][] a) {
+        int size = a.length;
+        if (size == 1) {
+            return a[0][0];
+        }
+        if (size == 2) {
+            return a[0][0] * a[1][1] - a[0][1] * a[1][0];
+        }
+
+        int result = 0;
+        int sign = 1;
+        for (int i = 0; i < size; i++) {
+            result += sign * a[0][i] * subDeterminant(a, 0, i);
+            sign = -sign;
+        }
+        return result;
+    }
+
+    /**
+     * Calculates the sub-determinant of a matrix.
+     * @param matrix the input matrix
+     * @param exRow the excluded row
+     * @param exCol the excluded column
+     * @return the sub-determinant value
+     */
+    private int subDeterminant(int[][] matrix, int exRow, int exCol) {
+        int size = matrix.length;
+        int[][] subMatrix = new int[size - 1][size - 1];
+        int subRow = 0, subCol;
+
+        for (int i = 0; i < size; i++) {
+            if (i == exRow) {
+                continue;
+            }
+            subCol = 0;
+            for (int j = 0; j < size; j++) {
+                if (j == exCol) {
+                    continue;
+                }
+                subMatrix[subRow][subCol] = matrix[i][j];
+                subCol++;
+            }
+            subRow++;
+        }
+        return determinant(subMatrix);
+    }
+
+    /**
+     * Prints the matrix.
+     * @param a the input matrix
+     */
+    public void show(int[][] a) {
+        if (a != null) {
+            for (int i = 0; i < a.length; i++) {
+                for (int j = 0; j < a[0].length; j++) {
+                    System.out.printf("%4d ", a[i][j]);
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("The size can not pair.");
+        }
+    }
+}
+
+public class J_1213_01 {
+    public static void main(String[] args) {
+        Scanner sn = new Scanner(System.in);
+
+        System.out.print("Enter the rows for matrixA: ");
+        int rowsA = sn.nextInt();
+        System.out.print("Enter the cols for matrixA: ");
+        int colsA = sn.nextInt();
+        System.out.println("Enter the value for matrixA: ");
+        int[][] matrixA = new int[rowsA][colsA];
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                matrixA[i][j] = sn.nextInt();
+            }
+        }
+
+        System.out.print("Enter the rows for matrixB: ");
+        int rowsB = sn.nextInt();
+        System.out.print("Enter the cols for matrixB: ");
+        int colsB = sn.nextInt();
+        System.out.println("Enter the value for matrixB: ");
+        int[][] matrixB = new int[rowsB][colsB];
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                matrixB[i][j] = sn.nextInt();
+            }
+        }
+
+        MyMatrix m1 = new MyMatrix(matrixA);
+        System.out.println("matrixA:");
+        m1.show(matrixA);
+        System.out.println("matrixB:");
+        m1.show(matrixB);
+
+        System.out.println("(mA + mB):");
+        int[][] Sum = m1.add(matrixB);
+        m1.show(Sum);
+        System.out.println("(mA - mB):");
+        int[][] Diff = m1.diff(matrixB);
+        m1.show(Diff);
+        System.out.println("(mA * mB):");
+        int[][] Multply = m1.multply(matrixB);
+        m1.show(Multply);
+
+        int det = m1.determinant(Multply);
+        System.out.println("(mA * mB)'s determinant is " + det);
+
+        sn.close();
+    }
+}
+```
+
+說明改進的程式碼有修改的部分及原因：
+
+* 添加了 JavaDoc 註釋以說明每個方法的功能。
+* 優化了縮排和編碼風格，保持一致的縮排和空格使用。
+* 優化了邏輯，例如在 `determinant` 方法中使用了遞迴計算子矩陣的deteminant。
+
+為學生提供改進建議和反饋：
+
+* 請添加 JavaDoc 註釋以說明每個方法的功能。
+* 優化縮排和編碼風格，保持一致的縮排和空格使用。
+* 優化邏輯，例如在 `determinant` 方法中使用了遞迴計算子矩陣的deteminant。
+* 考慮添加更多的錯誤處理，例如檢查矩陣的大小是否合法。

@@ -1,0 +1,183 @@
+根據您的標準，我將對這份作業進行評分和分析。
+
+評分：
+備註：10/20 (缺乏明確的函數說明)
+格式：20/25 (縮排和編碼風格良好，但有一些地方可以改進)
+準確性：25/25 (程式產生正確的結果)
+邏輯：25/30 (程式邏輯正確，但有一些地方可以優化)
+
+總分：80/100
+
+分析：
+優點：程式基本上實現了矩陣的加、減、乘、 скаляr乘法操作，邏輯正確。
+缺點：缺乏明確的函數說明，縮排和編碼風格可以改進，矩陣乘法操作可以優化。
+
+改進的程式碼：
+
+```java
+import java.util.Scanner;
+import java.util.Arrays;
+
+/**
+ * 矩陣類別
+ */
+class MyMatrix {
+    int[][] matrix;
+
+    /**
+     * 建構函數，初始化矩陣
+     * @param n 矩陣數據
+     */
+    public MyMatrix(int[][] n) {
+        matrix = n;
+    }
+
+    /**
+     * 矩陣加法
+     * @param matrix2 另一個矩陣
+     * @return 矩陣加法結果
+     */
+    public MyMatrix add(MyMatrix matrix2) {
+        int[][] flag = new int[2][3];
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                flag[i][j] = matrix[i][j] + matrix2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(flag);
+    }
+
+    /**
+     * 矩陣減法
+     * @param matrix2 另一個矩陣
+     * @return 矩陣減法結果
+     */
+    public MyMatrix sub(MyMatrix matrix2) {
+        int[][] flag = new int[2][3];
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                flag[i][j] = matrix[i][j] - matrix2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(flag);
+    }
+
+    /**
+     * 矩陣乘法
+     * @param matrix2 另一個矩陣
+     * @return 矩陣乘法結果
+     */
+    public MyMatrix multiply(MyMatrix matrix2) {
+        int[][] flag = new int[2][2];
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                flag[i][j] = 0;
+                for (int k = 0; k < 3; k++) {
+                    flag[i][j] += matrix[i][k] * matrix2.matrix[k][j];
+                }
+            }
+        }
+
+        return new MyMatrix(flag);
+    }
+
+    /**
+     * 矩陣 скаляr乘法
+     * @param n скаляr值
+     * @return 矩陣 скаляr乘法結果
+     */
+    public MyMatrix scalar(int n) {
+        int[][] flag = new int[2][3];
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                flag[i][j] = matrix[i][j] * n;
+            }
+        }
+        return new MyMatrix(flag);
+    }
+}
+
+public class app10_H1 {
+    public static void main(String args[]) {
+        int[][] mat1 = {{1, 2, 3}, {4, 5, 6}};
+        int[][] mat2 = {{9, 8, 7}, {6, 5, 4}};
+        int[][] mat3 = {{9, 8}, {7, 6}, {5, 4}};
+        int n = 4;
+
+        MyMatrix m1 = new MyMatrix(mat1);
+        MyMatrix m2 = new MyMatrix(mat2);
+        MyMatrix m3 = new MyMatrix(mat3);
+
+        MyMatrix m4 = m1.add(m2);
+        MyMatrix m5 = m1.sub(m2);
+        MyMatrix m6 = m1.multiply(m3);
+        MyMatrix m7 = m1.scalar(n);
+
+        System.out.printf("matrix 1:\n");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%4d ", mat1[i][j]);
+            }
+            System.out.printf("\n");
+        }
+
+        System.out.printf("matrix 2:\n");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%4d ", mat2[i][j]);
+            }
+            System.out.printf("\n");
+        }
+
+        System.out.printf("matrix 3:\n");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.printf("%4d ", mat3[i][j]);
+            }
+            System.out.printf("\n");
+        }
+
+        System.out.printf("matrix 1+matrix 2:\n");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%4d ", m4.matrix[i][j]);
+            }
+            System.out.printf("\n");
+        }
+
+        System.out.printf("matrix 1-matrix 2:\n");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%4d ", m5.matrix[i][j]);
+            }
+            System.out.printf("\n");
+        }
+
+        System.out.printf("matrix 1*matrix 2:\n");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                System.out.printf("%4d ", m6.matrix[i][j]);
+            }
+            System.out.printf("\n");
+        }
+
+        System.out.printf("4*matrix 1:\n");
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.printf("%4d ", m7.matrix[i][j]);
+            }
+            System.out.printf("\n");
+        }
+    }
+}
+
+改進的程式碼主要對函數添加了明確的註解，並優化了矩陣乘法操作。
+
+建議：
+1. 添加更多的註解，以提高程式碼的可讀性。
+2. 優化矩陣乘法操作，以提高效率。
+3. 考慮添加錯誤處理機制，以提高程式碼的穩定性。
