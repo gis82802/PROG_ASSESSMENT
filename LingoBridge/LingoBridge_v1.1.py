@@ -22,7 +22,9 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 # items 資料路徑
 ITEMS_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, 'data/items.json'))
 
-# 輸出預設路徑
+# 預設路徑
+TASK_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, '../data/5/2/homework_texts/Q1.txt')) # 預設題目位址
+CODE_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, '../data/5/2/homework/108/Q1/test.java')) # 預設程式位址
 OUTPUT_DIR = os.path.normpath(os.path.join(CURRENT_DIR, 'logs/feedback/')) # 預設輸出路徑
 
 # 存取標準輸入
@@ -107,7 +109,7 @@ class Gemini:
         self.time = -1
     
     def chat(self, msg):
-        print("Gemini通話中")
+        print("【Gemini】 通話中")
         
         # 配置生成模型
         genai.configure(api_key = data["token_gemini"]) # Gemini API Token
@@ -135,7 +137,7 @@ class Gemini:
         response  = chat_session.send_message(msg) # Gemini 回覆
         Etime     = time.time() # 結束時間(sec)
         self.time = Etime - Stime  # 執行時間
-        print("Gemini結束對話")
+        print("【Gemini】 結束對話")
         self.res = response.text
 
     def log(self, name, dir, code_name):
@@ -146,18 +148,18 @@ class Gemini:
 
         with open(timelog_path, "w", encoding = "utf-8") as file:
             file.write(f"[{time_now}] {code_name} 耗費時間(sec):{self.time}\n")
-        print("已儲存時間log")
+        print("【Gemini】 已儲存時間log")
 
     def savefile(self, name):
         # 儲存回饋
         path = os.path.join(OUTPUT_DIR, name)
         with open(path, "w", encoding = "utf-8") as file:
             file.write(self.res)
-        print("已儲存 Gemini 回饋至 " + path)
+        print("【Gemini】 已儲存回饋至 " + path)
 
 
 #--- MAIN----------------------------------------------------------------------+
-print("已執行LB系統")
+print("【SYSTEM】 已執行LB系統")
 ERROR = main()
 
 #--- END-----------------------------------------------------------------------+
