@@ -1,0 +1,138 @@
+首先，感謝您提供了學生的程式碼。以下是我的分析和建議：
+
+1. 評分：根據你的標準，我們給這份作業打分為75分。備註部分為15分，因為程式中並沒有明確的說明。格式部分為20分，因為程式的縮排和編碼風格不錯。準確性部分為20分，因為程式的結果正確。邏輯部分為20分，因為程式的邏輯也正確。
+
+2. 分析：程式的優點是格式良好，邏輯清晰，結果正確。缺點是沒有明確的說明。
+
+3. 改進的程式碼：
+
+```java
+/*
+    Filename: "hw1.java"
+    Function: Two-dimensional matrix calculation
+    Author: SHUN-YE SHU
+    Date: 2024/12/13
+    Version: 0.1
+*/
+
+class MyMatrix{
+    private int rows, cols;
+    private int[][] matrix;
+
+    MyMatrix(int[][] mat){
+        matrix = mat;
+        rows = matrix.length;
+        cols = matrix[0].length;
+    }
+
+    // Matrix addition
+    public MyMatrix add(MyMatrix mat2){
+        if(rows != mat2.rows || cols != mat2.cols){
+            System.out.println("Matrix rows and columns are not the same, cannot add");
+            return null;
+        }
+        
+        int[][] result = new int[rows][cols];
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                result[i][j] = matrix[i][j] + mat2.matrix[i][j];
+            }
+        }
+
+        return new MyMatrix(result);
+    }
+
+    // Matrix subtraction
+    public MyMatrix minus(MyMatrix mat2){
+        if(rows != mat2.rows || cols != mat2.cols){
+            System.out.println("Matrix rows and columns are not the same, cannot subtract");
+            return null;
+        }
+        
+        int[][] result = new int[rows][cols];
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                result[i][j] = matrix[i][j] - mat2.matrix[i][j];
+            }
+        }
+
+        return new MyMatrix(result);
+    }
+
+    // Matrix multiplication
+    public MyMatrix multiplication(MyMatrix mat2){
+        if(cols != mat2.rows){
+            System.out.println("Cannot multiply");
+            return null;
+        }
+        
+        int[][] result = new int[rows][mat2.cols];
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < mat2.cols; j++){
+                int sum = 0;
+                for(int k = 0; k < cols; k++){
+                    sum += matrix[i][k] * mat2.matrix[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+
+        return new MyMatrix(result);
+    }
+
+    // Matrix multiplication by scalar
+    public MyMatrix multiplicationA(int num){
+        int[][] result = new int[rows][cols];
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                result[i][j] = num * matrix[i][j];
+            }
+        }
+
+        return new MyMatrix(result);
+    }
+
+    // Print matrix content
+    public void print(){
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                System.out.print(matrix[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+}
+
+public class hw1{
+    public static void main(String[] args){
+        int mat1[][] = {{1, 2, 3}, {4, 5, 6}};
+        int mat2[][] = {{9, 8, 7}, {6, 5, 4}};
+        int mat3[][] = {{9, 8}, {7, 6}, {5, 4}};
+
+        MyMatrix A = new MyMatrix(mat1);
+        MyMatrix B = new MyMatrix(mat2);
+        MyMatrix C = new MyMatrix(mat3);
+
+        System.out.println("Matrix A:"); 
+        A.print();
+        System.out.println("\nMatrix B:"); 
+        B.print();
+        System.out.println("\nMatrix C:"); 
+        C.print();
+
+        System.out.println("\nMatrix A+B:"); 
+        A.add(B).print(); 
+        System.out.println("\nMatrix A-B:"); 
+        A.minus(B).print();
+        System.out.println("\nMatrix A*C:"); 
+        A.multiplication(C).print();
+        System.out.println("\nMatrix 4*A:"); 
+        A.multiplicationA(4).print();
+    }
+}
+```
+
+4. 說明：改進後的程式碼保持了原有的優點，並解決了缺點。明確的說明被添加到程式的開頭。
+
+5. 建議：學生需要在程式的開頭添加明確的說明，並遵循常見的程式設計規範。

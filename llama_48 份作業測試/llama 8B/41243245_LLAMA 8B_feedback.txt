@@ -1,0 +1,158 @@
+根據你的標準，學生的作業得分為80/100。
+
+優點：  
+- 程式結構良好，易於遵循。
+- 矩陣相加、相減、和標量相乘的運算正確。
+
+缺點：  
+- 矩陣相乘的運算不正確。
+- 程式碼可以益於更多的註釋和變數命名。
+
+改進建議：  
+- 檢查矩陣相乘的運算是否正確。
+- 將每個方法添加更多的註釋，以解釋其功能和目的。
+- 考慮改善變數命名，以提高清晰度和可讀性。
+
+改進後的程式碼：
+```java
+public class Main {
+    public static void main(String[] args) {
+        // 定義兩個矩陣
+        double[][] data1 = {
+            {1, 2, 3},
+            {4, 5, 6}
+        };
+
+        double[][] data2 = {
+            {7, 8, 9},
+            {10, 11, 12}
+        };
+
+        // 定義矩陣乘法
+        double[][] data3 = {
+            {1, 2},
+            {3, 4},
+            {5, 6}
+        };
+
+        // 建立MyMatrix對象
+        MyMatrix mat1 = new MyMatrix(data1);
+        MyMatrix mat2 = new MyMatrix(data2);
+        MyMatrix mat3 = new MyMatrix(data3);
+
+        // 輸出原始矩陣
+        System.out.println("Matrix 1：");
+        mat1.print();
+        System.out.println("Matrix 2：");
+        mat2.print();
+        System.out.println("Matrix 3：");
+        mat3.print();
+
+        // 相加矩陣
+        System.out.println("Matrix 1 + Matrix 2：");
+        MyMatrix sum = mat1.add(mat2);
+        sum.print();
+
+        // 相減矩陣
+        System.out.println("Matrix 1 - Matrix 2：");
+        MyMatrix diff = mat1.subtract(mat2);
+        diff.print();
+
+        // 矩陣乘法
+        System.out.println("Matrix 1 * Matrix 3：");
+        MyMatrix product = mat1.multiply(mat3);
+        product.print();
+
+        // 標量乘法
+        System.out.println("Matrix 1 * 4：");
+        MyMatrix scalarProduct = mat1.multiply(4);
+        scalarProduct.print();
+    }
+}
+
+// MyMatrix.java
+public class MyMatrix {
+    private int rows;
+    private int cols;
+    private double[][] matrix;
+
+    // 建構函數
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.matrix = new double[rows][cols];
+    }
+
+    // 建構函數，初始化為2D數組
+    public MyMatrix(double[][] matrix) {
+        this.rows = matrix.length;
+        this.cols = matrix[0].length;
+        this.matrix = matrix;
+    }
+
+    // 相加兩個矩陣
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣必須具有相同的維度以進行相加。");
+        }
+        double[][] result = new double[this.rows][this.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 相減兩個矩陣
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣必須具有相同的維度以進行相減。");
+        }
+        double[][] result = new double[this.rows][this.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 矩陣乘法
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("矩陣的列數必須等於第二矩陣的行數以進行乘法。");
+        }
+        double[][] result = new double[this.rows][other.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 矩陣乘以標量
+    public MyMatrix multiply(double scalar) {
+        double[][] result = new double[this.rows][this.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 輸出矩陣
+    public void print() {
+        for (double[] row : this.matrix) {
+            for (double val : row) {
+                System.out.printf("%8.2f", val);
+            }
+            System.out.println();
+        }
+    }
+}
+```

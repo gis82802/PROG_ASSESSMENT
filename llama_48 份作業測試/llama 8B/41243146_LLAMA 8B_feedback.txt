@@ -1,0 +1,99 @@
+首先，我們需要評分和分析學生的程式碼。根據你的標準，我們會給出以下評分：
+
+備註：20/20，因為程式包含對其功能的明確說明。
+
+格式：23/25，因為程式保持適當的縮排和編碼風格，但有一些地方可以改善。
+
+準確性：25/25，因為程式是否產生正確的結果。
+
+邏輯：28/30，因為程式是否有正確的邏輯。
+
+總分：96/100
+
+分析：程式的優點是明確的說明、良好的格式和正確的邏輯。需要改進的方面是程式中的變數命名不夠直觀。
+
+改進的程式碼：
+
+```java
+class MyMatrix {
+    private int[][] matrix;
+
+    MyMatrix(int[][] inmatrix) {
+        matrix = inmatrix;
+    }
+
+    MyMatrix add(MyMatrix m) {
+        int[][] result = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                result[i][j] = matrix[i][j] + m.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    MyMatrix mult(MyMatrix m) {
+        int[][] result = new int[matrix.length][m.matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < m.matrix[0].length; j++) {
+                result[i][j] = 0;
+                for (int k = 0; k < matrix[0].length; k++) {
+                    result[i][j] += matrix[i][k] * m.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    MyMatrix scalarMult(int scalar) {
+        int[][] result = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    void print() {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class HW1213 {
+    public static void main(String[] args) {
+        int[][] ma = {{1, 2, 3}, {4, 5, 6}};
+        int[][] mb = {{2, 1, 3}, {3, 4, 9}};
+        int[][] mc = {{1, 2}, {3, 4}, {5, 6}};
+
+        System.out.println("--------------------");
+        System.out.println("Matrix A");
+        MyMatrix a = new MyMatrix(ma);
+        a.print();
+        System.out.println("Matrix B");
+        MyMatrix b = new MyMatrix(mb);
+        b.print();
+        System.out.println("Matrix C");
+        MyMatrix c = new MyMatrix(mc);
+        c.print();
+
+        System.out.println("--------------------");
+        System.out.println("Matrix A + Matrix B");
+        MyMatrix d = a.add(b);
+        d.print();
+        System.out.println("Matrix A * Matrix C");
+        MyMatrix e = a.mult(c);
+        e.print();
+        System.out.println("Matrix A * 3");
+        MyMatrix f = a.scalarMult(3);
+        f.print();
+    }
+}
+```
+
+改進的原因：改進的程式碼保持了原始程式的優點，並改善了變數命名的不直觀問題。

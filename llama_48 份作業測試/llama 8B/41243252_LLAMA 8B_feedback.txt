@@ -1,0 +1,100 @@
+我可以幫助你按你的標準來評分和改進學生的程式碼。請提供學生的程式碼和作業內容，我們就可以開始進行評分和修改了。
+
+你提供的程式碼是一個名為MyMatrix的類別，該類別實現了矩陣的基本運算，包括加法、減法、乘法和乘以純量。該程式碼的優點是結構清晰，易於理解。惡劣之處是缺乏明確的說明和註釋，解釋每個方法和類別的作用。
+
+根據你的標準，我們首先進行評分：滿分為100分，該程式碼獲得85分。這是因為該程式碼缺乏明確的說明和註釋。
+
+接下來，我們進行改進。以下是改進後的程式碼：
+
+```java
+/**
+ * 代表一個矩陣，並實現了對其進行加法、減法、乘法和乘以純量的運算。
+ */
+public class MyMatrix {
+    private int rows;  
+    private int cols;  
+    private int[][] matrix;
+
+    // 初始化矩陣
+    public MyMatrix(int[][] mat) {
+        this.rows = mat.length;
+        this.cols = mat[0].length;
+        this.matrix = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                this.matrix[i][j] = mat[i][j];
+            }
+        }
+    }
+
+    // 加法
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣維度不匹配，無法進行加法運算！");
+        }
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 減法
+    public MyMatrix sub(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣維度不匹配，無法進行減法運算！");
+        }
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 乘法
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("矩陣維度不匹配，無法進行乘法運算！");
+        }
+        int[][] result = new int[this.rows][other.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 乘法(乘以純量)
+    public MyMatrix multiply(int scalar) {
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 印出矩陣內容
+    public void printMat() {
+        System.out.println("矩陣維度: " + rows + " x " + cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+改進後的程式碼保持了原本的結構，但添加了明確的說明和註釋，解釋了每個方法和類別的作用。
+
+最後，對學生的建議是：他們應該專注於添加註釋和文檔，以使程式碼更易於理解和維護。

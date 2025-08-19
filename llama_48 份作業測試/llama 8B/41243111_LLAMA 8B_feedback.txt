@@ -1,0 +1,47 @@
+好的，我們可以開始了。首先，我需要分析程式碼，並提供意見。
+
+1. 分數：根據你的標準，我將給這份程式一個分數為85分。程式結構良好，遵循良好的編碼實踐。然而，也有一些改善的領域。
+
+2. 分析：程式的優點包括使用正確的變數命名、充分的註釋和良好的縮排。程式也相對緊湊易懂。然而，也存在一些弱點。例如，某些方法可以被 further抽象和重複使用，還有更多的錯誤處理空間。
+
+3. 改進程式碼：以下是改進後的程式。私は抽象出矩陣輸入和印刷方法，以提高重複使用和可讀性。
+
+```java
+class MatrixInput {
+    // 讀取矩陣方法
+    public static double[][] readMatrix() {
+        Scanner s = new Scanner(System.in);
+        ArrayList<double[]> matrix_temp = new ArrayList<>();
+        int n = 1;
+        while (true) {
+            System.out.printf("第 %d 列: ", n++);
+            String input = s.nextLine();
+            if (input.equals("")) break;
+            String[] row_S = input.split("\\s+");
+            double[] row_D = new double[row_S.length];
+            for (int i = 0; i < row_S.length; i++) {
+                row_D[i] = Double.parseDouble(row_S[i]);
+            }
+            matrix_temp.add(row_D);
+        }
+        return matrix_temp.toArray(new double[matrix_temp.size()][]);
+    }
+}
+
+class MatrixOutput {
+    // 印刷矩陣方法
+    public static void printMatrix(String name, double[][] matrix) {
+        System.out.printf("請輸入 %s 矩陣的資料(資料間以空白隔開，輸入空白行結束讀取):\n", name);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.printf("  %.2f", matrix[i][j]);
+            }
+            System.out.printf("\n");
+        }
+    }
+}
+```
+
+4. 說明：我已經將程式分割成兩個類別，即`MatrixInput`和`MatrixOutput`，以提高重複使用和可讀性。`MatrixInput`類現在處理矩陣的用戶輸入，而`MatrixOutput`類處理矩陣的印刷。
+
+5. 建議：為了進一步改進，你可以考慮添加更多註釋，並提高錯誤處理。例如，你可以添加檢查，以確保被相加或相減的矩陣大小相同，並處理用戶輸入無效的情況。

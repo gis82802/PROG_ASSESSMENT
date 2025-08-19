@@ -1,0 +1,194 @@
+首先，我們需要評估這份作業的成果。根據你的標準，我們將對每個方面進行評估並給出分數。然後，我們將分析優缺點，並提供改進的程式碼。最後，我們將提供改進建議和反饋。
+
+1. 備註（滿分20）：該程式是否包含對其功能的明確說明
+
+    評估結果：15分。程式沒有明確的說明，但可以從程式碼中推斷出來。
+
+2. 格式（滿分25）：是否保持適當的縮排和編碼風格
+
+    評估結果：20分。程式碼的縮排和編碼風格良好，易於閱讀。
+
+3. 準確性（滿分25）：程式是否產生正確的結果
+
+    評估結果：25分。程式的運算結果正確。
+
+4.邏輯（滿分30）：程式是否有正確的邏輯
+
+    評估結果：28分。程式的邏輯正確，但有一些重複的代碼可以進行優化。
+
+總分：88分
+
+優點：
+
+程式的邏輯清晰，易於理解。程式碼的縮排和編碼風格良好，易於閱讀。
+
+缺點：
+
+程式沒有明確的說明。有一些重複的代碼可以進行優化。
+
+改進的程式碼：
+
+```java
+import java.util.Scanner;
+class MyMatrix
+{
+    private int[][] matrix; // 儲存矩陣內容
+    private int row;        // 列
+    private int column;     // 行
+
+    public MyMatrix(int r, int c) //解構子
+    {
+        Scanner scn = new Scanner(System.in);
+        while (r <= 0 || c <= 0) 
+        {
+            System.out.println("列數與行數必須為正，請重新輸入兩正整數給列和行: ");
+            r = scn.nextInt();
+            c = scn.nextInt();
+        } 
+        this.row = r;
+        this.column = c;
+        this.matrix = new int[this.row][this.column];
+    }
+
+    // 設定矩陣內數值
+    public void setMatrix(int[][] values)
+     {
+        if (values.length != row || values[0].length != column) 
+        {
+            System.out.println("輸入內容的矩陣大小與目標矩陣大小不符");
+            return;  // 當矩陣大小不符時，直接返回，不進行後續操作
+        }
+        for (int i = 0; i < row; i++) 
+        {
+            for (int j = 0; j < column; j++)
+            {
+                this.matrix[i][j] = values[i][j];
+            }
+        }
+    }
+
+    // 矩陣相加
+    public MyMatrix add(MyMatrix other) 
+    {
+        if (this.row != other.row || this.column != other.column) 
+        {
+            System.out.println("矩陣大小不匹配，無法相加");
+            return null; // 返回 null 表示操作失敗
+        }
+        MyMatrix result = new MyMatrix(this.row, this.column);
+        for (int i = 0; i < this.row; i++) 
+        {
+            for (int j = 0; j < this.column; j++) 
+            {
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣相減
+    public MyMatrix sub(MyMatrix other)
+    {
+        if (this.row != other.row || this.column != other.column) 
+        {
+            System.out.println("矩陣大小不匹配，無法相減");
+            return null; // 返回 null 表示操作失敗
+        }
+        MyMatrix result = new MyMatrix(this.row, this.column);
+        for (int i = 0; i < this.row; i++) 
+        {
+            for (int j = 0; j < this.column; j++) 
+            {
+                result.matrix[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣相乘
+    public MyMatrix multiply(MyMatrix other) 
+    {
+        if (this.column != other.row) 
+        {
+            System.out.println("矩陣乘法條件不匹配，無法相乘");
+            return null; // 返回 null 表示操作失敗
+        }
+        MyMatrix result = new MyMatrix(this.row, other.column);
+        for (int i = 0; i < this.row; i++) 
+        {
+            for (int j = 0; j < other.column; j++) 
+            {
+                for (int k = 0; k < this.column; k++) 
+                {
+                    result.matrix[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+    
+    // 純量與矩陣相乘
+    public MyMatrix multiply(int scalar)
+    {
+        MyMatrix result = new MyMatrix(this.row, this.column);
+        for (int i = 0; i < row; i++) 
+        {
+            for (int j = 0; j < column; j++) 
+            {
+                result.matrix[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    public void printmatrix() // 印出矩陣內容
+    {
+       for (int i = 0; i < row; i++)
+       {
+            for (int j = 0; j < column; j++)
+            {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println();
+       }
+    }
+}
+
+public class hw
+{
+    public static void main(String args[])
+    {
+        MyMatrix matrixA = new MyMatrix(2, 2);
+        MyMatrix matrixB = new MyMatrix(2, 2);
+        MyMatrix matrixC = new MyMatrix(2, 2);
+
+        //設定矩陣內容
+        matrixA.setMatrix(new int[][] { { 1, 2 }, { 3, 4 } });
+        matrixB.setMatrix(new int[][] { { 5, 6 }, { 7, 8 } });
+        matrixC.setMatrix(new int[][] { { 9, 10 }, { 11, 12 } });
+	
+	System.out.println("矩陣A內容:");
+	matrixA.printmatrix();
+        System.out.println("\n矩陣B內容:");
+	matrixB.printmatrix();
+	System.out.println("\n矩陣C內容:");
+	matrixC.printmatrix();
+
+        System.out.println("\nMatrix A+B: ");   //兩矩陣相加
+        MyMatrix c=matrixA.add(matrixB);
+        c.printmatrix();         //印出矩陣內容
+
+        System.out.println("\nMatrix A-B: ");   //兩矩陣相減
+        c=matrixA.sub(matrixB);
+        c.printmatrix();
+
+        System.out.println("\nMatrix A*C: ");   //兩矩陣相乘
+        c=matrixA.multiply(matrixC);
+        c.printmatrix();
+
+        System.out.println("\nMatrix 5*A: ");   //純量與矩陣的乘法運算
+        c=matrixA.multiply(5);
+        c.printmatrix();
+    }
+}
+```

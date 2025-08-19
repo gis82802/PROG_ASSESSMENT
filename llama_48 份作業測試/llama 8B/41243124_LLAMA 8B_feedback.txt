@@ -1,0 +1,165 @@
+首先，我們需要評分這份作業。根據你的標準，我給這份作業打分為75分。備註部分得20分，因為程式有明確的說明。格式部分得23分，因為程式保持了適當的縮排和編碼風格。準確性部分得20分，因為程式能夠生產正確的結果。邏輯部分得12分，因為程式有一些可以改進的地方。
+
+接下來，我們將對這份作業進行分析。優點是程式明確地說明了每個方法的作用。缺點是程式中有些地方可以改進，例如程式的邏輯需要更好地組織。
+
+接下來，我們將為學生提供改進的程式碼。程式大致如下：
+
+```java
+import java.util.Scanner;
+import java.util.Arrays;
+
+class MyMatrix {
+    private int[][] matrix;
+
+    // 構造方法，初始化矩陣
+    public MyMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    // 矩陣加法
+    public MyMatrix add(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 矩陣減法
+    public MyMatrix subtract(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 矩陣乘法
+    public MyMatrix multiply(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = other.matrix[0].length;
+        int common = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < common; k++) {
+                    result[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 純量乘法
+    public MyMatrix scalarMultiply(int scalar) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 打印矩陣內容
+    public void printMatrix() {
+        for (int[] row : matrix) {
+            System.out.println(Arrays.toString(row));
+        }
+    }
+
+    // 主程式
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入第一個矩陣
+        System.out.println("輸入第一個矩陣的行數和列數:");
+        int rows1 = scanner.nextInt();
+        int cols1 = scanner.nextInt();
+        int[][] data1 = new int[rows1][cols1];
+        System.out.println("輸入第一個矩陣的元素:");
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
+                data1[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 輸入第二個矩陣
+        System.out.println("輸入第二個矩陣的行數和列數:");
+        int rows2 = scanner.nextInt();
+        int cols2 = scanner.nextInt();
+        int[][] data2 = new int[rows2][cols2];
+        System.out.println("輸入第二個矩陣的元素:");
+        for (int i = 0; i < rows2; i++) {
+            for (int j = 0; j < cols2; j++) {
+                data2[i][j] = scanner.nextInt();
+            }
+        }
+
+        MyMatrix matrix1 = new MyMatrix(data1);
+        MyMatrix matrix2 = new MyMatrix(data2);
+
+        // 打印輸入的矩陣
+        System.out.println("\n矩陣1:");
+        matrix1.printMatrix();
+
+        System.out.println("\n矩陣2:");
+        matrix2.printMatrix();
+
+        // 矩陣加法
+        if (rows1 == rows2 && cols1 == cols2) {
+            System.out.println("\n加法結果:");
+            MyMatrix sum = matrix1.add(matrix2);
+            sum.printMatrix();
+        } else {
+            System.out.println("\n無法進行加法：矩陣大小不同");
+        }
+
+        // 矩陣減法
+        if (rows1 == rows2 && cols1 == cols2) {
+            System.out.println("\n減法結果:");
+            MyMatrix difference = matrix1.subtract(matrix2);
+            difference.printMatrix();
+        } else {
+            System.out.println("\n無法進行減法：矩陣大小不同");
+        }
+
+        // 矩陣乘法
+        if (cols1 == rows2) {
+            System.out.println("\n乘法結果:");
+            MyMatrix product = matrix1.multiply(matrix2);
+            product.printMatrix();
+        } else {
+            System.out.println("\n無法進行乘法：第一個矩陣的列數不等於第二個矩陣的行數");
+        }
+
+        // 純量乘法
+        System.out.println("\n輸入純量值進行乘法:");
+        int scalar = scanner.nextInt();
+        System.out.println("\n純量乘法結果 (矩陣1):");
+        MyMatrix scalarProduct = matrix1.scalarMultiply(scalar);
+        scalarProduct.printMatrix();
+    }
+}
+```
+
+程式的改進點是：
+
+- 我們可以將程式的邏輯更好地組織，例如將矩陣加法、減法、乘法和純量乘法方法集中在一起。
+- 我們可以在程式的開始部分添加一個main方法，以便在其他地方調用程式。
+
+最後，我們將對學生提供改進建議和反饋。建議是：學生需要更好地組織程式的邏輯，並且需要注意程式的可讀性。反饋是：學生提交的作業有很大的進步，但仍需要進一步的改進。

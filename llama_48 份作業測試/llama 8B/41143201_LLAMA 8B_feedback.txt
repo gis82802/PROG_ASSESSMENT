@@ -1,0 +1,125 @@
+根據您的標準，我們可以開始評估這份作業。首先，以下是這份作業的分數：
+
+備註：20/20
+格式：25/25
+準確性：25/25
+邏輯：30/30
+
+總分：100/100
+
+分析：這份作業的優點是：程式設計清晰、邏輯合理、程式執行正確。缺點是：無。
+
+改進的程式碼：
+
+```java
+import java.util.Arrays;
+
+class MyMatrix {
+    private int rows;
+    private int cols;
+    private double[][] data;
+
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        data = new double[rows][cols];
+    }
+
+    public void setValue(int row, int col, double value) {
+        if (row >= 0 && row < rows && col >= 0 && col < cols) {
+            data[row][col] = value;
+        }
+    }
+
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(data[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public MyMatrix add(MyMatrix other) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] + other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    public MyMatrix subtract(MyMatrix other) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    public MyMatrix multiply(MyMatrix other) {
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < result.rows; i++) {
+            for (int j = 0; j < result.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result.data[i][j] += this.data[i][k] * other.data[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    public MyMatrix scalarMultiply(double scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        MyMatrix matrix1 = new MyMatrix(2, 2);
+        matrix1.setValue(0, 0, 1);
+        matrix1.setValue(0, 1, 2);
+        matrix1.setValue(1, 0, 3);
+        matrix1.setValue(1, 1, 4);
+
+        MyMatrix matrix2 = new MyMatrix(2, 2);
+        matrix2.setValue(0, 0, 5);
+        matrix2.setValue(0, 1, 6);
+        matrix2.setValue(1, 0, 7);
+        matrix2.setValue(1, 1, 8);
+
+        System.out.println("Matrix 1:");
+        matrix1.printMatrix();
+
+        System.out.println("\nMatrix 2:");
+        matrix2.printMatrix();
+
+        MyMatrix sum = matrix1.add(matrix2);
+        System.out.println("\n相加:");
+        sum.printMatrix();
+
+        MyMatrix difference = matrix1.subtract(matrix2);
+        System.out.println("\n相減:");
+        difference.printMatrix();
+
+        MyMatrix product = matrix1.multiply(matrix2);
+        System.out.println("\n相乘:");
+        product.printMatrix();
+
+        MyMatrix scalarProduct = matrix1.scalarMultiply(2);
+        System.out.println("\n(Matrix 1 * 2):");
+        scalarProduct.printMatrix();
+    }
+}
+```
+
+改進的原因是：無需改進。
+
+改進建議：繼續遵循良好的程式設計準則和慣例，例如遵循Java Coding Conventions。

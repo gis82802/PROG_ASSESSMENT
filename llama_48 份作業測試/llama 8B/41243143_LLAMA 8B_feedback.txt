@@ -1,0 +1,169 @@
+好的，我已經收到代碼了。根據你的標準，我將這份作業打分為85分。這份作業結構良好，並包含明確的功能說明。使用Scanner類別非常合適，並正確地初始化和處理矩陣。然而，這份作業有一些命名變數和代碼格式的問題需要修正。
+
+2. 這份作業的優點是明確且結構良好的矩陣處理方法。缺點是命名變數不一致，以及一些代碼格式問題。
+
+3. 這裡是一份改進後的代碼，包括了改善的格式和變數命名：
+
+```java
+import java.util.Scanner;
+
+public class MatrixOperations {
+    private static final int ROWS = 0;
+    private static final int COLS = 1;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 請輸入矩陣的維度（行數和列數）
+        System.out.print("Enter number of rows for the matrices: ");
+        int rows = scanner.nextInt();
+        System.out.print("Enter number of columns for the matrices: ");
+        int cols = scanner.nextInt();
+
+        // 創建兩個矩陣物件，使用用戶定義的維度
+        Matrix matrix1 = new Matrix(rows, cols);
+        Matrix matrix2 = new Matrix(rows, cols);
+
+        // 輸入矩陣1的元素
+        System.out.println("Enter elements for Matrix 1 (each row separated by spaces):");
+        scanner.nextLine(); // Clear the newline character
+        for (int i = 0; i < rows; i++) {
+            String[] rowValues = scanner.nextLine().split(" ");  // Split the input by spaces
+            for (int j = 0; j < cols; j++) {
+                matrix1.setElement(i, j, Double.parseDouble(rowValues[j]));  // Set the element in the matrix
+            }
+        }
+
+        // 輸入矩陣2的元素
+        System.out.println("Enter elements for Matrix 2 (each row separated by spaces):");
+        for (int i = 0; i < rows; i++) {
+            String[] rowValues = scanner.nextLine().split(" ");  // Split the input by spaces
+            for (int j = 0; j < cols; j++) {
+                matrix2.setElement(i, j, Double.parseDouble(rowValues[j]));  // Set the element in the matrix
+            }
+        }
+
+        // 輸入標量值以進行標量乘法
+        System.out.print("Enter a scalar value: ");
+        double scalar = scanner.nextDouble();
+
+        // 顯示矩陣並進行操作
+        System.out.println("\nMatrix 1:");
+        matrix1.printMatrix();  // Print Matrix 1
+
+        System.out.println("Matrix 2:");
+        matrix2.printMatrix();  // Print Matrix 2
+
+        System.out.println("Matrix 1 + Matrix 2:");
+        Matrix sumMatrix = matrix1.add(matrix2);  // Add the matrices
+        sumMatrix.printMatrix();  // Print the result of addition
+
+        System.out.println("Matrix 1 - Matrix 2:");
+        Matrix diffMatrix = matrix1.subtract(matrix2);  // Subtract the matrices
+        diffMatrix.printMatrix();  // Print the result of subtraction
+
+        System.out.println("Matrix 1 * Matrix 2:");
+        Matrix productMatrix = matrix1.multiply(matrix2);  // Multiply the matrices
+        productMatrix.printMatrix();  // Print the result of multiplication
+
+        System.out.println("Matrix 1 * Scalar " + scalar + ":");
+        Matrix scalarProductMatrix = matrix1.multiplyScalar(scalar);  // Perform scalar multiplication
+        scalarProductMatrix.printMatrix();  // Print the result of scalar multiplication
+
+        scanner.close();  // Close the scanner
+    }
+}
+
+class Matrix {
+    private int rows;   // Number of rows in the matrix
+    private int cols;   // Number of columns in the matrix
+    private double[][] matrix;  // Matrix data structure (2D array)
+
+    // Constructor to initialize the matrix with given rows and columns
+    public Matrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.matrix = new double[rows][cols];  // Initialize the matrix with zero values
+    }
+
+    // Method to set an element in the matrix at a specific position
+    public void setElement(int row, int col, double value) {
+        this.matrix[row][col] = value;
+    }
+
+    // Method to get an element from the matrix at a specific position
+    public double getElement(int row, int col) {
+        return this.matrix[row][col];
+    }
+
+    // Method to print the matrix in a readable format
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + " ");  // Print each element with a space
+            }
+            System.out.println();  // Move to the next line after printing a row
+        }
+    }
+
+    // Method to add two matrices together
+    public Matrix add(Matrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for addition.");
+        }
+
+        Matrix result = new Matrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.setElement(i, j, this.matrix[i][j] + other.getElement(i, j));
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+
+    // Method to subtract two matrices
+    public Matrix subtract(Matrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for subtraction.");
+        }
+
+        Matrix result = new Matrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.setElement(i, j, this.matrix[i][j] - other.getElement(i, j));
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+
+    // Method to multiply two matrices
+    public Matrix multiply(Matrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Matrix dimensions must match for multiplication.");
+        }
+
+        Matrix result = new Matrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                double sum = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    sum += this.matrix[i][k] * other.getElement(k, j);  // Perform multiplication and summation
+                }
+                result.setElement(i, j, sum);  // Store the result in the new matrix
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+
+    // Method to multiply a matrix by a scalar value
+    public Matrix multiplyScalar(double scalar) {
+        Matrix result = new Matrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.setElement(i, j, this.matrix[i][j] * scalar);  // Multiply each element by the scalar
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+}
+```

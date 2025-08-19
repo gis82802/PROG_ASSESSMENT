@@ -1,0 +1,163 @@
+首先，感謝您提供的程式碼。根據您的標準，我們可以開始評估和改進：
+
+1. 打分：我給這份作業打分為80。備註部分扣10分，因為程式缺乏明確的說明。格式部分扣5分，因為程式的縮排和編碼風格並不一致。準確性部分扣5分，因為在進行運算時，沒有進行錯誤檢查。邏輯部分扣10分，因為程式的結構不夠清晰。
+
+2. 分析優缺點：優點是程式中使用了多種矩陣運算，包括加法、減法、乘法和轉置。缺點是程式缺乏明確的說明，格式不夠一致，沒有進行錯誤檢查，邏輯不夠清晰。
+
+3. 改進程式碼：以下是改進後的程式碼：
+
+```java
+public class MyMatrix {
+    private int rows;
+    private int cols;
+    private int[][] matrix;
+
+    // Constructor
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.matrix = new int[rows][cols];
+    }
+
+    // Constructor with a 2D array
+    public MyMatrix(int[][] mat) {
+        if (mat.length == 0 || mat[0].length == 0) {
+            throw new IllegalArgumentException("矩陣不得為空");
+        }
+        this.rows = mat.length;
+        this.cols = mat[0].length;
+        this.matrix = new int[rows][cols];
+        setMatrix(mat);
+    }
+
+    // 設定矩陣內容
+    public void setMatrix(int[][] mat) {
+        if (mat.length != rows || mat[0].length != cols) {
+            throw new IllegalArgumentException("矩陣尺寸不匹配");
+        }
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(mat[i], 0, matrix[i], 0, cols);
+        }
+    }
+
+    // 矩陣加法
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣尺寸必須相同才能進行加法運算");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣減法
+    public MyMatrix sub(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣尺寸必須相同才能進行減法運算");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣乘法
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("矩陣A的列數必須等於矩陣B的行數才能進行乘法運算");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                int sum = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    sum += this.matrix[i][k] * other.matrix[k][j];
+                }
+                result.matrix[i][j] = sum;
+            }
+        }
+        return result;
+    }
+
+    // 矩陣與純量乘法
+    public MyMatrix multiply(int scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    // 矩陣轉置
+    public MyMatrix transpose() {
+        MyMatrix result = new MyMatrix(cols, rows);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[j][i] = this.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 覆寫 toString 方法
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int[] row : matrix) {
+            for (int val : row) {
+                sb.append(val).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    // 測試主程式
+    public static void main(String[] args) {
+        int[][] matA = {{1, 2, 3}, {4, 5, 6}};
+        int[][] matB = {{9, 8, 7}, {6, 5, 4}};
+        int[][] matC = {{9, 8}, {7, 6}, {5, 4}};
+
+        MyMatrix mA = new MyMatrix(matA);
+        MyMatrix mB = new MyMatrix(matB);
+        MyMatrix mC = new MyMatrix(matC);
+
+        System.out.println("Matrix A:");
+        System.out.println(mA);
+
+        System.out.println("Matrix B:");
+        System.out.println(mB);
+
+        System.out.println("Matrix C:");
+        System.out.println(mC);
+
+        System.out.println("Matrix A + B:");
+        System.out.println(mA.add(mB));
+
+        System.out.println("Matrix A - B:");
+        System.out.println(mA.sub(mB));
+
+        System.out.println("Matrix A * C:");
+        System.out.println(mA.multiply(mC));
+
+        System.out.println("Matrix 4 * A:");
+        System.out.println(mA.multiply(4));
+
+        System.out.println("Transpose of Matrix A:");
+        System.out.println(mA.transpose());
+    }
+}
+```
+
+4. 說明改進的程式碼：主要修改了程式的說明部分，增加了明確的說明。並且，進行了格式的調整，保持了適當的縮排和編碼風格。還有，增加了錯誤檢查，提高了準確性。最後，修改了程式的結構，提高了邏輯。
+
+5. 建議和反饋：建議學生在進行程式設計時，需要注意程式的說明、格式、準確性和邏輯。並且，需要不斷地測試程式，確保程式的正確性和可靠性。

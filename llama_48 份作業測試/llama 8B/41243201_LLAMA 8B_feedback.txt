@@ -1,0 +1,85 @@
+首先，我們需要評估這份作業。根據你的標準，我們需要評估備註、格式、準確性和邏輯四個方面。然後，我們需要分析它的優缺點，並為你的學生提供改進的程式碼。最後，我們需要說明改進的程式碼有修改的部分及原因，並為學生提供改進建議和反饋。
+
+我們可以從以下幾點出發：
+1. 備註：程式是否包含對其功能的明確說明。這份程式的備註部分滿足要求。
+2. 格式：是否保持適當的縮排和編碼風格。這份程式的格式需要改善。
+3. 準確性：程式是否產生正確的結果。這份程式的準確性需要改善。
+4.邏輯：程式是否有正確的邏輯。這份程式的邏輯需要改善。
+
+總的來說，這份程式需要改善的方面較多。因此，以下是改進的程式碼：
+
+```java
+class MyMatrix {
+    private double[][] matrix;
+
+    public void setMatrix(double matrix[][]) {
+        this.matrix = matrix;
+    }
+
+    public double[][] add(MyMatrix b) {
+        if (matrix.length != b.matrix.length || matrix[0].length != b.matrix[0].length) {
+            System.out.println("兩矩陣大小不同，無法相加");
+            return null;
+        }
+        double result[][] = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                result[i][j] = matrix[i][j] + b.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    public double[][] sub(MyMatrix b) {
+        if (matrix.length != b.matrix.length || matrix[0].length != b.matrix[0].length) {
+            System.out.println("兩矩陣大小不同，無法相減");
+            return null;
+        }
+        double result[][] = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                result[i][j] = matrix[i][j] - b.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    public double[][] mul(double scalar) {
+        double result[][] = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    public double[][] mul(MyMatrix b) {
+        if (matrix[0].length != b.matrix.length) {
+            System.out.println("矩陣大小不符合，無法相乘");
+            return null;
+        }
+        double result[][] = new double[matrix.length][b.matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < b.matrix[0].length; j++) {
+                for (int k = 0; k < matrix[0].length; k++) {
+                    result[i][j] += matrix[i][k] * b.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    public void print() {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+}
+```
+
+改進的程式碼主要是格式的改善、邏輯的改善和錯誤的修正。程式碼的邏輯和準確性都需要改善，以確保程式能夠正確地運行。

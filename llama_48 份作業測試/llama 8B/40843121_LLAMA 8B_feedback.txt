@@ -1,0 +1,107 @@
+根據您的標準，我們可以開始評估這份作業。首先，以下是這份作業的分數：
+
+備註：20/20
+格式：23/25
+準確性：25/25
+邏輯：30/30
+
+總分：98/100
+
+分析：這份作業的優點是：程式設計清晰、邏輯合理、程式執行正確。缺點是：程式格式有兩處不夠標準，第35行和第36行的縮排需要改善。
+
+改進的程式碼：
+
+```java
+import java.util.Arrays;
+
+class MyMatrix {
+    private int rows, cols;
+    private int[][] matrix;
+
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        matrix = new int[rows][cols];
+    }
+
+    public void setMatrix(int[][] values) {
+        if (values.length != rows || values[0].length != cols) {
+            throw new IllegalArgumentException("Matrix dimensions do not match.");
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = values[i][j];
+            }
+        }
+    }
+
+    public int[][] getMatrix() {
+        return matrix;
+    }
+
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // ... (其他方法保持不變)
+
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for addition.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // ... (其他方法保持不變)
+
+    public static void main(String[] args) {
+        MyMatrix matrix1 = new MyMatrix(2, 2);
+        MyMatrix matrix2 = new MyMatrix(2, 2);
+
+        matrix1.setMatrix(new int[][]{{1, 2}, {3, 4}});
+        matrix2.setMatrix(new int[][]{{5, 6}, {7, 8}});
+
+        System.out.println("Matrix 1:");
+        matrix1.printMatrix();
+
+        System.out.println("Matrix 2:");
+        matrix2.printMatrix();
+
+        MyMatrix resultAdd = matrix1.add(matrix2);
+        System.out.println("Matrix 1 + Matrix 2:");
+        resultAdd.printMatrix();
+
+        MyMatrix resultSubtract = matrix1.subtract(matrix2);
+        System.out.println("Matrix 1 - Matrix 2:");
+        resultSubtract.printMatrix();
+
+        MyMatrix resultMultiply = matrix1.multiply(matrix2);
+        System.out.println("Matrix 1 * Matrix 2:");
+        resultMultiply.printMatrix();
+
+        int scalar = 2;
+        MyMatrix resultScalarMultiply = matrix1.scalarMultiply(scalar);
+        System.out.println("Matrix 1 * Scalar " + scalar + ":");
+        resultScalarMultiply.printMatrix();
+
+        MyMatrix resultScalarMultiply2 = matrix2.scalarMultiply(scalar);
+        System.out.println("Matrix 2 * Scalar " + scalar + ":");
+        resultScalarMultiply2.printMatrix();
+    }
+}
+```
+
+改進的原因是：修正了程式格式的問題，提高了程式的整潔性和可讀性。
+
+改進建議：繼續遵循良好的程式設計準則和慣例，例如遵循Java Coding Conventions。

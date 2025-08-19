@@ -1,0 +1,154 @@
+基於你的標準，我們可以進行以下評價和改進：
+
+評價：
+1. 備註：程式中包含明確的說明和註解，滿分20分，我評分18分，因為某些方法的註解不夠明確。
+2. 格式：程式的格式良好，維持適當的縮排和編碼風格，滿分25分，我評分23分，因為某些方法的結構不夠合理。
+3. 準確性：程式能夠正確地執行所有的運算，滿分25分，我評分25分。
+4.邏輯：程式的邏輯清晰，滿分30分，我評分28分，因為某些方法的邏輯不夠明確。
+
+總分：96分
+
+改進：
+以下是改進後的程式碼：
+
+```java
+import java.util.Scanner;
+
+class MyMatrix {
+    private int rows;
+    private int cols;
+    private double[][] data;
+
+    // Constructor
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new double[rows][cols];
+    }
+
+    // Fill matrix with user input
+    public void fillMatrix() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter elements of the matrix (row by row):");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                data[i][j] = scanner.nextDouble();
+            }
+        }
+    }
+
+    // Add two matrices
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions for addition.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] + other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Subtract two matrices
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions for subtraction.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Multiply two matrices
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Number of columns of the first matrix must equal number of rows of the second matrix.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < result.rows; i++) {
+            for (int j = 0; j < result.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result.data[i][j] += this.data[i][k] * other.data[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // Multiply matrix by scalar
+    public MyMatrix scalarMultiply(double scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    // Print matrix contents
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.printf("%.2f ", data[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class javawork1213 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input first matrix
+        System.out.println("Enter dimensions of the first matrix (rows and cols):");
+        int rows1 = scanner.nextInt();
+        int cols1 = scanner.nextInt();
+        MyMatrix matrix1 = new MyMatrix(rows1, cols1);
+        matrix1.fillMatrix();
+
+        // Input second matrix
+        System.out.println("Enter dimensions of the second matrix (rows and cols):");
+        int rows2 = scanner.nextInt();
+        int cols2 = scanner.nextInt();
+        MyMatrix matrix2 = new MyMatrix(rows2, cols2);
+        matrix2.fillMatrix();
+
+        // Perform operations
+        System.out.println("Matrix Addition:");
+        if (rows1 == rows2 && cols1 == cols2) {
+            matrix1.add(matrix2).printMatrix();
+        } else {
+            System.out.println("Addition not possible due to dimension mismatch.");
+        }
+
+        System.out.println("Matrix Subtraction:");
+        if (rows1 == rows2 && cols1 == cols2) {
+            matrix1.subtract(matrix2).printMatrix();
+        } else {
+            System.out.println("Subtraction not possible due to dimension mismatch.");
+        }
+
+        System.out.println("Matrix Multiplication:");
+        if (cols1 == rows2) {
+            matrix1.multiply(matrix2).printMatrix();
+        } else {
+            System.out.println("Multiplication not possible due to dimension mismatch.");
+        }
+
+        System.out.println("Scalar Multiplication of the first matrix (scalar = 2):");
+        matrix1.scalarMultiply(2).printMatrix();
+    }
+}
+```
+
+改進的原因：
+1. 在每個方法的註解中增加明確的說明。
+2. 改變某些方法的結構，以提高程式的邏輯性和可讀性。

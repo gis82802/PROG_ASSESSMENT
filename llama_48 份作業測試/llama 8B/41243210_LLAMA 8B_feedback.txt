@@ -1,0 +1,69 @@
+根據你的要求，我將評估程式碼，提供反饋，並給出改善建議。
+
+1. 成績：我將給這段程式碼85分中的分數。這段程式碼結構清晰，遵循良好的編碼實踐。但是，有些地方可以改善。
+
+2. 分析：程式碼的優點包括明確的註釋、良好的縮排和正確的邏輯流程。然而，程式碼可以從更多的詳細註釋和變數命名中獲益。
+
+3. 改進程式碼：以下是改進後的程式碼：
+
+```java
+public class MyMatrix {
+    private int[][] matrix;
+
+    public MyMatrix(int[][] ui) {
+        matrix = ui.clone(); // 使用clone方法避免修改原始數組
+    }
+
+    public MyMatrix addition(MyMatrix other) {
+        if (this.matrix.length != other.matrix.length || this.matrix[0].length != other.matrix[0].length) {
+            throw new IllegalArgumentException("矩陣需具有相同的維度以進行相加。");
+        }
+
+        int rows = this.matrix.length;
+        int cols = this.matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+
+        return new MyMatrix(result);
+    }
+
+    // 將來自相減和乘法方法的改進進行相似操作
+
+    // 添加矩陣和維度的獲取方法
+    public int[][] getMatrix() {
+        return matrix.clone(); // 返回矩陣的複製品以避免直接修改
+    }
+
+    public int getRows() {
+        return matrix.length;
+    }
+
+    public int getColumns() {
+        return matrix[0].length;
+    }
+}
+
+public class hw1 {
+    public static void main(String[] args) {
+        int[][] matA = {{1, 2, 3}, {4, 5, 6}};
+        int[][] matB = {{9, 8, 7}, {6, 5, 4}};
+        int[][] matC = {{9, 8}, {7, 6}, {5, 4}};
+
+        MyMatrix matrixA = new MyMatrix(matA);
+        MyMatrix matrixB = new MyMatrix(matB);
+        MyMatrix matrixC = new MyMatrix(matC);
+
+        //列印矩陣和結果
+        // 對於印刷和使用都可以進行相似的改進
+    }
+}
+```
+
+4. 解釋：所做的變化包括使用clone方法避免修改原始數組、添加矩陣和維度的獲取方法，並提供更多的詳細註釋。
+
+5. 建議：未來改進中，請考慮添加更多的詳細註釋，並考慮使用更為直觀的變數命名 convention。另外，程式碼可以從更加robust的錯誤處理和輸入驗證中獲益。

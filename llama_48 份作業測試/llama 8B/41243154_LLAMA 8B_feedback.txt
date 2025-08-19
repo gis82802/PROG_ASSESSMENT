@@ -1,0 +1,160 @@
+首先，根據你所提供的標準，以下是這份作業的評分：
+
+- 備註：20分中得10分，因為這份作業包含了明確的說明，但是在說明中有一些錯誤的標點符號。
+- 格式：25分中得22分，因為程式保持了適當的縮排和編碼風格，但是一些變數命名不夠直觀。
+- 準確性：25分中得23分，因為程式產生了大多數的正確結果，但是在某些特殊情況下會出現錯誤。
+-邏輯：30分中得28分，因為程式大多數的邏輯都是正確的，但是在某些地方需要改進。
+
+總分為93分。
+
+接下來是這份作業的優點和缺點：
+
+優點：程式的結構清晰，變數命名大多數是合理的，程式的邏輯大多數是正確的。
+
+缺點：程式在某些特殊情況下會出現錯誤，變數命名不夠直觀在某些地方，需要改進的邏輯。
+
+接下來是改進的程式碼：
+
+```java
+import java.util.Scanner;
+
+class MyMatrix{
+	int[][] Ma;
+	int rows;
+	int cols;
+	
+	public MyMatrix(int[][] a){Ma = a; rows=a.length; cols=a[0].length;}
+	public int[][] add(int[][] a){
+		if(rows == a.length && cols == a[0].length){
+			int[][] result = new int[rows][cols];
+			for(int i=0;i<rows;i++){
+				for(int j=0;j<cols;j++){
+					result[i][j] = Ma[i][j] + a[i][j];
+				}
+			}
+			return result;
+		}else return null;
+	}
+	public int[][] diff(int[][] a){
+		if(rows == a.length && cols == a[0].length){
+			int[][] result = new int[rows][cols];
+			for(int i=0;i<rows;i++){
+				for(int j=0;j<cols;j++){
+					result[i][j] = Ma[i][j] - a[i][j];
+				}
+			}
+			return result;
+		}else return null;
+	}
+	public int[][] multply(int[][] a){
+		if(cols == a.length){
+			int[][] result = new int[rows][a[0].length];
+			for(int i=0;i<rows;i++){
+				for(int j=0;j<a[0].length;j++){
+					result[i][j] = 0;
+					for(int k=0;k<cols;k++){
+						result[i][j] += Ma[i][k] * a[k][j];
+					}
+				}
+			}
+			return result;
+		}else return null;
+	}
+	public int determinant(int[][] a){
+		int size = a.length;
+		if(size == 1)return a[0][0];
+		if(size == 2)return a[0][0]*a[1][1] - a[0][1]*a[1][0];
+		
+		int result = 0;
+		int sign = 1;
+		for(int i=0;i<size;i++){
+			result += sign * a[0][i] * subDeterminant(a,0,i);
+			sign = -sign;
+		}
+		return result;
+	}
+	private int subDeterminant(int[][] matrix, int exRow, int exCol){
+		int size = matrix.length;
+		int[][] subMatrix = new int[size-1][size-1];
+		int subRow = 0,subCol;
+		
+		for(int i=0;i<size;i++){
+			if(i == exRow)continue;
+			subCol = 0;
+			for(int j=0;j<size;j++){
+				if(j == exCol)continue;
+				subMatrix[subRow][subCol] = matrix[i][j];
+				subCol++;
+			}
+			subRow++;
+		}
+		return determinant(subMatrix);
+	}
+	public void show(int[][] a){
+		if(a != null){
+			for(int i=0;i<a.length;i++){
+				for(int j=0;j<a[0].length;j++){
+					System.out.printf("%4d ",a[i][j]);
+				}
+				System.out.println();
+			}
+		}else{
+			System.out.println("The size can not pair.");
+		}
+	}
+	
+}
+
+public class J_1213_01 {
+	public static void main (String[] args){
+		Scanner sn = new Scanner(System.in);
+		
+		System.out.print("Enter the rows for matrixA: ");
+		int rowsA = sn.nextInt();
+		System.out.print("Enter the cols for matrixA: ");
+		int colsA = sn.nextInt();
+		System.out.println("Enter the value for matrixA: ");
+		int[][] matrixA = new int[rowsA][colsA];
+		for(int i=0;i<rowsA;i++){
+			for(int j=0;j<colsA;j++){
+				matrixA[i][j] = sn.nextInt();
+			}
+		}
+		
+		System.out.print("Enter the rows for matrixB: ");
+		int rowsB = sn.nextInt();
+		System.out.print("Enter the cols for matrixB: ");
+		int colsB = sn.nextInt();
+		System.out.println("Enter the value for matrixB: ");
+		int[][] matrixB = new int[rowsB][colsB];
+		for(int i=0;i<rowsB;i++){
+			for(int j=0;j<colsB;j++){
+				matrixB[i][j] = sn.nextInt();
+			}
+		}
+		
+		MyMatrix m1 = new MyMatrix(matrixA);
+		System.out.println("matrixA:");
+		m1.show(matrixA);
+		System.out.println("matrixB:");
+		m1.show(matrixB);
+		
+		System.out.println("(mA + mB):");
+		int[][] Sum = m1.add(matrixB);
+		m1.show(Sum);
+		System.out.println("(mA - mB):");
+		int[][] Diff = m1.diff(matrixB);
+		m1.show(Diff);
+		System.out.println("(mA * mB):");
+		int[][] Multply = m1.multply(matrixB);
+		m1.show(Multply);
+		
+		int det = m1.determinant(Multply);
+		System.out.println("(mA * mB)'s determinant is " + det);
+		
+		sn.close();
+	}
+}
+```
+
+改進的程式碼主要是變更了一些變數命名，並且在某些地方進行了邏輯改進。

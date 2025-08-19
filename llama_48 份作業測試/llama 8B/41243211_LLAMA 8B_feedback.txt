@@ -1,0 +1,72 @@
+首先，我們需要評估這份作業。根據你的標準，我們會給這份作業打分為72分。它的優點是程式的邏輯清晰，變數命名合理，格式也保持良好。但是，備註方面需要改進，因為程式的說明並不充分。 
+
+另外，程式的準確性也需要改進。雖然程式能夠運行，但是沒有任何錯誤檢查機制，沒有任何輸出錯誤的處理機制。 
+
+以下是改進的程式碼：
+
+```java
+public class MyMatrix {
+    // ... (previous code remains the same)
+
+    // 加法
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) 
+            throw new IllegalArgumentException("矩陣尺寸必須相同！");
+        
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) 
+            for (int j = 0; j < cols; j++) 
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+        return result;
+    }
+
+    // 減法
+    public MyMatrix sub(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) 
+            throw new IllegalArgumentException("矩陣尺寸必須相同！");
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 乘法
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) 
+            throw new IllegalArgumentException("左矩陣的列數必須等於右矩陣的行數！");
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result.matrix[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // 純量乘法
+    public MyMatrix Multiply(int scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) 
+            for (int j = 0; j < cols; j++) 
+                result.matrix[i][j] = this.matrix[i][j] * scalar;
+        return result;
+    }
+
+    // 列印
+    public void print() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) 
+                System.out.print(matrix[i][j] + " ");
+            System.out.println();
+        }
+    }
+}
+```
+改進的程式碼除了前述的改進外，還增加了輸出錯誤的處理機制。 
+
+最後，我們建議學生在寫程式時，需要詳細地說明程式的功能，並需要在程式中添加輸出錯誤的處理機制。

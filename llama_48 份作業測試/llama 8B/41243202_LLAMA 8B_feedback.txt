@@ -1,0 +1,89 @@
+首先，我需要注意的是，該程式碼並未包含任何明確的說明，滿分20分中只有5分因此，備註部分的分數為5分。
+
+格式部分，程式碼的編碼風格和縮排都非常整潔，滿分25分中有23分因此，格式部分的分數為23分。
+
+準確性部分，程式碼中所有的運算都進行了正確的計算，滿分25分中有25分因此，準確性部分的分數為25分。
+
+邏輯部分，程式碼的邏輯是非常明確的，並且每個方法的作用都非常明確，滿分30分中有28分因此，邏輯部分的分數為28分。
+
+總分為81分。總的來說，該程式碼的結構和邏輯都非常清晰，但缺乏明確的說明，需要改進。
+
+以下是改進的建議和程式碼：
+
+1. 添加明確的說明，說明每個類別、方法的作用和邏輯。
+
+2. 在main方法中，添加輸入矩陣大小和元素的說明。
+
+3. 在每個方法的開頭添加明確的說明，說明方法的作用和輸入輸出。
+
+4. 在輸出矩陣內容時，添加標籤，標明每個矩陣的內容是哪一個矩陣的內容。
+
+改進後的程式碼如下：
+
+```java
+//MyMatrix類別
+class MyMatrix 
+{
+    	//其他內容同上
+    	//...
+
+    	//印出矩陣內容
+    	public void print(String matrixName) 
+	{
+        	System.out.println("矩陣名稱： " + matrixName);
+        	System.out.println("矩陣內容：");
+        	for(int i = 0; i < rows; i++) 
+		{
+            		for(int j = 0; j < cols; j++) 
+			{
+                		System.out.printf("%.2f\t", matrix[i][j]);
+            		}
+            		System.out.println();
+        	}
+    	}
+}
+
+//展示 MyMatrix 類的功能
+public class wh1 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        //其他內容同上
+        //...
+
+        //加法
+        try {
+            System.out.println("\n=== 矩陣加法 (矩陣1 + 矩陣2) ===");
+            MyMatrix sum = matrix1.add(matrix2);
+            sum.print("矩陣1 + 矩陣2");
+        } catch (IllegalArgumentException e) {
+            System.out.println("加法錯誤: " + e.getMessage());
+        }
+
+        //減法
+        try {
+            System.out.println("\n=== 矩陣減法 (矩陣1 - 矩陣2) ===");
+            MyMatrix difference = matrix1.subtract(matrix2);
+            difference.print("矩陣1 - 矩陣2");
+        } catch (IllegalArgumentException e) {
+            System.out.println("減法錯誤: " + e.getMessage());
+        }
+
+        //乘法
+        try {
+            System.out.println("\n=== 矩陣乘法 (矩陣1 * 矩陣2) ===");
+            MyMatrix product = matrix1.multiply(matrix2);
+            product.print("矩陣1 * 矩陣2");
+        } catch (IllegalArgumentException e) {
+            System.out.println("乘法錯誤: " + e.getMessage());
+        }
+
+        //純量乘法
+        System.out.println("\n=== 純量乘法 (矩陣1 * 2) ===");
+        MyMatrix scalarProduct = matrix1.multiply(2.0);
+        scalarProduct.print("矩陣1 * 2");
+
+        sc.close();
+    }
+}
+```

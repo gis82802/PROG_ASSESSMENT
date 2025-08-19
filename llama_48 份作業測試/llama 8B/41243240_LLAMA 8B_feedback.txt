@@ -1,0 +1,97 @@
+好的，我已經閱讀了你的代碼。根據你的標準，我給出了以下評價：
+
+1. 分數：85分出於100分
+    - 代碼結構清晰，遵循了問題的要求
+    - 評論清楚，提供了每個函數的良好解釋
+    - 不過，代碼可以更加緊湊，某些方法可以被結合
+
+2. 分析：
+    - 代碼的一個優點是其結構清晰易懂。每個函數都被良好評論，並且易於追蹤
+    - 代碼的一個弱點是重複的方法。相加、相減和純量乘法的方法幾乎相同，唯一的不同之處是進行的操作。這可以被優化以提高閱讀性和效率。
+
+3. 改進的代碼：
+    - 下面是修訂後的代碼，減少重複並優化方法：
+
+```java
+public class MyMatrix{
+   int [][]matrix; 
+
+   public void setMatrix (int [][]matrix){
+	this.matrix=matrix;	
+   }
+
+   public void printMat() {
+       for(int i = 0; i < this.matrix.length; i++) {
+           for(int j = 0; j < this.matrix[i].length; j++) {
+               System.out.print(this.matrix[i][j] + " ");
+           }
+           System.out.println();
+       }
+   }
+
+   public MyMatrix addOrSubtract(MyMatrix otherMatrix, boolean add) {
+       if(this.matrix.length != otherMatrix.matrix.length || this.matrix[0].length != otherMatrix.matrix[0].length) { 
+           throw new IllegalArgumentException("矩陣大小不同，無法進行相加或相減"); 
+       }
+
+       int rows = this.matrix.length; 
+       int cols = this.matrix[0].length; 
+       int[][] result = new int[rows][cols]; 
+
+       for(int i = 0; i < rows; i++) { 
+           for(int j = 0; j < cols; j++) { 
+               result[i][j] = add ? this.matrix[i][j] + otherMatrix.matrix[i][j] : this.matrix[i][j] - otherMatrix.matrix[i][j]; 
+           } 
+       } 
+
+       MyMatrix resultMatrix = new MyMatrix();
+       resultMatrix.setMatrix(result);
+       return resultMatrix;
+   }
+
+   public MyMatrix multiply(MyMatrix otherMatrix) { 
+       if(this.matrix[0].length != otherMatrix.matrix.length) { 
+           throw new IllegalArgumentException("矩陣相乘條件不符，無法進行運算"); 
+       } 
+
+       int rows = this.matrix.length; 
+       int cols = otherMatrix.matrix[0].length; 
+       int[][] result = new int[rows][cols]; 
+
+       for(int i = 0; i < rows; i++) { 
+           for(int j = 0; j < cols; j++) { 
+               result[i][j] = 0; 
+               for(int k = 0; k < this.matrix[0].length; k++) { 
+                   result[i][j] += this.matrix[i][k] * otherMatrix.matrix[k][j]; 
+               } 
+           } 
+       } 
+
+       MyMatrix resultMatrix = new MyMatrix();
+       resultMatrix.setMatrix(result);
+       return resultMatrix;
+   }
+
+   public MyMatrix scalarMultiply(int scalar) { 
+       int rows = this.matrix.length; 
+       int cols = this.matrix[0].length; 
+       int[][] result = new int[rows][cols]; 
+
+       for(int i = 0; i < rows; i++) { 
+           for(int j = 0; j < cols; j++) { 
+               result[i][j] = this.matrix[i][j] * scalar; 
+           } 
+       } 
+
+       MyMatrix resultMatrix = new MyMatrix();
+       resultMatrix.setMatrix(result);
+       return resultMatrix;
+   }
+}
+```
+
+4. 改進代碼的解釋：代碼被優化，將相加和相減的方法結合為單個方法“addOrSubtract”。這個方法將運算是否為相加或相減作為布爾參數決定。multiply和scalarMultiply方法保持不變，因為它們已經被優化。
+
+5. 反饋：
+    - 總的來說，代碼良好，結構清晰，遵循問題的要求，並且易於理解。
+    - 存在優化的空間。考慮結合相加和相減的方法以減少重複。

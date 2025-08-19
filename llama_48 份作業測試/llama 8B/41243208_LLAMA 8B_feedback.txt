@@ -1,0 +1,78 @@
+根據你的標準，我會給這份作業以下分數：
+備註：20/20
+格式：23/25
+準確性：25/25
+邏輯：30/30
+
+總分：98/100
+
+分析：
+這份程式有明確的註釋，並且結構良好。變數名稱描述明確，程式格式良好。程式邏輯也正確，包含適當的錯誤檢查，並正確地使用矩陣運算。然而，程式沒有README文件，也沒有明確的說明程式功能。
+
+改進建議：
+1. 添加README文件，解釋程式的目的是什麼、如何使用、以及任何假設。
+2. 添加更多註釋，解釋程式中某些部分的理由。
+3. 考慮添加一些輸入和輸出檢查，以確保程式的行為正確。
+
+修改後程式碼：
+以下是添加README文件和額外註釋後的修改後程式碼：
+
+```java
+/**
+ * MyMatrix class for performing operations on matrices.
+ *
+ * @author Your Name
+ * @version 1.0
+ * @since 2022-01-01
+ */
+
+public class MyMatrix {
+    // ... (same as before)
+
+    // Set matrix values (for demo purposes)
+    public void setMatrix(int[][] values) {
+        for (int i = 0; i < rows; i++) {
+            // Copy each row of the input matrix to the corresponding row of this matrix.
+            System.arraycopy(values[i], 0, matrix[i], 0, cols);
+        }
+    }
+
+    // ... (same as before)
+
+    public static void main(String[] args) {
+        // ... (same as before)
+
+        // Print the matrices
+        System.out.println("Matrix A:");
+        mA.printMatrix();
+
+        System.out.println("\nMatrix B:");
+        mB.printMatrix();
+
+        System.out.println("\nMatrix C:");
+        mC.printMatrix();
+
+        // ... (same as before)
+
+        // Print the results of the operations
+        System.out.println("\nMatrix A + B:");
+        MyMatrix resultAdd = mA.add(mB);
+        resultAdd.printMatrix();
+
+        System.out.println("\nMatrix A - B:");
+        MyMatrix resultSub = mA.subtract(mB);
+        resultSub.printMatrix();
+
+        System.out.println("\nMatrix A * C:");
+        MyMatrix resultMul = mA.multiply(mC);
+        resultMul.printMatrix();
+
+        System.out.println("\nMatrix 4 * A:");
+        MyMatrix resultScalar = mA.multiply(4);
+        resultScalar.printMatrix();
+    }
+}
+```
+
+反饋：
+總的來說，程式良好，結構良好。我的建議只是一些小改進，旨在讓程式更友善。繼續保持良好的工作！
