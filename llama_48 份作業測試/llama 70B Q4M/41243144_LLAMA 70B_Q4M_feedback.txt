@@ -1,0 +1,149 @@
+根據您的標準，我將對這份作業進行評分和分析。
+
+**評分：**
+
+* 備註 (20 分)：15 分 (有明確的說明，但有些地方可以改善)
+* 格式 (25 分)：23 分 (保持適當的縮排和編碼風格，但有些地方可以改善)
+* 準確性 (25 分)：25 分 (程式產生正確的結果)
+* 邏輯 (30 分)：28 分 (程式有正確的邏輯，但有些地方可以改善)
+
+總分：91 分
+
+**分析：**
+
+優點：
+
+* 程式碼整潔、易讀，使用了適當的縮排和編碼風格。
+* 程式有明確的說明，易於理解。
+* 程式產生正確的結果，邏輯正確。
+
+缺點：
+
+*有些地方可以改善備註的說明，例如在 inverse() 方法中可以添加更多的說明。
+* 在 add() 和 sub() 方法中，可以使用更簡潔的方式來檢查矩陣是否可以相加或相減。
+* 在 mult() 方法中，可以使用更好的變數命名，例如使用 `result` 而不是 `new_matrix`。
+
+**改進的程式碼：**
+```
+public class Matrix {
+    // ...
+
+    private Matrix inverse() {
+        // ...
+        /**
+         *  回傳矩陣反矩陣，若矩陣無反矩陣則拋出例外
+         *  
+         *  return: Matrix 矩陣類別
+         * 
+         *  throw:
+         *      1. IllegalArgumentException("只有方陣才能計算逆矩陣")
+         *      2.IllegalArgumentException("矩陣不可逆")
+         */
+        if (matrix_length != matrix_sub_length) {
+            throw new IllegalArgumentException("只有方陣才能計算逆矩陣");
+        }
+
+        int n = matrix_length;
+        double[][] augmented = new double[n][2 * n];
+
+        // 建立增廣矩陣：[A | I]
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                augmented[i][j] = matrix[i][j];
+            }
+            augmented[i][n + i] = 1.0;
+        }
+
+        // 高斯-喬丹消去法
+        for (int i = 0; i < n; i++) {
+            // 尋找主元
+            if (Math.abs(augmented[i][i]) < 1e-9) {
+                throw new IllegalArgumentException("矩陣不可逆");
+            }
+            double pivot = augmented[i][i];
+
+            // 歸一化主元所在行
+            for (int j = 0; j < 2 * n; j++) {
+                augmented[i][j] /= pivot;
+            }
+
+            // 消去其他行
+            for (int k = 0; k < n; k++) {
+                if (k != i) {
+                    double factor = augmented[k][i];
+                    for (int j = 0; j < 2 * n; j++) {
+                        augmented[k][j] -= factor * augmented[i][j];
+                    }
+                }
+            }
+        }
+
+        // 提取逆矩陣
+        double[][] inverse_matrix = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                inverse_matrix[i][j] = augmented[i][n + j];
+            }
+        }
+
+        return new Matrix(inverse_matrix);
+    }
+
+    public Matrix add(final Matrix summand) {
+        // ...
+        if (this.get_matrix_length() == summand.get_matrix_length() && this.get_matrix_sub_length() == summand.get_matrix_sub_length()) {
+            double[][] result = new double[this.get_matrix_length()][this.get_matrix_sub_length()];
+            for (int i = 0; i < this.get_matrix_length(); i++) {
+                for (int j = 0; j < this.get_matrix_sub_length(); j++) {
+                    result[i][j] = matrix[i][j] + summand.get_matrix()[i][j];
+                }
+            }
+            return new Matrix(result);
+        }
+
+        throw new IllegalArgumentException("兩個陣列無法相加");
+    }
+
+    public Matrix sub(final Matrix minuend) {
+        // ...
+        if (this.get_matrix_length() == minuend.get_matrix_length() && this.get_matrix_sub_length() == minuend.get_matrix_sub_length()) {
+            double[][] result = new double[this.get_matrix_length()][this.get_matrix_sub_length()];
+            for (int i = 0; i < this.get_matrix_length(); i++) {
+                for (int j = 0; j < this.get_matrix_sub_length(); j++) {
+                    result[i][j] = matrix[i][j] - minuend.get_matrix()[i][j];
+                }
+            }
+            return new Matrix(result);
+        }
+
+        throw new IllegalArgumentException("兩個陣列無法相減");
+    }
+
+    public Matrix mult(final Matrix multiplicand) {
+        // ...
+        if (this.get_matrix_sub_length() == multiplicand.get_matrix_length()) {
+            double[][] result = new double[this.get_matrix_length()][multiplicand.get_matrix_sub_length()];
+            for (int i = 0; i < this.get_matrix_length(); i++) {
+                for (int j = 0; j < multiplicand.get_matrix_sub_length(); j++) {
+                    for (int k = 0; k < this.get_matrix_sub_length(); k++) {
+                        result[i][j] += matrix[i][k] * multiplicand.get_matrix()[k][j];
+                    }
+                }
+            }
+            return new Matrix(result);
+        }
+
+        throw new IllegalArgumentException("兩個陣列無法相乘");
+    }
+
+    // ...
+}
+
+**改進建議和反饋：**
+
+* 請繼續保持整潔的程式碼風格和適當的縮排。
+* 請添加更多的備註，例如在 inverse() 方法中添加更多的說明。
+* 請使用更簡潔的方式來檢查矩陣是否可以相加或相減。
+* 請使用更好的變數命名，例如使用 `result` 而不是 `new_matrix`。
+
+希望這些建議和反饋能夠幫助您改進程式碼！

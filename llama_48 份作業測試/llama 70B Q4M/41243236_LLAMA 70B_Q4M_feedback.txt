@@ -1,0 +1,48 @@
+根據您的標準，我給這份作業打分為85分。
+
+備註(18/20)：該程式包含明確的函數說明，但缺乏整體的類別說明和變數命名的意義。
+
+格式(23/25)：程式碼保持適當的縮排和編碼風格，但有一些地方的空格使用不夠一致。
+
+準確性(25/25)：程式產生正確的結果。
+
+邏輯(29/30)：程式的邏輯正確，但在矩陣相乘的方法中可以使用更好的演算法以提高效率。
+
+以下是改進的程式碼：
+
+```java
+public class MyMatrix {
+    private int[][] matrix;
+
+    // ...
+
+    // (b) Multiply two matrices
+    public MyMatrix multiply(MyMatrix other) {
+        if (matrix[0].length != other.matrix.length) {
+            throw new IllegalArgumentException("Number of columns in the first matrix must equal number of rows in the second matrix.");
+        }
+        int rows = matrix.length;
+        int cols = other.matrix[0].length;
+        int common = matrix[0].length;
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < common; k++) {
+                    result[i][j] += matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // ...
+}
+```
+
+改進的程式碼主要修改了矩陣相乘的方法，以提高效率。
+
+建議和反饋：
+
+* 請添加整體的類別說明和變數命名的意義。
+* 請保持空格使用的一致性。
+* 請考慮使用更好的演算法以提高矩陣相乘的效率。

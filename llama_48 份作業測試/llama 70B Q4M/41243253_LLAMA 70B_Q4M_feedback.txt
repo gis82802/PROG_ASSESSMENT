@@ -1,0 +1,202 @@
+我已經評估了學生的作業程式碼，以下是我的評分和分析：
+
+**評分：**
+備註：15/20 (缺乏明確的函數說明和變數命名的意義)
+格式：20/25 (縮排和編碼風格良好，但有些地方可以進一步改善)
+準確性：23/25 (程式碼能夠正確地執行矩陣操作，但有些地方可以進一步優化)
+邏輯：26/30 (程式碼的邏輯正確，但有些地方可以進一步簡化和優化)
+
+總分：84/100
+
+**分析優缺點：**
+優點：
+
+* 程式碼能夠正確地執行矩陣操作
+*縮排和編碼風格良好
+
+缺點：
+
+* 缺乏明確的函數說明和變數命名的意義
+*有些地方可以進一步優化和簡化程式碼
+
+**改進的程式碼：**
+```
+class MyMatrix {
+    private int[][] mat;
+
+    /**
+     * 設置矩陣內容
+     * @param Mat 矩陣內容
+     */
+    public void setMatrix(int[][] Mat) {
+        mat = new int[Mat.length][Mat[0].length];
+        for (int i = 0; i < Mat.length; i++) {
+            for (int j = 0; j < Mat[i].length; j++) {
+                mat[i][j] = Mat[i][j];
+            }
+        }
+    }
+
+    /**
+     * 列印矩陣內的內容
+     */
+    public void printMat() {
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                System.out.print(mat[i][j] + "  ");
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * 矩陣相加
+     * @param mat2 矩陣B
+     * @return 相加結果
+     */
+    public MyMatrix addMat(MyMatrix mat2) {
+        if (mat.length != mat2.mat.length || mat[0].length != mat2.mat[0].length) {
+            System.out.println("矩陣彼此大小不同，無法相加");
+            return null;
+        } else {
+            MyMatrix resMat = new MyMatrix();
+            int[][] result = new int[mat.length][mat[0].length];
+            for (int i = 0; i < mat.length; i++) {
+                for (int j = 0; j < mat[i].length; j++) {
+                    result[i][j] = this.mat[i][j] + mat2.mat[i][j];
+                }
+            }
+            resMat.setMatrix(result);
+            return resMat;
+        }
+    }
+
+    /**
+     * 矩陣相減
+     * @param mat2 矩陣B
+     * @return 相減結果
+     */
+    public MyMatrix subMat(MyMatrix mat2) {
+        if (mat.length != mat2.mat.length || mat[0].length != mat2.mat[0].length) {
+            System.out.println("矩陣彼此大小不同，無法相減");
+            return null;
+        } else {
+            MyMatrix resMat = new MyMatrix();
+            int[][] result = new int[mat.length][mat[0].length];
+            for (int i = 0; i < mat.length; i++) {
+                for (int j = 0; j < mat[i].length; j++) {
+                    result[i][j] = this.mat[i][j] - mat2.mat[i][j];
+                }
+            }
+            resMat.setMatrix(result);
+            return resMat;
+        }
+    }
+
+    /**
+     * 矩陣相乘
+     * @param mat2 矩陣B
+     * @return 相乘結果
+     */
+    public MyMatrix multMat(MyMatrix mat2) {
+        if (this.mat[0].length != mat2.mat.length) {
+            System.out.println("矩陣彼此大小不符，無法相乘");
+            return null;
+        } else {
+            MyMatrix resMat = new MyMatrix();
+            int[][] result = new int[this.mat.length][mat2.mat[0].length];
+            for (int i = 0; i < this.mat.length; i++) {
+                for (int j = 0; j < mat2.mat[0].length; j++) {
+                    result[i][j] = 0;
+                    for (int k = 0; k < this.mat[0].length; k++) {
+                        result[i][j] += this.mat[i][k] * mat2.mat[k][j];
+                    }
+                }
+            }
+            resMat.setMatrix(result);
+            return resMat;
+        }
+    }
+
+    /**
+     * 矩陣與純量相乘
+     * @param scalar 純量
+     * @return 相乘結果
+     */
+    public MyMatrix multMat(int scalar) {
+        MyMatrix resMat = new MyMatrix();
+        int[][] result = new int[mat.length][mat[0].length];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                result[i][j] = mat[i][j] * scalar;
+            }
+        }
+        resMat.setMatrix(result);
+        return resMat;
+    }
+}
+
+//主程式
+public class hw9_1 {
+    public static void main(String args[]) {
+        int Mat1[][] = { { 1, 2, 3 }, { 4, 5, 6 } };
+        int Mat2[][] = { { 9, 8, 7 }, { 6, 5, 4 } };
+        int Mat3[][] = { { 9, 8 }, { 7, 6 }, { 5, 4 } };
+
+        MyMatrix matA = new MyMatrix();
+        matA.setMatrix(Mat1);
+        MyMatrix matB = new MyMatrix();
+        matB.setMatrix(Mat2);
+        MyMatrix matC = new MyMatrix();
+        matC.setMatrix(Mat3);
+
+        System.out.println("Matrix A:");
+        matA.printMat();
+
+        System.out.println("Matrix B:");
+        matB.printMat();
+
+        System.out.println("Matrix C:");
+        matC.printMat();
+
+        // 矩陣相加
+        System.out.println("Matrix A + B：");
+        MyMatrix result1 = matA.addMat(matB);
+        if (result1 != null) {
+            result1.printMat();
+        }
+
+        // 矩陣相減
+        System.out.println("Matrix A - B：");
+        MyMatrix result2 = matA.subMat(matB);
+        if (result2 != null) {
+            result2.printMat();
+        }
+
+        // 矩陣相乘
+        System.out.println("Matrix A * C：");
+        MyMatrix result3 = matA.multMat(matC);
+        if (result3 != null) {
+            result3.printMat();
+        }
+
+        // 矩陣相乘純量
+        System.out.println("Matrix 4*B：");
+        MyMatrix result4 = matB.multMat(4);
+        if (result4 != null) {
+            result4.printMat();
+        }
+    }
+}
+
+**說明改進的程式碼：**
+我對學生的程式碼進行了以下改進：
+
+* 添加了函數說明和變數命名的意義
+* 優化了矩陣操作的程式碼
+* 簡化了矩陣相加、相減、相乘的程式碼
+
+**為學生提供改進建議和反饋：**
+* 請添加明確的函數說明和變數命名的意義，以便更好地理解程式碼
+* 請繼續優化和簡化矩陣操作的程式碼，以提高程式碼的效率和可讀性
+* 請注意縮排和編碼風格，以保持程式碼的整潔和易讀性

@@ -1,0 +1,140 @@
+根據您的標準，我給這份作業打分為85分。
+
+備註（20分）：這個程式碼缺乏明確的說明，沒有任何注釋或文檔，故只給10分。
+
+格式（25分）：程式碼的縮排和編碼風格基本上是正確的，但有一些地方可以改善，例如在方法之間添加空行以提高可讀性，故給22分。
+
+準確性（25分）：程式碼能夠正確地執行矩陣加法、減法、乘法和數乘法，故給25分。
+
+邏輯（30分）：程式碼的邏輯基本上是正確的，但有一些地方可以改善，例如在add和sub方法中可以使用相同的邏輯來檢查矩陣大小，故給27分。
+
+以下是優缺點分析：
+
+優點：程式碼能夠正確地執行矩陣運算，縮排和編碼風格基本上是正確的。
+
+缺點：缺乏明確的說明，方法之間沒有空行，add和sub方法中可以使用相同的邏輯來檢查矩陣大小。
+
+以下是改進的程式碼：
+
+```java
+class Matrix {
+    private int[][] mat;
+
+    /**
+     * Constructor for Matrix class
+     * @param recv 2D array to initialize the matrix
+     */
+    public Matrix(int[][] recv) {
+        mat = recv;
+    }
+
+    /**
+     * Add two matrices
+     * @param recv matrix to add
+     * @return resulting matrix
+     */
+    public Matrix add(Matrix recv) {
+        if (!canOperate(recv)) {
+            System.out.println("Cannot Add");
+            return null;
+        }
+        int[][] total = new int[mat.length][mat[0].length];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                total[i][j] = mat[i][j] + recv.mat[i][j];
+            }
+        }
+        return new Matrix(total);
+    }
+
+    /**
+     * Subtract two matrices
+     * @param recv matrix to subtract
+     * @return resulting matrix
+     */
+    public Matrix sub(Matrix recv) {
+        if (!canOperate(recv)) {
+            System.out.println("Cannot Sub");
+            return null;
+        }
+        int[][] total = new int[mat.length][mat[0].length];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                total[i][j] = mat[i][j] - recv.mat[i][j];
+            }
+        }
+        return new Matrix(total);
+    }
+
+    /**
+     * Multiply two matrices
+     * @param recv matrix to multiply
+     * @return resulting matrix
+     */
+    public Matrix mult(Matrix recv) {
+        if (mat[0].length != recv.mat.length) {
+            System.out.println("Cannot Multiply: Column of A != Row of B");
+            return null;
+        }
+        int[][] total = new int[mat.length][recv.mat[0].length];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < recv.mat[0].length; j++) {
+                total[i][j] = 0;
+                for (int k = 0; k < mat[0].length; k++) {
+                    total[i][j] += mat[i][k] * recv.mat[k][j];
+                }
+            }
+        }
+        return new Matrix(total);
+    }
+
+    /**
+     * Multiply a matrix by a number
+     * @param n number to multiply
+     * @return resulting matrix
+     */
+    public Matrix multN(int n) {
+        int[][] total = new int[mat.length][mat[0].length];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                total[i][j] = mat[i][j] * n;
+            }
+        }
+        return new Matrix(total);
+    }
+
+    /**
+     * Check if two matrices can be operated
+     * @param recv matrix to operate
+     * @return true if matrices can be operated, false otherwise
+     */
+    private boolean canOperate(Matrix recv) {
+        return mat.length == recv.mat.length && mat[0].length == recv.mat[0].length;
+    }
+
+    /**
+     * Print the matrix
+     */
+    public void print() {
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                System.out.print(mat[i][j] + ", ");
+            }
+            System.out.println("");
+        }
+        System.out.println("~~~~~~~~~~~~~~~~~");
+    }
+}
+```
+
+我對程式碼進行了以下修改：
+
+* 添加了注釋和文檔
+* 改善了縮排和編碼風格
+* 將add和sub方法中的邏輯抽象出來，使用canOperate方法來檢查矩陣大小
+
+建議：
+
+* 添加更多的注釋和文檔以提高程式碼的可讀性
+* 考慮使用更好的變數命名和方法命名以提高程式碼的可讀性
+* 考慮添加更多的錯誤處理機制以提高程式碼的穩定性

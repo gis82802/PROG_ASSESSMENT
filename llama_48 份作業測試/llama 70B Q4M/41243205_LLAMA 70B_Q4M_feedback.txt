@@ -1,0 +1,104 @@
+根據您的標準，我給這份作業打分如下：
+
+備註：15/20（缺少對矩陣操作的明確說明）
+格式：20/25（縮排和編碼風格良好，但有些地方可以進一步改善）
+準確性：25/25（矩陣操作結果正確）
+邏輯：25/30（矩陣操作邏輯正確，但有些地方可以進一步優化）
+
+總分：85/100
+
+分析優缺點：
+
+優點：矩陣操作結果正確，縮排和編碼風格良好。
+缺點：缺少對矩陣操作的明確說明，矩陣操作邏輯可以進一步優化。
+
+以下是改進的程式碼：
+
+```java
+class MyMatrix {
+    private int[][] matrix;
+
+    // 初始化矩陣
+    public MyMatrix(int[][] data) {
+        matrix = data;
+    }
+
+    // 設定矩陣
+    public void setMatrix(int[][] data) {
+        matrix = data;
+    }
+
+    // 矩陣加法
+    public static MyMatrix add(MyMatrix m1, MyMatrix m2) {
+        if (m1.matrix.length != m2.matrix.length || m1.matrix[0].length != m2.matrix[0].length) {
+            throw new RuntimeException("矩陣尺寸不匹配");
+        }
+        int[][] result = new int[m1.matrix.length][m1.matrix[0].length];
+        for (int i = 0; i < m1.matrix.length; i++) {
+            for (int j = 0; j < m1.matrix[0].length; j++) {
+                result[i][j] = m1.matrix[i][j] + m2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 矩陣減法
+    public static MyMatrix minus(MyMatrix m1, MyMatrix m2) {
+        if (m1.matrix.length != m2.matrix.length || m1.matrix[0].length != m2.matrix[0].length) {
+            throw new RuntimeException("矩陣尺寸不匹配");
+        }
+        int[][] result = new int[m1.matrix.length][m1.matrix[0].length];
+        for (int i = 0; i < m1.matrix.length; i++) {
+            for (int j = 0; j < m1.matrix[0].length; j++) {
+                result[i][j] = m1.matrix[i][j] - m2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 矩陣乘法
+    public static MyMatrix multiply(MyMatrix m1, MyMatrix m2) {
+        if (m1.matrix[0].length != m2.matrix.length) {
+            throw new RuntimeException("矩陣尺寸不匹配");
+        }
+        int[][] result = new int[m1.matrix.length][m2.matrix[0].length];
+        for (int i = 0; i < m1.matrix.length; i++) {
+            for (int j = 0; j < m2.matrix[0].length; j++) {
+                for (int k = 0; k < m1.matrix[0].length; k++) {
+                    result[i][j] += m1.matrix[i][k] * m2.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 矩陣乘純量
+    public static MyMatrix scalar(MyMatrix m1, int scalar) {
+        int[][] result = new int[m1.matrix.length][m1.matrix[0].length];
+        for (int i = 0; i < m1.matrix.length; i++) {
+            for (int j = 0; j < m1.matrix[0].length; j++) {
+                result[i][j] = m1.matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // 印出矩陣
+    public void printMatrix() {
+        for (int[] row : matrix) {
+            for (int element : row) {
+                System.out.print(element + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+改進的程式碼中，我們添加了矩陣尺寸檢查，以避免矩陣操作的錯誤。我們也優化了矩陣操作的邏輯，讓它更加清晰和高效。
+
+建議：
+
+1. 添加對矩陣操作的明確說明，以提高程式碼的可讀性和可維護性。
+2. 優化矩陣操作的邏輯，以提高程式碼的效率和可靠性。
+3. 考慮添加更多的錯誤檢查，以避免矩陣操作的錯誤。

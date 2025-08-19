@@ -1,0 +1,207 @@
+我已經評估了學生的作業程式碼。以下是根據您的標準的評分和分析：
+
+1. 評分：82
+
+備註（20）：10（程式碼中缺乏明確的說明和註釋）
+格式（25）：23（程式碼的縮排和編碼風格基本上是正確的，但有一些地方可以改善）
+準確性（25）：25（程式碼能夠正確地執行矩陣運算）
+邏輯（30）：24（程式碼的邏輯基本上是正確的，但有一些地方可以改善）
+
+2. 分析優缺點：
+
+優點：程式碼能夠正確地執行矩陣運算，縮排和編碼風格基本上是正確的。
+缺點：程式碼中缺乏明確的說明和註釋，某些地方的邏輯可以改善。
+
+3. 改進的程式碼：
+```
+import java.util.Scanner;
+
+public class MyMatrix {
+    private int[][] matrix; // 矩陣數據
+
+    // 設定矩陣
+    public void setMatrix(int[][] mat) {
+        this.matrix = mat;
+    }
+
+    // 印出矩陣內容
+    public void printMat() {
+        for (int[] row : matrix) {
+            for (int elem : row) {
+                System.out.print(elem + "\t");
+            }
+            System.out.println();
+        }
+    }
+
+    // 矩陣相加
+    public MyMatrix add(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        if (rows != other.matrix.length || cols != other.matrix[0].length) {
+            throw new RuntimeException("矩陣尺寸不同，無法相加");
+        }
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        MyMatrix resultMatrix = new MyMatrix();
+        resultMatrix.setMatrix(result);
+        return resultMatrix;
+    }
+
+    // 矩陣相減
+    public MyMatrix sub(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        if (rows != other.matrix.length || cols != other.matrix[0].length) {
+            throw new RuntimeException("矩陣尺寸不同，無法相減");
+        }
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        MyMatrix resultMatrix = new MyMatrix();
+        resultMatrix.setMatrix(result);
+        return resultMatrix;
+    }
+
+    // 矩陣相乘
+    public MyMatrix multiply(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = other.matrix[0].length;
+        int common = matrix[0].length;
+        if (common != other.matrix.length) {
+            throw new RuntimeException("矩陣尺寸不同，無法相乘");
+        }
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < common; k++) {
+                    result[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        MyMatrix resultMatrix = new MyMatrix();
+        resultMatrix.setMatrix(result);
+        return resultMatrix;
+    }
+
+    // 矩陣乘以常數
+    public MyMatrix multiply(int scalar) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        MyMatrix resultMatrix = new MyMatrix();
+        resultMatrix.setMatrix(result);
+        return resultMatrix;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入矩陣 A
+        System.out.println("請輸入矩陣 A 的行數和列數 (以空格分隔): ");
+        int rowsA = scanner.nextInt();
+        int colsA = scanner.nextInt();
+        int[][] matA = new int[rowsA][colsA];
+        System.out.println("請輸入矩陣 A 的元素:");
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                matA[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 輸入矩陣 B
+        System.out.println("請輸入矩陣 B 的行數和列數 (以空格分隔): ");
+        int rowsB = scanner.nextInt();
+        int colsB = scanner.nextInt();
+        int[][] matB = new int[rowsB][colsB];
+        System.out.println("請輸入矩陣 B 的元素:");
+        for (int i = 0; i < rowsB; i++) {
+            for (int j = 0; j < colsB; j++) {
+                matB[i][j] = scanner.nextInt();
+            }
+        }
+
+        // 輸入矩陣 C
+        System.out.println("請輸入矩陣 C 的行數和列數 (以空格分隔): ");
+        int rowsC = scanner.nextInt();
+        int colsC = scanner.nextInt();
+        int[][] matC = new int[rowsC][colsC];
+        System.out.println("請輸入矩陣 C 的元素:");
+        for (int i = 0; i < rowsC; i++) {
+            for (int j = 0; j < colsC; j++) {
+                matC[i][j] = scanner.nextInt();
+            }
+        }
+
+        MyMatrix mA = new MyMatrix();
+        mA.setMatrix(matA);
+        MyMatrix mB = new MyMatrix();
+        mB.setMatrix(matB);
+        MyMatrix mC = new MyMatrix();
+        mC.setMatrix(matC);
+
+        // 顯示矩陣 A, B, C
+        System.out.println("矩陣 A:");
+        mA.printMat();
+        System.out.println("\n矩陣 B:");
+        mB.printMat();
+        System.out.println("\n矩陣 C:");
+        mC.printMat();
+
+        // 矩陣相加
+        if (rowsA == rowsB && colsA == colsB) {
+            System.out.println("\n矩陣 A + B:");
+            MyMatrix c = mA.add(mB);
+            c.printMat();
+        } else {
+            System.out.println("\n無法相加，矩陣 A 和 B 的尺寸不同。");
+        }
+
+        // 矩陣相減
+        if (rowsA == rowsB && colsA == colsB) {
+            System.out.println("\n矩陣 A - B:");
+            MyMatrix c = mA.sub(mB);
+            c.printMat();
+        } else {
+            System.out.println("\n無法相減，矩陣 A 和 B 的尺寸不同。");
+        }
+
+        // 矩陣相乘
+        if (colsA == rowsC) {
+            System.out.println("\n矩陣 A * C:");
+            MyMatrix c = mA.multiply(mC);
+            c.printMat();
+        } else {
+            System.out.println("\n無法相乘，矩陣 A 的列數與矩陣 C 的行數不同。");
+        }
+
+        // 矩陣乘以常數
+        System.out.println("\n請輸入一個常數進行乘法: ");
+        int scalar = scanner.nextInt();
+        System.out.println("\n矩陣 A * " + scalar + ":");
+        MyMatrix c = mA.multiply(scalar);
+        c.printMat();
+
+        scanner.close();
+    }
+}
+
+4. 說明改進的程式碼有修改的部分及原因：
+
+我修改了矩陣相加、相減和相乘的方法，添加了輸入檢查，以確保矩陣尺寸相同。同時，我也修改了程式碼的縮排和編碼風格，以提高可讀性。
+
+5. 為學生提供改進建議和反饋：
+
+在未來的程式設計中，請務必注意輸入檢查和錯誤處理，以確保程式碼的穩定性和可靠性。同時，請繼續努力提高程式碼的可讀性和維護性。

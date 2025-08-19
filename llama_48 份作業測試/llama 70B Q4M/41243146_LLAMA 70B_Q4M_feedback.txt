@@ -1,0 +1,102 @@
+根據您的標準，我給這份作業打分如下：
+
+備註：15/20（該程式缺乏明確的說明，例如函數的用途和參數的意義）
+格式：20/25（程式碼的縮排和編碼風格基本上是正確的，但有一些地方可以改進）
+準確性：25/25（程式產生正確的結果）
+邏輯：25/30（程式的邏輯基本上是正確的，但有一些地方可以改進）
+
+總分：85/100
+
+以下是優缺點分析：
+
+優點：該程式實現了矩陣加法、乘法和純量乘法的功能，且結果正確。
+
+缺點：該程式缺乏明確的說明，函數的用途和參數的意義不清楚；程式碼的縮排和編碼風格可以改進；一些變數的命名不夠直觀。
+
+以下是改進的程式碼：
+
+```java
+class MyMatrix{
+    private int [][] matrix;
+
+    /**
+     * 建構子，初始化矩陣
+     * @param inmatrix 矩陣
+     */
+    MyMatrix(int[][] inmatrix){
+        matrix = inmatrix;
+    }
+
+    /**
+     * 矩陣加法
+     * @param m 另一個矩陣
+     * @return 結果矩陣
+     */
+    MyMatrix add(MyMatrix m){
+        int [][] result = new int[matrix.length][matrix[0].length];
+        for(int i =0;i<matrix.length;i++){
+            for(int j =0;j<matrix[0].length;j++){
+                result[i][j] = matrix[i][j] + m.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣乘法
+     * @param m 另一個矩陣
+     * @return 結果矩陣
+     */
+    MyMatrix mult(MyMatrix m){
+        int [][] result = new int[matrix.length][m.matrix[0].length];
+        for(int i =0;i<matrix.length;i++){
+            for(int j =0;j<m.matrix[0].length;j++){
+                result[i][j] = 0;
+                for(int k =0;k<matrix[0].length;k++){
+                    result[i][j] += matrix[i][k] * m.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 純量乘法
+     * @param scalar 純量
+     * @return 結果矩陣
+     */
+    MyMatrix scalarMult(int scalar){
+        int [][] result = new int[matrix.length][matrix[0].length];
+        for(int i =0;i<matrix.length;i++){
+            for(int j =0;j<matrix[0].length;j++){
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 顯示矩陣
+     */
+    void print(){
+        for(int i =0;i<matrix.length;i++){
+            for(int j =0;j<matrix[0].length;j++){
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+修改的部分：
+
+* 添加了函數的說明
+* 改進了變數的命名
+* 保留了優點，修改了缺點
+
+為學生提供的改進建議和反饋：
+
+* 請添加函數的說明，以便更好地理解程式碼
+* 請注意變數的命名，應該使用有意義的名稱
+* 請保持程式碼的縮排和編碼風格一致

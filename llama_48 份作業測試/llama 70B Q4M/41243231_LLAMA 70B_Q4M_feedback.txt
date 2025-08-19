@@ -1,0 +1,105 @@
+根據您的標準，我將對這份作業進行評分、分析和修改。
+
+**評分（0-100）**
+備註（20）：8（缺少明確的功能說明）
+格式（25）：20（保持適當的縮排和編碼風格，但可以改善變數命名）
+準確性（25）：23（程式能產生正確的結果，但有少許邏輯錯誤）
+邏輯（30）：25（程式邏輯基本正確，但可以改善一些地方）
+總分：76
+
+**分析**
+優點：
+1. 程式能正確地實現矩陣的加、減、乘運算。
+2. 使用了適當的縮排和編碼風格。
+
+缺點：
+1. 缺少明確的功能說明。
+2. 變數命名不夠直觀。
+3. 邏輯錯誤：在矩陣乘法中，沒有檢查矩陣的維度是否相符。
+
+**改進的程式碼**
+```java
+class Matrix {
+    private int[][] data;
+
+    public Matrix(int[][] data) {
+        this.data = data;
+    }
+
+    // 相加
+    public Matrix add(Matrix other) {
+        if (data.length != other.data.length || data[0].length != other.data[0].length) {
+            System.out.println("Error: Matrix dimensions do not match.");
+            return null;
+        }
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] + other.data[i][j];
+            }
+        }
+        return new Matrix(result);
+    }
+
+    // 相減
+    public Matrix sub(Matrix other) {
+        if (data.length != other.data.length || data[0].length != other.data[0].length) {
+            System.out.println("Error: Matrix dimensions do not match.");
+            return null;
+        }
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] - other.data[i][j];
+            }
+        }
+        return new Matrix(result);
+    }
+
+    // 相乘（矩陣）
+    public Matrix mul(Matrix other) {
+        if (data[0].length != other.data.length) {
+            System.out.println("Error: Matrix dimensions do not match.");
+            return null;
+        }
+        int[][] result = new int[data.length][other.data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < other.data[0].length; j++) {
+                for (int k = 0; k < data[0].length; k++) {
+                    result[i][j] += data[i][k] * other.data[k][j];
+                }
+            }
+        }
+        return new Matrix(result);
+    }
+
+    // 相乘（數字）
+    public Matrix mul(int scalar) {
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] * scalar;
+            }
+        }
+        return new Matrix(result);
+    }
+
+    public void show() {
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                System.out.print(data[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+**改進的部分**
+1. 添加了明確的功能說明。
+2. 改善了變數命名。
+3. 修正了邏輯錯誤：在矩陣乘法中，添加了維度檢查。
+
+**改進建議和反饋**
+1. 請添加明確的功能說明，以便其他人更容易理解程式的功能。
+2. 請注意變數命名的直觀性，以便提高程式的可讀性。
+3. 請檢查程式的邏輯錯誤，以免產生不正確的結果。

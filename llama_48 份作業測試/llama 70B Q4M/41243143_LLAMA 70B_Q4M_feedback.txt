@@ -1,0 +1,211 @@
+我已經閱讀了學生的作業程式碼。根據您的標準，我將對其進行評分和分析。
+
+**評分：**
+備註 (20)：15 (缺乏明確的函數說明和變數命名説明)
+格式 (25)：23 (保持適當的縮排和編碼風格，但有一些地方的縮排不夠一致)
+準確性 (25)：25 (程式能夠正確地執行矩陣運算)
+邏輯 (30)：28 (程式的邏輯正確，但有一些地方可以改進)
+
+總分：91
+
+**分析：**
+優點：學生的程式碼能夠正確地執行矩陣運算，保持適當的縮排和編碼風格。
+缺點：缺乏明確的函數說明和變數命名説明，某些地方的縮排不夠一致。
+
+**改進的程式碼：**
+以下是改進的程式碼：
+```java
+import java.util.Scanner;
+
+public class app12_13 {
+    /**
+     * 主要方法，執行矩陣運算
+     */
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt user to input the matrix dimensions (number of rows and columns)
+        System.out.print("Enter number of rows for the matrices: ");
+        int rows = scanner.nextInt();
+        System.out.print("Enter number of columns for the matrices: ");
+        int cols = scanner.nextInt();
+
+        // Create two matrix objects with the user-defined dimensions
+        MyMatrix matrix1 = new MyMatrix(rows, cols);
+        MyMatrix matrix2 = new MyMatrix(rows, cols);
+
+        // Input elements for Matrix 1
+        System.out.println("Enter elements for Matrix 1 (each row separated by spaces):");
+        scanner.nextLine(); // Clear the newline character
+        for (int i = 0; i < rows; i++) {
+            String[] rowValues = scanner.nextLine().split(" ");  // Split the input by spaces
+            for (int j = 0; j < cols; j++) {
+                matrix1.setElement(i, j, Double.parseDouble(rowValues[j]));  // Set the element in the matrix
+            }
+        }
+
+        // Input elements for Matrix 2
+        System.out.println("Enter elements for Matrix 2 (each row separated by spaces):");
+        for (int i = 0; i < rows; i++) {
+            String[] rowValues = scanner.nextLine().split(" ");  // Split the input by spaces
+            for (int j = 0; j < cols; j++) {
+                matrix2.setElement(i, j, Double.parseDouble(rowValues[j]));  // Set the element in the matrix
+            }
+        }
+
+        // Input scalar value for scalar multiplication
+        System.out.print("Enter a scalar value: ");
+        double scalar = scanner.nextDouble();
+
+        // Display the matrices and perform operations
+        System.out.println("\nMatrix 1:");
+        matrix1.printMatrix();  // Print Matrix 1
+
+        System.out.println("Matrix 2:");
+        matrix2.printMatrix();  // Print Matrix 2
+
+        System.out.println("Matrix 1 + Matrix 2:");
+        MyMatrix sumMatrix = matrix1.add(matrix2);  // Add the matrices
+        sumMatrix.printMatrix();  // Print the result of addition
+
+        System.out.println("Matrix 1 - Matrix 2:");
+        MyMatrix diffMatrix = matrix1.subtract(matrix2);  // Subtract the matrices
+        diffMatrix.printMatrix();  // Print the result of subtraction
+
+        System.out.println("Matrix 1 * Matrix 2:");
+        MyMatrix productMatrix = matrix1.multiply(matrix2);  // Multiply the matrices
+        productMatrix.printMatrix();  // Print the result of multiplication
+
+        System.out.println("Matrix 1 * Scalar " + scalar + ":");
+        MyMatrix scalarProductMatrix = matrix1.multiplyScalar(scalar);  // Perform scalar multiplication
+        scalarProductMatrix.printMatrix();  // Print the result of scalar multiplication
+
+        scanner.close();  // Close the scanner
+    }
+}
+
+class MyMatrix {
+    /**
+     * 矩陣的行數
+     */
+    private int rows;
+
+    /**
+     * 矩陣的列數
+     */
+    private int cols;
+
+    /**
+     * 矩陣的數據結構（2D 陣列）
+     */
+    private double[][] matrix;
+
+    /**
+     * 建構函數，初始化矩陣的行數和列數
+     */
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.matrix = new double[rows][cols];  // Initialize the matrix with zero values
+    }
+
+    /**
+     * 設置矩陣元素的值
+     */
+    public void setElement(int row, int col, double value) {
+        this.matrix[row][col] = value;
+    }
+
+    /**
+     * 獲取矩陣元素的值
+     */
+    public double getElement(int row, int col) {
+        return this.matrix[row][col];
+    }
+
+    /**
+     * 打印矩陣
+     */
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + " ");  // Print each element with a space
+            }
+            System.out.println();  // Move to the next line after printing a row
+        }
+    }
+
+    /**
+     * 矩陣加法
+     */
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for addition.");
+        }
+
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.setElement(i, j, this.matrix[i][j] + other.getElement(i, j));
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+
+    /**
+     * 矩陣減法
+     */
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for subtraction.");
+        }
+
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.setElement(i, j, this.matrix[i][j] - other.getElement(i, j));
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+
+    /**
+     * 矩陣乘法
+     */
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Matrix dimensions must match for multiplication.");
+        }
+
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                double sum = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    sum += this.matrix[i][k] * other.getElement(k, j);  // Perform multiplication and summation
+                }
+                result.setElement(i, j, sum);  // Store the result in the new matrix
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+
+    /**
+     * 矩陣與標量乘法
+     */
+    public MyMatrix multiplyScalar(double scalar) {
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.setElement(i, j, this.matrix[i][j] * scalar);  // Multiply each element by the scalar
+            }
+        }
+        return result;  // Return the resulting matrix
+    }
+}
+
+**改進建議和反饋：**
+1. 在函數中添加明確的函數說明和變數命名説明，以提高程式碼的可讀性。
+2. 保持適當的縮排和編碼風格，並確保縮排的一致性。
+3. 考慮添加更多的錯誤處理機制，以提高程式碼的穩定性。
+4. 可以考慮使用更好的變數命名和函數命名，以提高程式碼的可讀性和維護性。
