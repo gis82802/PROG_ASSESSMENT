@@ -23,8 +23,8 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 ITEMS_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, 'data/items.json'))
 
 # 預設路徑
-TASK_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, '../data/5/2/homework_texts/Q1.txt')) # 預設題目位址
-CODE_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, '../data/5/2/homework/108/Q1/test.java')) # 預設程式位址
+TASK_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, 'data/sample/Q1.txt')) # 預設題目位址
+CODE_PATH  = os.path.normpath(os.path.join(CURRENT_DIR, 'data/sample/test.java')) # 預設程式位址
 OUTPUT_DIR = os.path.normpath(os.path.join(CURRENT_DIR, 'logs/feedback/')) # 預設輸出路徑
 
 # 存取標準輸入
@@ -103,6 +103,8 @@ def main():
     g1.log(TIMELOG_NAME, TIMELOG_DIR, code_name)
     g1.savefile(GEMINI_FEEDBACK_NAME)
 
+    return 0
+
 class Gemini:
     def __init__(self):
         self.res  = ""  # response
@@ -161,5 +163,6 @@ class Gemini:
 #--- MAIN----------------------------------------------------------------------+
 print("【SYSTEM】 已執行LB系統")
 ERROR = main()
+#print(ERROR)
 
 #--- END-----------------------------------------------------------------------+
