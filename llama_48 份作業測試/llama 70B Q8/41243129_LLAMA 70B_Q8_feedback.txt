@@ -1,0 +1,92 @@
+根據您的評估標準，我將對學生的作業進行評估和分析。
+
+**評估結果：**
+備註：15/20 (缺乏明確的功能說明)
+格式：23/25 (縮排和編碼風格良好，但有一些地方可以改善)
+準確性：25/25 (程式產生正確的結果)
+邏輯：28/30 (程式邏輯正確，但有一些地方可以優化)
+
+總分：91/100
+
+**分析：**
+優點：
+- 程式實現了矩陣的基本操作，如加法、減法、乘法等。
+- 程式碼組織良好，易於閱讀和理解。
+
+缺點：
+- 缺乏明確的功能說明，導致程式碼不易理解。
+- 一些地方的縮排和編碼風格可以改善。
+- 程式邏輯可以優化，以提高效率和可讀性。
+
+**改進的程式碼：**
+(以下是改進的程式碼，保留了學生的原始程式碼的優點，並修改了缺點)
+
+```java
+public class Matrix {
+    private int[][] array;
+
+    /**
+     * 建構矩陣
+     * @param rows 矩陣的行數
+     * @param cols 矩陣的列數
+     */
+    public Matrix(int rows, int cols) {
+        this.array = new int[rows][cols];
+    }
+
+    /**
+     * 設置矩陣的值
+     * @param values 矩陣的值
+     */
+    public void setValues(int[][] values) {
+        this.array = values;
+    }
+
+    /**
+     * 印出矩陣
+     */
+    public void print() {
+        for (int[] row : array) {
+            for (int val : row) {
+                System.out.printf("%d   ", val);
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * 矩陣加法
+     * @param other 另一個矩陣
+     * @return 加法結果
+     */
+    public Matrix add(Matrix other) {
+        int rows = this.array.length;
+        int cols = this.array[0].length;
+        Matrix result = new Matrix(rows, cols);
+
+        int[][] sum = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                sum[i][j] = this.array[i][j] + other.array[i][j];
+            }
+        }
+        result.setValues(sum);
+        return result;
+    }
+
+    // ... (其他方法相同)
+
+    public static void main(String[] args) {
+        // ... (相同)
+    }
+}
+```
+
+**改進的原因：**
+- 添加了明確的功能說明，以提高程式碼的可讀性。
+- 優化了縮排和編碼風格，以提高程式碼的可讀性和維護性。
+
+**改進建議：**
+- 在未來的程式設計中，請務必添加明確的功能說明，以提高程式碼的可讀性。
+- 優化縮排和編碼風格，以提高程式碼的可讀性和維護性。
+- 考慮使用更加優化的算法，以提高程式的效率。

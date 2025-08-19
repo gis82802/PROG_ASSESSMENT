@@ -1,0 +1,74 @@
+根據您的標準，我將為這份作業打分如下：
+
+備註(滿分20)：12分（缺少對每個方法的明確說明）
+格式(滿分25)：23分（縮排和編碼風格良好，但少數地方可以進一步改善）
+準確性(滿分25)：25分（程式產生正確的結果）
+邏輯(滿分30)：27分（程式邏輯正確，但可以進一步優化）
+
+總分：87分
+
+優點：程式結構清晰，易於理解；矩陣運算的實現正確。
+
+缺點：缺少對每個方法的明確說明；少數地方的縮排和編碼風格可以進一步改善。
+
+以下是改進的程式碼：
+
+```java
+class MyMatrix{
+    private int rows, cols; // 存行和列
+    private int matrix[][];
+
+    /**
+     * 建構矩陣
+     * @param mat 矩陣數據
+     */
+    MyMatrix(int mat[][]){
+        matrix = mat;
+        rows = matrix.length;
+        cols = matrix[0].length;
+    }
+
+    /**
+     * 矩陣相加
+     * @param mat2 另一個矩陣
+     * @return 相加結果
+     */
+    public MyMatrix add(MyMatrix mat2){
+        if(rows != mat2.rows && cols != mat2.cols){
+            System.out.println("矩陣行列不相同，無法相加");
+            return null;
+        }
+        
+        int result[][] = new int[rows][cols];
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                result[i][j] = matrix[i][j] + mat2.matrix[i][j];
+            }
+        }
+
+        return new MyMatrix(result);
+    }
+
+    // ...
+
+    /**
+     * 印出矩陣內容
+     */
+    public void print(){
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                System.out.print(matrix[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+}
+```
+
+修改的部分：
+
+* 添加了JavaDoc註釋以說明每個方法的功能
+* 改進了少數地方的縮排和編碼風格
+
+建議：在未來的作業中，請務必添加JavaDoc註釋以說明每個方法的功能，並繼續優化縮排和編碼風格。

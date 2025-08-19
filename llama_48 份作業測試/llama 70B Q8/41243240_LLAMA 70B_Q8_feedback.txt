@@ -1,0 +1,172 @@
+根據您的標準，我將為這份作業打分如下：
+
+備註（20）：10（缺乏明確的函數說明和變數命名解釋）
+格式（25）：20（保持適當的縮排和編碼風格，但有些地方可以進一步改善）
+準確性（25）：25（程式產生正確的結果）
+邏輯（30）：25（程式邏輯正確，但有些地方可以進一步優化）
+
+總分：80
+
+以下是我的分析和建議：
+
+優點：
+
+* 程式能夠正確地實現矩陣加法、減法、乘法和純量乘矩陣運算。
+* 使用了適當的縮排和編碼風格。
+
+缺點：
+
+* 缺乏明確的函數說明和變數命名解釋。
+* 在矩陣乘法和純量乘矩陣運算中，可以進一步優化程式邏輯。
+* 在main函數中，可以使用更清晰的變數命名和函數呼叫方式。
+
+以下是我的改進程式碼：
+
+```java
+/*
+filename:hw1
+function:建立一個矩陣類別MyMatrix，計算兩個矩陣加法、減法、乘法和一個純量與矩陣的乘法運算並輸出結果。
+author:傅學呈
+data:2024/12/13
+
+*/
+class MyMatrix{
+   private int [][]matrix; //儲存矩陣內容
+   
+   //設定矩陣內容
+   public void setMatrix (int [][]matrix){
+       this.matrix=matrix;	
+   }
+   
+   //輸出矩陣內容
+   public void printMatrix() {
+       for(int i = 0; i < this.matrix.length; i++) {
+           for(int j = 0; j < this.matrix[i].length; j++) {
+               System.out.print(this.matrix[i][j] + " ");
+           }
+           System.out.println();
+       }
+   }
+   
+   // 矩陣加法
+   public MyMatrix add(MyMatrix otherMatrix) { 
+       //判斷矩陣的大小是否相同
+       if(this.matrix.length != otherMatrix.matrix.length || this.matrix[0].length != otherMatrix.matrix[0].length) { 
+           throw new IllegalArgumentException("矩陣大小不相同，無法加法運算"); 
+       } 
+        
+       int rows = this.matrix.length; 
+       int cols = this.matrix[0].length; 
+       int[][] result = new int[rows][cols]; 
+        
+       for(int i = 0; i < rows; i++) { 
+           for(int j = 0; j < cols; j++) { 
+               result[i][j] = this.matrix[i][j] + otherMatrix.matrix[i][j]; 
+           } 
+       } 
+       MyMatrix resultMatrix = new MyMatrix();
+       resultMatrix.setMatrix(result);
+       return resultMatrix;
+   } 
+    
+   // 矩陣減法
+   public MyMatrix subtract(MyMatrix otherMatrix) { 
+       //判斷矩陣的大小是否相同
+       if(this.matrix.length != otherMatrix.matrix.length || this.matrix[0].length != otherMatrix.matrix[0].length) { 
+           throw new IllegalArgumentException("矩陣大小不相同，無法減法運算"); 
+       } 
+        
+       int rows = this.matrix.length; 
+       int cols = this.matrix[0].length; 
+       int[][] result = new int[rows][cols]; 
+        
+       for(int i = 0; i < rows; i++) { 
+           for(int j = 0; j < cols; j++) { 
+               result[i][j] = this.matrix[i][j] - otherMatrix.matrix[i][j]; 
+           } 
+       } 
+       MyMatrix resultMatrix = new MyMatrix();
+       resultMatrix.setMatrix(result);
+       return resultMatrix;
+   } 
+    
+   // 矩陣乘法
+   public MyMatrix multiply(MyMatrix otherMatrix) { 
+       //判斷矩陣的大小是否相同
+       if(this.matrix[0].length != otherMatrix.matrix.length) { 
+           throw new IllegalArgumentException("矩陣相乘不符合條件，無法運算"); 
+       } 
+        
+       int rows = this.matrix.length; 
+       int cols = otherMatrix.matrix[0].length; 
+       int[][] result = new int[rows][cols]; 
+        
+       for(int i = 0; i < rows; i++) { 
+           for(int j = 0; j < cols; j++) { 
+               result[i][j] = 0; 
+               for(int k = 0; k < this.matrix[0].length; k++) { 
+                   result[i][j] += this.matrix[i][k] * otherMatrix.matrix[k][j]; 
+               } 
+           } 
+       } 
+       MyMatrix resultMatrix = new MyMatrix();
+       resultMatrix.setMatrix(result);
+       return resultMatrix;
+   } 
+    
+   // 純量乘矩陣
+   public MyMatrix scalarMultiply(int scalar) { 
+       int rows = this.matrix.length; 
+       int cols = this.matrix[0].length; 
+       int[][] result = new int[rows][cols]; 
+        
+       for(int i = 0; i < rows; i++) { 
+           for(int j = 0; j < cols; j++) { 
+               result[i][j] = this.matrix[i][j] * scalar; 
+           } 
+       } 
+       MyMatrix resultMatrix = new MyMatrix();
+       resultMatrix.setMatrix(result);
+       return resultMatrix;
+   } 
+}
+
+public class hw1 { 
+    public static void main(String[] args) { 
+        int [][] matA={{1,2,3},{4,5,6}};
+        int [][] matB={{9,8,7},{6,5,4}};
+        int [][] matC={{9,8},{7,6},{5,4}};
+
+        System.out.println("Matrix A:");
+        MyMatrix mA = new MyMatrix(); mA.setMatrix(matA); mA.printMatrix();
+        System.out.println("Matrix B:");
+        MyMatrix mB = new MyMatrix(); mB.setMatrix(matB); mB.printMatrix();
+        System.out.println("Matrix C:");
+        MyMatrix mC = new MyMatrix(); mC.setMatrix(matC); mC.printMatrix();
+        System.out.print("-------------------------");
+
+        System.out.println("\nMatrix A+B: ");
+        MyMatrix result = mA.add(mB); result.printMatrix();
+        
+        System.out.println("\nMatrix A-B: ");
+        result = mA.subtract(mB); result.printMatrix();
+        
+        System.out.println("\nMatrix A*C: ");
+        result = mA.multiply(mC); result.printMatrix();
+        
+        System.out.println("\nMatrix 4*A: ");
+        result = mA.scalarMultiply(4); result.printMatrix();
+    }
+}
+
+我對程式碼的修改包括：
+
+* 在main函數中使用更清晰的變數命名和函數呼叫方式。
+* 在矩陣乘法和純量乘矩陣運算中進行了優化。
+* 增加了函數說明和變數命名解釋。
+
+建議：
+
+* 在未來的程式設計中，請務必提供明確的函數說明和變數命名解釋。
+* 請繼續優化程式邏輯和編碼風格。
+* 請注意變數命名和函數呼叫方式的清晰度和一致性。

@@ -1,0 +1,76 @@
+好的！我已經接收到學生的作業程式碼。根據您的標準，我將進行評估和分析。
+
+首先，讓我給這份作業打分：
+
+備註（20）：6（缺乏明確的函數說明和變數命名解釋）
+格式（25）：20（保持適當的縮排和編碼風格，但缺乏空格和換行）
+準確性（25）：25（程式產生正確的結果）
+邏輯（30）：25（程式邏輯正確，但可以進一步優化）
+
+總分：76
+
+接下來，我將分析它的優缺點：
+
+優點：
+
+* 程式實現了矩陣加法、乘法和純量乘法的功能
+* 使用了適當的縮排和編碼風格
+
+缺點：
+
+* 缺乏明確的函數說明和變數命名解釋
+* 缺乏空格和換行，導致程式碼不易閱讀
+* 可以進一步優化程式邏輯和性能
+
+現在，我將為您的學生提供改進的程式碼：
+
+（修改後的程式碼）
+```java
+class MyMatrix {
+    private int[][] matrix;
+
+    /**
+     * 建構矩陣
+     * @param inmatrix 矩陣數據
+     */
+    MyMatrix(int[][] inmatrix) {
+        matrix = inmatrix;
+    }
+
+    /**
+     * 矩陣加法
+     * @param m 另一個矩陣
+     * @return 新的矩陣結果
+     */
+    MyMatrix add(MyMatrix m) {
+        int[][] result = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                result[i][j] = matrix[i][j] + m.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // ...其他函數修改類似
+
+    /**
+     * 顯示矩陣
+     */
+    void print() {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+```
+我修改了程式碼，添加了函數說明和變數命名解釋，並改善了縮排和空格使用。
+
+最後，我將為學生提供改進建議和反饋：
+
+* 請添加明確的函數說明和變數命名解釋，以提高程式碼的可讀性
+* 請注意縮排和空格的使用，以提高程式碼的可讀性
+* 請考慮進一步優化程式邏輯和性能，以提高程式的效率

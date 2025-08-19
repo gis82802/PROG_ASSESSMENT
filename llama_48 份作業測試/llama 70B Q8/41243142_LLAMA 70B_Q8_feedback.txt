@@ -1,0 +1,204 @@
+您好！我已經完成了對學生的作業評估。以下是根據您的標準的評估結果：
+
+**備註（20）：** 15分。學生的程式碼中缺乏明確的功能說明，例如在每個方法上添加JavaDoc註釋。
+
+**格式（25）：** 23分。學生的程式碼保持適當的縮排和編碼風格，但有些地方的空格使用不夠一致。
+
+**準確性（25）：** 25分。學生的程式碼能夠正確地執行矩陣的加法、減法、乘法和 скаляр乘法。
+
+**邏輯（30）：** 28分。學生的程式碼邏輯正確，但在矩陣乘法中可以使用更優化的算法。
+
+總分：91分
+
+以下是優缺點分析：
+
+優點：學生的程式碼能夠正確地執行矩陣的運算，且邏輯正確。
+
+缺點：程式碼缺乏明確的功能說明，縮排和編碼風格不夠一致，矩陣乘法算法可以優化。
+
+以下是改進的程式碼：
+
+```java
+// File name: app12_1
+// Author: 41243142
+// Version:
+// Function: Matrix operations
+// Date: 24/12/6
+
+import java.util.Arrays;
+
+/**
+ * Represents a matrix with rows and columns.
+ */
+class MyMatrix {
+    private int rows; // Number of rows
+    private int cols; // Number of columns
+    private double[][] data; // Matrix data
+
+    /**
+     * Constructor using rows and cols.
+     *
+     * @param rows  number of rows
+     * @param cols  number of columns
+     */
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new double[rows][cols];
+    }
+
+    /**
+     * Constructor using a 2D array.
+     *
+     * @param array 2D array
+     */
+    public MyMatrix(int[][] array) {
+        this.rows = array.length;
+        this.cols = array[0].length;
+        this.data = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                this.data[i][j] = array[i][j];
+            }
+        }
+    }
+
+    /**
+     * Add two matrices.
+     *
+     * @param other  another matrix
+     * @return       the sum of two matrices
+     */
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions for addition.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] + other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Subtract two matrices.
+     *
+     * @param other  another matrix
+     * @return       the difference of two matrices
+     */
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions for subtraction.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Multiply two matrices.
+     *
+     * @param other  another matrix
+     * @return       the product of two matrices
+     */
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Matrix A's columns must match Matrix B's rows for multiplication.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < result.rows; i++) {
+            for (int j = 0; j < result.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result.data[i][j] += this.data[i][k] * other.data[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Multiply a matrix by a scalar.
+     *
+     * @param scalar  scalar value
+     * @return       the product of the matrix and the scalar
+     */
+    public MyMatrix multiplyByScalar(double scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Print the matrix.
+     */
+    public void print() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.printf("%.2f ", data[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class app12_1 {
+    public static void main(String[] args) {
+        // Initialize matrices with predefined 2D arrays
+        int[][] matA = {{1, 2, 3}, {4, 5, 6}};
+        int[][] matB = {{9, 8, 7}, {6, 5, 4}};
+        int[][] matC = {{9, 8}, {7, 6}, {5, 4}};
+
+        // Create matrices using the 2D arrays
+        MyMatrix matrixA = new MyMatrix(matA);
+        MyMatrix matrixB = new MyMatrix(matB);
+        MyMatrix matrixC = new MyMatrix(matC);
+
+        // Print matrices
+        System.out.println("Matrix A:");
+        matrixA.print();
+        System.out.println("Matrix B:");
+        matrixB.print();
+        System.out.println("Matrix C:");
+        matrixC.print();
+
+        // Add matrices A and B
+        System.out.println("A + B:");
+        MyMatrix sumAB = matrixA.add(matrixB);
+        sumAB.print();
+
+        // Subtract matrices A and B
+        System.out.println("A - B:");
+        MyMatrix diffAB = matrixA.subtract(matrixB);
+        diffAB.print();
+
+        // Multiply matrices A and C
+        System.out.println("A * C:");
+        MyMatrix productAC = matrixA.multiply(matrixC);
+        productAC.print();
+
+        // Multiply matrix A by scalar 4
+        System.out.println("A * 4:");
+        MyMatrix scalarA = matrixA.multiplyByScalar(4);
+        scalarA.print();
+    }
+}
+```
+
+我添加了JavaDoc註釋到每個方法上，並將縮排和編碼風格統一化。矩陣乘法算法保持不變，因為它已經正確了。
+
+最後，以下是改進建議和反饋：
+
+* 請添加明確的功能說明到每個方法上。
+* 請保持縮排和編碼風格的一致性。
+* 矩陣乘法算法可以優化，但在這個案例中，它已經正確了。
+* 請考慮使用更優化的算法來提高程式碼的效率。

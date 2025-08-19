@@ -1,0 +1,206 @@
+好的！以下是完整的回應：
+
+1. 評分：76
+
+備註 (滿分20)：10 (缺乏明確的功能說明)
+格式 (滿分25)：23 (保持適當的縮排和編碼風格，但有些地方可以進一步改善)
+準確性 (滿分25)：25 (程式產生正確的結果)
+邏輯 (滿分30)：28 (程式有正確的邏輯，但有些地方可以進一步優化)
+
+2. 分析優缺點：
+
+優點：程式實現了矩陣的基本操作，包括加法、減法、乘法和 скаляр乘法。程式的邏輯正確，能夠正確地產生結果。
+
+缺點：程式缺乏明確的功能說明，變數命名不夠直觀，縮排和編碼風格可以進一步改善。
+
+3. 改進的程式碼：
+```java
+import java.util.Scanner;
+
+/**
+ * MyMatrix class represents a matrix with basic operations.
+ */
+public class MyMatrix {
+    private int rows;
+    private int cols;
+    private double[][] data;
+
+    /**
+     * Constructor to create a matrix with given rows and columns.
+     * @param rows number of rows
+     * @param cols number of columns
+     */
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new double[rows][cols];
+    }
+
+    /**
+     * Method to set matrix values from user input.
+     * @param scanner input scanner
+     */
+    public void setMatrix(Scanner scanner) {
+        System.out.println("Enter values for the matrix (row by row):");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                data[i][j] = scanner.nextDouble();
+            }
+        }
+    }
+
+    /**
+     * Add two matrices.
+     * @param other matrix to add
+     * @return result matrix
+     */
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for addition.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] + other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Subtract two matrices.
+     * @param other matrix to subtract
+     * @return result matrix
+     */
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for subtraction.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Multiply two matrices.
+     * @param other matrix to multiply
+     * @return result matrix
+     */
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Matrix dimensions must match for multiplication.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result.data[i][j] += this.data[i][k] * other.data[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Multiply matrix by a scalar.
+     * @param scalar scalar value
+     * @return result matrix
+     */
+    public MyMatrix multiplyByScalar(double scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Print matrix.
+     */
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(data[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input first matrix
+        System.out.println("Enter the dimensions of the first matrix (rows and columns):");
+        int rows1 = scanner.nextInt();
+        int cols1 = scanner.nextInt();
+        MyMatrix matrix1 = new MyMatrix(rows1, cols1);
+        matrix1.setMatrix(scanner);
+
+        // Input second matrix
+        System.out.println("Enter the dimensions of the second matrix (rows and columns):");
+        int rows2 = scanner.nextInt();
+        int cols2 = scanner.nextInt();
+        MyMatrix matrix2 = new MyMatrix(rows2, cols2);
+        matrix2.setMatrix(scanner);
+
+        // Perform operations
+        System.out.println("Matrix 1:");
+        matrix1.printMatrix();
+        System.out.println("Matrix 2:");
+        matrix2.printMatrix();
+
+        // Addition
+        if (rows1 == rows2 && cols1 == cols2) {
+            System.out.println("Result of addition:");
+            MyMatrix additionResult = matrix1.add(matrix2);
+            additionResult.printMatrix();
+        } else {
+            System.out.println("Addition not possible due to dimension mismatch.");
+        }
+
+        // Subtraction
+        if (rows1 == rows2 && cols1 == cols2) {
+            System.out.println("Result of subtraction:");
+            MyMatrix subtractionResult = matrix1.subtract(matrix2);
+            subtractionResult.printMatrix();
+        } else {
+            System.out.println("Subtraction not possible due to dimension mismatch.");
+        }
+
+        // Multiplication
+        if (cols1 == rows2) {
+            System.out.println("Result of multiplication:");
+            MyMatrix multiplicationResult = matrix1.multiply(matrix2);
+            multiplicationResult.printMatrix();
+        } else {
+            System.out.println("Multiplication not possible due to dimension mismatch.");
+        }
+
+        // Scalar multiplication example
+        System.out.println("Enter a scalar to multiply with the first matrix:");
+        double scalar = scanner.nextDouble();
+        System.out.println("Result of scalar multiplication:");
+        MyMatrix scalarResult = matrix1.multiplyByScalar(scalar);
+        scalarResult.printMatrix();
+
+        scanner.close();
+    }
+}
+
+4. 改進的程式碼修改部分及原因：
+
+* 添加了Javadoc註釋以提高程式碼的可讀性和理解性。
+* 對變數命名進行了改善，以提高程式碼的可讀性。
+* 縮排和編碼風格進行了改善，以提高程式碼的可讀性和維護性。
+
+5. 改進建議和反饋：
+
+* 在未來的程式設計中，請注意添加明確的功能說明和Javadoc註釋，以提高程式碼的可讀性和理解性。
+* 請注意變數命名的直觀性和可讀性，以提高程式碼的可讀性和維護性。
+* 請繼續優化程式碼的縮排和編碼風格，以提高程式碼的可讀性和維護性。

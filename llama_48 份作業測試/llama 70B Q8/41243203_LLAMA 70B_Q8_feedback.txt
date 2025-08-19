@@ -1,0 +1,104 @@
+我已經閱讀了學生的作業程式碼。根據您的標準，我將進行評估和分析。
+
+**評估結果：**
+
+* 備註 (20)：8/20 (缺少對於矩陣運算的明確說明)
+* 格式 (25)：20/25 (保持適當的縮排和編碼風格，但有一些地方的縮排不夠 Consistent)
+* 準確性 (25)：25/25 (程式產生正確的結果)
+* 邏輯 (30)：25/30 (程式邏輯正確，但有一些地方可以優化)
+
+**總分：88/100**
+
+**分析：**
+
+優點：
+
+* 程式實現了矩陣運算的基本功能
+* 使用了適當的Exception Handling機制
+
+缺點：
+
+* 缺少對於矩陣運算的明確說明
+* 一些地方的縮排不夠 Consistent
+* 程式邏輯可以優化
+
+**改進建議：**
+
+1. 在程式中添加對於矩陣運算的明確說明
+2. 優化縮排和編碼風格
+3. 優化程式邏輯
+
+**改進的程式碼：**
+
+以下是改進的程式碼：
+
+```java
+import java.util.Scanner;
+
+// MyMatrix 類別
+class MyMatrix {
+    private int rows;       // 行數
+    private int cols;       // 列數
+    private double[][] matrix; // 內容
+
+    /**
+     * 建構子，初始化矩陣
+     * @param rows 行數
+     * @param cols 列數
+     * @param sc 輸入流
+     */
+    public MyMatrix(int rows, int cols, Scanner sc) {
+        this.rows = rows;
+        this.cols = cols;
+        matrix = new double[rows][cols];
+
+        System.out.println("請輸入矩陣的元素（共 " + (rows * cols) + " 個數字）：");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = sc.nextDouble();
+            }
+        }
+    }
+
+    // ...
+
+    /**
+     * 矩陣加法
+     * @param other 另一個矩陣
+     * @return 加法結果
+     */
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣加法需要相同的維度");
+        }
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    // ...
+}
+
+//展示 MyMatrix 類的功能
+public class wh1 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // ...
+    }
+}
+```
+
+**改進的程式碼解釋：**
+
+1. 我們添加了對於矩陣運算的明確說明，使用JavaDoc風格的註釋。
+2. 我們優化了縮排和編碼風格，使用 Consistent 的縮排和空格。
+3. 我們優化了程式邏輯，使用更明確的變數命名和註釋。
+
+**總結：**
+
+根據您的標準，我們對學生的作業程式碼進行了評估和分析，並提供了改進的建議和程式碼。希望這些建議和程式碼能夠幫助學生改進自己的程式碼。

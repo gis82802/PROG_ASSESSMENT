@@ -1,0 +1,86 @@
+根據您的標準，我給這份作業打分如下：
+
+備註：15/20 (缺少明確的函數說明)
+格式：23/25 (縮排和編碼風格良好，但有些地方可以進一步改善)
+準確性：25/25 (程式產生正確的結果)
+邏輯：28/30 (程式邏輯正確，但有些地方可以進一步優化)
+
+總分：91/100
+
+分析：
+優點：程式結構清晰，函數分離明確，邏輯正確。
+缺點：缺少函數說明，縮排和編碼風格可以進一步改善，些許地方可以優化。
+
+以下是改進的程式碼：
+
+```java
+/**
+ * MyMatrix class represents a matrix.
+ */
+class MyMatrix {
+    private int[][] m;
+
+    /**
+     * Constructor to create a MyMatrix object from a 2D array.
+     * @param ui 2D array
+     */
+    public MyMatrix(int[][] ui) {
+        m = new int[ui.length][ui[0].length];
+        for (int i = 0; i < ui.length; i++) {
+            for (int j = 0; j < ui[0].length; j++) {
+                m[i][j] = ui[i][j];
+            }
+        }
+    }
+
+    /**
+     * Adds two matrices.
+     * @param other the matrix to be added
+     * @return the result of the addition
+     */
+    public MyMatrix add(MyMatrix other) {
+        if (this.m.length != other.m.length || this.m[0].length != other.m[0].length) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions for addition.");
+        }
+
+        int rows = this.m.length;
+        int cols = this.m[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.m[i][j] + other.m[i][j];
+            }
+        }
+
+        return new MyMatrix(result);
+    }
+
+    // ... (other methods remain the same)
+
+    /**
+     * Prints the matrix.
+     */
+    public void printMatrix() {
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[i].length; j++) {
+                System.out.print(m[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // ... (other methods remain the same)
+}
+```
+
+改進的程式碼有：
+
+* 添加了函數說明
+* 改善了縮排和編碼風格
+* 優化了些許地方的邏輯
+
+建議：
+* 在函數中添加更多的說明，以提高程式的可讀性
+* 考慮使用更好的變數命名，以提高程式的可讀性
+* 優化程式的邏輯，以提高程式的效率

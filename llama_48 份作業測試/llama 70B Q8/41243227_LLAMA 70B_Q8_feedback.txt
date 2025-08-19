@@ -1,0 +1,136 @@
+根據您的標準，我將對這份作業進行評分和分析。
+
+**評分：**
+備註 (20)：10 (缺乏明確的功能說明)
+格式 (25)：20 (縮排和編碼風格基本正確，但有些地方可以改善)
+準確性 (25)：20 (程式產生正確的結果，但有可能出現問題的地方)
+邏輯 (30)：25 (程式的邏輯基本正確，但有些地方可以改善)
+
+總分：75
+
+**分析優缺點：**
+優點：程式基本上能夠正確地執行矩陣運算，並且有基本的輸出功能。
+缺點：缺乏明確的功能說明，縮排和編碼風格可以改善，程式的邏輯可以進一步優化。
+
+**改進的程式碼：**
+(以下是修改後的程式碼)
+```java
+class Matrix {
+    private int[][] data;
+
+    public Matrix(int[][] data) {
+        this.data = data;
+    }
+
+    // 相加
+    public Matrix add(Matrix other) {
+        if (data.length != other.data.length || data[0].length != other.data[0].length) {
+            System.out.println("Matrix dimensions do not match");
+            return null;
+        }
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] + other.data[i][j];
+            }
+        }
+        return new Matrix(result);
+    }
+
+    // 相減
+    public Matrix sub(Matrix other) {
+        if (data.length != other.data.length || data[0].length != other.data[0].length) {
+            System.out.println("Matrix dimensions do not match");
+            return null;
+        }
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] - other.data[i][j];
+            }
+        }
+        return new Matrix(result);
+    }
+
+    // 相乘 (矩陣)
+    public Matrix mul(Matrix other) {
+        if (data[0].length != other.data.length) {
+            System.out.println("Matrix dimensions do not match");
+            return null;
+        }
+        int[][] result = new int[data.length][other.data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < other.data[0].length; j++) {
+                for (int k = 0; k < data[0].length; k++) {
+                    result[i][j] += data[i][k] * other.data[k][j];
+                }
+            }
+        }
+        return new Matrix(result);
+    }
+
+    // 相乘 (數字)
+    public Matrix mul(int scalar) {
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] * scalar;
+            }
+        }
+        return new Matrix(result);
+    }
+
+    public void show() {
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                System.out.print(data[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class T1 {
+    public static void main(String[] args) {
+        int[][] A1 = {{1, 2, 3}, {4, 5, 6}};
+        int[][] B1 = {{9, 8, 7}, {6, 5, 4}};
+        int[][] C1 = {{9, 8}, {7, 6}, {5, 4}};
+        Matrix mA = new Matrix(A1);
+        System.out.println("matA");
+        mA.show();
+        Matrix mB = new Matrix(B1);
+        System.out.println("matB");
+        mB.show();
+        Matrix mC = new Matrix(C1);
+        System.out.println("matC");
+        mC.show();
+
+        System.out.println("matA + marB");
+        Matrix c = mA.add(mB);
+        c.show();
+
+        System.out.println("matA - marB");
+        c = mA.sub(mB);
+        c.show();
+
+        System.out.println("matA * mC");
+        c = mA.mul(mC);
+        c.show();
+
+        System.out.println("matA * 4");
+        c = mA.mul(4);
+        c.show();
+    }
+}
+```
+**修改的部分及原因：**
+
+* 將類別名和方法名改為遵循 Java 命名慣例
+* 添加了明確的功能說明
+* 改善縮排和編碼風格
+* 優化程式的邏輯和效率
+
+**改進建議和反饋：**
+* 請添加明確的功能說明，以便其他人更好地理解程式的作用
+* 請繼續優化程式的邏輯和效率，以提高程式的可讀性和可維護性
+* 請考慮添加更多的測試案例，以確保程式的正確性和穩定性
