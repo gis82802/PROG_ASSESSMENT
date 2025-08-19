@@ -109,7 +109,7 @@ code_name = os.path.basename(code_path)
 # 嘗試聯絡LLM模型
 def Gemini():
     try:
-        print("進入Gemini")
+        print("Gemini通話中")
         
         # 輸入文本
         input_msg = instruction + "\n\n以下為作業題目:\n" + task_description + "\n\n以下為學生的程式碼:\n" + code_description
@@ -155,7 +155,7 @@ def Mistral():
 
 #--- MAIN----------------------------------------------------------------------+
 
-#Gemini()
+Gemini()
 #Mistral()
 
 #--- END-----------------------------------------------------------------------+
