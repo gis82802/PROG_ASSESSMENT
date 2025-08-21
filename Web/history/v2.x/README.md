@@ -16,3 +16,13 @@
   - 區分成功(report)、錯誤(error)訊息，以及測資系統狀態之顯示。
 - 測資批改系統由main_v5.java 更新為 main_v6.java
 - 測資程式系統由main_v6.java 正式命名為JTS_main.java
+
+## v2.0.4
+- 資料新增: 0820 暑修課程內容
+- py/ 更新為 LingoBridge/
+  - 尚保留原始的Gemini.py Mistral.py
+  - 目前LB系統 最高版本為 LingoBridge_v1.1.py
+  - 未來會將LLM Token(API) 程式碼中移除，相關資料請於 data/items.json 寫入
+- php/uploadhomework.php
+  - "uploadhomework - 複製.php" 此為v2.0.3版本(備份用途)
+  - "uploadhomework.php" 正在追加 LB系統，為半成品程式碼，雖尚未上線相關功能，但不影響其他網頁功能
