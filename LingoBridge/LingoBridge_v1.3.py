@@ -17,6 +17,9 @@ from mistralai import Mistral as misai
 
 #--- VARIABLE------------------------------------------------------------------+
 
+# 如果為0，表示正常結束程序
+ERROR = 0
+
 # LLM模型選擇，預設為0
 MODE = 0
 
@@ -43,15 +46,18 @@ OUTPUT_DIR = LOG_DIR
 
 #--- INITIAL-------------------------------------------------------------------+
 
-# 讀取 items.json 資料
-with open(ITEMS_PATH, "r", encoding = "utf-8") as file:
-    data = json.load(file)
-
 # 初始化必要目錄
 # exist_ok 預設為 False，如果目錄已存在會報錯；True 則不會報錯。
 os.makedirs(DATA_DIR, exist_ok = True)     # 建立 data目錄
 os.makedirs(LOGS_DIR, exist_ok = True)     # 建立 logs 根目錄
 os.makedirs(LOG_DIR, exist_ok = True)      # 建立 log 目錄
+
+# 讀取 items.json 資料
+if os.path.exists(ITEMS_PATH):
+    with open(ITEMS_PATH, "r", encoding = "utf-8") as file:
+        data = json.load(file)
+else:
+    print("【ERROR】 items.json 不存在，請檢查是否存在於" + ITEMS_PATH)
 
 # 讀取標準輸入
 MODE       = int(sys.argv[1]) if len(sys.argv) > 1 else MODE   # 模型選擇
@@ -114,6 +120,7 @@ def main(mode):
 
     # 如果輸出目錄非 log路徑時，再輸出一份至指定路徑
     if OUTPUT_DIR != LOG_DIR:
+        os.makedirs(OUTPUT_DIR, exist_ok = True) # 建立輸出目錄
         savefile(OUTPUT_DIR, fb_name, feedback)
 
     return 0
@@ -227,7 +234,10 @@ class Mistral:
             return 2
 
 #--- MAIN----------------------------------------------------------------------+
-print("【SYSTEM】 已執行LB系統")
-ERROR = main(MODE)
+if ERROR == 0:
+    print("【SYSTEM】 已執行LB系統")
+    ERROR = main(MODE)
+else:
+    print("【ERROR】 發生錯誤，已停止程序")
 
 #--- END-----------------------------------------------------------------------+
