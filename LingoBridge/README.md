@@ -10,3 +10,17 @@
 ## v1.2
 - 追加報錯功能(避免LLM無法呼叫)
 - 更改 log 相關資料格式及路徑
+
+## v1.3
+- 追加 Mistral LLM模型 (模式選則為 2)
+- log 時間改為 yyMMdd_HHmmSS (原為 yyMMdd_HHmm)
+- 此為正式版本，可串聯應用於網頁或其他程序
+  - 應用於專題網頁恐還需要一份串接程式碼
+- 使用方式如下:
+```
+$python LingoBridge_v1.3.py {(int)模型選擇} {(str)提問路徑} {(str)輸出路徑}
+```
+以上參數均為可選，若無提供則會執行預設路徑
+- 模型預設: (1) gemini-2.0-flash-exp
+- 提問路徑: data/quiz/default.txt
+- 輸出路徑: logs/{log}/
