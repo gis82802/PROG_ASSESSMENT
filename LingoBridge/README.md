@@ -18,7 +18,7 @@
   - 應用於專題網頁恐還需要一份串接程式碼
 - 使用方式如下:
 ```
-$python LingoBridge_v1.3.py {(int)模型選擇} {(str)提問路徑} {(str)輸出路徑}
+python LingoBridge_v1.3.py {(int)模型選擇} {(str)提問路徑} {(str)輸出路徑}
 ```
 以上參數均為可選，若無提供則會執行預設路徑
 - 模型預設: (1) gemini-2.0-flash-exp
