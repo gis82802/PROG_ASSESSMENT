@@ -23,6 +23,6 @@ python LingoBridge_v1.3.py {(int)模型選擇} {(str)提問路徑} {(str)輸出�
 以上參數均為可選，若無提供則會執行預設路徑
 - 模型預設: (1) gemini-2.0-flash-exp
 - 提問路徑: data/quiz/default.txt
-- 輸出路徑: logs/{log}/
+- 輸出路徑: logs/{log}/  
 **使用需知**  
   使用前，請務必自行更改data/items.json內的LLM Token，方可使用
