@@ -7,11 +7,11 @@
 - 尚未實裝Mistral功能
 - 希望將 INSTRUCTION (指令) 更改為讀取.txt檔案，未來較無需更動程式碼
 
-## v1.2
+## LingoBridge_v1.2
 - 追加報錯功能(避免LLM無法呼叫)
 - 更改 log 相關資料格式及路徑
 
-## v1.3
+## LingoBridge_v1.3
 - 追加 Mistral LLM模型 (模式選則為 2)
 - log 時間改為 yyMMdd_HHmmSS (原為 yyMMdd_HHmm)
 - 如果 items.json不存在時，會終止執行系統
