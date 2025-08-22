@@ -1,0 +1,36 @@
+【題目】
+請撰寫一個 Java 程式，讀取使用者輸入的一行文字，並統計其中每個英文字母（不區分大小寫）出現的次數。
+
+統計規則：
+
+程式應忽略所有非英文字母的字元（例如：數字、標點符號、空格）。
+
+統計時不區分大小寫，例如 'a' 和 'A' 都視為同一個字母進行統計。
+
+程式應在最後印出所有出現過的英文字母及其對應的出現次數。
+
+【輸入】
+A "Hello World" program in Java is a fundamental first step for beginners, demonstrating the basic structure and how to print output to the console.
+【輸出】
+出現的字母統計:
+a: 10
+b: 2
+c: 3
+d: 4
+e: 10
+f: 3
+g: 3
+h: 4
+i: 7
+j: 1
+l: 5
+m: 3
+n: 10
+o: 11
+p: 4
+r: 10
+s: 8
+t: 14
+u: 5
+v: 1
+w: 2

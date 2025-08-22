@@ -1,0 +1,41 @@
+【題目】
+請撰寫一個 Java 程式，建立一個 MyVector 類別來表示一個多維度的向量，並實作以下功能：
+
+建構子：MyVector(double[] elements)，接受一個 double 陣列作為參數，用來初始化向量的元素。
+
+getNorm() 方法：計算並回傳向量的範數（Norm）。向量的範數定義為其所有元素平方和的平方根。
+
+dotProduct(MyVector other) 方法：計算並回傳兩個向量的內積（Dot Product）。如果兩個向量的維度不一致，應拋出 IllegalArgumentException。
+
+angle(MyVector other) 方法：計算並回傳兩個向量的夾角（Angle），以弧度（radians）表示。計算公式為：
+theta=
+arccos(
+fracvecacdotvecb∣veca∣cdot∣vecb∣)。同樣，如果維度不一致，應拋出 IllegalArgumentException。
+
+toString() 方法：覆寫此方法，以 [e1, e2, e3, ...] 的格式回傳向量的字串表示。
+
+在 main 方法中，請依序完成以下步驟：
+
+讓使用者輸入兩個向量的維度（維度必須相同）。
+
+讓使用者依序輸入兩個向量的元素。
+
+建立兩個 MyVector 物件。
+
+印出這兩個向量的表示。
+
+計算並印出這兩個向量的範數、內積和夾角。
+
+【輸入】
+3
+1 2 3
+4 5 6
+【輸出】
+向量 a = [1.0, 2.0, 3.0]
+向量 b = [4.0, 5.0, 6.0]
+
+向量 a 的範數: 3.7416573867739413
+向量 b 的範數: 8.774964387392123
+
+a 與 b 的內積: 32.0
+a 與 b 的夾角 (弧度): 0.2257261285527342

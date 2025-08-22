@@ -1,0 +1,11 @@
+請撰寫一個 Java 程式，建立兩個類別：Caaa 和 Cbbb。讓 Cbbb 繼承 Caaa。
+
+在 main 方法中，建立一個 Caaa 型別的參考變數 aRef，並將其指向一個 Cbbb 的實例，即：Caaa aRef = new Cbbb();
+
+程式需利用 aRef.getClass() 方法，來確認 aRef 所參考的實際物件是屬於哪一個類別，並將該類別的名稱印出。
+
+【輸入】
+本題無任何輸入。
+
+【輸出】
+aRef 變數所參考的實際類別是：class Cbbb
