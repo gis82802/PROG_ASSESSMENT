@@ -1,0 +1,262 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）為這份作業給予 **0?100** 的總分，並說明優缺點、給出改寫後的程式碼、說明修改內容以及提供改進建議與回饋。  
+
+---
+
+## 1?? 總分 (100 分滿分)
+
+| 評分項目 | 滿分 | 得分 | 評語 |
+|--------|------|------|------|
+| **備註 (20 分)** | 20 | **6** | 程式只有少量註解（`//相加`、`//相減`、`//相乘(矩陣)`、`//相乘(數字)`），缺乏對類別、建構子、每個方法功能與參數的說明。 |
+| **格式 (25 分)** | 25 | **12** | 縮排不一致（`c=r;`、`x=new int…` 等行未縮排），大括號與關鍵字之間缺少空格，類別名稱未遵循 Java 命名慣例（`matrix` 應為 `Matrix`），檔案結構混雜兩個 public 類別。 |
+| **準確性 (25 分)** | 25 | **18** | 大多數運算正確，唯一問題是當尺寸不匹配時仍會回傳一個全 0 矩陣，且訊息拼寫錯誤 (`flase`)。 |
+| **邏輯 (30 分)** | 30 | **22** | 基本演算法正確，然而缺少尺寸檢查的例外處理、未防止 `null` 陣列、`mul(matrix)` 中未初始化 `x[i][j]` 為 0（雖然 Java 預設 0，但寫得不清晰），以及 `add`、`sub` 在不相容時仍回傳空矩陣，易造成後續 NPE。 |
+| **合計** | **100** | **58** | **總體而言程式能跑通，但在可讀性、錯誤處理與命名規範上有較大提升空間。** |
+
+---
+
+## 2?? 優缺點分析
+
+### ? 優點
+1. **功能完整**：實作了矩陣加、減、乘（矩陣與純量）四種常見運算，且提供 `show()` 方便列印。  
+2. **演算法正確**：矩陣相乘的三層迴圈實作正確，符合數學定義。  
+3. **使用者測試程式**：`t1` 類別示範了所有方法的呼叫，便於驗證。  
+
+### ? 缺點
+| 類別 | 問題 | 影響 |
+|------|------|------|
+| **註解** | 缺少類別、建構子、參數與回傳值說明 | 讀者不易快速了解 API 用法 |
+| **命名** | 類別 `matrix`、變數 `c`、`x` 不符合 Java 命名慣例，且 `c` 代表「矩陣」不直觀 | 可讀性下降 |
+| **格式** | 縮排、空格、括號位置不統一；兩個 `public` 類別放在同一檔案 | 編譯時需分檔，維護困難 |
+| **錯誤處理** | 尺寸不符僅印出 `flase`，仍回傳全 0 矩陣；訊息拼寫錯誤 | 使用者無法得知錯誤根本原因，且後續操作可能產生 NullPointerException |
+| **封裝性** | `c` 欄位為 `private`，但在同一檔案的 `t1` 仍能直接存取（因為在同一 package），若未來改為不同 package 會出問題 | 破壞封裝原則 |
+| **效能** | `mul(matrix)` 每次迴圈都使用 `+=`，但未明確將 `x[i][j]` 初始化為 0（雖然 Java 預設），可加上 `x[i][j]=0;` 讓意圖更清楚 | 可讀性與維護性 |
+| **例外** | 未使用 `throw new IllegalArgumentException(...)` 之類的例外機制 | 不符合 Java API 設計慣例 |
+
+---
+
+## 3?? 改寫後的程式碼  
+
+以下保留原有的演算法與變數名稱（`c`、`x`），僅在必要時調整變數命名、加入註解、統一格式、加強錯誤處理與封裝。  
+> **說明**：  
+> * 類別改為 `Matrix`（首字母大寫）。  
+> * `c` 改為 `data`，更具語意。  
+> * 所有方法在尺寸不匹配時拋出 `IllegalArgumentException`，而不是回傳零矩陣。  
+> * 加入 Javadoc 風格的說明，方便自動產生 API 文件。  
+> * `show()` 改為 `print()`，並使用 `StringBuilder` 減少 I/O 次數。  
+
+```java
+/**
+ * 簡易矩陣運算類別，支援加、減、乘(矩陣) 與乘(純量)。
+ * <p>
+ * 只支援整數型別的矩陣，所有運算皆返回新的 Matrix 物件，原矩陣保持不變。
+ * </p>
+ */
+public class Matrix {
+
+    /** 矩陣的實際資料，行列皆以 0 為起始索引 */
+    private final int[][] data;
+
+    /**
+     * 依據給定的二維陣列建立矩陣。
+     *
+     * @param rows  二維整數陣列，必須為長方形（每列長度相同）
+     * @throws IllegalArgumentException 若 rows 為 null 或不是長方形
+     */
+    public Matrix(int[][] rows) {
+        if (rows == null || rows.length == 0) {
+            throw new IllegalArgumentException("Input array cannot be null or empty.");
+        }
+        int colLen = rows[0].length;
+        for (int[] r : rows) {
+            if (r == null || r.length != colLen) {
+                throw new IllegalArgumentException("All rows must have the same length.");
+            }
+        }
+        // 深拷貝，避免外部修改
+        data = new int[rows.length][colLen];
+        for (int i = 0; i < rows.length; i++) {
+            System.arraycopy(rows[i], 0, data[i], 0, colLen);
+        }
+    }
+
+    /** ---------------------- 基本運算 ---------------------- */
+
+    /** 相加 */
+    public Matrix add(Matrix other) {
+        checkSameSize(other);
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] + other.data[i][j];
+            }
+        }
+        return new Matrix(result);
+    }
+
+    /** 相減 */
+    public Matrix sub(Matrix other) {
+        checkSameSize(other);
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] - other.data[i][j];
+            }
+        }
+        return new Matrix(result);
+    }
+
+    /** 矩陣相乘 */
+    public Matrix mul(Matrix other) {
+        if (data[0].length != other.data.length) {
+            throw new IllegalArgumentException(
+                "Matrix multiplication not possible: column count of A (" + data[0].length +
+                ") != row count of B (" + other.data.length + ").");
+        }
+        int[][] result = new int[data.length][other.data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < other.data[0].length; j++) {
+                int sum = 0;                       // 明確初始化
+                for (int k = 0; k < data[0].length; k++) {
+                    sum += data[i][k] * other.data[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+        return new Matrix(result);
+    }
+
+    /** 與純量相乘 */
+    public Matrix mul(int scalar) {
+        int[][] result = new int[data.length][data[0].length];
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                result[i][j] = data[i][j] * scalar;
+            }
+        }
+        return new Matrix(result);
+    }
+
+    /** ---------------------- 輔助方法 ---------------------- */
+
+    /** 檢查兩矩陣尺寸是否相同，若不同則拋出例外 */
+    private void checkSameSize(Matrix other) {
+        if (data.length != other.data.length ||
+            data[0].length != other.data[0].length) {
+            throw new IllegalArgumentException(
+                "Matrix sizes differ: (" + data.length + "x" + data[0].length + ") vs (" +
+                other.data.length + "x" + other.data[0].length + ").");
+        }
+    }
+
+    /** 以較友善的方式印出矩陣 */
+    public void print() {
+        StringBuilder sb = new StringBuilder();
+        for (int[] row : data) {
+            for (int val : row) {
+                sb.append(val).append(' ');
+            }
+            sb.append(System.lineSeparator());
+        }
+        System.out.print(sb.toString());
+    }
+
+    /** 取得矩陣的行數（僅供測試使用） */
+    public int rows() {
+        return data.length;
+    }
+
+    /** 取得矩陣的列數（僅供測試使用） */
+    public int cols() {
+        return data[0].length;
+    }
+}
+
+/* ----------------------------------------------------------- */
+/* 測試程式（保持與原本功能相同）                           */
+class T1 {
+    public static void main(String[] args) {
+        int[][] A1 = {{1, 2, 3}, {4, 5, 6}};
+        int[][] B1 = {{9, 8, 7}, {6, 5, 4}};
+        int[][] C1 = {{9, 8}, {7, 6}, {5, 4}};
+
+        Matrix mA = new Matrix(A1);
+        System.out.println("matA");
+        mA.print();
+
+        Matrix mB = new Matrix(B1);
+        System.out.println("matB");
+        mB.print();
+
+        Matrix mC = new Matrix(C1);
+        System.out.println("matC");
+        mC.print();
+
+        System.out.println("matA + matB");
+        mA.add(mB).print();
+
+        System.out.println("matA - matB");
+        mA.sub(mB).print();
+
+        System.out.println("matA * matC");
+        mA.mul(mC).print();
+
+        System.out.println("matA * 4");
+        mA.mul(4).print();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明與原因
+
+| 原始位置 | 修改內容 | 為什麼要這樣改 |
+|----------|----------|----------------|
+| `class matrix` → `public class Matrix` | 類別名稱改為大寫，符合 Java 命名慣例。 | 增強可讀性、符合業界標準。 |
+| `private int c[][];` → `private final int[][] data;` | 欄位改名、加上 `final`，並使用 `int[][]` 的慣用寫法。 | `final` 表示不可變，避免意外改寫；`data` 更具語意。 |
+| 建構子內直接 `c=r;` → 深拷貝檢查長方形後再複製 | 防止外部傳入的陣列被後續修改影響內部狀態。 | 保持封裝性，避免 side?effect。 |
+| 所有錯誤訊息 `System.out.println("flase");` → `throw new IllegalArgumentException(...)` | 使用例外機制取代印出錯誤訊息，且訊息拼寫正確。 | 呼叫端能捕捉例外並做適當處理，符合 API 設計慣例。 |
+| `add`、`sub`、`mul(matrix)` 中回傳 `new matrix(x);` 即使尺寸不符 | 改為先檢查尺寸，若不符直接拋例外，不產生全 0 矩陣。 | 防止使用者得到錯誤結果，提升程式安全性。 |
+| `mul(matrix)` 內 `x[i][j] += ...` 前未明確初始化 | 改為先 `int sum = 0;` 再累加，最後 `result[i][j] = sum;` | 讓演算法意圖更清晰，避免讀者誤以為有隱式初始化需求。 |
+| `show()` → `print()` 並使用 `StringBuilder` | 減少每次 `System.out.print` 的 I/O 呼叫。 | 提升效能，同時名稱更貼近功能。 |
+| `public class t1` → `class T1`（非 public） | 保持同一檔案中只能有一個 public 類別，符合 Java 編譯規則。 | 編譯時不會因多個 public 類別而失敗。 |
+| 縮排與空格統一（每層 4 個空格） | 重新排版，使程式碼結構一目了然。 | 增強可讀性，符合團隊 coding style。 |
+| 加入 Javadoc 註解 | 為類別、建構子、每個公開方法提供說明。 | 方便自動產生 API 文件，提升可維護性。 |
+
+---
+
+## 5?? 改進建議與回饋
+
+1. **遵守命名與格式慣例**  
+   - 類別名稱首字母大寫、變數與方法使用小寫開頭的駝峰式 (`camelCase`)。  
+   - 每個程式區塊（方法、迴圈、條件）保持一致的縮排（建議 4 個空格）。  
+   - 使用 IDE（如 IntelliJ IDEA、Eclipse）自動格式化功能，可大幅減少排版錯誤。
+
+2. **加入完整註解**  
+   - 在類別、建構子、公開方法前使用 Javadoc，說明參數、回傳值、可能的例外。  
+   - 若有特殊演算法或複雜的迴圈，於程式內加入簡短說明，讓閱讀者快速掌握意圖。
+
+3. **錯誤處理**  
+   - 當尺寸不匹配或傳入 `null` 時，拋出 `IllegalArgumentException` 或自訂例外類別，而不是僅印出訊息。  
+   - 在測試程式中使用 `try…catch` 示範例外處理，讓學生了解例外的使用情境。
+
+4. **封裝與不變性**  
+   - 讓內部資料 (`data`) 為 `private final`，並在建構子中做深拷貝，保護物件不被外部意外修改。  
+   - 所有運算返回新物件，原矩陣保持不變，符合函數式編程的「無副作用」原則。
+
+5. **單元測試**  
+   - 建議使用 JUnit 撰寫測試案例，驗證每個運算在正常與異常情況下的行為。  
+   - 例如測試相加的正確性、尺寸不匹配時是否拋出例外、純量乘法的結果等。
+
+6. **效能小技巧**  
+   - `print()` 使用 `StringBuilder` 合併字串，減少 I/O 次數。  
+   - 若未來要處理大型矩陣，可考慮使用多執行緒或矩陣分塊演算法。
+
+7. **檔案結構**  
+   - 每個 `public` 類別應放在獨立檔案（`Matrix.java`、`T1.java`），遵守 Java 編譯規則。  
+   - 若僅作為練習，可保留同檔案的 `package`，但仍建議分檔以利日後擴充。
+
+---
+
+**總結**：  
+學生已完成核心功能，程式能正確執行基礎矩陣運算。接下來的重點在於 **程式可讀性、錯誤處理與遵守 Java 標準**。透過上述的格式化、註解、例外機制與封裝改寫，程式將更具專業水準，也更易於維護與擴充。希望這些建議對您和學生都有幫助，若需要進一步的測試範例或教學素材，隨時告訴我！祝教學順利 ??

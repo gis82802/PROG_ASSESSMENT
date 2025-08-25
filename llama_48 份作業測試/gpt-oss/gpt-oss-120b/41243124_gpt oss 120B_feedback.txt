@@ -1,0 +1,269 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）對 **這份「矩陣運算」作業** 進行 **打分、優缺點分析、程式碼改寫、修改說明與改進建議**。  
+
+---
+
+## 1. 總分（0?100）
+
+| 評分項目 | 滿分 | 得分 | 評分說明 |
+|----------|------|------|----------|
+| **備註 (20)** | 20 | **14** | 程式碼在類別與方法上都有簡短的註解，說明了功能。但缺少：<br>‧ 程式入口（`main`）的整體說明<br>‧ 輸入格式、輸出範例的說明<br>‧ 例外情況（如矩陣維度不符）如何處理的說明 |
+| **格式 (25)** | 25 | **22** | 縮排、括號位置、變數命名皆符合 Java 常見慣例。需要改進的地方：<br>‧ 註解風格不統一（有 `//` 也有 `/* */`）<br>‧ `Scanner` 未在最後 `close()`，會產生資源警告<br>‧ `import java.util.Arrays;` 只在 `printMatrix` 使用，若改用 `StringBuilder` 可省去此 import |
+| **準確性 (25)** | 25 | **23** | 大部分功能正確，能完成加、減、乘、純量乘。少數情況下會產生錯誤：<br>‧ 若使用者輸入的矩陣尺寸不符合題目（例如行列為 0），程式會拋出 `ArrayIndexOutOfBoundsException`。<br>‧ `multiply` 中未檢查 `common` 是否相等於 `matrix[0].length`，若兩矩陣不相容會直接跑出錯誤。 |
+| **邏輯 (30)** | 30 | **27** | 演算法正確，流程清晰。可改進的邏輯點：<br>‧ 重複的維度檢查（加法、減法）可抽成共用方法，降低程式碼重複度。<br>‧ `printMatrix` 直接使用 `Arrays.toString`，會在每列之間自動加上 `,` 與空格，雖可接受但不夠美觀。 |
+| **總分** | **100** | **86** | **86 分**（屬於 B+） |
+
+---
+
+## 2. 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣的加、減、乘、純量乘四大基本運算，且在 `main` 中提供使用者互動介面。  
+2. **程式結構清晰**：每項運算都封裝在獨立的成員方法中，符合物件導向設計。  
+3. **使用了增強型 for 迴圈**（`printMatrix`），展現對 Java 語法的熟悉度。  
+4. **變數命名具可讀性**：`rows1`、`cols1`、`data1` 等名稱直觀易懂。  
+
+### 缺點
+| 項目 | 具體問題 | 可能的影響 |
+|------|----------|------------|
+| **備註** | 缺少程式整體說明、輸入/輸出範例、例外處理說明。 | 評分較低，讀者不易快速了解程式用途。 |
+| **格式** | 註解風格不統一、未關閉 `Scanner`、多餘 `import`。 | 可能產生 IDE 警告或資源泄漏。 |
+| **準確性** | 未檢查 0 行/0 列、未在 `multiply` 前驗證維度相容性。 | 當使用者輸入不合法資料時會拋例外，程式崩潰。 |
+| **邏輯** | 重複的維度檢查程式碼、`printMatrix` 輸出格式較粗糙。 | 可讀性與維護性下降，未來若要擴充功能會較費力。 |
+
+---
+
+## 3. 改進後的程式碼  
+
+以下程式碼 **保留原有函式與變數名稱**（除非名稱不夠直觀），僅針對缺點做修正，並加入共用檢查方法與更完整的註解說明。  
+
+```java
+import java.util.Scanner;
+import java.util.Arrays;
+
+/**
+ * MyMatrix - 簡易矩陣運算類別
+ *
+ * 支援的操作：
+ *   1. 矩陣加法 (add)
+ *   2. 矩陣減法 (subtract)
+ *   3. 矩陣乘法 (multiply)
+ *   4. 純量乘法 (scalarMultiply)
+ *
+ * 使用說明：
+ *   - 於 main 方法中依序輸入兩個矩陣的行列與元素。
+ *   - 程式會自動判斷是否能執行相應的運算，若維度不符則顯示錯誤訊息。
+ *   - 最後可輸入一個整數作為純量，對第一個矩陣執行純量乘法。
+ */
+class MyMatrix {
+    private int[][] matrix;
+
+    /** 建構子：以二維陣列初始化矩陣 */
+    public MyMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    /** 矩陣加法 */
+    public MyMatrix add(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 矩陣減法 */
+    public MyMatrix subtract(MyMatrix other) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 矩陣乘法 */
+    public MyMatrix multiply(MyMatrix other) {
+        int rows = matrix.length;                // A 的行數
+        int common = matrix[0].length;           // A 的列數 = B 的行數
+        int cols = other.matrix[0].length;       // B 的列數
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < common; k++) {
+                    result[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 純量乘法 */
+    public MyMatrix scalarMultiply(int scalar) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 以較美觀的格式印出矩陣 */
+    public void printMatrix() {
+        for (int[] row : matrix) {
+            // 使用 Arrays.toString 產生 "[a, b, c]"，再去除最外層的 [] 讓輸出更整齊
+            String line = Arrays.toString(row);
+            System.out.println(line.substring(1, line.length() - 1));
+        }
+    }
+
+    /** 判斷兩矩陣是否可進行加/減法（尺寸相同） */
+    private static boolean sameSize(MyMatrix a, MyMatrix b) {
+        return a.matrix.length == b.matrix.length &&
+               a.matrix[0].length == b.matrix[0].length;
+    }
+
+    /** 判斷兩矩陣是否可進行乘法（A 的列數 = B 的行數） */
+    private static boolean canMultiply(MyMatrix a, MyMatrix b) {
+        return a.matrix[0].length == b.matrix.length;
+    }
+
+    /** 主程式：負責輸入、驗證與呼叫運算方法 */
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            // ---------- 輸入第一個矩陣 ----------
+            System.out.println("輸入第一個矩陣的行數與列數 (兩個正整數, 以空格分隔):");
+            int rows1 = scanner.nextInt();
+            int cols1 = scanner.nextInt();
+            if (rows1 <= 0 || cols1 <= 0) {
+                System.out.println("行數與列數必須為正整數，程式結束。");
+                return;
+            }
+            int[][] data1 = new int[rows1][cols1];
+            System.out.println("請依序輸入第一個矩陣的元素 (共 " + rows1 * cols1 + " 個整數):");
+            for (int i = 0; i < rows1; i++) {
+                for (int j = 0; j < cols1; j++) {
+                    data1[i][j] = scanner.nextInt();
+                }
+            }
+
+            // ---------- 輸入第二個矩陣 ----------
+            System.out.println("輸入第二個矩陣的行數與列數 (兩個正整數, 以空格分隔):");
+            int rows2 = scanner.nextInt();
+            int cols2 = scanner.nextInt();
+            if (rows2 <= 0 || cols2 <= 0) {
+                System.out.println("行數與列數必須為正整數，程式結束。");
+                return;
+            }
+            int[][] data2 = new int[rows2][cols2];
+            System.out.println("請依序輸入第二個矩陣的元素 (共 " + rows2 * cols2 + " 個整數):");
+            for (int i = 0; i < rows2; i++) {
+                for (int j = 0; j < cols2; j++) {
+                    data2[i][j] = scanner.nextInt();
+                }
+            }
+
+            MyMatrix matrix1 = new MyMatrix(data1);
+            MyMatrix matrix2 = new MyMatrix(data2);
+
+            // ---------- 顯示輸入的矩陣 ----------
+            System.out.println("\n矩陣 1:");
+            matrix1.printMatrix();
+
+            System.out.println("\n矩陣 2:");
+            matrix2.printMatrix();
+
+            // ---------- 加法 ----------
+            if (sameSize(matrix1, matrix2)) {
+                System.out.println("\n加法結果:");
+                matrix1.add(matrix2).printMatrix();
+            } else {
+                System.out.println("\n無法進行加法：兩矩陣尺寸不同。");
+            }
+
+            // ---------- 減法 ----------
+            if (sameSize(matrix1, matrix2)) {
+                System.out.println("\n減法結果:");
+                matrix1.subtract(matrix2).printMatrix();
+            } else {
+                System.out.println("\n無法進行減法：兩矩陣尺寸不同。");
+            }
+
+            // ---------- 乘法 ----------
+            if (canMultiply(matrix1, matrix2)) {
+                System.out.println("\n乘法結果:");
+                matrix1.multiply(matrix2).printMatrix();
+            } else {
+                System.out.println("\n無法進行乘法：第一個矩陣的列數不等於第二個矩陣的行數。");
+            }
+
+            // ---------- 純量乘法 ----------
+            System.out.println("\n輸入純量值 (整數) 以對矩陣 1 進行純量乘法:");
+            int scalar = scanner.nextInt();
+            System.out.println("\n純量乘法結果 (矩陣 1):");
+            matrix1.scalarMultiply(scalar).printMatrix();
+
+        } finally {
+            // 確保資源正確釋放
+            scanner.close();
+        }
+    }
+}
+```
+
+---
+
+## 4. 程式碼修改說明
+
+| 修改位置 | 原始問題 | 改動內容 | 為什麼要這樣改 |
+|----------|----------|----------|----------------|
+| **備註/檔頭註解** | 無完整說明 | 加入檔案說明、功能列表、使用說明 | 提高可讀性，讓評分的「備註」項目得分提升 |
+| **`Scanner` 關閉** | 未關閉 `Scanner`，可能產生資源泄漏警告 | 用 `try … finally` 包住主流程，最後 `scanner.close()` | 符合資源管理的最佳實踐，提升格式分數 |
+| **維度檢查抽取** | 加法、減法、乘法的維度檢查寫在 `main` 中且重複 | 新增 `sameSize`、`canMultiply` 兩個私有靜態方法 | 減少重複程式碼，提升邏輯清晰度 |
+| **輸入合法性檢查** | 若使用者輸入 0 或負數會導致陣列建立失敗 | 在讀取行列後立即檢查 `rows > 0 && cols > 0`，不合法則提前結束 | 防止例外拋出，提高準確性 |
+| **`printMatrix` 輸出美化** | 使用 `Arrays.toString` 直接印出 `[a, b]`，包含方括號 | 去除最外層方括號，使每列顯示為 `a, b, c` | 讓輸出更易讀，提升程式的使用者體驗 |
+| **多餘 import** | `import java.util.Arrays;` 已在 `printMatrix` 使用，保留但說明其必要性 | 保留 `Arrays`，因仍需轉換列為字串；若改用 `StringBuilder` 可移除，但此處保留以減少改動幅度 | 保持原有語法結構，符合「使用原有函式、變數名稱」的要求 |
+| **註解風格統一** | 有些註解使用 `//`，有些使用 `/** */` | 統一使用 `/** */`（Javadoc）說明公共方法，`//` 用於簡短說明 | 使程式碼風格更一致，提升格式分數 |
+| **錯誤訊息文字** | 原本訊息較簡單 | 加入更具說明性的文字（例如「兩矩陣尺寸不同」） | 讓使用者更易理解錯誤原因，提升備註與邏輯可讀性 |
+
+---
+
+## 5. 改進建議與回饋
+
+1. **加強文件說明**  
+   - 在檔案開頭加入完整的程式說明、使用範例與限制條件（如矩陣大小上限）。  
+   - 每個公開方法（`add`、`subtract`、`multiply`、`scalarMultiply`）都寫上 Javadoc，說明參數、回傳值與可能的例外情況。
+
+2. **錯誤處理**  
+   - 目前僅以 `if` 判斷維度不符並印出訊息，建議拋出自訂例外（如 `IllegalArgumentException`），讓呼叫端可以自行決定如何處理。  
+   - 若要進一步提升魯棒性，可在 `main` 中加入 `try?catch`，捕捉 `InputMismatchException`，防止使用者輸入非整數時程式直接崩潰。
+
+3. **程式碼抽象化**  
+   - 你已將維度檢查抽成工具方法，未來若要加入更多運算（如轉置、逆矩陣），可以把「矩陣尺寸」相關的檢查再封裝成一個 `MatrixValidator` 類別，讓核心運算類別更專注於數學邏輯。
+
+4. **效能優化（可選）**  
+   - 現在的矩陣乘法是 O(n3) 的標準實作，對於大型矩陣可考慮使用 **Strassen** 演算法或多執行緒平行化。這不在本次作業範圍，但若有興趣可作為延伸練習。
+
+5. **測試**  
+   - 建議寫一套單元測試（JUnit）來驗證每個運算的正確性，特別是邊界情況（如 1×1 矩陣、零矩陣）。測試可以幫助你在未來修改程式時避免回歸錯誤。
+
+6. **使用者介面**  
+   - 現在的 CLI 介面雖然功能完整，但可以加入 **選單**（例如 `1. 加法 2. 減法 3. 乘法 4. 純量乘法 5. 離開`），讓使用者不必每次都重新輸入兩個矩陣。
+
+---
+
+**總結**：這份作業已具備完整的矩陣運算功能，程式結構清晰，僅在說明文件、錯誤處理與程式碼重用性上有提升空間。依照上述修改後的程式碼與建議，你的作品可以從 **86 分提升至 92–95 分**，同時也更具可維護性與專業度。祝教學順利，若需要進一步的教學範例或測試案例，隨時告訴我！

@@ -1,0 +1,311 @@
+
+以下依照您提供的評分標準，針對 **學生提交的程式碼** 進行 **1. 打分、2. 優缺點分析、3. 改寫程式碼、4. 修改說明、5. 改進建議**，全部以中文說明。
+
+---
+
+## 1. 總分 (0‑100)
+
+| 評分項目 | 滿分 | 得分 | 評分說明 |
+|---------|------|------|----------|
+| **備註 (說明)** | 20 | **12** | 程式碼最上方只有類別與方法的簡短中文註解，缺少整體功能說明、輸入/輸出格式與使用限制的說明。 |
+| **格式** | 25 | **20** | 縮排一致（4 個空格），但有少數地方缺少空行（如兩個 `try‑catch` 區塊之間），以及 `//` 註解與程式碼之間未加空格。 |
+| **準確性** | 25 | **23** | 大部分功能正確，唯一的錯誤是 **矩陣乘法** 中 `result.matrix[i][j]` 初始化為 0，若 `MyMatrix` 內部未顯式賦值則仍為 0，算術上正確；但在 **純量乘法** 時若使用 `double` 輸入負數或 0，仍能正確運算。唯一可能失敗的情況是使用者輸入的列/行數為 0，會拋出 `ArrayIndexOutOfBoundsException`（因 `inputMatrix` 仍會執行迴圈）。 |
+| **邏輯** | 30 | **26** | 邏輯結構清晰，例外處理妥當。但缺少 **0 行/列** 的防護，且在 **加法/減法** 前未檢查 `other` 為 `null`，雖然在本程式不會發生，但屬於防呆不足。 |
+| **總分** | **100** | **81** | **最終得分：81 / 100** |
+
+> **評分結論**：程式已完整實作題目要求的四種運算，結構與演算法正確；主要扣分在說明不足、格式細節與少量防呆邏輯。
+
+---
+
+## 2. 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣加、減、乘、純量乘四種運算，且都有例外拋出訊息，符合題目需求。  
+2. **封裝良好**：將矩陣相關操作封裝在 `MyMatrix` 類別，屬性私有、方法公開，符合物件導向設計原則。  
+3. **使用 `printf` 美化輸出**：`printMatrix` 以固定寬度、兩位小數呈現，易於閱讀。  
+4. **例外處理**：在 `add`、`subtract`、`multiply` 中使用 `IllegalArgumentException`，並在 `main` 中捕捉，讓使用者得到明確錯誤訊息。  
+
+### 缺點
+| 項目 | 具體問題 | 可能影響 |
+|------|----------|----------|
+| **備註** | 程式檔案缺乏檔案說明、使用說明、演算法時間複雜度等註解。 | 讀者不易快速了解程式功能與限制。 |
+| **格式** | - `//` 註解與程式碼之間未留空格<br>- `try {` 與 `catch` 之間缺少空行<br>- 部分 `System.out.print` 文字長度未對齊，影響可讀性。 | 程式碼可讀性略受影響。 |
+| **防呆** | - 未檢查 `rows`、`cols` 是否為正整數。<br>- `inputMatrix` 在 `rows` 或 `cols` 為 0 時仍會執行迴圈，導致 `ArrayIndexOutOfBoundsException`。<br>- `multiply` 中未檢查 `result.matrix[i][j]` 是否已被初始化（雖然 Java 會自動 0.0，但寫明會更清晰）。 | 當使用者輸入不合法資料時程式會直接崩潰。 |
+| **變數命名** | `rows`、`cols` 在中文註解中說「列」與「行」顛倒，易造成概念混淆。 | 初學者可能誤解矩陣的維度。 |
+| **程式流程** | `scanner.close()` 放在 `main` 最後，若未正確輸入資料而在 `try‑catch` 前拋出例外，`scanner` 仍會被關閉，影響後續輸入。 | 小概率情況下會導致資源提前釋放。 |
+
+---
+
+## 3. 改寫程式碼（保留優點、修正缺點）
+
+```java
+import java.util.Scanner;
+
+/**
+ * MyMatrix - 矩陣運算類別
+ * 功能說明：
+ *   1. 透過建構子建立 rows x cols 的雙精度矩陣
+ *   2. 支援矩陣加法、減法、乘法以及純量乘法
+ *   3. 提供輸入、輸出、簡易防呆檢查
+ *
+ * 使用限制：
+ *   - rows、cols 必須為正整數
+ *   - 加/減運算要求兩矩陣尺寸相同
+ *   - 乘法要求左矩陣的列數 = 右矩陣的行數
+ *
+ * 時間複雜度：
+ *   加/減 O(rows * cols)；乘法 O(rows * common * cols)
+ */
+class MyMatrix {
+    private int rows;                 // 矩陣的「列」數 (row)
+    private int cols;                 // 矩陣的「行」數 (column)
+    private double[][] matrix;
+
+    /** 建構子：檢查 rows、cols 為正整數 */
+    public MyMatrix(int rows, int cols) {
+        if (rows <= 0 || cols <= 0) {
+            throw new IllegalArgumentException("矩陣的列數與行數必須為正整數。");
+        }
+        this.rows = rows;
+        this.cols = cols;
+        this.matrix = new double[rows][cols];
+    }
+
+    /** 讓使用者輸入矩陣內容（使用 Scanner） */
+    public void inputMatrix(Scanner scanner) {
+        System.out.println("請依序輸入矩陣內容（共 " + rows + " 列，" + cols + " 行），每個元素以空白或換行分隔：");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                while (!scanner.hasNextDouble()) {
+                    System.out.print("第 " + (i + 1) + " 列第 " + (j + 1) + " 行的輸入無效，請重新輸入：");
+                    scanner.next(); // 丟掉無效的 token
+                }
+                matrix[i][j] = scanner.nextDouble();
+            }
+        }
+    }
+
+    /** 矩陣加法 */
+    public MyMatrix add(MyMatrix other) {
+        if (other == null) {
+            throw new IllegalArgumentException("加法的另一個矩陣不能為 null。");
+        }
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣大小不匹配，無法進行加法！");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    /** 矩陣減法 */
+    public MyMatrix subtract(MyMatrix other) {
+        if (other == null) {
+            throw new IllegalArgumentException("減法的另一個矩陣不能為 null。");
+        }
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣大小不匹配，無法進行減法！");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    /** 矩陣乘法 */
+    public MyMatrix multiply(MyMatrix other) {
+        if (other == null) {
+            throw new IllegalArgumentException("乘法的另一個矩陣不能為 null。");
+        }
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("矩陣大小不匹配，無法進行乘法！");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        // 初始化為 0.0（Java 會自動完成，此行僅為可讀性說明）
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                result.matrix[i][j] = 0.0;
+            }
+        }
+        // 標準三層迴圈乘法
+        for (int i = 0; i < this.rows; i++) {
+            for (int k = 0; k < this.cols; k++) {
+                double a = this.matrix[i][k];
+                for (int j = 0; j < other.cols; j++) {
+                    result.matrix[i][j] += a * other.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /** 純量乘法 */
+    public MyMatrix scalarMultiply(double scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    /** 輸出矩陣（固定寬度、兩位小數） */
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.printf("%8.2f", matrix[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+
+/** 主程式：示範四種矩陣運算 */
+public class MatrixDemo {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            // ---------- 建立第一個矩陣 ----------
+            System.out.print("請輸入第一個矩陣的列數 (正整數)：");
+            int rows1 = readPositiveInt(scanner);
+            System.out.print("請輸入第一個矩陣的行數 (正整數)：");
+            int cols1 = readPositiveInt(scanner);
+            MyMatrix matrix1 = new MyMatrix(rows1, cols1);
+            matrix1.inputMatrix(scanner);
+
+            // ---------- 建立第二個矩陣 ----------
+            System.out.print("請輸入第二個矩陣的列數 (正整數)：");
+            int rows2 = readPositiveInt(scanner);
+            System.out.print("請輸入第二個矩陣的行數 (正整數)：");
+            int cols2 = readPositiveInt(scanner);
+            MyMatrix matrix2 = new MyMatrix(rows2, cols2);
+            matrix2.inputMatrix(scanner);
+
+            // ---------- 純量 ----------
+            System.out.print("請輸入純量值 (double)：");
+            double scalar = readDouble(scanner);
+
+            // ---------- 矩陣加法 ----------
+            try {
+                MyMatrix sum = matrix1.add(matrix2);
+                System.out.println("\n=== 矩陣加法結果 ===");
+                sum.printMatrix();
+            } catch (IllegalArgumentException e) {
+                System.out.println("\n加法失敗： " + e.getMessage());
+            }
+
+            // ---------- 矩陣減法 ----------
+            try {
+                MyMatrix diff = matrix1.subtract(matrix2);
+                System.out.println("\n=== 矩陣減法結果 ===");
+                diff.printMatrix();
+            } catch (IllegalArgumentException e) {
+                System.out.println("\n減法失敗： " + e.getMessage());
+            }
+
+            // ---------- 矩陣乘法 ----------
+            try {
+                MyMatrix prod = matrix1.multiply(matrix2);
+                System.out.println("\n=== 矩陣乘法結果 ===");
+                prod.printMatrix();
+            } catch (IllegalArgumentException e) {
+                System.out.println("\n乘法失敗： " + e.getMessage());
+            }
+
+            // ---------- 純量乘法 ----------
+            System.out.println("\n=== 第一個矩陣的純量乘法結果 ===");
+            matrix1.scalarMultiply(scalar).printMatrix();
+
+            System.out.println("\n=== 第二個矩陣的純量乘法結果 ===");
+            matrix2.scalarMultiply(scalar).printMatrix();
+
+        } finally {
+            // 確保資源一定會被關閉
+            scanner.close();
+        }
+    }
+
+    /** 讀取正整數，若輸入不合法會持續要求重新輸入 */
+    private static int readPositiveInt(Scanner scanner) {
+        while (true) {
+            if (scanner.hasNextInt()) {
+                int value = scanner.nextInt();
+                if (value > 0) {
+                    return value;
+                }
+                System.out.print("輸入必須為正整數，請重新輸入：");
+            } else {
+                System.out.print("輸入非整數，請重新輸入正整數：");
+                scanner.next(); // 丟掉錯誤的 token
+            }
+        }
+    }
+
+    /** 讀取 double，若輸入不合法會持續要求重新輸入 */
+    private static double readDouble(Scanner scanner) {
+        while (true) {
+            if (scanner.hasNextDouble()) {
+                return scanner.nextDouble();
+            } else {
+                System.out.print("輸入非數字，請重新輸入 double 值：");
+                scanner.next(); // 丟掉錯誤的 token
+            }
+        }
+    }
+}
+```
+
+---
+
+## 4. 修改說明（哪些地方改了、為什麼）
+
+| 原始位置 | 改動內容 | 改動原因 |
+|----------|----------|----------|
+| `MyMatrix` 建構子 | 加入 `if (rows <= 0 || cols <= 0)` 檢查，拋出 `IllegalArgumentException`。 | 防止建立 0 或負數維度的矩陣，避免之後的 `ArrayIndexOutOfBoundsException`。 |
+| `inputMatrix` | 加入 `while (!scanner.hasNextDouble())` 迴圈，確保每個元素都是合法的 `double`。 | 提升使用者體驗，避免因輸入非數字而直接拋例外。 |
+| `add`、`subtract`、`multiply` | 增加 `if (other == null)` 檢查。 | 防止傳入 `null` 時產生 `NullPointerException`，提升程式魯棒性。 |
+| `multiply` | 重新排列三層迴圈為 `i‑k‑j`，並在外層先把 `result[i][j]` 設為 `0.0`（雖然 Java 會自動），並使用暫存變數 `a` 減少重複存取。 | 微調效能（減少陣列存取次數），同時讓程式結構更清晰。 |
+| `rows`、`cols` 註解 | 把中文說明改為「列」對應 `rows`、 「行」對應 `cols`，並在類別註解說明。 | 消除原始程式中「列」與「行」概念的混淆。 |
+| `main` 方法 | 包裝所有程式碼於 `try … finally`，確保 `scanner.close()` 必定執行。<br>新增 `readPositiveInt`、`readDouble` 輔助方法，提供輸入驗證。 | 防止因例外提前終止而未關閉資源；同時避免使用者輸入非正整數或非數字時程式直接崩潰。 |
+| `System.out.print` 文字 | 統一使用「===」標題，並在每段運算前加入空行，提升輸出可讀性。 | 改善使用者介面的可讀性。 |
+| 註解與檔案說明 | 在類別上方加入完整的功能說明、使用限制與時間複雜度。 | 滿足「備註」項目的分數需求。 |
+
+---
+
+## 5. 改進建議與回饋
+
+1. **加強說明文件**  
+   - 每個類別或重要方法前都應有 Javadoc（或等效的多行註解），說明功能、參數、回傳值與可能的例外。這不僅能提升備註分數，也有助於日後維護與團隊合作。  
+   - 在提交作業的 README 中加入「如何編譯、執行」的步驟說明，讓助教或同學能快速測試。
+
+2. **統一編碼風格**  
+   - 建議使用 IDE（如 IntelliJ IDEA、Eclipse）自帶的「Code Style」設定，統一縮排（4 個空格）與空行規則。  
+   - `import` 之後、類別宣告之前、方法之間都保留一個空行，讓程式結構更分明。
+
+3. **防呆與例外**  
+   - 已在改寫版加入正整數與 `double` 的驗證，未來可以將這類驗證抽成工具類別（例如 `InputUtil`），減少重複程式碼。  
+   - 若要支援更大型的矩陣運算，考慮使用 `try‑catch` 捕捉 `OutOfMemoryError`，並給予友善提示。
+
+4. **效能優化**  
+   - 現在的矩陣乘法已使用 `i‑k‑j` 迴圈順序，對於大型矩陣可減少快取未命中。若課程進一步探討，可介紹 **Strassen 演算法** 或 **多執行緒** 版的矩陣乘法。  
+   - `printMatrix` 每次呼叫都使用 `System.out.printf`，若輸出量非常大，可改為先組成 `StringBuilder` 再一次性輸出，以降低 I/O 開銷。
+
+5. **測試**  
+   - 建議為每個公開方法寫單元測試（JUnit），包括正常情況與異常情況。測試可以自動化驗證「加法尺寸不匹配」等例外是否正確拋出，提升程式的可靠性。
+
+6. **命名慣例**  
+   - 變數 `rows`、`cols` 已符合慣例，若未來加入更多屬性（如 `determinant`、`inverse`），請保持駝峰式命名且語意清晰。  
+   - 方法名稱如 `inputMatrix`、`printMatrix` 已很好，若新增功能（例如 `transpose`、`inverse`），同樣遵循動詞+名詞的命名規則。
+
+---
+
+**總結**：  
+此作業已完成核心功能，程式結構與演算法正確，得分 81 分屬於不錯的表現。透過上述的說明文件、格式統一、防呆機制與測試，您可以把分數提升到 90 分以上，並讓程式更具可讀性與可維護性。祝教學順利，若有其他作業或教學需求，隨時告訴我！

@@ -1,0 +1,249 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）對 **「hw1.java」** 這份作業進行完整評分、優缺點分析、程式碼改寫、修改說明以及改進建議。  
+
+---
+
+## 1?? 總分（0?100）
+
+| 評分項目 | 滿分 | 得分 | 評語 |
+|---------|------|------|------|
+| **備註 (20)** | 20 | **16** | 有檔案頭說明、功能、作者、日期、版本；但缺少每個方法的參數、回傳值與例外說明，且註解語法不統一（`Fuction` 拼寫錯誤）。 |
+| **格式 (25)** | 25 | **18** | 大部分縮排正確（4 個空格），但：<br>‧ `if (rows != mat2.rows && cols != mat2.cols)` 應改為 `||`，邏輯錯誤屬於程式錯誤，影響可讀性。<br>‧ 大括號位置與 `class`、`method` 之間缺少空行，導致視覺上擁擠。<br>‧ 變數 `matrix[][]` 建議寫成 `int[][] matrix`。 |
+| **準確性 (25)** | 25 | **22** | 主要功能（加、減、乘、純量乘）在正常輸入下正確；但：<br>‧ 加/減的尺寸檢查使用 `&&`，導致尺寸不相同時仍可能進入計算，會拋出 `ArrayIndexOutOfBoundsException`。<br>‧ `multiplication` 若傳入不相容矩陣會回傳 `null`，但呼叫端未做 `null` 判斷，會產生 `NullPointerException`。 |
+| **邏輯 (30)** | 30 | **24** | 演算法本身正確，使用三層迴圈完成矩陣乘法；但：<br>‧ 錯誤的尺寸檢查 (`&&` → `||`) 破壞邏輯正確性。<br>‧ `multiplicationA` 方法名稱不夠語意化，建議改為 `scalarMultiply`。 |
+| **總分** | 100 | **80** | 這是一份具備完整功能的作業，只要修正尺寸檢查與少量格式問題即可達到滿分。 |
+
+---
+
+## 2?? 優缺點分析（依四項標準）
+
+| 評分項目 | 優點 | 缺點 |
+|---------|------|------|
+| **備註** | ‧ 程式檔案開頭有完整的檔案資訊（作者、日期、版本）。<br>‧ 每個主要方法都有簡短中文說明。 | ‧ `Fuction` 拼寫錯誤。<br>‧ 缺少參數、回傳值與例外情形的說明。<br>‧ 方法說明未使用 Javadoc 標準格式。 |
+| **格式** | ‧ 縮排一致（4 空格），程式碼易讀。<br>‧ 變數命名大致遵循 `camelCase`（如 `rows`, `cols`）。 | ‧ 大括號位置與 `class`、`method` 之間缺少空行。<br>‧ `int matrix[][]` 建議改為 `int[][] matrix`（更符合 Java 風格）。<br>‧ 變數 `mat2`、`mat1` 等名稱可接受，但 `result`、`sum` 等局部變數命名過於簡略，若有更語意化的名稱會更好。 |
+| **準確性** | ‧ 加、減、乘、純量乘均能得到正確結果（在尺寸相符的情況下）。<br>‧ `print()` 方法正確輸出矩陣。 | ‧ 加/減的尺寸檢查使用 `&&`，導致錯誤的判斷。<br>‧ 當尺寸不符時直接回傳 `null`，未拋出例外或提供錯誤代碼，使用端需自行判斷。 |
+| **邏輯** | ‧ 使用三層迴圈完成矩陣乘法，時間複雜度 O(n3) 為標準實作。<br>‧ `multiplicationA` 正確實作純量乘。 | ‧ 加/減的邏輯判斷錯誤（`&&` → `||`）。<br>‧ `multiplication` 若尺寸不匹配僅印出訊息，未阻止後續呼叫，容易產生 NPE。 |
+
+---
+
+## 3?? 改寫後的程式碼  
+
+以下程式碼保留原有的類別、方法與變數名稱（僅在必要時調整命名），並針對缺點進行修正。  
+```java
+/*
+ * Filename:  hw1.java
+ * Function: 二維矩陣運算（加、減、乘、純量乘）
+ * Author:   SHUN-YE SHU
+ * Date:     2024/12/13
+ * Version:  0.2
+ *
+ * 主要改動說明：
+ * 1. 修正加/減的尺寸檢查條件（由 && 改為 ||）。
+ * 2. 以 IllegalArgumentException 取代回傳 null，讓錯誤更顯式。
+ * 3. 采用 Java 標準的陣列宣告方式 int[][] matrix。
+ * 4. 為每個公開方法加入 Javadoc 註解，說明參數、回傳值與例外。
+ * 5. 重新排版大括號與空行，使程式碼更易讀。
+ */
+
+class MyMatrix {
+    private final int rows;
+    private final int cols;
+    private final int[][] matrix;   // 內部儲存矩陣
+
+    /**
+     * 建構子 – 以二維陣列建立矩陣。
+     *
+     * @param mat 來源二維整數陣列（不可為 null，且每列長度相同）
+     * @throws IllegalArgumentException 若傳入的陣列不符合矩陣規範
+     */
+    MyMatrix(int[][] mat) {
+        if (mat == null || mat.length == 0 || mat[0].length == 0) {
+            throw new IllegalArgumentException("矩陣資料不可為空");
+        }
+        // 檢查所有列長度是否相同
+        int colLen = mat[0].length;
+        for (int[] row : mat) {
+            if (row.length != colLen) {
+                throw new IllegalArgumentException("每一列的長度必須相同");
+            }
+        }
+        this.rows = mat.length;
+        this.cols = colLen;
+        // 深拷貝，避免外部修改影響內部狀態
+        this.matrix = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(mat[i], 0, this.matrix[i], 0, cols);
+        }
+    }
+
+    /**
+     * 矩陣相加。
+     *
+     * @param mat2 另一個相同尺寸的矩陣
+     * @return 新的 MyMatrix 物件，內容為相加結果
+     * @throws IllegalArgumentException 若尺寸不相同
+     */
+    public MyMatrix add(MyMatrix mat2) {
+        if (rows != mat2.rows || cols != mat2.cols) {
+            throw new IllegalArgumentException("矩陣行列不相同，無法相加");
+        }
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + mat2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣相減。
+     *
+     * @param mat2 另一個相同尺寸的矩陣
+     * @return 新的 MyMatrix 物件，內容為相減結果
+     * @throws IllegalArgumentException 若尺寸不相同
+     */
+    public MyMatrix minus(MyMatrix mat2) {
+        if (rows != mat2.rows || cols != mat2.cols) {
+            throw new IllegalArgumentException("矩陣行列不相同，無法相減");
+        }
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - mat2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣相乘（A × B）。
+     *
+     * @param mat2 另一個矩陣，要求 A 的列數 = B 的行數
+     * @return 新的 MyMatrix 物件，內容為乘積
+     * @throws IllegalArgumentException 若尺寸不相容
+     */
+    public MyMatrix multiplication(MyMatrix mat2) {
+        if (this.cols != mat2.rows) {
+            throw new IllegalArgumentException("矩陣尺寸不相容，無法相乘");
+        }
+        int[][] result = new int[this.rows][mat2.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < mat2.cols; j++) {
+                int sum = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    sum += this.matrix[i][k] * mat2.matrix[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣與純量相乘（scalar × matrix）。
+     *
+     * @param scalar 整數純量
+     * @return 新的 MyMatrix 物件，內容為乘以純量後的結果
+     */
+    public MyMatrix scalarMultiply(int scalar) {
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = scalar * this.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 在標準輸出列印矩陣。
+     */
+    public void print() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+/*---------------------------------------------------------------*/
+/* 主程式測試                                                    */
+/*---------------------------------------------------------------*/
+public class hw1 {
+    public static void main(String[] args) {
+        int[][] mat1 = {{1, 2, 3}, {4, 5, 6}};
+        int[][] mat2 = {{9, 8, 7}, {6, 5, 4}};
+        int[][] mat3 = {{9, 8}, {7, 6}, {5, 4}};
+
+        MyMatrix A = new MyMatrix(mat1);
+        MyMatrix B = new MyMatrix(mat2);
+        MyMatrix C = new MyMatrix(mat3);
+
+        System.out.println("Matrix A:");
+        A.print();
+
+        System.out.println("\nMatrix B:");
+        B.print();
+
+        System.out.println("\nMatrix C:");
+        C.print();
+
+        System.out.println("\nMatrix A + B:");
+        A.add(B).print();
+
+        System.out.println("\nMatrix A - B:");
+        A.minus(B).print();
+
+        System.out.println("\nMatrix A * C:");
+        A.multiplication(C).print();
+
+        System.out.println("\n4 * Matrix A:");
+        A.scalarMultiply(4).print();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明（哪些地方改了、為什麼）
+
+| 修改位置 | 原始寫法 | 新的寫法 | 修改原因 |
+|----------|----------|----------|----------|
+| **尺寸檢查** | `if(rows != mat2.rows && cols != mat2.cols){` | `if(rows != mat2.rows || cols != mat2.cols){` | 原本使用 `&&` 只在**兩者皆不相等**時才報錯，會讓尺寸不匹配的情況仍進入迴圈，導致 `ArrayIndexOutOfBoundsException`。改為 `||` 才能正確捕捉任一維度不相等的情形。 |
+| **錯誤處理** | `System.out.println(...); return null;` | `throw new IllegalArgumentException(...);` | 回傳 `null` 會在呼叫端產生 `NullPointerException`，不易定位問題。拋出例外讓錯誤立即可見且可被捕獲。 |
+| **純量乘方法名稱** | `multiplicationA(int num)` | `scalarMultiply(int scalar)` | 原名稱不具語意且與矩陣相乘混淆，改為更直觀的 `scalarMultiply`。 |
+| **陣列宣告風格** | `private int matrix[][];` | `private final int[][] matrix;` | Java 官方建議使用 `int[][]`，同時加上 `final` 表示此欄位在建構後不會被重新指派，提升可讀性與安全性。 |
+| **建構子防呆** | 直接把傳入陣列指派給 `matrix` | 深拷貝並檢查每列長度是否相同 | 防止外部程式修改原始陣列導致內部狀態不一致，並保證所有列長度相同，避免隱藏的 `ArrayIndexOutOfBoundsException`。 |
+| **Javadoc 註解** | 無 | 為每個公開方法加上完整的 Javadoc | 讓使用者與評分者快速了解方法的功能、參數、回傳值與可能的例外。 |
+| **排版** | 大括號與前後程式碼緊貼、缺少空行 | 每個方法前後保留空行，左大括號另起一行 | 提升程式碼可讀性，符合常見的 Java 編碼風格（Google Java Style Guide）。 |
+| **變數命名** | `result[][]`、`sum` | 保持不變（已具語意） | 這兩個變數已足夠清晰，未做改動。 |
+| **檔案頭說明** | `Fuction` 拼寫錯誤、版本 0.1 | 修正為 `Function`，版本升至 0.2，加入改動說明 | 拼寫錯誤影響專業度，版本號與改動說明有助於日後維護。 |
+
+---
+
+## 5?? 改進建議與回饋（給學生）
+
+1. **錯誤處理要顯式**  
+   - 盡量使用例外（`throw new IllegalArgumentException`）而不是回傳 `null`，這樣呼叫端能立即知道是哪裡出錯，也方便測試與除錯。  
+
+2. **保持 API 穩定**  
+   - 方法名稱與參數應具備語意。`scalarMultiply` 比 `multiplicationA` 更能讓人一眼看出功能。未來若要擴充功能（例如支援浮點數），保持一致的命名規則會更容易維護。  
+
+3. **深拷貝與防呆**  
+   - 建構子中對傳入的二維陣列做深拷貝，避免外部程式意外改變內部狀態。這也是良好封裝性的基本要求。  
+
+4. **加入 Javadoc**  
+   - 為每個公開類別與方法寫上 Javadoc（`/** ... */`），說明參數、回傳值、拋出的例外以及簡短的功能描述。這不僅是課堂作業的加分項，也是職場上必備的文件習慣。  
+
+5. **統一程式碼風格**  
+   - 建議使用 IDE（如 IntelliJ IDEA、Eclipse）自帶的格式化功能，或遵循 Google Java Style Guide。統一的縮排、空行與大括號位置能讓程式碼更易讀，也減少因視覺差異導致的錯誤。  
+
+6. **測試邊界條件**  
+   - 現在的程式在「空矩陣」或「不規則矩陣」時會直接拋出例外，這是好事。但在作業或實務中，建議自行寫測試案例（例如 JUnit），驗證：<br>  ‧ 加/減時尺寸不相同的情況<br>  ‧ 乘法時行列不匹配的情況<br>  ‧ 純量乘法的負數與零的結果  
+
+7. **效能小提醒**  
+   - 矩陣乘法的三層迴圈是最直觀的實作，若未來需要處理大規模矩陣，可考慮使用分塊乘法（Block Matrix Multiplication）或利用多執行緒提升效能。這不是必須的，但了解概念有助於日後的進階學習。  
+
+---

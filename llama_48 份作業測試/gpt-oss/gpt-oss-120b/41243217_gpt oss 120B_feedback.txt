@@ -1,0 +1,268 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）為這份作業給予 **100 分滿分制** 的評分，並逐項說明優缺點、提供改進後的程式碼、說明修改內容以及給予學生的建議與回饋。
+
+---
+
+## 1?? 總分與各項得分
+
+| 評分項目 | 滿分 | 得分 | 評語 |
+|--------|------|------|------|
+| **備註** (說明) | 20 | **18** | 程式碼內有基本說明（建構子、各方法的功能），但缺少檔案頂部的整體說明與使用範例。 |
+| **格式** (縮排、風格) | 25 | **23** | 縮排一致、變數命名清晰；唯一可改進的是每個方法之間可加入空行、`@Override` 等註解以提升可讀性。 |
+| **準確性** (正確結果) | 25 | **25** | 所有矩陣運算在合法尺寸下均能得到正確結果，且已處理例外情形。 |
+| **邏輯** (演算法、流程) | 30 | **28** | 邏輯完整、檢查維度、例外拋出均正確。唯一缺點是 `multiply` 內的累加變數未先初始化為 0，雖然 Java 預設為 0，但寫明會更好。 |
+| **總分** | **100** | **94** | 整體表現相當優秀，只需在說明與細部寫法上再加強即可。 |
+
+---
+
+## 2?? 優缺點分析
+
+### ? 優點
+1. **完整的功能**：包含矩陣的加、減、乘、純量乘與列印，且在 `main` 中示範全部操作。  
+2. **錯誤檢查**：每個運算前都有尺寸檢查，並以 `IllegalArgumentException` 明確拋出錯誤。  
+3. **封裝性**：矩陣資料 (`data`) 為私有，外部只能透過方法操作，符合物件導向原則。  
+4. **變數命名**：`rows`, `cols`, `data`, `scalar` 等名稱直觀易懂。  
+5. **使用 `Scanner` 讀取輸入**，符合課堂教學的互動方式。
+
+### ? 缺點
+1. **缺少檔案頂部的說明**：程式檔案沒有概述此程式的目的、使用方法與範例輸入/輸出。  
+2. **格式細節**：方法之間的空行不夠，`for` 迴圈內的 `{}` 與 `if` 之間缺少空行，略影響可讀性。  
+3. **`multiply` 方法的累加變數未顯式初始化**：雖然 Java 會自動把 `double` 陣列元素設為 0，但寫成 `result.data[i][j] = 0;` 會更明確。  
+4. **資源釋放**：`Scanner` 在使用完畢後已呼叫 `close()`，但若在 IDE 中執行，關閉 `System.in` 可能導致後續輸入失效（雖此程式結束前已無需再輸入，仍可在說明中提醒）。  
+5. **缺少 `toString()` 方法**：若未使用 `printMatrix()`，直接 `System.out.println(matrix)` 會得到物件位址，若實作 `toString()` 會更友好。  
+
+---
+
+## 3?? 改進後的程式碼
+
+以下程式碼保留原有的函式與變數名稱，僅針對缺點進行修正：
+
+```java
+import java.util.Scanner;
+
+/**
+ * MyMatrix - 簡易的矩陣運算類別。
+ *
+ * 功能說明：
+ * 1. 讀取使用者輸入的矩陣資料
+ * 2. 支援矩陣加法、減法、乘法以及純量乘法
+ * 3. 提供列印矩陣的方法
+ *
+ * 使用範例（輸入）：
+ *   2 3          // 第一個矩陣的列數與欄數
+ *   1 2 3        // 第 1 列資料
+ *   4 5 6        // 第 2 列資料
+ *   2 3          // 第二個矩陣的列數與欄數
+ *   7 8 9
+ *   10 11 12
+ *   2            // 純量
+ *
+ * 輸出會顯示兩個矩陣、加減乘結果以及純量乘法結果。
+ */
+class MyMatrix {
+    private int rows;
+    private int cols;
+    private double[][] data;
+
+    // ---------- 建構子 ----------
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new double[rows][cols];
+    }
+
+    // ---------- 輸入矩陣 ----------
+    public void setMatrix(Scanner scanner) {
+        System.out.println("Enter values for the matrix (row by row):");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                data[i][j] = scanner.nextDouble();
+            }
+        }
+    }
+
+    // ---------- 加法 ----------
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for addition.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] + other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    // ---------- 減法 ----------
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for subtraction.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    // ---------- 乘法 ----------
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Matrix dimensions must match for multiplication.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                // 明確初始化累加器
+                result.data[i][j] = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    result.data[i][j] += this.data[i][k] * other.data[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // ---------- 純量乘法 ----------
+    public MyMatrix multiplyByScalar(double scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    // ---------- 列印 ----------
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(data[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // ---------- 方便直接印出 ----------
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                sb.append(data[i][j]).append(' ');
+            }
+            sb.append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
+
+    // ---------- 主程式 ----------
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 輸入第一個矩陣
+        System.out.println("Enter the dimensions of the first matrix (rows and columns):");
+        int rows1 = scanner.nextInt();
+        int cols1 = scanner.nextInt();
+        MyMatrix matrix1 = new MyMatrix(rows1, cols1);
+        matrix1.setMatrix(scanner);
+
+        // 輸入第二個矩陣
+        System.out.println("Enter the dimensions of the second matrix (rows and columns):");
+        int rows2 = scanner.nextInt();
+        int cols2 = scanner.nextInt();
+        MyMatrix matrix2 = new MyMatrix(rows2, cols2);
+        matrix2.setMatrix(scanner);
+
+        // 顯示原始矩陣
+        System.out.println("Matrix 1:");
+        matrix1.printMatrix();
+        System.out.println("Matrix 2:");
+        matrix2.printMatrix();
+
+        // 加法
+        if (rows1 == rows2 && cols1 == cols2) {
+            System.out.println("Result of addition:");
+            MyMatrix additionResult = matrix1.add(matrix2);
+            additionResult.printMatrix();
+        } else {
+            System.out.println("Addition not possible due to dimension mismatch.");
+        }
+
+        // 減法
+        if (rows1 == rows2 && cols1 == cols2) {
+            System.out.println("Result of subtraction:");
+            MyMatrix subtractionResult = matrix1.subtract(matrix2);
+            subtractionResult.printMatrix();
+        } else {
+            System.out.println("Subtraction not possible due to dimension mismatch.");
+        }
+
+        // 乘法
+        if (cols1 == rows2) {
+            System.out.println("Result of multiplication:");
+            MyMatrix multiplicationResult = matrix1.multiply(matrix2);
+            multiplicationResult.printMatrix();
+        } else {
+            System.out.println("Multiplication not possible due to dimension mismatch.");
+        }
+
+        // 純量乘法
+        System.out.println("Enter a scalar to multiply with the first matrix:");
+        double scalar = scanner.nextDouble();
+        System.out.println("Result of scalar multiplication:");
+        MyMatrix scalarResult = matrix1.multiplyByScalar(scalar);
+        scalarResult.printMatrix();
+
+        // 關閉 Scanner（若後續不再需要 System.in，則可關閉）
+        scanner.close();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明與原因
+
+| 修改位置 | 前後差異 | 原因說明 |
+|----------|----------|----------|
+| **檔案頂部加入 JavaDoc** | 新增多行註解說明程式目的、使用範例、輸入輸出說明 | 讓程式自我說明，符合「備註」的最高分要求。 |
+| **方法之間加入空行** | 每個功能區塊前後多留一行空白 | 提升可讀性，符合程式碼風格（格式）標準。 |
+| **`multiply` 中明確初始化累加器** | `result.data[i][j] = 0;` 先設定為 0 | 雖然陣列預設為 0，寫明更具可讀性與防止未來改為其他資料結構時產生錯誤。 |
+| **實作 `toString()`** | 新增 `@Override public String toString()` 方法 | 讓使用者可以直接 `System.out.println(matrix)` 印出矩陣，提升使用便利性。 |
+| **`main` 中的 `scanner.close()` 說明** | 在關閉前加入註解說明何時適合關閉 `System.in` | 防止學生誤以為關閉後仍可繼續讀取，避免資源管理的誤解。 |
+| **註解統一使用中文** | 所有註解改為中文（或保留英文但補充中文說明） | 符合課程語言環境，讓評分者更容易閱讀。 |
+
+---
+
+## 5?? 給學生的改進建議與回饋
+
+1. **完善程式說明**  
+   - 在檔案最上方加入 JavaDoc 或多行註解，簡要說明程式的功能、使用方式與範例。這不僅能提升備註分數，也能讓其他同學快速了解你的程式。
+
+2. **保持一致的格式**  
+   - 方法之間、程式區塊之間適度留空行，讓程式結構更清晰。  
+   - 盡量遵守「每個 `if`、`for`、`while` 之後的 `{` 與程式碼之間留一個空格」的慣例。
+
+3. **明確初始化變數**  
+   - 雖然 Java 會自動把陣列元素設為 0，但在做累加運算時，寫 `result[i][j] = 0;` 能讓程式更具可讀性，也避免在改用其他資料結構時遺漏初始化。
+
+4. **擴充功能（可選）**  
+   - **`toString()`**：實作後可直接使用 `System.out.println(matrix)`，更符合 Java 的慣例。  
+   - **矩陣轉置、求逆、行列式**：若課程後續涉及，可在此基礎上擴充。  
+   - **例外訊息本地化**：將拋出的錯誤訊息改成中文，提升使用者體驗。
+
+5. **測試與除錯**  
+   - 建議在開發階段自行撰寫幾組不同尺寸的測試資料（如 2×2、3×4、4×2），確保每個運算分支（加、減、乘、純量）都能正確執行。  
+   - 若有時間，可使用 JUnit 撰寫單元測試，養成測試驅動開發的好習慣。
+
+6. **資源管理**  
+   - `Scanner` 用完後關閉是好習慣，但若在大型程式中多次使用 `System.in`，要注意關閉後會導致後續讀取失效。可以在說明中提醒「此程式結束前才關閉」即可。
+
+---
+
+**總結**：這份作業已具備完整的矩陣運算功能，程式結構清晰，只有在說明文件、細部格式與少數可讀性細節上略有提升空間。依照上述建議調整後，將能拿到 **備註滿分 20 分**，整體分數也會提升至 **100 分**。期待你在後續的程式設計中持續精進！祝 coding 愉快 ??

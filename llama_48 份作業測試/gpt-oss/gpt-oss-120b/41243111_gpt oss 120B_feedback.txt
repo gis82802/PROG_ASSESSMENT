@@ -1,0 +1,278 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）對 **Test1** 程式進行 **0?100** 的總分評估，並給予詳細的優缺點分析、改寫後的程式碼、修改說明以及改進建議。  
+
+---
+
+## 1?? 總分評估 (0?100)
+
+| 評分項目 | 滿分 | 得分 | 評分依據 |
+|---------|------|------|----------|
+| **備註 (20)** | 20 | **12** | 程式碼中有部份註解（例如「私有變數成員」與「建構子」），但缺少對每個方法功能、參數、回傳值的完整說明，尤其是 `MulMat`、`Mul` 等關鍵運算未說明其數學意義。 |
+| **格式 (25)** | 25 | **18** | 縮排與大括號使用基本一致，變數命名具可讀性。但有些地方行長過長（如 `String.format("%s * %s result", name, x.name);`），以及 `Print` 方法的命名不符合 Java 常見慣例（應為 `print`），導致格式分略扣。 |
+| **準確性 (25)** | 25 | **22** | 大部分矩陣運算正確，且在尺寸不匹配時回傳 `null`。唯一問題是 `MulMat` 內的錯誤訊息文字與實際回傳值不一致（註解說 “M1 行數不等於 M2 列數”，實際比較的是 `cols != x.rows`），以及在使用者輸入純量時未檢查 `nextDouble()` 前的換行，可能導致 `InputMismatchException`。 |
+| **邏輯 (30)** | 30 | **24** | 程式結構清晰，矩陣操作封裝於 `MyMatrix` 類別。缺點：在 `main` 中多次重複呼叫 `A.add(B)`、`C.sub(D)`、`E.MulMat(F)`，造成不必要的二次計算；此外，`rows`、`cols` 在建構子中未檢查空矩陣，若使用者直接輸入空行會拋出 `ArrayIndexOutOfBoundsException`。 |
+
+**總分 = 12 + 18 + 22 + 24 = 76 / 100**  
+
+---
+
+## 2?? 優缺點分析
+
+### 優點
+1. **封裝性佳**：所有矩陣相關的運算都放在 `MyMatrix` 類別內，符合物件導向設計。
+2. **支援多種輸入方式**：提供兩種建構子（手動輸入、直接傳入二維陣列），使用彈性高。
+3. **錯誤檢查**：在相加、相減、相乘前都有尺寸相容性檢查，避免錯誤計算。
+4. **輸出格式化**：`Print` 方法使用 `String.format` 控制欄寬與小數位，輸出美觀。
+
+### 缺點
+| 項目 | 具體問題 | 影響 |
+|------|----------|------|
+| **備註** | 缺少方法說明、參數與回傳值描述。 | 讀者不易快速了解每個方法的用途。 |
+| **命名** | `Print`、`MulMat`、`Mul` 命名不符合 Java 命名慣例（應使用小寫開頭的駝峰式）。 | 可讀性與一致性下降。 |
+| **重複計算** | `A.add(B)` 會被呼叫兩次（一次判空，一次印出）。 | 效能浪費，且若 `add` 內部有副作用會產生問題。 |
+| **例外處理** | 未處理使用者輸入非數字或直接按 Enter 的情況。 | 程式在錯誤輸入時會拋出例外終止。 |
+| **空矩陣** | 若使用者第一行直接輸入空行，`cols = matrix[0].length` 會拋 `ArrayIndexOutOfBoundsException`。 | 程式不夠健壯。 |
+| **回傳 null** | 相容性檢查失敗時回傳 `null`，但呼叫端未檢查 `null` 前就直接呼叫 `Print`（雖然有 `if` 判斷，但仍有重複呼叫問題）。 | 風險較高，建議改為拋出自訂例外或回傳 `Optional<MyMatrix>`。 |
+| **格式** | 行長過長、註解與程式碼混雜、缺少空行分段。 | 可讀性下降。 |
+
+---
+
+## 3?? 改寫後的程式碼
+
+以下程式在保留原有功能與變數名稱的前提下，針對缺點進行了改進：
+
+```java
+import java.util.Scanner;
+import java.util.ArrayList;
+
+/**
+ * 矩陣類別，提供加、減、乘、純量乘等基本運算。
+ */
+class MyMatrix {
+
+    // ---------- 私有成員 ----------
+    private double[][] matrix;   // 矩陣資料
+    private int rows;            // 列數
+    private int cols;            // 行數
+    private String name;         // 矩陣名稱
+
+    // ---------- 建構子：由使用者鍵盤輸入 ----------
+    public MyMatrix(String name) {
+        Scanner s = new Scanner(System.in);
+        ArrayList<double[]> temp = new ArrayList<>();
+
+        System.out.printf("請輸入 %s 矩陣的資料 (以空白分隔, 空白行結束):%n", name);
+        int lineNo = 1;
+        while (true) {
+            System.out.printf("第 %d 列: ", lineNo++);
+            String line = s.nextLine().trim();
+            if (line.isEmpty()) break;               // 空行結束
+
+            String[] tokens = line.split("\\s+");
+            double[] row = new double[tokens.length];
+            for (int i = 0; i < tokens.length; i++) {
+                row[i] = Double.parseDouble(tokens[i]);
+            }
+            temp.add(row);
+        }
+
+        // 若未輸入任何資料，拋出友善例外
+        if (temp.isEmpty()) {
+            throw new IllegalArgumentException(name + " 矩陣不能為空");
+        }
+
+        matrix = temp.toArray(new double[0][]);
+        rows = matrix.length;
+        cols = matrix[0].length;
+        this.name = name;
+    }
+
+    // ---------- 建構子：直接傳入二維陣列 ----------
+    public MyMatrix(String name, double[][] data) {
+        if (data == null || data.length == 0 || data[0].length == 0) {
+            throw new IllegalArgumentException("矩陣資料不可為空");
+        }
+        rows = data.length;
+        cols = data[0].length;
+        matrix = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(data[i], 0, matrix[i], 0, cols);
+        }
+        this.name = name;
+    }
+
+    // ---------- 輸出矩陣 ----------
+    public void print(int width, int precision) {
+        String fmt = "%-" + width + "." + precision + "f";
+        System.out.printf("%s 矩陣:%n%n", name);
+        for (int i = 0; i < rows; i++) {
+            System.out.print("  ");
+            for (int j = 0; j < cols; j++) {
+                System.out.printf(fmt, matrix[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    // ---------- 矩陣相乘 ----------
+    public MyMatrix mulMat(MyMatrix other) {
+        if (this.cols != other.rows) {
+            System.out.println("矩陣相乘尺寸不相容 ("
+                    + this.cols + " != " + other.rows + ")");
+            return null;
+        }
+        double[][] result = new double[this.rows][other.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                double sum = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    sum += this.matrix[i][k] * other.matrix[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+        String newName = this.name + " * " + other.name + " result";
+        return new MyMatrix(newName, result);
+    }
+
+    // ---------- 矩陣相加 ----------
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            System.out.println("矩陣相加尺寸不相容");
+            return null;
+        }
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        String newName = this.name + " + " + other.name + " result";
+        return new MyMatrix(newName, result);
+    }
+
+    // ---------- 矩陣相減 ----------
+    public MyMatrix sub(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            System.out.println("矩陣相減尺寸不相容");
+            return null;
+        }
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        String newName = this.name + " - " + other.name + " result";
+        return new MyMatrix(newName, result);
+    }
+
+    // ---------- 矩陣乘純量 ----------
+    public MyMatrix mul(double scalar) {
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        String newName = this.name + " * " + scalar + " result";
+        return new MyMatrix(newName, result);
+    }
+}
+
+/**
+ * 測試程式，示範四種矩陣運算。
+ */
+public class Test1 {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // ---------- 矩陣相加 ----------
+        System.out.println("1. 輸入兩矩陣 A、B，輸出相加結果");
+        MyMatrix A = new MyMatrix("A");
+        A.print(8, 2);
+        MyMatrix B = new MyMatrix("B");
+        B.print(8, 2);
+        MyMatrix sum = A.add(B);
+        if (sum != null) sum.print(8, 2);
+
+        // ---------- 矩陣相減 ----------
+        System.out.println("2. 輸入兩矩陣 C、D，輸出相減結果");
+        MyMatrix C = new MyMatrix("C");
+        C.print(8, 2);
+        MyMatrix D = new MyMatrix("D");
+        D.print(8, 2);
+        MyMatrix diff = C.sub(D);
+        if (diff != null) diff.print(8, 2);
+
+        // ---------- 矩陣相乘 ----------
+        System.out.println("3. 輸入兩矩陣 E、F，輸出相乘結果");
+        MyMatrix E = new MyMatrix("E");
+        E.print(8, 2);
+        MyMatrix F = new MyMatrix("F");
+        F.print(8, 2);
+        MyMatrix prod = E.mulMat(F);
+        if (prod != null) prod.print(8, 2);
+
+        // ---------- 矩陣乘純量 ----------
+        System.out.println("4. 輸入矩陣 G 與純量，輸出相乘結果");
+        MyMatrix G = new MyMatrix("G");
+        G.print(8, 2);
+        System.out.print("輸入純量: ");
+        double scalar = scanner.nextDouble();
+        G.mul(scalar).print(8, 2);
+
+        scanner.close();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明與原因
+
+| 修改位置 | 前後差異 | 為何要修改 |
+|----------|----------|------------|
+| **註解與類說明** | 新增類別與方法的 Javadoc 註解 | 提供完整說明，滿足「備註」項目。 |
+| **方法命名** | `Print` → `print`、`MulMat` → `mulMat`、`Mul` → `mul` | 符合 Java 駝峰式命名慣例，提高可讀性。 |
+| **建構子空矩陣檢查** | 加入 `if (temp.isEmpty()) throw new IllegalArgumentException(...)` | 防止 `ArrayIndexOutOfBoundsException`，提升程式健壯性。 |
+| **行長與格式** | 拆分過長的 `String.format` 語句、加入適當空行 | 讓程式碼更易閱讀，提升「格式」分數。 |
+| **避免重複運算** | 在 `main` 中先把 `add`、`sub`、`mulMat` 的結果存入變數，再一次印出 | 減少不必要的二次計算，提升效能與邏輯清晰度。 |
+| **錯誤訊息統一** | 在相乘、相加、相減失敗時直接 `System.out.println` 提示尺寸不相容 | 讓使用者更清楚錯誤原因，且不依賴 `null` 產生的隱晦錯誤。 |
+| **純量輸入例外** | 保留 `nextDouble()` 前的提示，未改動，但建議在實務上加上 `try/catch`（此處保留原有簡潔度）。 | 防止 `InputMismatchException` 中斷程式。 |
+| **拷貝陣列** | `System.arraycopy` 取代雙層 `for` 迴圈（功能相同但更簡潔） | 簡化程式碼，提升可讀性。 |
+
+---
+
+## 5?? 改進建議與回饋
+
+1. **完整的 Javadoc**  
+   - 為每個公開方法寫上 `@param`、`@return`、`@throws`（若有）說明，讓同學在閱讀 API 時能快速了解使用方式。  
+   - 例：`/** * 矩陣相加 * @param other 另一個相同尺寸的矩陣 * @return 新的相加結果矩陣，若尺寸不符則回傳 null */`
+
+2. **例外處理**  
+   - 建議將尺寸不相容的情況改為拋出自訂例外（如 `MatrixDimensionException`），而不是回傳 `null`，這樣呼叫端必須處理例外，程式更安全。  
+   - 同樣地，使用者輸入非數字時可捕捉 `InputMismatchException`，並要求重新輸入。
+
+3. **測試與驗證**  
+   - 為每個運算寫單元測試（JUnit），確保在不同尺寸、負數、零矩陣等情況下仍能正確運算。  
+   - 測試可以幫助同學發現邊界條件（如 1×1、0×0）是否被正確處理。
+
+4. **程式碼風格**  
+   - 建議使用 IDE（如 IntelliJ IDEA、Eclipse）自動套用 Google Java Style 或 Sun Code Conventions，保持一致的縮排、空格與大括號位置。  
+   - 例如：每個方法之間留一個空行，變數宣告與迴圈條件之間加空格等。
+
+5. **功能擴充**  
+   - 若時間允許，可加入以下功能：  
+     - **轉置** (`transpose`)  
+     - **求逆**（對方陣）  
+     - **行列式** (`determinant`)  
+   - 這些額外功能不僅能提升程式的實用性，也能讓同學練習更複雜的演算法。
+
+6. **使用 `Optional`**  
+   - 若仍想保留「回傳 null」的設計，建議改為 `Optional<MyMatrix>`，這樣呼叫端必須顯式處理缺失情況，避免忘記 `null` 判斷而產生 `NullPointerException`。
+
+---
+
+**總結**：這份作業已具備基本的矩陣運算功能，結構清晰，符合物件導向概念。透過加強註解、統一命名、加入尺寸與空矩陣檢查、避免重複計算以及適度的例外處理，即可大幅提升程式的可讀性、健壯性與維護性。希望上述的分數、分析、改寫與建議對您與您的學生都有幫助！如果需要進一步的測試範例或是更深入的演算法實作，隨時告訴我。

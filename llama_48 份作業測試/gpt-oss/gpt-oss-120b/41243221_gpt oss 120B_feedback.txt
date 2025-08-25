@@ -1,0 +1,294 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）為此作業給予 **100 分制** 的評分，並針對優缺點、改進程式碼、修改說明以及給予學生的建議與回饋逐項說明。  
+
+---
+
+## 1?? 總分與細項分數
+
+| 項目 | 滿分 | 得分 | 評分說明 |
+|------|------|------|----------|
+| **備註** (20) | 20 | **12** | 程式中有簡短的功能註解（`// Method for matrix addition` 等），但缺少檔案頂部的整體說明、參數與回傳值說明，亦未說明使用限制（如矩陣必須為非空、維度相容）。 |
+| **格式** (25) | 25 | **20** | 縮排與大括號使用基本正確，變數命名具可讀性。但有些細節可改進：類別名稱 `MyMatrix` 與 `hw1` 應遵循 PascalCase / camelCase 規範；方法 `printmat` 建議改為 `printMatrix`；缺少空行分隔不同方法，程式可讀性略受影響。 |
+| **準確性** (25) | 25 | **23** | 大部分運算正確，且在維度不匹配時有提示訊息。但在維度不匹配時仍會回傳一個 **空的** `MyMatrix` 物件，若呼叫 `printmat()` 會產生 `NullPointerException`。此外，未檢查 `matrix` 是否為 `null`，在未呼叫 `set` 前直接使用會拋出例外。 |
+| **邏輯** (30) | 30 | **26** | 加、減、乘、純量乘的演算法正確，使用雙層或三層迴圈符合矩陣運算邏輯。唯一的邏輯缺陷在於錯誤處理：僅印出錯誤訊息而未拋出例外或返回 `null`，導致後續程式仍以錯誤結果繼續執行。 |
+
+**最終總分：** **81 / 100**  
+
+---
+
+## 2?? 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣的加、減、乘、純量乘與列印，涵蓋了基本線性代數運算。  
+2. **演算法正確**：使用標準的雙層/三層迴圈完成運算，且在乘法中正確初始化累加器 `c.matrix[i][j] = 0`。  
+3. **程式結構清晰**：每個運算都寫成獨立的方法，易於呼叫與測試。  
+4. **簡潔的錯誤訊息**：在維度不符時會印出提示，避免直接崩潰。  
+
+### 缺點
+| 項目 | 問題描述 |
+|------|----------|
+| **備註不足** | 缺少檔案頂部的說明、每個方法的 Javadoc（參數、回傳值、例外說明）。 |
+| **命名不一致** | 類別 `hw1` 應改為 `Hw1` 或 `Main`; 方法 `printmat` 命名不符合慣例。 |
+| **錯誤處理** | 只印訊息不拋例外，且仍回傳空 `MyMatrix`，容易在後續呼叫時產生 `NullPointerException`。 |
+| **空指標檢查** | 未檢查 `matrix` 是否為 `null`，若使用者忘記呼叫 `set` 會直接拋例外。 |
+| **格式細節** | 方法之間缺少空行，程式碼行長度略超過 100 個字元（如 `System.out.println("Can't add! Matrix dimensions do not match.");`），不符合常見的程式碼風格指南。 |
+| **可讀性** | `c.matrix = new int[matrix.length][matrix[0].length];` 重複出現在多個方法，可抽成私有輔助方法。 |
+
+---
+
+## 3?? 改進後的程式碼
+
+以下程式碼在保持原有函式與變數名稱（除非必要改名）基礎上，修正了上述缺點。  
+- 加入 **Javadoc** 註解。  
+- 統一命名風格（`printMatrix`、`Main`）。  
+- 改善錯誤處理：在維度不匹配時拋出 `IllegalArgumentException`，同時返回 `null`（呼叫端可自行判斷）。  
+- 增加 `checkInitialized()` 私有方法，防止 `null` 矩陣操作。  
+- 抽出 `createEmptyMatrix(int rows, int cols)` 私有輔助方法，減少重複程式碼。  
+- 調整格式與空行，使程式更易讀。
+
+```java
+/**
+ * 簡易矩陣運算類別，支援加、減、乘、純量乘與列印。
+ * <p>
+ * 使用前必須先呼叫 {@link #set(int[][])} 設定矩陣內容。
+ * 若維度不相容，會拋出 {@link IllegalArgumentException}。
+ * </p>
+ */
+class MyMatrix {
+    /** 矩陣資料，使用 row-major 方式儲存 */
+    private int[][] matrix;
+
+    /**
+     * 設定矩陣內容。
+     *
+     * @param mat  二維整數陣列，不能為 null，且每列長度必須相同
+     */
+    void set(int[][] mat) {
+        if (mat == null || mat.length == 0 || mat[0].length == 0) {
+            throw new IllegalArgumentException("Input matrix must be non?empty.");
+        }
+        // shallow copy 以防外部修改
+        matrix = new int[mat.length][mat[0].length];
+        for (int i = 0; i < mat.length; i++) {
+            System.arraycopy(mat[i], 0, matrix[i], 0, mat[i].length);
+        }
+    }
+
+    /** ------------------- 輔助方法 ------------------- */
+
+    /** 檢查矩陣是否已被初始化，未初始化則拋出例外 */
+    private void checkInitialized() {
+        if (matrix == null) {
+            throw new IllegalStateException("Matrix not initialized. Call set(...) first.");
+        }
+    }
+
+    /** 建立指定大小的空矩陣 */
+    private int[][] createEmptyMatrix(int rows, int cols) {
+        return new int[rows][cols];
+    }
+
+    /** ------------------- 運算方法 ------------------- */
+
+    /**
+     * 矩陣相加。
+     *
+     * @param m2 另一個矩陣
+     * @return 相加結果的矩陣物件
+     * @throws IllegalArgumentException 若兩矩陣維度不同
+     */
+    MyMatrix add(MyMatrix m2) {
+        checkInitialized();
+        m2.checkInitialized();
+
+        if (matrix.length != m2.matrix.length ||
+            matrix[0].length != m2.matrix[0].length) {
+            throw new IllegalArgumentException(
+                "Can't add! Matrix dimensions do not match.");
+        }
+
+        MyMatrix c = new MyMatrix();
+        c.matrix = createEmptyMatrix(matrix.length, matrix[0].length);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                c.matrix[i][j] = matrix[i][j] + m2.matrix[i][j];
+            }
+        }
+        return c;
+    }
+
+    /**
+     * 矩陣相減。
+     *
+     * @param m2 另一個矩陣
+     * @return 相減結果的矩陣物件
+     * @throws IllegalArgumentException 若兩矩陣維度不同
+     */
+    MyMatrix sub(MyMatrix m2) {
+        checkInitialized();
+        m2.checkInitialized();
+
+        if (matrix.length != m2.matrix.length ||
+            matrix[0].length != m2.matrix[0].length) {
+            throw new IllegalArgumentException(
+                "Can't subtract! Matrix dimensions do not match.");
+        }
+
+        MyMatrix c = new MyMatrix();
+        c.matrix = createEmptyMatrix(matrix.length, matrix[0].length);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                c.matrix[i][j] = matrix[i][j] - m2.matrix[i][j];
+            }
+        }
+        return c;
+    }
+
+    /**
+     * 矩陣相乘 (A * B)。
+     *
+     * @param m2 右側矩陣 B
+     * @return 乘積矩陣
+     * @throws IllegalArgumentException 若 A 的列數與 B 的行數不相等
+     */
+    MyMatrix multiply(MyMatrix m2) {
+        checkInitialized();
+        m2.checkInitialized();
+
+        if (matrix[0].length != m2.matrix.length) {
+            throw new IllegalArgumentException(
+                "Can't multiply! Column count of A must equal row count of B.");
+        }
+
+        MyMatrix c = new MyMatrix();
+        c.matrix = createEmptyMatrix(matrix.length, m2.matrix[0].length);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < m2.matrix[0].length; j++) {
+                int sum = 0;
+                for (int k = 0; k < matrix[0].length; k++) {
+                    sum += matrix[i][k] * m2.matrix[k][j];
+                }
+                c.matrix[i][j] = sum;
+            }
+        }
+        return c;
+    }
+
+    /**
+     * 純量乘法 (scalar * matrix)。
+     *
+     * @param value 整數倍數
+     * @return 乘以 scalar 後的新矩陣
+     */
+    MyMatrix multiply(int value) {
+        checkInitialized();
+
+        MyMatrix c = new MyMatrix();
+        c.matrix = createEmptyMatrix(matrix.length, matrix[0].length);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                c.matrix[i][j] = matrix[i][j] * value;
+            }
+        }
+        return c;
+    }
+
+    /** 列印矩陣內容，使用 Tab 分隔每個元素 */
+    void printMatrix() {
+        checkInitialized();
+        for (int[] row : matrix) {
+            for (int val : row) {
+                System.out.printf("%d\t", val);
+            }
+            System.out.println();
+        }
+    }
+}
+
+/** 主程式入口 */
+public class Main {
+    public static void main(String[] args) {
+        int[][] matA = {{1, 2, 3}, {4, 5, 6}};
+        int[][] matB = {{9, 8, 7}, {6, 5, 4}};
+        int[][] matC = {{9, 8}, {7, 6}, {5, 4}};
+
+        System.out.println("-----------------------------------");
+        System.out.println("Matrix A:");
+        MyMatrix mA = new MyMatrix();
+        mA.set(matA);
+        mA.printMatrix();
+
+        System.out.println("\nMatrix B:");
+        MyMatrix mB = new MyMatrix();
+        mB.set(matB);
+        mB.printMatrix();
+
+        System.out.println("\nMatrix C:");
+        MyMatrix mC = new MyMatrix();
+        mC.set(matC);
+        mC.printMatrix();
+
+        System.out.println("\nMatrix A + B:");
+        MyMatrix c = mA.add(mB);
+        c.printMatrix();
+
+        System.out.println("\nMatrix A - B:");
+        c = mA.sub(mB);
+        c.printMatrix();
+
+        System.out.println("\nMatrix A * C:");
+        c = mA.multiply(mC);
+        c.printMatrix();
+
+        System.out.println("\nMatrix 4 * A:");
+        c = mA.multiply(4);
+        c.printMatrix();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明與原因
+
+| 修改位置 | 具體變更 | 為何要改 |
+|----------|----------|----------|
+| **類別與方法命名** | `hw1` → `Main`、`printmat` → `printMatrix` | 符合 Java 命名慣例（PascalCase for class, camelCase for method），提升可讀性與維護性。 |
+| **Javadoc 註解** | 為類別、每個公開方法加入說明、參數、回傳與例外說明 | 有助於自動產生 API 文件，也讓使用者快速了解介面行為。 |
+| **錯誤處理** | 改為 `throw new IllegalArgumentException(...)`，不再回傳空 `MyMatrix` | 讓呼叫端能即時捕捉錯誤，避免後續 NullPointerException。 |
+| **矩陣初始化檢查** | `checkInitialized()` 私有方法 | 防止在未呼叫 `set` 前使用矩陣導致 `NullPointerException`。 |
+| **深拷貝 `set`** | 使用 `System.arraycopy` 複製輸入陣列 | 防止外部修改原始陣列後影響內部狀態，提升封裝性。 |
+| **抽出輔助方法** | `createEmptyMatrix(int rows, int cols)` | 減少重複程式碼，使程式更易維護。 |
+| **變數 `sum`** | 在乘法內部使用局部變數 `sum` 取代直接寫入 `c.matrix[i][j]` 前的 `0` 初始化 | 使演算法更直觀，避免不必要的寫入。 |
+| **格式調整** | 增加方法之間的空行、統一縮排、限制行長、使用增強型 for 迴圈列印 | 提升程式碼可讀性，符合常見的程式碼風格指南（如 Google Java Style）。 |
+| **列印方法** | 改名為 `printMatrix` 並在內部呼叫 `checkInitialized()` | 統一命名，同時保證列印前已初始化。 |
+
+---
+
+## 5?? 給學生的改進建議與回饋
+
+1. **加入完整的文件說明**  
+   - 每個類別與方法前加上 Javadoc，說明參數、回傳值、可能的例外。這不僅是好習慣，也會在團隊合作或開源時大幅提升可讀性。
+
+2. **錯誤處理要「拋例外」而不是僅印訊息**  
+   - 當維度不匹配時，直接 `throw new IllegalArgumentException(...)`，讓使用者能在 `try?catch` 中捕捉並決定後續行為。僅印訊息會讓程式繼續執行，容易產生不可預期的錯誤。
+
+3. **防止 NullPointerException**  
+   - 在每個操作前檢查矩陣是否已被 `set`，如未設定則拋出 `IllegalStateException`。這樣能在開發階段快速定位問題。
+
+4. **避免直接暴露內部陣列**  
+   - `set` 方法內部應做深拷貝，或提供 `getMatrixCopy()` 之類的只讀副本方法，保護封裝性。
+
+5. **命名與格式**  
+   - 類別使用大寫開頭（`MyMatrix`、`Main`），方法與變數使用小寫開頭的駝峰式（`printMatrix`、`multiply`）。  
+   - 保持每個方法之間空一行，縮排使用 4 個空格，行長不超過 100 個字元，讓程式碼在不同編輯器中都易於閱讀。
+
+6. **測試與例外情況**  
+   - 建議寫單元測試（JUnit）來驗證加、減、乘、純量乘的正確性，並測試維度不匹配、未初始化的情況。測試可以幫助你在未來擴充功能時保持正確性。
+
+7. **效能小提醒**  
+   - 雖然目前的矩陣規模不大，使用三層迴圈已足夠。但若未來需要處理更大矩陣，可考慮使用 `int[][]` 之外的資料結構（如 `java.util.stream` 或平行化）來提升效能。
+
+8. **程式碼重構**  
+   - 把相似的程式碼（如建立空矩陣、檢查維度）抽成私有方法，這樣未來若要改變實作（例如改用 `double`）只需要改動少數地方。
+
+**總結**：這份作業已具備完整的矩陣運算功能，邏輯正確且結構清晰。透過上述的錯誤處理、文件說明與程式碼風格的微調，將使程式更加健壯、易於維護，也更符合業界的 Java 開發標準。期待你在未來的專案中持續精進！祝編程順利 ??

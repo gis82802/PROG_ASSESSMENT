@@ -1,0 +1,282 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）為這份 **Matrix** 作業進行評分、優缺點分析、程式碼改寫、修改說明以及改進建議。  
+
+---
+
+## 1?? 總分 (0?100)
+
+| 評分項目 | 滿分 | 學生得分 | 評分說明 |
+|---------|------|----------|----------|
+| **備註** (20) | 20 | **14** | 程式最上方只有類別說明，缺少對每個方法的功能、參數、回傳值、例外情形的完整說明。 |
+| **格式** (25) | 25 | **20** | 大部分縮排正確、使用 `Arrays.toString` 輸出；但註解風格不統一（有「(a)」有「(e)」），缺少空行分隔不同功能區塊，部分大括號與關鍵字之間缺少空格。 |
+| **準確性** (25) | 25 | **23** | 所有基本運算在測試資料下均得到正確結果，唯一缺點是未對 **null**、空矩陣或不規則二維陣列做防護，會拋出 `NullPointerException` 或 `ArrayIndexOutOfBoundsException`。 |
+| **邏輯** (30) | 30 | **26** | 加、減、乘、純量乘的演算法正確且使用了雙層/三層 `for` 迴圈；但在 `multiply` 中未對 **溢位** 進行檢查，且在 `add`、`subtract` 中重複檢查尺寸的程式碼可抽取成共用私有方法。 |
+
+**最終總分：** **83 / 100**  
+
+---
+
+## 2?? 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣加、減、乘、純量乘與列印，符合題目要求。  
+2. **演算法正確**：使用標準的雙層/三層迴圈完成運算，結果與手算一致。  
+3. **物件導向**：將矩陣封裝在 `MyMatrix` 類別，提供建構子與方法，易於擴充。  
+4. **測試示例**：`main` 中示範了所有功能，方便驗證。  
+
+### 缺點
+| 項目 | 問題描述 | 可能的影響 |
+|------|----------|------------|
+| **備註不足** | 只在類別上有簡短說明，缺少每個方法的 Javadoc。 | 讀者不易快速了解參數、回傳值與例外情形。 |
+| **格式不統一** | 註解前後括號、空格不一致；缺少適當的空行。 | 程式碼可讀性下降，維護成本增加。 |
+| **錯誤檢查不足** | 未檢查 `null`、空矩陣、非矩形二維陣列。 | 當輸入不合法時會拋出未捕獲的例外。 |
+| **重複程式碼** | `add`、`subtract`、`multiply` 都有尺寸檢查邏輯。 | 增加維護負擔，未來若檢查規則改變需多處修改。 |
+| **溢位風險** | `int` 相乘後直接累加，可能超出 `int` 範圍。 | 在大數據或高維矩陣時產生錯誤結果。 |
+| **列印格式** | 使用 `Arrays.toString` 直接輸出，每列會有逗號與方括號。 | 若要求矩陣以矩形形式顯示，會不夠美觀。 |
+
+---
+
+## 3?? 改進後的程式碼  
+
+```java
+import java.util.Arrays;
+
+/**
+ * 矩陣運算類別，支援加、減、乘、純量乘與列印。
+ * <p>
+ *  - 所有建構子、方法均會檢查輸入是否合法，若不合法拋出 IllegalArgumentException。<br>
+ *  - 內部使用 int[][] 儲存資料，若需要更大數值範圍請自行改為 long 或 BigInteger。
+ * </p>
+ */
+public class MyMatrix {
+    private final int[][] matrix;   // 內部不可變矩陣
+
+    /** 建構子：建立 rows x cols 的零矩陣 */
+    public MyMatrix(int rows, int cols) {
+        if (rows <= 0 || cols <= 0) {
+            throw new IllegalArgumentException("Rows and columns must be positive.");
+        }
+        this.matrix = new int[rows][cols];
+    }
+
+    /** 建構子：以已有二維陣列建立矩陣，會深拷貝資料 */
+    public MyMatrix(int[][] data) {
+        validateRectangular(data);
+        this.matrix = deepCopy(data);
+    }
+
+    /** 取得矩陣的行數 */
+    public int getRowCount() {
+        return matrix.length;
+    }
+
+    /** 取得矩陣的列數 */
+    public int getColCount() {
+        return matrix[0].length;
+    }
+
+    /* -------------------------------------------------------------
+       公開運算方法
+       ------------------------------------------------------------- */
+
+    /** 矩陣相加，返回新矩陣 */
+    public MyMatrix add(MyMatrix other) {
+        checkSameDimension(other);
+        int rows = getRowCount();
+        int cols = getColCount();
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 矩陣相減，返回新矩陣 */
+    public MyMatrix subtract(MyMatrix other) {
+        checkSameDimension(other);
+        int rows = getRowCount();
+        int cols = getColCount();
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 矩陣相乘，返回新矩陣 */
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.getColCount() != other.getRowCount()) {
+            throw new IllegalArgumentException(
+                "Column count of first matrix must equal row count of second matrix.");
+        }
+        int rows = this.getRowCount();
+        int cols = other.getColCount();
+        int common = this.getColCount();
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                long sum = 0L;                     // 使用 long 防止 int 溢位
+                for (int k = 0; k < common; k++) {
+                    sum += (long) this.matrix[i][k] * other.matrix[k][j];
+                }
+                // 若超出 int 範圍則拋出例外
+                if (sum > Integer.MAX_VALUE || sum < Integer.MIN_VALUE) {
+                    throw new ArithmeticException("Integer overflow during multiplication.");
+                }
+                result[i][j] = (int) sum;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 純量乘法，返回新矩陣 */
+    public MyMatrix scalarMultiply(int scalar) {
+        int rows = getRowCount();
+        int cols = getColCount();
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                long prod = (long) this.matrix[i][j] * scalar;
+                if (prod > Integer.MAX_VALUE || prod < Integer.MIN_VALUE) {
+                    throw new ArithmeticException("Integer overflow during scalar multiplication.");
+                }
+                result[i][j] = (int) prod;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 以矩形格式列印矩陣 */
+    public void printMatrix() {
+        for (int[] row : matrix) {
+            // 只印出數字，去掉方括號與逗號
+            for (int j = 0; j < row.length; j++) {
+                System.out.print(row[j]);
+                if (j < row.length - 1) System.out.print("\t");
+            }
+            System.out.println();
+        }
+    }
+
+    /* -------------------------------------------------------------
+       私有輔助方法
+       ------------------------------------------------------------- */
+
+    /** 檢查兩個矩陣尺寸是否相同（加/減） */
+    private void checkSameDimension(MyMatrix other) {
+        if (this.getRowCount() != other.getRowCount()
+                || this.getColCount() != other.getColCount()) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions.");
+        }
+    }
+
+    /** 確認二維陣列為矩形且非空 */
+    private static void validateRectangular(int[][] data) {
+        if (data == null || data.length == 0) {
+            throw new IllegalArgumentException("Input array cannot be null or empty.");
+        }
+        int colLen = data[0].length;
+        if (colLen == 0) {
+            throw new IllegalArgumentException("Matrix columns cannot be zero.");
+        }
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] == null || data[i].length != colLen) {
+                throw new IllegalArgumentException("All rows must have the same length and cannot be null.");
+            }
+        }
+    }
+
+    /** 深拷貝二維陣列，防止外部修改內部資料 */
+    private static int[][] deepCopy(int[][] src) {
+        int[][] copy = new int[src.length][src[0].length];
+        for (int i = 0; i < src.length; i++) {
+            System.arraycopy(src[i], 0, copy[i], 0, src[i].length);
+        }
+        return copy;
+    }
+
+    /* -------------------------------------------------------------
+       示範程式 (main)
+       ------------------------------------------------------------- */
+    public static void main(String[] args) {
+        int[][] data1 = {{1, 2}, {3, 4}};
+        int[][] data2 = {{5, 6}, {7, 8}};
+
+        MyMatrix m1 = new MyMatrix(data1);
+        MyMatrix m2 = new MyMatrix(data2);
+
+        System.out.println("Matrix 1:");
+        m1.printMatrix();
+
+        System.out.println("\nMatrix 2:");
+        m2.printMatrix();
+
+        System.out.println("\nAddition:");
+        m1.add(m2).printMatrix();
+
+        System.out.println("\nSubtraction:");
+        m1.subtract(m2).printMatrix();
+
+        System.out.println("\nMultiplication:");
+        m1.multiply(m2).printMatrix();
+
+        System.out.println("\nScalar Multiplication (Matrix 1 * 2):");
+        m1.scalarMultiply(2).printMatrix();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明與原因
+
+| 位置 | 原始寫法 | 改寫後 | 為何修改 |
+|------|----------|--------|----------|
+| 類別/方法說明 | 無 Javadoc | 加入完整的類別與每個公開方法的 Javadoc | 提升可讀性、方便自動產生 API 文件 |
+| 建構子 `MyMatrix(int[][] data)` | 直接指派 `matrix = data;` | 先驗證矩形、深拷貝 `matrix = deepCopy(data);` | 防止外部陣列被修改、保證資料一致性 |
+| 尺寸檢查 | 每個方法內重複寫 `if (matrix.length != other.matrix.length ...)` | 抽出私有方法 `checkSameDimension`、`validateRectangular` | 減少重複程式碼，未來維護更方便 |
+| `multiply` 中的累加 | `result[i][j] += matrix[i][k] * other.matrix[k][j];` (int) | 使用 `long sum` 累加，最後檢查是否溢位再轉成 `int` | 防止 `int` 溢位導致錯誤結果 |
+| `scalarMultiply` | 直接 `matrix[i][j] * scalar` | 同樣使用 `long` 檢查溢位 | 同上 |
+| `printMatrix` | `System.out.println(Arrays.toString(row));` | 手動迭代列印，使用 `\t` 分隔，去除方括號 | 輸出更符合「矩陣」的視覺格式 |
+| 空白與縮排 | 部分 `if(a==b){`、缺少空行 | 統一使用 `if (a == b) {`、在功能區塊前後加空行 | 提升程式碼風格一致性與可讀性 |
+| 例外訊息 | 中文與英文混雜 | 統一使用英文訊息，並說明具體條件 | 在國際化環境下更易理解，也符合大多數課程要求 |
+| `main` 中的變數名稱 | `matrix1、matrix2` | 改為 `m1、m2`（保持簡潔） | 不是必須，但示範了變數命名可更簡潔且不失意義 |
+
+---
+
+## 5?? 改進建議與回饋
+
+1. **撰寫完整的 Javadoc**  
+   - 每個公開方法都應說明：功能、參數、回傳值、可能拋出的例外。這不僅有助於同學閱讀，也能在 IDE 中自動顯示說明。
+
+2. **防禦式程式設計**  
+   - 如本次加入的 `validateRectangular`、`checkSameDimension`，可在未來擴充功能（例如支援稀疏矩陣）時減少錯誤。  
+   - 考慮加入 `null` 檢查與「空矩陣」的特別處理。
+
+3. **避免重複程式碼**  
+   - 把共通檢查或運算抽成私有方法（如尺寸檢查、深拷貝），可提升可維護性與可測試性。
+
+4. **數值安全**  
+   - 若課程未限制資料型別，建議在需要大數值時改用 `long` 或 `BigInteger`。  
+   - 在本例中，我們使用 `long` 暫時避免 `int` 溢位，並在發生溢位時拋出 `ArithmeticException`，讓使用者知道問題所在。
+
+5. **輸出格式**  
+   - `printMatrix` 現在使用制表符 (`\t`) 讓每列對齊，若想要更美觀可自行實作固定寬度的格式化（`String.format("%4d", value)`）。
+
+6. **測試覆蓋**  
+   - 建議撰寫 JUnit 測試，涵蓋：正常矩陣、不同尺寸的錯誤、空矩陣、`null`、溢位情況等。測試能在提交作業前快速發現問題。
+
+7. **程式碼風格**  
+   - 使用 IDE（如 IntelliJ IDEA、Eclipse）自帶的 Code Style 設定，統一縮排（4 個空格）、大括號位置、空行規則。  
+   - 在團隊合作或提交作業時，保持風格一致會讓評分者更容易閱讀。
+
+---
+
+**總結**：這份作業已具備完整的矩陣運算功能，核心邏輯正確。透過加強註解、統一格式、抽取共用檢查、加入防溢位與錯誤檢查，可將程式碼的可讀性、健壯性與可維護性提升到更高的層次。希望上述修改與建議對您與學生都有幫助，若有其他需求（例如加入矩陣轉置、逆矩陣等進階功能），隨時告訴我！祝教學順利 ??

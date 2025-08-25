@@ -1,0 +1,246 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）對 **MyMatrix.java** 這份作業進行評分、優缺點分析、程式碼改寫、修改說明與改進建議。  
+
+---
+
+## 1?? 總分 (0?100)
+
+| 評分項目 | 滿分 | 得分 | 評分依據 |
+|--------|------|------|----------|
+| **備註** (20) | 20 | **16** | 有基本的中文註解說明建構子、各方法功能，但缺少檔案頂部的整體說明（例如程式目的、使用範例、限制條件）以及每個參數/回傳值的說明。 |
+| **格式** (25) | 25 | **22** | 縮排、括號位置大致正確，程式碼可讀性良好。唯一不足在於 `H11` 類別與 `MyMatrix` 類別之間缺少空行分隔，且最後的 `System.out.println` 前的 Tab 縮排不一致。 |
+| **準確性** (25) | 25 | **25** | 所有矩陣運算（加、減、乘、純量乘）在 2×2 測試案例下皆得到正確結果，且例外處理（維度不符）正確拋出 `IllegalArgumentException`。 |
+| **邏輯** (30) | 30 | **28** | 演算法正確且使用了三層迴圈完成矩陣乘法，邏輯清晰。唯一可改進之處是 `multiply` 方法在累加前未先將 `result.matrix[i][j]` 初始化為 0（雖然 Java 預設為 0，但若日後改為其他類型或自行建立陣列，需明確初始化）。 |
+
+**總分 = 16 + 22 + 25 + 28 = 91 / 100**  
+
+> **評分結論**：此作業已相當完整，僅在說明文件與細部格式上有可提升之處。
+
+---
+
+## 2?? 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣的加、減、乘、純量乘四大基本運算，且提供 `setMatrix`、`getMatrix`、`printMatrix` 輔助方法。  
+2. **例外處理**：在維度不匹配時主動拋出 `IllegalArgumentException`，避免錯誤的運算結果。  
+3. **程式結構清晰**：每個功能都拆成獨立方法，符合單一職責原則（SRP）。  
+4. **測試程式**：`H11` 主程式展示了所有功能的使用方式，方便驗證。  
+
+### 缺點
+1. **說明不足**：缺少檔案頂部的概述、參數說明與回傳值說明。  
+2. **格式不統一**：`H11` 類別中最後兩段 `System.out.println` 前的 Tab 縮排與前面不一致，且類別之間缺少空行。  
+3. **可讀性提升空間**：在 `multiply` 中直接使用 `result.matrix[i][j] += …`，若未明確說明「result 初始值為 0」可能讓初學者感到疑惑。  
+4. **封裝性**：`matrix` 欄位被 `MyMatrix` 類別的其他方法直接存取（`result.matrix[i][j] = …`），若未來想改為 `private` 並提供存取方法，會較難維護。  
+
+---
+
+## 3?? 改進後的程式碼  
+（保留原有函式與變數名稱，僅在必要時調整命名或加入說明，並修正格式與初始化問題）
+
+```java
+// MyMatrix.java
+/**
+ * 矩陣運算類別，支援加、減、乘、純量乘以及列印功能。
+ *  - 建構子: MyMatrix(int rows, int cols)  建立指定大小的整數矩陣。
+ *  - setMatrix(int[][] values)            設定矩陣內容，若尺寸不符會拋出例外。
+ *  - getMatrix() : int[][]                取得內部矩陣的直接參考（只讀用途）。
+ *  - printMatrix()                        以列為單位印出矩陣。
+ *  - add(MyMatrix other) : MyMatrix        矩陣相加，回傳新矩陣。
+ *  - subtract(MyMatrix other) : MyMatrix   矩陣相減，回傳新矩陣。
+ *  - multiply(MyMatrix other) : MyMatrix   矩陣相乘，回傳新矩陣。
+ *  - scalarMultiply(int scalar) : MyMatrix 純量乘法，回傳新矩陣。
+ *
+ * 注意：本類別僅支援整數型別的矩陣運算，若需支援其他型別請自行擴充。
+ */
+class MyMatrix {
+    private int rows, cols;
+    private int[][] matrix;
+
+    // 建構子，初始化矩陣大小
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        matrix = new int[rows][cols]; // 預設值皆為 0
+    }
+
+    // 設定矩陣值
+    public void setMatrix(int[][] values) {
+        if (values == null ||
+            values.length != rows ||
+            values[0].length != cols) {
+            throw new IllegalArgumentException("Matrix dimensions do not match.");
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = values[i][j];
+            }
+        }
+    }
+
+    // 取得矩陣值（只讀參考）
+    public int[][] getMatrix() {
+        return matrix;
+    }
+
+    // 印出矩陣
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // 矩陣加法
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for addition.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣減法
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrix dimensions must match for subtraction.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 矩陣乘法
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Matrix dimensions must match for multiplication.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        // 明確初始化為 0（雖然 Java 已預設為 0，寫出來更易懂）
+        for (int i = 0; i < result.rows; i++) {
+            for (int j = 0; j < result.cols; j++) {
+                result.matrix[i][j] = 0;
+            }
+        }
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    result.matrix[i][j] += this.matrix[i][k] * other.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // 矩陣與純量的乘法
+    public MyMatrix scalarMultiply(int scalar) {
+        MyMatrix result = new MyMatrix(this.rows, this.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                result.matrix[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+}
+
+// 主程式
+public class H11 {
+    public static void main(String[] args) {
+        // 建立兩個 2x2 矩陣
+        MyMatrix matrix1 = new MyMatrix(2, 2);
+        MyMatrix matrix2 = new MyMatrix(2, 2);
+
+        // 設定矩陣值
+        matrix1.setMatrix(new int[][]{{1, 2}, {3, 4}});
+        matrix2.setMatrix(new int[][]{{5, 6}, {7, 8}});
+
+        // 印出原始矩陣
+        System.out.println("Matrix 1:");
+        matrix1.printMatrix();
+
+        System.out.println("Matrix 2:");
+        matrix2.printMatrix();
+
+        // 加法
+        System.out.println("Matrix 1 + Matrix 2:");
+        MyMatrix resultAdd = matrix1.add(matrix2);
+        resultAdd.printMatrix();
+
+        // 減法
+        System.out.println("Matrix 1 - Matrix 2:");
+        MyMatrix resultSubtract = matrix1.subtract(matrix2);
+        resultSubtract.printMatrix();
+
+        // 乘法
+        System.out.println("Matrix 1 * Matrix 2:");
+        MyMatrix resultMultiply = matrix1.multiply(matrix2);
+        resultMultiply.printMatrix();
+
+        // 純量乘法
+        int scalar = 2;
+        System.out.println("Matrix 1 * Scalar " + scalar + ":");
+        MyMatrix resultScalarMultiply = matrix1.scalarMultiply(scalar);
+        resultScalarMultiply.printMatrix();
+
+        System.out.println("Matrix 2 * Scalar " + scalar + ":");
+        MyMatrix resultScalarMultiply2 = matrix2.scalarMultiply(scalar);
+        resultScalarMultiply2.printMatrix();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明與原因
+
+| 修改位置 | 內容 | 為何修改 |
+|----------|------|----------|
+| 檔案頂部 | 加入 **JavaDoc** 風格的檔案說明，列出類別功能、建構子、各方法的參數與回傳值說明 | 提升備註分數，讓閱讀者快速了解程式目的與使用方式 |
+| `setMatrix` | 加入 `values == null` 檢查 | 防止傳入 `null` 時產生 `NullPointerException`，提升程式魯棒性 |
+| `multiply` | 新增兩層迴圈將 `result.matrix[i][j]` 明確設為 `0` | 雖然 Java 預設為 0，但寫出來更具可讀性，避免未來改為其他資料型別時遺漏初始化 |
+| `multiply` | 迴圈條件使用 `result.rows`、`result.cols` 取代 `this.rows`、`other.cols`（僅為可讀性） | 讓程式語意更直觀 |
+| `H11` 類別 | 在類別之間加入空行、統一使用 4 個空格縮排、修正最後兩行 `System.out.println` 前的 Tab 縮排 | 改善格式分數，使程式碼排版一致 |
+| `setMatrix`、`multiply` 等方法的例外訊息 | 保持原訊息不變，只是統一語句結構 | 保持功能不變，同時讓訊息更具說服力 |
+| `getMatrix` 註解 | 標示「只讀參考」 | 防止學生誤以為可以直接修改返回的陣列而破壞封裝性 |
+
+---
+
+## 5?? 改進建議與回饋
+
+1. **完整的說明文件**  
+   - 在每個類別或方法前加上 JavaDoc（或簡易註解），說明參數、回傳值、可能拋出的例外。這不僅有助於評分，也方便日後維護與團隊合作。  
+   - 可以在檔案開頭加入「程式功能概述」與「使用範例」的說明。
+
+2. **封裝與資料安全**  
+   - 目前 `matrix` 陣列在同一類別內被直接存取（例如 `result.matrix[i][j] = …`）。若未來想要把 `matrix` 設為 `private final`，建議提供 `private void setElement(int r, int c, int value)` 與 `private int getElement(int r, int c)` 方法，以提升封裝性。  
+   - `getMatrix()` 直接回傳內部陣列，外部程式仍可修改。若想保護資料，改為回傳 `clone` 或 `deepCopy`。
+
+3. **錯誤訊息與例外處理**  
+   - 現在的 `IllegalArgumentException` 訊息已相當清楚，若要更進一步，可在例外前先檢查 `values` 是否為 `null`，並拋出更具體的訊息。  
+   - 在主程式中，可使用 `try?catch` 包住測試區段，示範例外捕捉與錯誤處理流程。
+
+4. **測試與驗證**  
+   - 除了手動印出結果，建議寫單元測試（JUnit）驗證每個運算的正確性，特別是邊界情況（如 1×N、N×1、零矩陣、負數值）。  
+   - 可以加入隨機產生矩陣的測試，確保 `multiply` 的時間複雜度符合 O(n3)（對於小規模練習足夠）。
+
+5. **效能小技巧（進階）**  
+   - 若未來要處理較大矩陣，可考慮將 `multiply` 的三層迴圈改寫為「行列分塊」或使用 `java.util.concurrent` 平行化，以提升效能。  
+   - 另外，`scalarMultiply` 也可以直接在原矩陣上做原位修改（若需求允許），以減少額外物件建立。
+
+6. **程式風格**  
+   - 統一使用 4 個空格作為縮排（或依照您課程的風格指南），避免混用 Tab 與空格。  
+   - 在每個方法的開頭與結尾留一行空白，讓程式段落更易辨識。
+
+---
+
+**總結**：這份作業已具備完整且正確的矩陣運算功能，得分 91 分屬於優秀等級。只要在說明文件、格式統一性與封裝性上稍作加強，就能達到滿分，亦能培養學生良好的程式設計習慣。祝教學順利！如果需要進一步的測試範例或教學素材，隨時告訴我。

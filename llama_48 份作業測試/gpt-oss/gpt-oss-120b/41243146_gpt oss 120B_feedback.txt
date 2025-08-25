@@ -1,0 +1,318 @@
+**一、依照您的評分標準給予總分 (0‑100)**  
+
+| 評分項目 | 滿分 | 給分 | 評分說明 |
+|---------|------|------|----------|
+| 備註 (20) | 20 | **18** | 程式最上方有完整的類別說明與每個方法的功能說明，說明清晰。但 `inverse()` 為私有方法，說明中未特別標註其存取層級，且說明中「矩陣相除」的描述與實作細節略有不一致，扣 2 分。 |
+| 格式 (25) | 25 | **22** | 縮排、括號、空行基本符合 Java 風格，註解使用 `/* … */` 與 `//` 混合。少數地方（如 `if(matrix_length > 0 ){`）括號與關鍵字之間多餘空格，`else{` 同理，扣 3 分。 |
+| 準確性 (25) | 25 | **23** | 大部分功能（加、減、乘、除、逆矩陣）在合法輸入下能正確運算。缺點：`inverse()` 只檢查主元是否為 0，未處理數值上接近 0 的情況，可能因除以極小值導致不穩定；`div()` 直接呼叫 `inverse()`，若矩陣不可逆會拋出例外，符合需求但未提供除法的容錯機制。扣 2 分。 |
+| 邏輯 (30) | 30 | **27** | 整體邏輯清晰，使用高斯‑喬丹法求逆、三層迴圈實作矩陣乘法。缺點：`add()`、`sub()` 中的 `if(this_row > 0 && …)` 多餘的 `this_row > 0` 檢查；`sub()` 的例外訊息寫成「兩個陣列無法相加減」不夠精確；`inverse()` 只檢查主對角線元素，未進行行交換以處理零主元的情形。扣 3 分。 |
+
+**總分：90 / 100**
+
+---
+
+**二、優缺點分析**
+
+| 項目 | 優點 | 缺點 |
+|------|------|------|
+| **備註** | - 類別與每個公開方法都有完整說明。<br>- 參數、回傳值與例外說明清楚。 | - `inverse()` 為私有方法，說明未標註。<br>- 說明中「矩陣相除」的細節與實作不完全對應。 |
+| **格式** | - 縮排一致（4 個空格）。<br>- 使用 `StringBuilder`、`String.format` 產生輸出。 | - `if`、`else` 與大括號之間空格不一致。<br>- 註解風格混雜（`/* … */` 與 `//`）。 |
+| **準確性** | - 基本矩陣運算正確。<br>- 例外處理有提供錯誤訊息。 | - 逆矩陣演算法未處理「主元為 0」時的行交換，會在某些矩陣上拋出錯誤。<br>- 逆矩陣計算的數值穩定性不足（未使用容差）。 |
+| **邏輯** | - 高斯‑喬丹法實作清晰。<br>- `div()` 直接以 `this * inverse(divisor)` 完成除法，邏輯簡潔。 | - `add()`、`sub()` 中多餘的 `this_row > 0` 判斷。<br>- `sub()` 例外訊息不精確。<br>- `inverse()` 沒有行交換與部分樞紐化（partial pivoting），在某些情況下會失敗。 |
+
+---
+
+**三、改進後的程式碼**  
+（僅修改缺點，保留原有函式、變數名稱，除非命名不直觀才調整；保持 `for`/`while` 迴圈結構）
+
+```java
+/*
+ *      class name: Matrix
+ *      description:
+ *          儲存矩陣、矩陣相加、矩陣相減、矩陣相乘、矩陣相除、獲取矩陣的長寬、取得整個矩陣、取得矩陣反矩陣
+ *      function():
+ *          - get_matrix_length(): 取得矩陣 row 數
+ *          - get_matrix_sub_length(): 取得矩陣 col 數
+ *          - get_matrix(): 取得整個矩陣內容（深拷貝）
+ *          - inverse(): 取得反矩陣（若不可逆拋出例外）
+ *          - add(final Matrix summand): 將自己與傳入矩陣相加後回傳
+ *          - sub(final Matrix minuend): 將自己與傳入矩陣相減後回傳
+ *          - mult(final Matrix multiplicand): 將自己與傳入矩陣相乘後回傳
+ *          - div(final Matrix divisor): 以除法（乘以逆矩陣）回傳結果
+ */
+public class Matrix {
+    private final double[][] matrix;          // 原始矩陣（不可變）
+    private final int matrix_length;          // rows
+    private final int matrix_sub_length;      // cols
+
+    // ------------------------------------------------------------
+    // 建構子
+    // ------------------------------------------------------------
+    public Matrix(final double[][] mat) {
+        /*
+         *  將傳入矩陣深拷貝並更新 rows、cols。
+         *  這樣可以避免外部修改原始陣列。
+         */
+        if (mat == null) {
+            throw new IllegalArgumentException("傳入矩陣不可為 null");
+        }
+        matrix_length = mat.length;
+        matrix_sub_length = (matrix_length > 0) ? mat[0].length : 0;
+
+        // 深拷貝
+        matrix = new double[matrix_length][matrix_sub_length];
+        for (int i = 0; i < matrix_length; i++) {
+            if (mat[i].length != matrix_sub_length) {
+                throw new IllegalArgumentException("所有列的長度必須相同");
+            }
+            System.arraycopy(mat[i], 0, matrix[i], 0, matrix_sub_length);
+        }
+    }
+
+    // ------------------------------------------------------------
+    // 取得資訊
+    // ------------------------------------------------------------
+    public int get_matrix_length() {
+        return this.matrix_length;
+    }
+
+    public int get_matrix_sub_length() {
+        return this.matrix_sub_length;
+    }
+
+    /** 取得矩陣的深拷貝，避免外部直接修改內部資料 */
+    public double[][] get_matrix() {
+        double[][] copy = new double[matrix_length][matrix_sub_length];
+        for (int i = 0; i < matrix_length; i++) {
+            System.arraycopy(matrix[i], 0, copy[i], 0, matrix_sub_length);
+        }
+        return copy;
+    }
+
+    // ------------------------------------------------------------
+    // 逆矩陣（private）
+    // ------------------------------------------------------------
+    private Matrix inverse() {
+        /*
+         *  使用高斯‑喬丹法並加入「部分樞紐化」(partial pivoting)。
+         *  若矩陣不是方陣或在消去過程找不到非零主元，拋出 IllegalArgumentException。
+         */
+        if (matrix_length != matrix_sub_length) {
+            throw new IllegalArgumentException("只有方陣才能計算逆矩陣");
+        }
+
+        int n = matrix_length;
+        double[][] aug = new double[n][2 * n];
+
+        // 建立增廣矩陣 [A | I]
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(matrix[i], 0, aug[i], 0, n);
+            aug[i][n + i] = 1.0;
+        }
+
+        // 高斯‑喬丹消去（含部分樞紐化）
+        for (int col = 0; col < n; col++) {
+            // 找到絕對值最大的主元行
+            int pivotRow = col;
+            double maxAbs = Math.abs(aug[col][col]);
+            for (int r = col + 1; r < n; r++) {
+                double curAbs = Math.abs(aug[r][col]);
+                if (curAbs > maxAbs) {
+                    maxAbs = curAbs;
+                    pivotRow = r;
+                }
+            }
+
+            if (maxAbs < 1e-12) {
+                throw new IllegalArgumentException("矩陣不可逆");
+            }
+
+            // 若主元行不是當前行，交換兩行
+            if (pivotRow != col) {
+                double[] temp = aug[col];
+                aug[col] = aug[pivotRow];
+                aug[pivotRow] = temp;
+            }
+
+            // 歸一化主元所在行
+            double pivot = aug[col][col];
+            for (int j = 0; j < 2 * n; j++) {
+                aug[col][j] /= pivot;
+            }
+
+            // 消去其他行
+            for (int r = 0; r < n; r++) {
+                if (r != col) {
+                    double factor = aug[r][col];
+                    for (int j = 0; j < 2 * n; j++) {
+                        aug[r][j] -= factor * aug[col][j];
+                    }
+                }
+            }
+        }
+
+        // 取出右半部即為逆矩陣
+        double[][] inv = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(aug[i], n, inv[i], 0, n);
+        }
+        return new Matrix(inv);
+    }
+
+    // ------------------------------------------------------------
+    // 加法
+    // ------------------------------------------------------------
+    public Matrix add(final Matrix summand) {
+        /*
+         *  若兩矩陣維度相同則逐元素相加，否則拋出例外。
+         */
+        int rows = this.get_matrix_length();
+        int cols = this.get_matrix_sub_length();
+
+        if (rows == summand.get_matrix_length() && cols == summand.get_matrix_sub_length()) {
+            double[][] result = new double[rows][cols];
+            double[][] other = summand.get_matrix();
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    result[i][j] = matrix[i][j] + other[i][j];
+                }
+            }
+            return new Matrix(result);
+        }
+
+        throw new IllegalArgumentException("兩個矩陣的維度不相容，無法相加");
+    }
+
+    // ------------------------------------------------------------
+    // 減法
+    // ------------------------------------------------------------
+    public Matrix sub(final Matrix minuend) {
+        /*
+         *  與 add() 同理，只是改為相減。
+         */
+        int rows = this.get_matrix_length();
+        int cols = this.get_matrix_sub_length();
+
+        if (rows == minuend.get_matrix_length() && cols == minuend.get_matrix_sub_length()) {
+            double[][] result = new double[rows][cols];
+            double[][] other = minuend.get_matrix();
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    result[i][j] = matrix[i][j] - other[i][j];
+                }
+            }
+            return new Matrix(result);
+        }
+
+        throw new IllegalArgumentException("兩個矩陣的維度不相容，無法相減");
+    }
+
+    // ------------------------------------------------------------
+    // 乘法
+    // ------------------------------------------------------------
+    public Matrix mult(final Matrix multiplicand) {
+        /*
+         *  若左矩陣的列數等於右矩陣的行數則執行矩陣乘法。
+         */
+        int rowsA = this.get_matrix_length();
+        int colsA = this.get_matrix_sub_length();
+        int rowsB = multiplicand.get_matrix_length();
+        int colsB = multiplicand.get_matrix_sub_length();
+
+        if (colsA == rowsB) {
+            double[][] result = new double[rowsA][colsB];
+            double[][] B = multiplicand.get_matrix();
+
+            for (int i = 0; i < rowsA; i++) {
+                for (int j = 0; j < colsB; j++) {
+                    double sum = 0.0;
+                    for (int k = 0; k < colsA; k++) {
+                        sum += matrix[i][k] * B[k][j];
+                    }
+                    result[i][j] = sum;
+                }
+            }
+            return new Matrix(result);
+        }
+
+        throw new IllegalArgumentException("左矩陣的列數必須等於右矩陣的行數，才能相乘");
+    }
+
+    // ------------------------------------------------------------
+    // 除法（以乘以逆矩陣實作）
+    // ------------------------------------------------------------
+    public Matrix div(final Matrix divisor) {
+        /*
+         *  先計算除數的逆矩陣，再與本矩陣相乘。
+         *  若逆矩陣計算失敗，將原例外訊息包裝後拋出。
+         */
+        try {
+            Matrix inv = divisor.inverse();   // 可能拋出 IllegalArgumentException
+            return this.mult(inv);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("矩陣除法失敗: " + e.getMessage());
+        }
+    }
+
+    // ------------------------------------------------------------
+    // 文字輸出
+    // ------------------------------------------------------------
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < matrix_length; i++) {
+            for (int j = 0; j < matrix_sub_length; j++) {
+                sb.append(String.format("%6.2f", matrix[i][j])).append(' ');
+            }
+            sb.append('\n');
+        }
+        return sb.toString();
+    }
+}
+```
+
+---
+
+**四、修改說明與原因**
+
+| 修改位置 | 原始寫法 | 改寫後 | 為什麼要改 |
+|----------|----------|--------|-------------|
+| 建構子 | 直接把 `mat` 指派給 `matrix`，未檢查 `null` 或列長度一致性。 | 深拷貝 `mat`、檢查 `null`、確保每列長度相同。 | 防止外部陣列被意外改變，提升類別封裝性與健壯性。 |
+| `inverse()` | 只檢查主對角線是否為 0，未做行交換（partial pivoting），數值不穩定。 | 加入尋找最大絕對值主元、交換行、容差判斷 (`1e-12`)。 | 能處理主元為 0 或非常小的情況，避免不必要的 “矩陣不可逆” 錯誤。 |
+| `add()` / `sub()` | 判斷式中有 `this_row > 0` 的多餘檢查，例外訊息不夠精確。 | 移除多餘條件、統一例外訊息為 “兩個矩陣的維度不相容，無法相加/相減”。 | 簡化程式、提升可讀性，讓錯誤訊息更具指示性。 |
+| `get_matrix()` | 直接回傳內部陣列。 | 回傳深拷貝。 | 防止呼叫端修改內部資料，保持不可變性。 |
+| `if (matrix_length > 0 ){`、`else{` | 大括號前後空格不一致。 | 改為 `if (matrix_length > 0) {`、`else {`。 | 統一程式碼風格，符合常見 Java 格式規範。 |
+| `div()` | 直接呼叫 `inverse()`，若失敗會把原例外訊息包在新訊息中。<br>保持不變。 | 保留原有結構，只是把 `inverse()` 的呼叫放在 `try` 內，並加入說明註解。 | 讓程式碼可讀性更好，說明意圖。 |
+| `mult()` 內部計算 | 使用 `new_matrix[i][j] += …`，但未先將元素初始化為 0（雖然 Java 預設為 0）。 | 明確使用 `double sum = 0.0;` 再賦值 `result[i][j] = sum;`。 | 增加可讀性，避免依賴隱式初始化。 |
+
+---
+
+**五、給學生的改進建議與反饋**
+
+1. **封裝與防護**  
+   - 建構子應該對輸入做防呆（null、列長度不一致），並且深拷貝資料，避免外部程式意外改變內部狀態。  
+   - `get_matrix()` 也應返回深拷貝，保持類別的不可變特性。
+
+2. **數值穩定性**  
+   - 逆矩陣的計算在實務上常會遇到主元為 0 或非常小的情況。加入「部分樞紐化」(partial pivoting) 可以大幅提升成功率與精度。  
+   - 在比較浮點數時使用容差 (`1e-12` 或更小) 而不是直接 `== 0`。
+
+3. **錯誤訊息**  
+   - 例外訊息盡量具體說明是哪一步失敗，方便使用者除錯。  
+   - 例如在加、減、乘時，直接指出「矩陣的維度不相容」而不是「兩個陣列無法相加減」。
+
+4. **程式碼風格**  
+   - 統一大括號前後的空格、縮排（4 個空格）以及註解風格（建議使用 `/** … */` 為 Javadoc）。  
+   - 盡量避免在同一行寫過多語句，保持每行一個明確的操作，提升可讀性。
+
+5. **效能小技巧**  
+   - 在矩陣乘法內部使用局部變數 `double sum` 累加，最後一次性寫入 `result[i][j]`，可以減少陣列存取次數。  
+   - 若未來需要處理大型矩陣，可考慮使用多執行緒或引入第三方矩陣庫（如 EJML、Apache Commons Math）。
+
+6. **測試**  
+   - 為每個公開方法寫單元測試（JUnit），包括正常情況、邊界條件（如 0×0、1×1 矩陣）以及例外情況。測試能幫助在未來修改程式碼時快速驗證正確性。
+
+---
+
+**結語**  
+這份作業已經具備完整的矩陣運算功能，程式結構清晰。透過上述的細部修正（尤其是逆矩陣的部分樞紐化與資料封裝），可以讓程式更健全、易於維護，也更符合實務開發的最佳實踐。祝你在教學與程式設計的道路上持續精進！如果需要更進一步的範例或測試程式碼，隨時告訴我。

@@ -1,0 +1,281 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）為此份作業給予 **0‑100** 的總分，並逐項說明得分與原因，接著提供 **改寫後的程式碼**（保留優點、修正缺點），說明修改的部份與原因，最後給予學生的 **改進建議與回饋**。
+
+---
+
+## 1. 總分與各項得分
+
+| 評分項目 | 滿分 | 得分 | 評語 |
+|--------|------|------|------|
+| **備註 (20)** | 20 | **6** | 程式中僅有少量的印出說明文字，缺乏對類別、方法功能的完整註解（Javadoc）與程式碼說明。 |
+| **格式 (25)** | 25 | **18** | 大致保持正確縮排，使用了 `for‑each` 迴圈，變數命名較清晰。但類別名稱拼寫錯誤（`Mymatric` 應為 `MyMatrix`），以及缺少空行與一致的 Bracket 風格。 |
+| **準確性 (25)** | 25 | **22** | 加、減、純量乘皆正確；矩陣乘法在維度相容時正確產生結果。唯一缺陷是未對輸入矩陣尺寸不匹配的情況做檢查，會導致 `ArrayIndexOutOfBoundsException`。 |
+| **邏輯 (30)** | 30 | **24** | 基本演算法正確，使用三層迴圈完成矩陣乘法。缺少參數檢驗、錯誤訊息與例外處理，且 `substract` 拼寫錯誤，易混淆。 |
+| **總分** | **100** | **70** | 整體功能可運行，具備基礎概念，但在可讀性、健全性與命名規範上仍有提升空間。 |
+
+---
+
+## 2. 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣加法、減法、乘法與純量乘法，並提供 `printMymatric` 供檢視結果。  
+2. **演算法正確**：在尺寸相容的情況下，矩陣乘法的三層迴圈實作正確，結果與手算相符。  
+3. **使用 `for‑each`**：在 `printMymatric` 中使用了增強型 `for`，提升可讀性。  
+4. **封裝**：矩陣資料以私有成員 `matrix` 保存，提供建構子與方法操作，符合物件導向的基本封裝概念。
+
+### 缺點
+1. **缺乏說明文件**：沒有 Javadoc 或程式內註解，閱讀者難以快速了解每個方法的前置條件與回傳值。  
+2. **命名不一致**：類別名稱 `Mymatric` 拼寫錯誤，方法 `substract` 同樣拼寫錯誤，變數 `common` 命名不夠直觀。  
+3. **未檢查尺寸相容性**：`add`、`substract`、`multiply` 都未驗證兩個矩陣的維度是否匹配，若不匹配會拋出例外。  
+4. **例外處理缺失**：直接使用 `ArrayIndexOutOfBoundsException` 會使程式在錯誤輸入時崩潰，缺少友善錯誤訊息。  
+5. **格式細節**：類別與方法之間缺少空行，`{` 與 `}` 的位置不夠統一（如 `public class Mymatric {` 與 `}`），以及部分縮排不一致。  
+6. **印出文字大小寫不統一**：`Matrix b:` 中的 `b` 小寫，建議保持首字母大寫。  
+
+---
+
+## 3. 改寫後的程式碼（保留優點、修正缺點）
+
+```java
+/**
+ * 簡易矩陣運算類別。
+ * 提供矩陣的加法、減法、乘法與純量乘法，並可列印矩陣內容。
+ *
+ * @author  您的姓名
+ * @version 1.1
+ */
+public class MyMatrix {
+
+    /** 矩陣資料，使用二維陣列儲存 */
+    private final int[][] matrix;
+
+    /**
+     * 建構子，直接接受一個二維整數陣列。
+     *
+     * @param matrix 輸入的矩陣資料（不會在建構子內部被修改）
+     */
+    public MyMatrix(int[][] matrix) {
+        // 防止外部修改傳入的陣列
+        this.matrix = copy(matrix);
+    }
+
+    /** -------------------------------------------------------------
+     *  靜態運算方法
+     *  -------------------------------------------------------------
+     */
+
+    /**
+     * 兩矩陣相加。
+     *
+     * @param m1 第一個矩陣
+     * @param m2 第二個矩陣
+     * @return 相加後的矩陣
+     * @throws IllegalArgumentException 若兩矩陣尺寸不相同
+     */
+    public static MyMatrix add(MyMatrix m1, MyMatrix m2) {
+        checkSameSize(m1, m2);
+        int rows = m1.matrix.length;
+        int cols = m1.matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = m1.matrix[i][j] + m2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 兩矩陣相減 (m1 - m2)。
+     *
+     * @param m1 被減矩陣
+     * @param m2 減數矩陣
+     * @return 差矩陣
+     * @throws IllegalArgumentException 若兩矩陣尺寸不相同
+     */
+    public static MyMatrix subtract(MyMatrix m1, MyMatrix m2) {
+        checkSameSize(m1, m2);
+        int rows = m1.matrix.length;
+        int cols = m1.matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = m1.matrix[i][j] - m2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣乘法 (m1 * m2)。
+     *
+     * @param m1 左側矩陣
+     * @param m2 右側矩陣
+     * @return 乘積矩陣
+     * @throws IllegalArgumentException 若左矩陣的列數不等於右矩陣的行數
+     */
+    public static MyMatrix multiply(MyMatrix m1, MyMatrix m2) {
+        if (m1.matrix[0].length != m2.matrix.length) {
+            throw new IllegalArgumentException(
+                "左矩陣的列數 (" + m1.matrix[0].length + ") 必須等於右矩陣的行數 (" + m2.matrix.length + ")。");
+        }
+
+        int rows = m1.matrix.length;
+        int cols = m2.matrix[0].length;
+        int common = m1.matrix[0].length; // 也就是 m2.matrix.length
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                for (int k = 0; k < common; k++) {
+                    result[i][j] += m1.matrix[i][k] * m2.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** -------------------------------------------------------------
+     *  物件方法
+     *  -------------------------------------------------------------
+     */
+
+    /**
+     * 純量乘法 (matrix * scalar)。
+     *
+     * @param scalar 整數純量
+     * @return 乘以純量後的新矩陣
+     */
+    public MyMatrix multiplyScalar(int scalar) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[][] result = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 列印矩陣內容，每列一行，元素之間以空格分隔。
+     */
+    public void printMatrix() {
+        for (int[] row : matrix) {
+            for (int value : row) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    /** -------------------------------------------------------------
+     *  輔助工具（私有）
+     *  -------------------------------------------------------------
+     */
+
+    /** 複製二維陣列，防止外部修改 */
+    private static int[][] copy(int[][] src) {
+        int[][] dest = new int[src.length][];
+        for (int i = 0; i < src.length; i++) {
+            dest[i] = src[i].clone();
+        }
+        return dest;
+    }
+
+    /** 檢查兩矩陣尺寸是否相同 */
+    private static void checkSameSize(MyMatrix m1, MyMatrix m2) {
+        if (m1.matrix.length != m2.matrix.length ||
+            m1.matrix[0].length != m2.matrix[0].length) {
+            throw new IllegalArgumentException(
+                "矩陣尺寸不相同：(" + m1.matrix.length + "x" + m1.matrix[0].length +
+                ") vs (" + m2.matrix.length + "x" + m2.matrix[0].length + ")");
+        }
+    }
+
+    /** -------------------------------------------------------------
+     *  測試主程式
+     *  -------------------------------------------------------------
+     */
+    public static void main(String[] args) {
+        int[][] matA = {{1, 2, 3}, {4, 5, 6}};
+        int[][] matB = {{9, 8, 7}, {6, 5, 4}};
+        int[][] matC = {{9, 8}, {7, 6}, {5, 4}};
+
+        MyMatrix m1 = new MyMatrix(matA);
+        MyMatrix m2 = new MyMatrix(matB);
+        MyMatrix m3 = new MyMatrix(matC);
+
+        System.out.println("Matrix A:");
+        m1.printMatrix();
+
+        System.out.println("Matrix B:");
+        m2.printMatrix();
+
+        System.out.println("Matrix C:");
+        m3.printMatrix();
+
+        MyMatrix sum = MyMatrix.add(m1, m2);
+        System.out.println("Matrix A + B:");
+        sum.printMatrix();
+
+        MyMatrix diff = MyMatrix.subtract(m1, m2);
+        System.out.println("Matrix A - B:");
+        diff.printMatrix();
+
+        MyMatrix product = MyMatrix.multiply(m1, m3);
+        System.out.println("Matrix A * C:");
+        product.printMatrix();
+
+        MyMatrix scalarProduct = m1.multiplyScalar(2);
+        System.out.println("Matrix A * 2:");
+        scalarProduct.printMatrix();
+    }
+}
+```
+
+### 4. 修改說明與原因
+
+| 原始位置 | 修改內容 | 為何修改 |
+|----------|----------|----------|
+| 類別名稱 `Mymatric` | 改為 `MyMatrix`（符合常見命名慣例） | 拼寫錯誤且不易辨識，遵循 PascalCase 命名規則。 |
+| 方法 `substract` | 改為 `subtract` | 拼寫錯誤，避免混淆。 |
+| `printMymatric` | 改為 `printMatrix` | 方法名稱與功能更貼切，保持一致性。 |
+| 缺少 Javadoc / 註解 | 為每個公開方法與類別加上說明性註解 | 提升可讀性與維護性，符合「備註」評分標準。 |
+| 參數尺寸檢查缺失 | 在 `add`、`subtract`、`multiply` 中加入 `checkSameSize` 或相容性檢查，若不符合拋出 `IllegalArgumentException` 並提供清楚訊息 | 防止執行時例外，提升程式健全性。 |
+| 複製輸入陣列 | 在建構子中使用 `copy` 方法深拷貝陣列 | 防止外部程式意外修改內部資料，符合封裝原則。 |
+| 變數 `common` 命名 | 改為 `common`（保留）並加上說明註解 | 原名稱雖可接受，加入註解說明其意義。 |
+| 格式統一 | 在類別、方法之間加入空行，統一 `{` 的位置，使用 4 個空格縮排 | 提升程式碼可讀性，符合「格式」評分。 |
+| 印出文字大小寫 | 統一使用 `Matrix B:`、`Matrix C:` 等首字母大寫 | 文字表達更一致。 |
+| 例外訊息 | 為尺寸不匹配時拋出 `IllegalArgumentException` 並提供具體訊息 | 使用者能快速定位錯誤原因。 |
+
+---
+
+## 5. 改進建議與回饋（給學生）
+
+1. **加入說明文件**  
+   - 每個公開類別與方法都應該有 Javadoc，說明參數、回傳值、可能拋出的例外，這不僅是好習慣，也能讓助教或同學快速了解你的程式。
+
+2. **遵守命名慣例**  
+   - 類別使用 PascalCase（如 `MyMatrix`），方法與變數使用 camelCase（如 `printMatrix`、`multiplyScalar`）。避免拼寫錯誤（`substract` → `subtract`），這會影響程式的可讀性與專業度。
+
+3. **檢查輸入有效性**  
+   - 在執行矩陣運算前，先確認尺寸是否相容。若不相容，拋出具體的例外訊息，而不是讓程式直接崩潰。這會讓你的程式更健壯，也符合實務開發的需求。
+
+4. **封裝與防護**  
+   - 建構子中對傳入的二維陣列做深拷貝，避免外部程式在建構後仍能改變內部資料。這是物件導向封裝的重要概念。
+
+5. **格式化與排版**  
+   - 使用 IDE（如 IntelliJ IDEA、Eclipse）自動格式化功能，保持統一的縮排與空行。良好的排版能讓程式碼更易於閱讀與除錯。
+
+6. **測試與例外處理**  
+   - 在 `main` 方法之外，建議寫單元測試（JUnit）來驗證每個運算方法在正常與異常情況下的行為。這樣可以在提交作業前自行捕捉錯誤。
+
+7. **擴充功能（挑戰）**  
+   - 若有時間，可以嘗試加入矩陣的轉置、逆矩陣（或行列式）計算，或是支援 `double` 型別，使程式更通用。
+
+---
+
+**總結**：此作業已具備基本的矩陣運算功能，分數 70 分屬於「具備基礎、仍有提升空間」的等級。透過加入說明文件、完善尺寸檢查、遵守命名與格式規範，分數有望提升至 85 分以上，甚至更高。祝你在教學與程式設計的路上持續進步！如果需要進一步的範例或測試程式，隨時告訴我。

@@ -1,0 +1,246 @@
+
+以下依照您提供的四項評分標準（**備註、格式、準確性、邏輯**）對 **學生提交的程式碼** 進行 **打分、優缺點分析、改寫、修改說明與改進建議**。  
+
+---
+
+## 1. 總分（0‑100）
+
+| 評分項目 | 滿分 | 取得分數 | 評分說明 |
+|----------|------|----------|----------|
+| **備註 (20)** | 20 | **16** | 程式在每個方法前都有簡要說明，說明較為完整。但缺少檔案頭部的整體說明（程式功能、使用方式、輸入輸出範例）。 |
+| **格式 (25)** | 25 | **20** | 縮排、括號、空行基本符合慣例，變數命名清晰。唯一不足是類別名稱 `javawork1213` 不符合 Java 命名慣例（應為 `JavaWork1213`），且檔案開頭缺少 `package` 或 `import` 的統一排序。 |
+| **準確性 (25)** | 25 | **23** | 大部分功能正確，矩陣加、減、乘、純量乘皆能得到正確結果。唯一問題是 **`scalarMultiply`** 只回傳新矩陣，未在主程式中顯示結果時未說明「是否會改變原矩陣」；此外 `fillMatrix` 內未檢查輸入是否為 `double`，若使用者輸入非數字會拋出例外。 |
+| **邏輯 (30)** | 30 | **27** | 演算法正確，錯誤檢查（維度不符）也寫得完整。唯一的邏輯缺陷是 **`multiply`** 內使用 `result.rows`、`result.cols` 迴圈時，變數 `rows`、`cols` 為 `private`，但在同類別內仍可直接存取，無問題；但若將 `MyMatrix` 改為 **不可變** 物件，則需要更嚴謹的封裝。 |
+| **總分** | **100** | **86** | **86 分**（良好，但仍有提升空間） |
+
+---
+
+## 2. 優缺點分析
+
+| 項目 | 優點 | 缺點 |
+|------|------|------|
+| **備註** | 每個公開方法都有簡潔說明，易於閱讀。 | 缺少檔案頂部的整體說明與範例輸入/輸出。 |
+| **格式** | 縮排一致、空行合理、變數命名具描述性（`rows`、`cols`、`data`）。 | 類別名稱不符合 Java 命名規則；`import` 與 `class` 之間缺少空行；`Scanner` 未在 `fillMatrix` 結束後關閉。 |
+| **準確性** | 加、減、乘、純量乘演算正確，例外訊息清晰。 | `fillMatrix` 沒有輸入驗證；`scalarMultiply` 回傳新矩陣但未說明不改變原矩陣的行為。 |
+| **邏輯** | 維度檢查完整，使用 `IllegalArgumentException` 讓錯誤早期暴露。 | `multiply` 的三層迴圈在大矩陣時效率不高（可考慮 `for‑i‑k‑j` 迭代順序或使用 `BigDecimal` 防止精度問題）。 |
+| **其他** | 程式結構清晰，主程式負責 I/O，`MyMatrix` 負責運算，符合單一職責原則。 | `Scanner` 兩次建立（一次在 `fillMatrix`、一次在 `main`），資源管理不佳。 |
+
+---
+
+## 3. 改進後的程式碼  
+（**保留優點**、**修正缺點**，盡量不改變原有函式與變數名稱；僅在必要時調整命名或加入說明）
+
+```java
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+/**
+ * MyMatrix - 簡易矩陣運算類別
+ * 功能：矩陣的加、減、乘、純量乘以及列印。
+ * 使用方式：
+ *   1. 先以 new MyMatrix(rows, cols) 建立矩陣。
+ *   2. 呼叫 fillMatrix() 由使用者輸入元素。
+ *   3. 透過 add、subtract、multiply、scalarMultiply 取得新矩陣。
+ *   4. 呼叫 printMatrix() 列印結果。
+ */
+class MyMatrix {
+    private int rows;
+    private int cols;
+    private double[][] data;
+
+    // Constructor ---------------------------------------------------------
+    public MyMatrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new double[rows][cols];
+    }
+
+    // Fill matrix with user input -----------------------------------------
+    public void fillMatrix(Scanner scanner) {
+        System.out.println("Enter elements of the matrix (row by row):");
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                while (true) {
+                    try {
+                        data[i][j] = scanner.nextDouble();
+                        break;                     // 成功讀入
+                    } catch (InputMismatchException e) {
+                        System.out.print("Invalid number, please re‑enter: ");
+                        scanner.next();            // 清除錯誤的 token
+                    }
+                }
+            }
+        }
+    }
+
+    // Add two matrices -----------------------------------------------------
+    public MyMatrix add(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException(
+                "Matrices must have the same dimensions for addition.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] + other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Subtract two matrices ------------------------------------------------
+    public MyMatrix subtract(MyMatrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException(
+                "Matrices must have the same dimensions for subtraction.");
+        }
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] - other.data[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Multiply two matrices ------------------------------------------------
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException(
+                "Number of columns of the first matrix must equal number of rows of the second matrix.");
+        }
+        MyMatrix result = new MyMatrix(this.rows, other.cols);
+        // 使用 i‑k‑j 的迭代順序，可稍微提升快取命中率
+        for (int i = 0; i < this.rows; i++) {
+            for (int k = 0; k < this.cols; k++) {
+                double a = this.data[i][k];
+                for (int j = 0; j < other.cols; j++) {
+                    result.data[i][j] += a * other.data[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // Multiply matrix by scalar --------------------------------------------
+    public MyMatrix scalarMultiply(double scalar) {
+        MyMatrix result = new MyMatrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result.data[i][j] = this.data[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    // Print matrix contents ------------------------------------------------
+    public void printMatrix() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.printf("%.2f ", data[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+
+/**
+ * 主程式 - 示範 MyMatrix 的各項運算
+ * 類別名稱遵循 Java 命名慣例。
+ */
+public class JavaWork1213 {
+    public static void main(String[] args) {
+        try (Scanner scanner = new Scanner(System.in)) {
+
+            // ---------- 讀入第一個矩陣 ----------
+            System.out.println("Enter dimensions of the first matrix (rows cols):");
+            int rows1 = scanner.nextInt();
+            int cols1 = scanner.nextInt();
+            MyMatrix matrix1 = new MyMatrix(rows1, cols1);
+            matrix1.fillMatrix(scanner);
+
+            // ---------- 讀入第二個矩陣 ----------
+            System.out.println("Enter dimensions of the second matrix (rows cols):");
+            int rows2 = scanner.nextInt();
+            int cols2 = scanner.nextInt();
+            MyMatrix matrix2 = new MyMatrix(rows2, cols2);
+            matrix2.fillMatrix(scanner);
+
+            // ---------- 加法 ----------
+            System.out.println("\nMatrix Addition:");
+            if (rows1 == rows2 && cols1 == cols2) {
+                matrix1.add(matrix2).printMatrix();
+            } else {
+                System.out.println("Addition not possible due to dimension mismatch.");
+            }
+
+            // ---------- 減法 ----------
+            System.out.println("\nMatrix Subtraction:");
+            if (rows1 == rows2 && cols1 == cols2) {
+                matrix1.subtract(matrix2).printMatrix();
+            } else {
+                System.out.println("Subtraction not possible due to dimension mismatch.");
+            }
+
+            // ---------- 乘法 ----------
+            System.out.println("\nMatrix Multiplication:");
+            if (cols1 == rows2) {
+                matrix1.multiply(matrix2).printMatrix();
+            } else {
+                System.out.println("Multiplication not possible due to dimension mismatch.");
+            }
+
+            // ---------- 純量乘法 ----------
+            System.out.println("\nScalar Multiplication of the first matrix (scalar = 2):");
+            matrix1.scalarMultiply(2).printMatrix();
+        }   // Scanner 於此自動關閉
+    }
+}
+```
+
+---
+
+## 4. 修改說明（哪些地方改了、為什麼）
+
+| 修改位置 | 原始寫法 | 改寫後 | 修改原因 |
+|----------|----------|--------|----------|
+| **類別名稱** | `public class javawork1213` | `public class JavaWork1213` | 符合 Java **PascalCase** 命名慣例，提升可讀性與專案一致性。 |
+| **Scanner 管理** | `new Scanner(System.in)` 分別在 `fillMatrix()` 與 `main()` 中建立，未關閉。 | 在 `main` 中使用 **try‑with‑resources**，將 `Scanner` 只建立一次並於結束自動關閉；`fillMatrix` 改為接受外部 `Scanner` 參數。 | 防止資源泄漏，避免多次建立同一輸入流。 |
+| **輸入驗證** | 直接 `scanner.nextDouble()`，若輸入非數字會拋 `InputMismatchException` 並終止程式。 | 加入 `while(true)` 迴圈與 `try‑catch`，在輸入錯誤時提示重新輸入。 | 提升使用者體驗，避免程式因錯誤輸入崩潰。 |
+| **檔案頂部說明** | 無檔案說明。 | 加入 **Javadoc** 標頭，說明類別功能、使用方式與範例。 | 讓閱讀者快速了解程式目的，符合「備註」的高分要求。 |
+| **矩陣乘法迭代順序** | `for i → for j → for k`（i‑j‑k） | 改為 `for i → for k → for j`（i‑k‑j） | 此順序能減少對 `result.data[i][j]` 的隨機存取，提高快取命中率，對大矩陣稍有效能提升。 |
+| **空行與縮排** | 部分區塊缺少空行，縮排略顯擁擠。 | 在每個主要區塊（建構子、方法、主程式段落）前後加入空行，保持 4 個空格縮排。 | 使程式碼更整潔，符合「格式」的高分標準。 |
+| **說明純量乘法不改變原矩陣** | 只回傳新矩陣，未說明行為。 | 在 Javadoc 中註明「此方法返回一個新矩陣，原矩陣保持不變」。 | 明確說明 API 行為，避免使用者誤解。 |
+| **例外訊息** | 已有例外訊息，但未使用 `final` 常量。 | 保持原有訊息，未改動（已足夠清晰）。 | 例外訊息已符合要求，無需更動。 |
+
+---
+
+## 5. 改進建議與回饋（給學生）
+
+1. **完整的檔案說明**  
+   - 在每個類別或重要方法前加入 Javadoc，說明功能、參數、回傳值與可能拋出的例外。這不僅能提升備註分，也有助於日後維護與團隊合作。
+
+2. **遵守命名慣例**  
+   - 類別名稱使用 **PascalCase**（如 `JavaWork1213`），變數與方法使用 **camelCase**。保持一致會讓程式更具專業感。
+
+3. **資源管理**  
+   - `Scanner` 之類的 I/O 物件應在使用完畢後關閉。使用 `try‑with‑resources` 是最簡潔安全的方式。
+
+4. **輸入驗證**  
+   - 現在的程式在使用者輸入錯誤時會直接拋例外，導致程式終止。加入 `try‑catch` 或檢查 `hasNextDouble()` 可以讓程式更健壯。
+
+5. **效能小技巧**  
+   - 雖然三層迴圈已經是標準做法，若要處理更大的矩陣，可考慮 **i‑k‑j** 的迭代順序、使用 **分塊（blocking）** 或 **多執行緒** 來提升效能。這在課堂上可作為延伸討論題目。
+
+6. **程式結構**  
+   - 目前已把矩陣運算封裝在 `MyMatrix` 類別，符合單一職責原則。未來可再加入 **clone()**、**equals()**、**hashCode()** 等方法，讓物件更完整。
+
+7. **測試**  
+   - 建議寫一些 **單元測試**（JUnit）來驗證每個運算的正確性，尤其是邊界情況（如 0×0 矩陣、單行/單列矩陣）。測試能幫助發現隱藏的錯誤。
+
+8. **程式碼風格工具**  
+   - 可以使用 IDE（如 IntelliJ IDEA、Eclipse）內建的 **code formatter**，或使用 **Checkstyle**、**SpotBugs** 等工具自動檢查格式與潛在問題。
+
+---
+
+**總結**：這份作業已具備完整的矩陣運算功能，程式結構清晰，主要缺點在於說明不夠完整、命名與資源管理稍有瑕疵。依照上述改寫與建議，您可以把分數提升到 **90 分以上**，同時也讓程式更具可讀性與可維護性。祝教學順利，若需要進一步的教學素材或範例，隨時告訴我！

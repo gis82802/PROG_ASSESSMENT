@@ -1,0 +1,233 @@
+
+以下依照您給出的四項評分標準（備註、格式、準確性、邏輯）為這份作業進行打分、優缺點分析、程式碼改寫、修改說明以及改進建議。  
+
+---
+
+## 1?? 總分（0?100）  
+
+| 評分項目 | 滿分 | 得分 | 評分說明 |
+|--------|------|------|----------|
+| **備註** (20) | 20 | **12** | 程式只有少數註解（只有類別與方法名稱），缺少對每個方法功能、參數、回傳值的說明。 |
+| **格式** (25) | 25 | **18** | 縮排基本正確，使用了 `}` 換行。但有些地方括號與關鍵字之間缺少空格，變數命名不夠一致（例如 `Matrix` 變數名與類別同名），以及 `if` 條件使用了錯誤的邏輯運算子（見下文）。 |
+| **準確性** (25) | 25 | **22** | 大部分矩陣運算正確，測試案例能得到預期結果。唯一的錯誤在於加、減法的尺寸檢查使用了 `&&`，導致尺寸不同時仍可能通過檢查，產生 `ArrayIndexOutOfBoundsException`。 |
+| **邏輯** (30) | 30 | **24** | 方法的核心演算法正確，然而尺寸檢查的邏輯錯誤（同上），以及 `print()` 方法在空矩陣時會拋出例外。程式未處理 `null` 回傳的情況，直接把 `null` 設給 `Matrix` 會在後續 `print()` 時出錯。 |
+| **總分** | 100 | **76** | 整體表現不錯，但仍有可改進之處。 |
+
+---
+
+## 2?? 優缺點分析  
+
+### 優點
+1. **演算法正確**：加、減、純量乘、矩陣乘的三層迴圈實作符合線性代數的定義。  
+2. **封裝性**：將矩陣資料與操作封裝在 `MyMatrix` 類別中，使用 `setMatrix` 進行初始化。  
+3. **測試程式完整**：在 `main` 中示範了四種運算，輸出結果易於觀察。  
+
+### 缺點
+1. **備註不足**：缺乏 Javadoc 或行內註解，閱讀者不易快速了解每個方法的目的與限制。  
+2. **尺寸檢查邏輯錯誤**：  
+   ```java
+   if(matrix.length!=b.matrix.length && matrix[0].length!=b.matrix[0].length)
+   ```
+   應使用 `||`（或）而非 `&&`（且），否則只有兩個維度同時不相等時才會報錯。  
+3. **變數命名不佳**：  
+   - `Matrix` 變數與類別同名，容易混淆。  
+   - `matrix` 欄位使用小寫，但在 `setMatrix` 的參數寫成 `double matrix[][]`，建議統一寫法 `double[][] matrix`。  
+4. **錯誤處理不足**：`add`、`sub`、`mul(MyMatrix)` 在尺寸不符時回傳 `null`，但呼叫端未檢查 `null` 就直接 `setMatrix`，會導致 `NullPointerException`。  
+5. **格式不統一**：括號與關鍵字之間缺少空格、陣列宣告方式不一致、缺少空行分隔不同功能區塊。  
+
+---
+
+## 3?? 改進後的程式碼  
+
+```java
+/**
+ * 簡易矩陣運算類別。
+ * 支援矩陣加法、減法、純量乘法與矩陣乘法。
+ */
+class MyMatrix {
+    /** 內部儲存的二維陣列 */
+    private double[][] matrix;
+
+    /** 設定矩陣內容 */
+    public void setMatrix(double[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    /** 取得矩陣內容（供外部檢查） */
+    public double[][] getMatrix() {
+        return matrix;
+    }
+
+    /** 判斷兩矩陣尺寸是否相同 */
+    private boolean sameSize(MyMatrix other) {
+        return matrix.length == other.matrix.length &&
+               matrix[0].length == other.matrix[0].length;
+    }
+
+    /** 矩陣加法 */
+    public double[][] add(MyMatrix b) {
+        if (!sameSize(b)) {
+            System.out.println("兩矩陣大小不同，無法相加");
+            return null;
+        }
+        double[][] result = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                result[i][j] = matrix[i][j] + b.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    /** 矩陣減法 */
+    public double[][] sub(MyMatrix b) {
+        if (!sameSize(b)) {
+            System.out.println("兩矩陣大小不同，無法相減");
+            return null;
+        }
+        double[][] result = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                result[i][j] = matrix[i][j] - b.matrix[i][j];
+            }
+        }
+        return result;
+    }
+
+    /** 純量乘法 */
+    public double[][] mul(double scalar) {
+        double[][] result = new double[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    /** 矩陣乘法 */
+    public double[][] mul(MyMatrix b) {
+        if (matrix[0].length != b.matrix.length) {
+            System.out.println("矩陣大小不符合，無法相乘");
+            return null;
+        }
+        double[][] result = new double[matrix.length][b.matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < b.matrix[0].length; j++) {
+                for (int k = 0; k < matrix[0].length; k++) {
+                    result[i][j] += matrix[i][k] * b.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    /** 印出矩陣內容 */
+    public void print() {
+        if (matrix == null) {
+            System.out.println("矩陣為 null，無法列印");
+            return;
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+}
+
+/*---------------------------------------------------------------*/
+
+public class hw1213_1 {
+    public static void main(String[] args) {
+        double[][] mA = {{1, 2, 3}, {4, 5, 6}};
+        double[][] mB = {{7, 8, 9}, {10, 11, 12}};
+        double[][] mC = {{1, 2}, {3, 4}, {5, 6}};
+
+        MyMatrix A = new MyMatrix();
+        A.setMatrix(mA);
+        System.out.println("A =");
+        A.print();
+
+        MyMatrix B = new MyMatrix();
+        B.setMatrix(mB);
+        System.out.println("B =");
+        B.print();
+
+        MyMatrix C = new MyMatrix();
+        C.setMatrix(mC);
+        System.out.println("C =");
+        C.print();
+
+        // 使用臨時變數儲存結果，避免把 null 設給同一個物件
+        MyMatrix tmp = new MyMatrix();
+
+        System.out.println("A + B =");
+        tmp.setMatrix(A.add(B));
+        tmp.print();
+
+        System.out.println("A - B =");
+        tmp.setMatrix(A.sub(B));
+        tmp.print();
+
+        System.out.println("A * C =");
+        tmp.setMatrix(A.mul(C));
+        tmp.print();
+
+        System.out.println("4 * A =");
+        tmp.setMatrix(A.mul(4));
+        tmp.print();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明（列出重點變更與原因）  
+
+| 位置 | 原始寫法 | 修改後寫法 | 原因 |
+|------|----------|------------|------|
+| `if (matrix.length!=b.matrix.length && matrix[0].length!=b.matrix[0].length)` | 使用 `&&` | 改為 `!sameSize(b)`（內部使用 `||`） | 必須在任一維度不同時即報錯，原本的 `&&` 只在兩個維度同時不同時才觸發，會導致錯誤的加/減運算。 |
+| `Matrix` 變數 | `MyMatrix Matrix = new MyMatrix();` | `MyMatrix tmp = new MyMatrix();` | 避免與類別名稱相同，提升可讀性。 |
+| `setMatrix` 參數宣告 | `void setMatrix(double matrix[][])` | `public void setMatrix(double[][] matrix)` | 統一陣列寫法，並加上 `public` 讓外部可呼叫。 |
+| 欄位存取修飾子 | `double[][] matrix;` (預設 package?private) | `private double[][] matrix;` | 封裝資料，遵守 OOP 原則。 |
+| 新增 `getMatrix()` | 無 | `public double[][] getMatrix()` | 若未來需要讀取矩陣內容，可提供安全的存取方法。 |
+| 新增 `sameSize(MyMatrix)` 私有方法 | 無 | `private boolean sameSize(MyMatrix other)` | 把尺寸相等的判斷抽離，避免重複程式碼，提升可維護性。 |
+| `print()` 中的 `null` 檢查 | 無 | 加入 `if (matrix == null) { … }` | 防止在前一次運算失敗（回傳 null）後直接列印導致 `NullPointerException`。 |
+| 錯誤訊息統一 | 有些訊息使用「無法相加」等，有些使用「矩陣大小不符合,無法相乘」 | 統一使用中文全形逗號、空格，訊息更易讀。 |
+| 註解與 Javadoc | 只有類別名稱註解 | 為每個公開方法加上簡短說明，並在類別前加入整體說明 | 增加備註分數，讓讀者快速了解功能與限制。 |
+| 格式統一 | 部分 `}` 前缺少空行、括號與關鍵字之間缺空格 | 依照 Java Code Conventions（每層縮排 4 個空格、關鍵字後加空格）調整 | 提升格式分數，讓程式更易閱讀。 |
+
+---
+
+## 5?? 改進建議與回饋  
+
+1. **加強註解與文件**  
+   - 為每個公開方法寫 Javadoc（`/** ... */`），說明參數、回傳值、例外情況。  
+   - 在類別說明中寫明此類別的使用限制（例如不支援不規則矩陣）。  
+
+2. **錯誤處理**  
+   - 現在使用 `null` 回傳表示失敗，呼叫端必須自行檢查。建議改為拋出自訂例外（`IllegalArgumentException`），或回傳 `Optional<double[][]>`，讓錯誤更顯式。  
+   - 在 `main` 中使用 `if (result != null)` 再呼叫 `print()`，避免意外的 NPE。  
+
+3. **封裝與可擴充性**  
+   - 把矩陣資料設為 `private`，提供 `cloneMatrix()` 或 `copyFrom()` 方法，避免外部直接改動內部陣列。  
+   - 若未來要支援更高維度或稀疏矩陣，可考慮抽象出 `Matrix` 介面，讓不同實作共用相同 API。  
+
+4. **效能小技巧**  
+   - 在矩陣乘法中，`result[i][j]` 每次迴圈都會做 `+=`，在迴圈前先把 `result[i][j]` 初始化為 `0`（已在宣告時自動完成），但若要進一步優化，可把 `matrix[i][k]` 與 `b.matrix[k][j]` 抽出來暫存，減少陣列存取次數。  
+   - 若矩陣較大，可考慮使用多執行緒或 `java.util.stream` 進行平行化。  
+
+5. **測試**  
+   - 建議撰寫 JUnit 測試案例，驗證每個運算在正常與錯誤尺寸下的行為。這不僅能提升程式的可靠性，也能在未來修改程式時防止 regression。  
+
+6. **命名慣例**  
+   - 類別名稱首字母大寫（已符合），變數與方法使用小寫開頭的駝峰式（如 `resultMatrix`、`scalar`）。  
+   - 避免使用單一字母作為變數名稱（如 `i、j、k` 除了迴圈外），在需要時可以使用更具意義的名稱（例如 `row、col、inner`）。  
+
+---
+
+**結論**：  
+這份作業已完成基本的矩陣運算功能，程式結構清晰，演算法正確。主要的改進點在於尺寸檢查的邏輯錯誤、錯誤處理與註解不足。依照上述修改後，程式在可讀性、健壯性與維護性上都有明顯提升，預計總分可提升至 **85?90 分** 左右。祝教學順利，若還有其他作業需要協助，隨時告訴我！

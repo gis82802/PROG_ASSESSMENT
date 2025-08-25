@@ -1,0 +1,271 @@
+好的，我已經收到您提供的學生作業程式碼。以下依照您給出的四項評分標準（備註、格式、準確性、邏輯）為此份作業進行評分、優缺點分析，並在保留原有結構與函式名稱的前提下，給予改進後的程式碼、修改說明以及進一步的建議與回饋。  
+
+---
+
+## 1?? 總分（0?100）
+
+| 評分項目 | 滿分 | 得分 | 評語 |
+|---------|------|------|------|
+| **備註** (20) | 20 | **12** | 程式最上方有簡短的類別說明，但缺少：<br>? 輸入/輸出規格說明<br>? 演算法步驟的詳細描述<br>? 範例測試資料與預期結果 |
+| **格式** (25) | 25 | **18** | 大部分縮排正確，使用了 4 個空格的縮排風格；但：<br>? 變數命名過於簡略（如 `rows、cols` 可接受，但 `matA、matB` 直接寫在 `main` 中缺乏說明）<br>? 大括號 `{}` 前後缺少空行，導致程式塊視覺上較為擁擠 |
+| **準確性** (25) | 25 | **22** | 主要功能（矩陣加、減、乘、純量乘）在測試資料下皆正確；唯一問題是未對 **null** 或 **空矩陣** 做防呆，若傳入空陣列會拋出 `ArrayIndexOutOfBoundsException` |
+| **邏輯** (30) | 30 | **24** | ? 所有矩陣運算的邏輯正確，使用了三層迴圈完成矩陣乘法。<br>? 例外訊息寫得清楚。<br>? 但在 `add`、`sub`、`multiply` 中，檢查維度的條件寫成 `if (this.rows != other.rows || this.cols != other.cols)`，對於 **矩陣乘法** 的維度檢查僅檢查 `this.cols != other.rows`，未檢查 `other.cols` 是否為正確值，雖然在此情境下不會出錯，但仍可加強說明。 |
+| **總分** | **100** | **76** | **B**（功能完整，程式結構清晰，但在說明、格式與防呆上仍有提升空間） |
+
+---
+
+## 2?? 優缺點分析
+
+### ? 優點
+1. **功能完整**：實作了矩陣的加、減、乘（矩陣×矩陣、矩陣×純量）四項基本運算，且在 `main` 中示範了所有功能。  
+2. **例外處理**：在維度不匹配時拋出 `IllegalArgumentException`，訊息具體，符合錯誤處理的好習慣。  
+3. **程式結構**：將矩陣相關的操作封裝在 `MyMatrix` 類別中，符合物件導向設計的概念。  
+4. **使用了多層迴圈**：符合課程中「for 迴圈」的教學目標，且三層迴圈的寫法清晰易懂。  
+
+### ? 缺點
+| 項目 | 具體問題 |
+|------|----------|
+| **備註** | 缺少完整的說明（演算法步驟、輸入格式、輸出範例）。 |
+| **格式** | 1. 大括號前後缺少空行，導致程式塊視覺上不夠分明。<br>2. 變數命名雖然正確，但在 `main` 中直接使用 `matA、matB、matC`，未加註解說明其尺寸與用途。 |
+| **準確性** | 未對 **空矩陣**、**null** 參數做防呆檢查，若使用者自行建立 `new MyMatrix(new int[0][0])` 會在建構子 `mat[0].length` 產生 `ArrayIndexOutOfBoundsException`。 |
+| **邏輯** | 1. `multiply(MyMatrix other)` 的維度檢查只驗證 `this.cols != other.rows`，若 `other.cols` 為 0（空矩陣）仍會通過，後續運算會拋例外。<br>2. `printMat()` 中直接使用 `System.out.print(matrix[i][j] + "\t");`，在矩陣元素較大時排版會稍顯不齊，可使用 `String.format` 讓輸出更整齊。 |
+| **效能** | 雖然在本作業規模不大，但每次運算都會重新建立新陣列，若在大規模矩陣運算中，建議使用 **原地運算** 或 **緩衝區** 以降低 GC 壓力。 |
+
+---
+
+## 3?? 改進後的程式碼
+
+以下程式碼 **保留了原有的類別名稱、方法名稱與主要邏輯**，僅針對缺點做了以下調整：
+
+1. 增加完整的程式說明（備註）  
+2. 調整縮排、加入空行與註解提升可讀性  
+3. 在建構子加入 **防呆檢查**（避免空矩陣）  
+4. 完善 `multiply(MyMatrix other)` 的維度檢查  
+5. `printMat()` 使用 `String.format` 讓輸出對齊  
+6. 在 `main` 中加入簡短的測試說明與輸出分隔線  
+
+```java
+import java.util.Arrays;
+
+/**
+ * MyMatrix - 矩陣運算類別
+ *
+ * 功能說明：
+ * 1. 建構子接受二維 int 陣列作為矩陣資料，並檢查是否為合法矩陣。
+ * 2. 提供加法 (add)、減法 (sub)、矩陣乘法 (multiply) 與純量乘法 (multiply(int))。
+ * 3. printMat() 以整齊的表格形式印出矩陣內容。
+ *
+ * 使用範例：
+ *   int[][] a = { {1,2,3}, {4,5,6} };
+ *   MyMatrix mA = new MyMatrix(a);
+ *   mA.printMat();               // 印出矩陣 A
+ *   MyMatrix mB = mA.multiply(2); // 純量乘法
+ *
+ * 輸入/輸出：
+ *   - 輸入：在本作業中，矩陣資料直接寫在程式碼內（不接受鍵盤輸入）。
+ *   - 輸出：每次運算結果皆以「矩陣維度: rows x cols」開頭，後接矩陣元素。
+ *
+ * 注意事項：
+ *   - 若傳入的二維陣列為空或行列長度不一致，建構子會拋出 IllegalArgumentException。
+ *   - 矩陣相加、相減要求兩矩陣的行列完全相同；矩陣相乘要求左矩陣的列數等於右矩陣的行數。
+ */
+public class MyMatrix {
+    private final int rows;      // 矩陣的行數
+    private final int cols;      // 矩陣的列數
+    private final int[][] matrix; // 真正儲存資料的二維陣列
+
+    /* ---------- 建構子 ---------- */
+    public MyMatrix(int[][] mat) {
+        // ---------- 防呆檢查 ----------
+        if (mat == null || mat.length == 0) {
+            throw new IllegalArgumentException("矩陣資料不能為 null 或空陣列");
+        }
+        // 確認每一列的長度一致
+        int colLen = mat[0].length;
+        for (int i = 1; i < mat.length; i++) {
+            if (mat[i] == null || mat[i].length != colLen) {
+                throw new IllegalArgumentException("所有列的長度必須相同且不能為 null");
+            }
+        }
+
+        this.rows = mat.length;
+        this.cols = colLen;
+        this.matrix = new int[rows][cols];
+
+        // 複製資料（避免外部修改影響內部狀態）
+        for (int i = 0; i < rows; i++) {
+            System.arraycopy(mat[i], 0, this.matrix[i], 0, cols);
+        }
+    }
+
+    /* ---------- 加法 ---------- */
+    public MyMatrix add(MyMatrix other) {
+        if (other == null) {
+            throw new IllegalArgumentException("加法的另一個矩陣不能為 null");
+        }
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣維度不匹配，無法進行加法運算！");
+        }
+
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /* ---------- 減法 ---------- */
+    public MyMatrix sub(MyMatrix other) {
+        if (other == null) {
+            throw new IllegalArgumentException("減法的另一個矩陣不能為 null");
+        }
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("矩陣維度不匹配，無法進行減法運算！");
+        }
+
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /* ---------- 矩陣乘法（矩陣 × 矩陣） ---------- */
+    public MyMatrix multiply(MyMatrix other) {
+        if (other == null) {
+            throw new IllegalArgumentException("乘法的另一個矩陣不能為 null");
+        }
+        // 必須滿足：左矩陣的列數 == 右矩陣的行數
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException(
+                "矩陣維度不匹配，無法進行乘法運算！" +
+                " (左矩陣列數 = " + this.cols + ", 右矩陣行數 = " + other.rows + ")"
+            );
+        }
+
+        int[][] result = new int[this.rows][other.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                int sum = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    sum += this.matrix[i][k] * other.matrix[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /* ---------- 純量乘法（矩陣 × 整數） ---------- */
+    public MyMatrix multiply(int scalar) {
+        int[][] result = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = this.matrix[i][j] * scalar;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /* ---------- 印出矩陣 ---------- */
+    public void printMat() {
+        System.out.println("矩陣維度: " + rows + " x " + cols);
+        for (int i = 0; i < rows; i++) {
+            // 使用 String.format 讓每個元素佔 6 個字元寬度，對齊輸出
+            for (int j = 0; j < cols; j++) {
+                System.out.print(String.format("%6d", matrix[i][j]));
+            }
+            System.out.println();
+        }
+    }
+}
+
+/* ---------- 主程式：測試 MyMatrix ---------- */
+public class hw12_13 {
+    public static void main(String[] args) {
+        // ---------- 測試資料說明 ----------
+        // A 為 2x3 矩陣，B 為 2x3 矩陣，C 為 3x2 矩陣（可與 A 相乘）
+        int[][] matA = { {1, 2, 3}, {4, 5, 6} };
+        int[][] matB = { {9, 8, 7}, {6, 5, 4} };
+        int[][] matC = { {9, 8}, {7, 6}, {5, 4} };
+
+        System.out.println("=== 矩陣 A ===");
+        MyMatrix mA = new MyMatrix(matA);
+        mA.printMat();
+
+        System.out.println("\n=== 矩陣 B ===");
+        MyMatrix mB = new MyMatrix(matB);
+        mB.printMat();
+
+        System.out.println("\n=== 矩陣 C ===");
+        MyMatrix mC = new MyMatrix(matC);
+        mC.printMat();
+
+        System.out.println("\n=== A + B ===");
+        MyMatrix result = mA.add(mB);
+        result.printMat();
+
+        System.out.println("\n=== A - B ===");
+        result = mA.sub(mB);
+        result.printMat();
+
+        System.out.println("\n=== A * C ===");
+        result = mA.multiply(mC);
+        result.printMat();
+
+        System.out.println("\n=== A * 4 (純量乘) ===");
+        result = mA.multiply(4);
+        result.printMat();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明與原因
+
+| 修改位置 | 原始寫法 | 改寫後 | 為何需要此修改 |
+|----------|----------|--------|----------------|
+| **類別註解** | 無完整說明 | 加入完整的 Javadoc，說明功能、使用方式、輸入/輸出、注意事項 | 讓程式碼自說明，符合「備註」的高分要求。 |
+| **建構子防呆** | 直接假設 `mat` 為合法二維陣列，直接取 `mat[0].length` | 加入 `null`、空陣列、列長不一致的檢查，若不符合拋出 `IllegalArgumentException` | 防止在實際使用時因不合法參數導致程式崩潰，提高準確性與健壯性。 |
+| **方法參數檢查** | `add/sub/multiply` 未檢查 `other == null` | 增加 `if (other == null)` 檢查 | 同上，避免 NullPointerException。 |
+| **矩陣乘法維度檢查** | 只檢查 `this.cols != other.rows`，未說明錯誤訊息 | 保留此檢查，並在訊息中加入具體的行列資訊 | 讓使用者更容易定位錯誤來源。 |
+| **`printMat` 輸出格式** | `System.out.print(matrix[i][j] + "\t");` | 改為 `String.format("%6d", matrix[i][j])` | 輸出對齊，提升可讀性，符合格式美觀的要求。 |
+| **縮排與空行** | 部分大括號前後緊貼，缺少空行 | 在每個方法之間、類別結束前後加入空行，統一使用 4 個空格縮排 | 讓程式碼結構更清晰，提升格式分數。 |
+| **`main` 中的說明與分隔線** | 直接印出矩陣，缺少說明 | 加入「=== 矩陣 A ===」等標題，並在每段前後加空行 | 讓測試輸出更易於閱讀，也展示了良好的輸出規範。 |
+| **變數命名** | `matA、matB、matC` 已保留（符合題目要求） | 在註解中說明每個矩陣的尺寸與用途 | 雖未改名，但補足說明，提升可讀性。 |
+
+---
+
+## 5?? 改進建議與回饋
+
+1. **完整的程式說明**  
+   - 在每個類別或方法前加入 Javadoc（`/** ... */`），說明參數、回傳值、例外情況與使用範例。這不僅能提升備註分數，也有助於同儕閱讀與維護。
+
+2. **防呆與例外處理**  
+   - 除了建構子外，所有公開方法（尤其是接受外部物件的）都應檢查 `null`、空集合或不合法的尺寸。  
+   - 若有可能的錯誤情況，使用 `IllegalArgumentException` 或自訂例外類別，並在訊息中提供具體資訊。
+
+3. **統一的輸出格式**  
+   - 使用 `String.format` 或 `System.out.printf` 統一欄位寬度，讓矩陣、表格等輸出在不同資料規模下仍保持對齊。  
+   - 若未來要支援更大數值，建議使用 `%10d` 或更寬的欄位。
+
+4. **測試與邊界案例**  
+   - 在 `main` 中加入 **空矩陣**、**單行/單列矩陣**、**不相容矩陣相乘** 的測試，觀察程式是否能正確拋出例外。  
+   - 若時間允許，可使用 JUnit 撰寫單元測試，讓自動化測試成為習慣。
+
+5. **效能小提示**  
+   - 在矩陣乘法中，`result[i][j]` 每次迭代都會累加，若矩陣非常大，可考慮 **快取** `this.matrix[i][k]` 或使用 **分塊乘法**（Block Matrix Multiplication）以提升快取命中率。  
+   - 目前的實作已足以應付課堂作業，但了解這些優化概念對未來更大規模的計算很有幫助。
+
+6. **程式碼風格**  
+   - 建議在團隊或課堂上統一 **檔案編碼**（UTF?8）與 **行尾換行**（LF），避免跨平台時產生差異。  
+   - 若使用 IDE（如 IntelliJ IDEA、Eclipse），可開啟自動格式化功能，讓縮排、空行、括號風格保持一致。
+
+---
+
+**總結**：這份作業已具備完整的功能與正確的演算法，主要需要在說明文件、程式碼可讀性與防呆機制上做加強。依照上述修改與建議，學生的程式將更符合專業開發的標準，也能在評分時獲得更高的備註與格式分數。祝教學順利，若有其他作業或需要進一步的分析，隨時告訴我！

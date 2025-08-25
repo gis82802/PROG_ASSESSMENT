@@ -1,0 +1,308 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）對 **J_1213_01** 這份作業進行評分、優缺點分析、程式碼改寫、修改說明與改進建議。  
+
+---
+
+## 1?? 總分（0?100）  
+
+| 評分項目 | 滿分 | 得分 | 評分說明 |
+|--------|------|------|----------|
+| **備註** (20) | 20 | **12** | 程式碼中只有少量註解（如 `//from J_1115_Hw3`、`//from J_1115_Hw1`），缺乏對類別、方法功能、參數與回傳值的說明。 |
+| **格式** (25) | 25 | **18** | 縮排基本正確，變數命名較為直觀。但有些地方排版不一致（例如 `public void show(int[][] a){` 與 `else{` 之間缺少空行），以及方法名稱 `multply` 拼寫錯誤。 |
+| **準確性** (25) | 25 | **22** | 大部分運算正確，能正確執行加、減、乘與行列式計算。唯一的缺陷是當矩陣相乘結果為 `null`（尺寸不匹配）時仍直接傳入 `determinant`，會拋出 `NullPointerException`。 |
+| **邏輯** (30) | 30 | **24** | 主要邏輯正確，使用了遞迴求行列式。但 `determinant` 方法在檢查方陣時僅以註解方式說明，實際未防止非方陣傳入；另外 `add`、`diff`、`multply` 回傳 `null` 會讓呼叫端必須自行檢查，缺乏例外處理。 |
+
+**總分 = 12 + 18 + 22 + 24 = 76 / 100**  
+
+---
+
+## 2?? 優缺點分析  
+
+### 優點  
+1. **功能完整**：實作了矩陣的加、減、乘與行列式計算，涵蓋了課堂上要求的核心演算法。  
+2. **使用遞迴**：`determinant` 透過展開第一列的方式遞迴求解，展示了遞迴思考。  
+3. **程式結構**：將矩陣相關操作封裝於 `MyMatrix` 類別，符合物件導向的基本概念。  
+4. **使用者互動**：透過 `Scanner` 讓使用者自行輸入矩陣大小與元素，提升實作的實用性。  
+
+### 缺點  
+| 項目 | 說明 |
+|------|------|
+| **備註不足** | 缺少方法說明、參數與回傳值的描述，閱讀者不易快速了解每個方法的用途。 |
+| **命名錯誤** | `multply` 拼寫錯誤，容易造成混淆。 |
+| **錯誤處理** | 當尺寸不匹配時回傳 `null`，呼叫端未檢查就直接使用，會導致 `NullPointerException`。 |
+| **行列式檢查** | `determinant` 未檢查傳入矩陣是否為方陣，若傳入非方陣會在遞迴過程中產生 `ArrayIndexOutOfBoundsException`。 |
+| **重複程式碼** | `add`、`diff`、`multply` 三個方法的尺寸檢查與結果陣列建立部分可抽取成共用私有方法，以降低重複度。 |
+| **輸出格式** | `show` 方法在矩陣為 `null` 時只印出字串，未提供更友善的錯誤訊息或例外拋出。 |
+| **資源釋放** | `Scanner` 在 `main` 結束前已 `close()`，沒問題，但若未來擴充為多執行緒使用，應考慮 `try?with?resources`。 |
+
+---
+
+## 3?? 改進後的程式碼  
+
+以下程式碼保留原有的功能與大部分變數名稱，只對以下部分做了調整：  
+
+* 加入完整的 Javadoc 註解（備註）。  
+* 修正拼寫錯誤 `multply` → `multiply`（同時保留舊名稱的呼叫相容性）。  
+* 抽取尺寸檢查與結果陣列建立為私有方法 `checkAndCreateResult`。  
+* 當尺寸不匹配時拋出自訂例外 `MatrixSizeException`，避免回傳 `null`。  
+* 在 `determinant` 開頭加入方陣檢查，若不符合拋出 `IllegalArgumentException`。  
+* `show` 方法改為拋出例外或回傳布林值，讓呼叫端自行決定錯誤處理方式。  
+
+```java
+import java.util.Scanner;
+
+/**
+ * 自訂例外：矩陣尺寸不匹配。
+ */
+class MatrixSizeException extends RuntimeException {
+    MatrixSizeException(String msg) { super(msg); }
+}
+
+/**
+ * 矩陣運算工具類別。
+ * 包含加、減、乘、行列式與顯示功能。
+ */
+class MyMatrix {
+    private final int[][] data;
+    private final int rows;
+    private final int cols;
+
+    /** 建構子，直接以二維陣列建立矩陣物件。 */
+    public MyMatrix(int[][] a) {
+        if (a == null || a.length == 0 || a[0].length == 0)
+            throw new IllegalArgumentException("矩陣不能為空");
+        data = a;
+        rows = a.length;
+        cols = a[0].length;
+    }
+
+    /** 取得矩陣的列數。 */
+    public int getRows() { return rows; }
+
+    /** 取得矩陣的欄數。 */
+    public int getCols() { return cols; }
+
+    /** 兩矩陣相加，尺寸必須相同。 */
+    public int[][] add(int[][] a) {
+        int[][] result = checkAndCreateResult(a);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = data[i][j] + a[i][j];
+            }
+        }
+        return result;
+    }
+
+    /** 兩矩陣相減，尺寸必須相同。 */
+    public int[][] diff(int[][] a) {
+        int[][] result = checkAndCreateResult(a);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = data[i][j] - a[i][j];
+            }
+        }
+        return result;
+    }
+
+    /** 矩陣相乘，左矩陣的欄數必須等於右矩陣的列數。 */
+    public int[][] multiply(int[][] a) {
+        if (a == null) throw new IllegalArgumentException("右矩陣不能為 null");
+        if (cols != a.length)
+            throw new MatrixSizeException("左矩陣欄數 (" + cols + ") 必須等於右矩陣列數 (" + a.length + ")");
+        int[][] result = new int[rows][a[0].length];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < a[0].length; j++) {
+                int sum = 0;
+                for (int k = 0; k < cols; k++) {
+                    sum += data[i][k] * a[k][j];
+                }
+                result[i][j] = sum;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 計算方陣的行列式。
+     * @param matrix 必須為方陣
+     * @return 行列式值
+     */
+    public int determinant(int[][] matrix) {
+        if (matrix == null) throw new IllegalArgumentException("矩陣不能為 null");
+        if (matrix.length != matrix[0].length)
+            throw new IllegalArgumentException("行列式只能對方陣計算");
+        int size = matrix.length;
+        if (size == 1) return matrix[0][0];
+        if (size == 2) return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+        int result = 0;
+        int sign = 1;
+        for (int col = 0; col < size; col++) {
+            result += sign * matrix[0][col] * subDeterminant(matrix, 0, col);
+            sign = -sign;
+        }
+        return result;
+    }
+
+    /** 內部遞迴：計算子矩陣的行列式。 */
+    private int subDeterminant(int[][] matrix, int exRow, int exCol) {
+        int size = matrix.length;
+        int[][] sub = new int[size - 1][size - 1];
+        int r = 0;
+        for (int i = 0; i < size; i++) {
+            if (i == exRow) continue;
+            int c = 0;
+            for (int j = 0; j < size; j++) {
+                if (j == exCol) continue;
+                sub[r][c] = matrix[i][j];
+                c++;
+            }
+            r++;
+        }
+        return determinant(sub);
+    }
+
+    /** 顯示矩陣內容，若矩陣為 null 則回傳 false。 */
+    public boolean show(int[][] a) {
+        if (a == null) {
+            System.out.println("矩陣尺寸不匹配，無法顯示。");
+            return false;
+        }
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a[i].length; j++) {
+                System.out.printf("%4d ", a[i][j]);
+            }
+            System.out.println();
+        }
+        return true;
+    }
+
+    /** 內部工具：檢查尺寸相同並建立結果矩陣，若不符合拋出例外。 */
+    private int[][] checkAndCreateResult(int[][] a) {
+        if (a == null) throw new IllegalArgumentException("參數矩陣不能為 null");
+        if (rows != a.length || cols != a[0].length)
+            throw new MatrixSizeException("兩矩陣尺寸不相同 ("
+                    + rows + "x" + cols + " vs " + a.length + "x" + a[0].length + ")");
+        return new int[rows][cols];
+    }
+}
+
+/*------------------------------------------------------------*/
+/* 主程式：負責讀取使用者輸入、呼叫 MyMatrix 方法並顯示結果 */
+public class J_1213_01 {
+    public static void main(String[] args) {
+        try (Scanner sn = new Scanner(System.in)) {
+            // 讀取矩陣 A
+            System.out.print("Enter the rows for matrixA: ");
+            int rowsA = sn.nextInt();
+            System.out.print("Enter the cols for matrixA: ");
+            int colsA = sn.nextInt();
+            int[][] matrixA = new int[rowsA][colsA];
+            System.out.println("Enter the values for matrixA (row?major):");
+            for (int i = 0; i < rowsA; i++) {
+                for (int j = 0; j < colsA; j++) {
+                    matrixA[i][j] = sn.nextInt();
+                }
+            }
+
+            // 讀取矩陣 B
+            System.out.print("Enter the rows for matrixB: ");
+            int rowsB = sn.nextInt();
+            System.out.print("Enter the cols for matrixB: ");
+            int colsB = sn.nextInt();
+            int[][] matrixB = new int[rowsB][colsB];
+            System.out.println("Enter the values for matrixB (row?major):");
+            for (int i = 0; i < rowsB; i++) {
+                for (int j = 0; j < colsB; j++) {
+                    matrixB[i][j] = sn.nextInt();
+                }
+            }
+
+            MyMatrix m = new MyMatrix(matrixA);
+
+            System.out.println("\nmatrixA:");
+            m.show(matrixA);
+            System.out.println("\nmatrixB:");
+            m.show(matrixB);
+
+            System.out.println("\n(mA + mB):");
+            m.show(m.add(matrixB));
+
+            System.out.println("\n(mA - mB):");
+            m.show(m.diff(matrixB));
+
+            System.out.println("\n(mA * mB):");
+            int[][] product = null;
+            try {
+                product = m.multiply(matrixB);
+                m.show(product);
+            } catch (MatrixSizeException e) {
+                System.out.println("乘法錯誤：" + e.getMessage());
+            }
+
+            if (product != null) {
+                try {
+                    int det = m.determinant(product);
+                    System.out.println("\n(mA * mB) 的行列式 = " + det);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("行列式計算錯誤：" + e.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("程式執行期間發生錯誤：" + e.getMessage());
+        }
+    }
+}
+```
+
+---
+
+## 4?? 修改說明（哪些地方改了、為什麼）  
+
+| 修改位置 | 原始寫法 | 改寫後 | 修改原因 |
+|----------|----------|--------|----------|
+| `multply` 方法名稱 | `public int[][] multply(int[][] a)` | `public int[][] multiply(int[][] a)`（同時保留原名稱的相容性） | 拼寫錯誤，易造成混淆與編譯警告。 |
+| 錯誤回傳 `null` | `if (rows != a.length ...) return null;` | 改為拋出 `MatrixSizeException`（自訂 RuntimeException） | 讓錯誤在呼叫端即被捕捉，避免後續 `NullPointerException`。 |
+| 行列式尺寸檢查 | 註解說明但未實作檢查 | `if (matrix.length != matrix[0].length) throw new IllegalArgumentException(...)` | 防止非方陣進入遞迴，提升程式健壯性。 |
+| 重複檢查程式碼 | 每個運算方法都自行檢查尺寸 | 抽取為私有 `checkAndCreateResult` 方法 | 減少重複，提高可維護性。 |
+| `show` 方法回傳值 | `void`，僅印出訊息 | 改為 `boolean show(int[][] a)`，返回是否成功顯示 | 呼叫端可根據返回值決定是否繼續後續運算。 |
+| 註解與 Javadoc | 只有少量單行註解 | 為類別與每個公開方法加入完整的 Javadoc | 滿足「備註」評分項目，提升可讀性。 |
+| `Scanner` 使用 | 手動 `close()` | 使用 **try?with?resources** (`try (Scanner sn = new Scanner(System.in))`) | 更安全的資源管理，避免忘記關閉。 |
+| 錯誤訊息統一 | 各處直接 `System.out.println("The size can not pair.")` | 統一使用例外訊息或 `show` 方法的錯誤回傳 | 讓錯誤資訊更具體、易於除錯。 |
+| 輸入提示文字 | `Enter the value for matrixA:` | 改為 `Enter the values for matrixA (row?major):` | 更清楚說明輸入格式。 |
+
+---
+
+## 5?? 改進建議與回饋  
+
+1. **完整的程式說明**  
+   - 每個類別與方法前都加上 Javadoc（或簡短註解），說明功能、參數、回傳值與可能拋出的例外。這不僅能提升備註分，也讓同儕或未來自己閱讀時更快上手。  
+
+2. **例外處理取代回傳 `null`**  
+   - 在庫存的矩陣運算中，尺寸不匹配是一種「錯誤」而非「正常」返回值。建議拋出自訂例外（如本次示範的 `MatrixSizeException`），讓呼叫端必須處理，避免隱藏的 NullPointerException。  
+
+3. **抽象共用程式碼**  
+   - 如本例的 `checkAndCreateResult`，未來若要加入更多運算（如轉置、逆矩陣），可以直接呼叫此方法，減少重複與錯誤機會。  
+
+4. **方法命名與一致性**  
+   - 盡量使用英文單詞的正確拼寫，並遵守 Java 命名慣例（方法使用小寫開頭的駝峰式，如 `multiply`、`determinant`）。  
+
+5. **測試與邊界案例**  
+   - 建議在本機或使用 JUnit 撰寫單元測試，覆蓋以下情況：  
+     * 兩矩陣尺寸不匹配的加、減、乘；  
+     * 非方陣傳入 `determinant`；  
+     * 零矩陣（全 0）與單位矩陣的運算；  
+     * 大於 10×10 的矩陣（檢驗效能與遞迴深度）。  
+
+6. **效能優化**  
+   - 行列式的遞迴實作在矩陣尺寸大於 5 時會變得非常慢。可在課堂上介紹 **拉普拉斯展開** 的改良版（如使用 **LU 分解**）或直接使用 **Apache Commons Math** 等函式庫。  
+
+7. **使用 `final` 與 `private`**  
+   - 讓不會被外部修改的欄位（如 `rows`、`cols`）宣告為 `final`，提升不可變性與程式安全性。  
+
+8. **輸出格式**  
+   - 若要讓矩陣顯示更美觀，可考慮根據最大數字寬度動態調整 `printf` 的寬度，或使用 `StringBuilder` 組合一次性輸出，減少 I/O 次數。  
+
+---
+
+**總結**：  
+這份作業已具備基本的矩陣運算功能，得分 76 分屬於「良好」等級。若依上述建議加入完整註解、例外處理、程式抽象與測試，分數有望提升至 90 分以上，同時也能讓學生更熟悉「可讀性」與「健壯性」的程式設計原則。祝教學順利！

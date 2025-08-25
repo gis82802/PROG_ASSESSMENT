@@ -1,0 +1,220 @@
+
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）對這份作業進行評分、優缺點分析、程式碼改寫、修改說明以及改進建議。  
+
+---
+
+## 1?? 總分 (0?100)
+
+| 評分項目 | 滿分 | 得分 | 評分說明 |
+|---------|------|------|----------|
+| **備註** (20) | 20 | **12** | 程式內只有少量註解，且缺乏對類別與每個方法功能的完整說明。 |
+| **格式** (25) | 25 | **18** | 基本縮排正確，但有不一致的空格、括號使用與 `printf` 的寫法不符合慣例，且 `System.out.printf` 應使用格式字串。 |
+| **準確性** (25) | 25 | **22** | 大部分運算正確，唯一錯誤在矩陣乘法的維度計算（`colsA` 取錯），會在非方陣情況下拋出 `ArrayIndexOutOfBoundsException`。 |
+| **邏輯** (30) | 30 | **24** | 加、減、純量乘法邏輯正確；矩陣乘法的迴圈與變數命名有邏輯缺陷；缺少對輸入矩陣尺寸不匹配的檢查。 |
+| **總分** | 100 | **76** | **76 / 100**，屬於「基本完成」但仍有可改進之處。 |
+
+---
+
+## 2?? 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣的列印、加法、減法、乘法與純量乘法，符合題目要求。  
+2. **封裝良好**：將矩陣資料封裝在 `MyMatrix` 類別中，提供了直觀的 API。  
+3. **使用了雙層迴圈**：加、減、純量乘法的實作簡潔且正確。  
+4. **重用 `result` 變數**：在 `main` 中合理重用變數，避免不必要的多餘宣告。  
+
+### 缺點
+1. **缺少說明文件**：類別與方法缺乏 Javadoc 或完整註解，閱讀者不易快速了解功能與參數限制。  
+2. **格式不統一**：  
+   - `System.out.printf(matData[i][j]+" ");` 應改為 `System.out.print(matData[i][j] + " ");` 或使用 `printf("%d ", matData[i][j]);`。  
+   - 括號與方括號之間的空格不一致，例如 `int[][] temp=new int[(matData.length)][(matData[0].length)];`。  
+   - 方法名稱 `mutiply` 拼寫錯誤，應為 `multiply`。  
+3. **矩陣乘法維度錯誤**：  
+   - `int colsA = secondMat.matData.length;` 應為 `int colsA = this.matData[0].length;`（第一矩陣的列數）。  
+   - 若兩矩陣尺寸不匹配，程式會直接執行導致例外。  
+4. **缺乏輸入檢查**：加、減、乘、純量乘法均未檢查矩陣尺寸是否相容，易產生 runtime error。  
+5. **變數命名不夠直觀**：`mutiply`、`scalar`（無參數）等名稱可更具體，例如 `multiply`、`scalarMultiply`。  
+
+---
+
+## 3?? 改寫後的程式碼（保留優點、修正缺點）
+
+```java
+/**
+ * 簡易矩陣類別，支援列印、加法、減法、矩陣乘法與純量乘法。
+ */
+class MyMatrix {
+    /** 矩陣資料，採行列優先儲存 */
+    private final int[][] matData;
+
+    /**
+     * 建構子，直接使用傳入的二維陣列（不會自行複製）。
+     *
+     * @param a 來源矩陣資料
+     */
+    public MyMatrix(int[][] a) {
+        this.matData = a;
+    }
+
+    /** 列印矩陣，每個元素之間以空格分隔，列結束換行。 */
+    public void printMat() {
+        for (int i = 0; i < matData.length; i++) {
+            for (int j = 0; j < matData[i].length; j++) {
+                System.out.printf("%d ", matData[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    /** 矩陣相加，要求兩矩陣尺寸相同。 */
+    public MyMatrix add(MyMatrix other) {
+        checkSameSize(other);
+        int rows = matData.length;
+        int cols = matData[0].length;
+        int[][] temp = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                temp[i][j] = this.matData[i][j] + other.matData[i][j];
+            }
+        }
+        return new MyMatrix(temp);
+    }
+
+    /** 矩陣相減，要求兩矩陣尺寸相同。 */
+    public MyMatrix sub(MyMatrix other) {
+        checkSameSize(other);
+        int rows = matData.length;
+        int cols = matData[0].length;
+        int[][] temp = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                temp[i][j] = this.matData[i][j] - other.matData[i][j];
+            }
+        }
+        return new MyMatrix(temp);
+    }
+
+    /** 矩陣乘法，要求 A 的列數等於 B 的行數。 */
+    public MyMatrix multiply(MyMatrix other) {
+        if (this.matData[0].length != other.matData.length) {
+            throw new IllegalArgumentException(
+                "矩陣相乘時，左矩陣的列數必須等於右矩陣的行數。");
+        }
+        int rowsA = this.matData.length;
+        int colsA = this.matData[0].length;   // ← 修正的地方
+        int colsB = other.matData[0].length;
+        int[][] temp = new int[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                for (int k = 0; k < colsA; k++) {
+                    temp[i][j] += this.matData[i][k] * other.matData[k][j];
+                }
+            }
+        }
+        return new MyMatrix(temp);
+    }
+
+    /** 純量乘法，將矩陣每個元素乘以 4。 */
+    public MyMatrix scalarMultiply() {
+        int rows = matData.length;
+        int cols = matData[0].length;
+        int[][] temp = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                temp[i][j] = 4 * matData[i][j];
+            }
+        }
+        return new MyMatrix(temp);
+    }
+
+    /** 檢查兩矩陣尺寸是否相同，若不同則拋出例外。 */
+    private void checkSameSize(MyMatrix other) {
+        if (this.matData.length != other.matData.length ||
+            this.matData[0].length != other.matData[0].length) {
+            throw new IllegalArgumentException("矩陣尺寸必須相同。");
+        }
+    }
+}
+
+/* --------------------------------------------------------------- */
+public class hw1213 {
+    public static void main(String[] args) {
+        int[][] matA = {{1, 2, 3}, {4, 5, 6}};
+        int[][] matB = {{9, 8, 7}, {6, 5, 4}};
+        int[][] matC = {{9, 8}, {7, 6}, {5, 4}};
+
+        System.out.println("\nMatrix A");
+        MyMatrix m1 = new MyMatrix(matA);
+        m1.printMat();
+
+        System.out.println("\nMatrix B");
+        MyMatrix m2 = new MyMatrix(matB);
+        m2.printMat();
+
+        System.out.println("\nMatrix C");
+        MyMatrix m3 = new MyMatrix(matC);
+        m3.printMat();
+
+        System.out.println("\nMatrix A + B");
+        MyMatrix result = m1.add(m2);
+        result.printMat();
+
+        System.out.println("\nMatrix A - B");
+        result = m1.sub(m2);
+        result.printMat();
+
+        System.out.println("\nMatrix A * C");
+        result = m1.multiply(m3);
+        result.printMat();
+
+        System.out.println("\n4 * Matrix A");
+        result = m1.scalarMultiply();
+        result.printMat();
+    }
+}
+```
+
+---
+
+## 4?? 修改說明（哪些地方改了、為什麼）
+
+| 修改位置 | 原始寫法 | 改寫後 | 修改原因 |
+|----------|----------|--------|----------|
+| **類別/方法註解** | 無 | 加入 Javadoc 註解與簡短說明 | 提升備註分數，讓程式易於閱讀與維護。 |
+| **方法名稱** | `mutiply`、`scalar` | `multiply`、`scalarMultiply` | 修正拼寫錯誤，語意更清晰。 |
+| **列印方式** | `System.out.printf(matData[i][j]+" ");` | `System.out.printf("%d ", matData[i][j]);` | 正確使用 `printf`，避免隱式轉型與效能問題。 |
+| **格式統一** | 多處空格與括號不一致 | 統一使用 `int[][] temp = new int[rows][cols];` 等寫法 | 提高格式分數，符合 Java 編碼慣例。 |
+| **矩陣乘法維度** | `int colsA = secondMat.matData.length;` | `int colsA = this.matData[0].length;` | 之前使用了錯誤的列數，會在非方陣時產生 `ArrayIndexOutOfBoundsException`。 |
+| **尺寸檢查** | 無檢查 | `checkSameSize`、`if (this.matData[0].length != other.matData.length)` | 防止尺寸不匹配時直接崩潰，提升準確性與健壯性。 |
+| **變數宣告** | 重複寫 `int[][] temp=new int[(matData.length)][(matData[0].length)];` | 統一使用 `int rows = ...; int cols = ...; int[][] temp = new int[rows][cols];` | 使程式更易讀，減少冗餘括號。 |
+| **`final` 修飾** | `private int[][] matData;` | `private final int[][] matData;` | 表示欄位在建構後不會被重新指派，提升程式安全性。 |
+
+---
+
+## 5?? 改進建議與回饋
+
+1. **加強說明文件**  
+   - 為每個公開方法寫完整的 Javadoc（包括參數、回傳值、例外說明），這不僅能提升備註分數，也有助於同學在日後使用 API。  
+
+2. **統一編碼風格**  
+   - 建議使用 IDE（如 IntelliJ IDEA、Eclipse）內建的 *Code Style* 設定，或遵循 Google Java Style Guide。自動格式化可以避免空格、縮排不一致的問題。  
+
+3. **錯誤處理**  
+   - 現在僅在尺寸不匹配時拋出 `IllegalArgumentException`，可以再加入更友善的訊息或自行定義 `MatrixDimensionException`，讓使用者更清楚錯誤來源。  
+
+4. **深拷貝建構子**  
+   - 目前建構子直接把外部陣列引用保存，若外部陣列在後續被修改會影響 `MyMatrix` 內部狀態。建議在建構子中做 **深拷貝**（`this.matData = Arrays.stream(a).map(int[]::clone).toArray(int[][]::new);`），提升封裝性。  
+
+5. **擴充功能**  
+   - 可以考慮加入 `transpose()`、`determinant()`（方陣）或 `inverse()` 等進階矩陣運算，讓類別更完整。  
+
+6. **測試案例**  
+   - 建議寫單元測試（JUnit）來驗證每個方法在正常與異常情況下的行為，這不僅能幫助自我驗證，也能在未來修改程式時避免回歸錯誤。  
+
+7. **效能小技巧**  
+   - 在矩陣乘法內部，`temp[i][j]` 每次迴圈都會被加總，若矩陣較大可考慮使用 `long` 暫存避免整數溢位，或在演算法層面使用分塊乘法（Block Matrix Multiplication）提升快取命中率。  
+
+---
+
+**總結**：此份作業已完成基本功能，具備良好的結構與可讀性。透過上述的說明文件、格式統一、尺寸檢查與正確的乘法維度修正，可將分數提升至 **90 分以上**，同時也讓程式在實務使用時更加安全與易於維護。祝教學順利，若需要進一步的測試範例或擴充功能的示範，隨時告訴我！

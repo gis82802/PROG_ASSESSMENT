@@ -1,0 +1,254 @@
+以下依照您提供的四項評分標準（備註、格式、準確性、邏輯）對 **此份 Java 作業** 進行完整評分、優缺點分析、程式碼改寫與改進建議，全部以中文說明。  
+
+---
+
+## 1. 總分（0?100）
+
+| 評分項目 | 滿分 | 取得分數 | 評分說明 |
+|----------|------|----------|----------|
+| **備註 (20)** | 20 | **12** | 程式碼中沒有任何 Javadoc 或註解說明每個方法的功能、參數與回傳值，僅在 `main` 中有簡單的 `printf` 標題。 |
+| **格式 (25)** | 25 | **19** | 大部分縮排正確，使用 4 個空格；但變數與類別名稱未遵循 Java 命名慣例（如 `MyMatrix` OK，`app10_H1` 建議改為 `App10H1`），且缺少空行分段、方法之間的分隔線，影響可讀性。 |
+| **準確性 (25)** | 25 | **22** | 加法、減法、標量乘法正確；矩陣乘法在 2×3 * 3×2 的情況下正確得到 2×2 結果。唯一缺點是未檢查輸入矩陣尺寸不匹配的情況，若使用者自行改變尺寸會拋出 `ArrayIndexOutOfBoundsException`。 |
+| **邏輯 (30)** | 30 | **24** | 核心演算法正確，使用了三層迴圈完成矩陣乘法；但在 `add`、`sub`、`scalar` 中硬編碼了矩陣行列大小（2×3），缺乏彈性。 |
+| **總分** | **100** | **77** | 程式功能完整且正確，但在可讀性、彈性與錯誤處理上仍有提升空間。 |
+
+---
+
+## 2. 優缺點分析
+
+### 優點
+1. **功能完整**：實作了矩陣的加、減、乘、純量乘四種運算，且在 `main` 中示範輸出。  
+2. **演算法正確**：矩陣乘法使用了標準的三層迴圈，結果符合線性代數規則。  
+3. **使用 `new MyMatrix(flag)` 回傳新物件**，避免了直接修改原矩陣，符合封裝原則。  
+
+### 缺點
+1. **缺乏說明文件**：沒有 Javadoc 或程式內註解，閱讀者無法快速了解每個方法的用途。  
+2. **硬編碼尺寸**：所有運算都假設矩陣尺寸固定為 2×3（或 2×2），若改變輸入尺寸會出錯。  
+3. **錯誤處理不足**：未檢查矩陣尺寸是否相容（如加法兩矩陣行列必須相同），也未處理 `null` 輸入。  
+4. **命名與風格**：類別 `app10_H1` 不符合 Java 命名慣例；`flag` 這個變數名稱不具描述性。  
+5. **程式碼重複**：`add`、`sub`、`scalar` 的迴圈結構相同，可抽成共用的私有方法。  
+
+---
+
+## 3. 改進後的程式碼
+
+以下程式碼保留原有的公開介面（`add`、`sub`、`multiply`、`scalar`），僅在內部實作上做了彈性化、錯誤檢查與說明文件的補強。  
+變數名稱仍盡量保留（如 `matrix`），但將不具描述性的 `flag` 改為 `result`，以提升可讀性。
+
+```java
+import java.util.Arrays;
+
+/**
+ * 矩陣運算類別，支援加法、減法、乘法與純量乘法。
+ * <p>
+ * 本類別不限制矩陣的行列數，只要在運算前尺寸相容即可。
+ * </p>
+ *
+ * @author  XXX (學生姓名)
+ */
+class MyMatrix {
+    /** 內部儲存的二維陣列 */
+    int[][] matrix;
+
+    /**
+     * 建構子，直接使用傳入的二維陣列作為內部資料。
+     *
+     * @param n 二維整數陣列，若為 {@code null} 會拋出 {@link IllegalArgumentException}
+     */
+    public MyMatrix(int[][] n) {
+        if (n == null) {
+            throw new IllegalArgumentException("矩陣不能為 null");
+        }
+        // 深拷貝，避免外部修改影響本物件
+        matrix = Arrays.stream(n).map(int[]::clone).toArray(int[][]::new);
+    }
+
+    /** 取得矩陣的行數 */
+    private int rows() {
+        return matrix.length;
+    }
+
+    /** 取得矩陣的列數 */
+    private int cols() {
+        return matrix[0].length;
+    }
+
+    /** 檢查兩矩陣尺寸是否相同，若不同拋出例外 */
+    private void ensureSameSize(MyMatrix other) {
+        if (this.rows() != other.rows() || this.cols() != other.cols()) {
+            throw new IllegalArgumentException("矩陣尺寸不相符（"
+                    + this.rows() + "x" + this.cols() + " vs "
+                    + other.rows() + "x" + other.cols() + "）");
+        }
+    }
+
+    /** 建立指定大小且全部元素為 0 的矩陣 */
+    private static int[][] zeroMatrix(int rows, int cols) {
+        int[][] arr = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            Arrays.fill(arr[i], 0);
+        }
+        return arr;
+    }
+
+    /**
+     * 矩陣相加。
+     *
+     * @param matrix2 被加的矩陣
+     * @return 兩矩陣相加的結果
+     */
+    public MyMatrix add(MyMatrix matrix2) {
+        ensureSameSize(matrix2);
+        int[][] result = zeroMatrix(rows(), cols());
+
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < cols(); j++) {
+                result[i][j] = this.matrix[i][j] + matrix2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣相減。
+     *
+     * @param matrix2 被減的矩陣
+     * @return 兩矩陣相減的結果
+     */
+    public MyMatrix sub(MyMatrix matrix2) {
+        ensureSameSize(matrix2);
+        int[][] result = zeroMatrix(rows(), cols());
+
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < cols(); j++) {
+                result[i][j] = this.matrix[i][j] - matrix2.matrix[i][j];
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 矩陣乘法 (A * B)。
+     * <p>
+     * 前提：A 的列數必須等於 B 的行數。
+     * </p>
+     *
+     * @param matrix2 右側矩陣 B
+     * @return 乘法結果矩陣
+     */
+    public MyMatrix multiply(MyMatrix matrix2) {
+        if (this.cols() != matrix2.rows()) {
+            throw new IllegalArgumentException("矩陣乘法尺寸不相容："
+                    + this.cols() + " (A 列) != " + matrix2.rows() + " (B 行)");
+        }
+
+        int[][] result = zeroMatrix(this.rows(), matrix2.cols());
+
+        for (int i = 0; i < this.rows(); i++) {
+            for (int j = 0; j < matrix2.cols(); j++) {
+                for (int k = 0; k < this.cols(); k++) {
+                    result[i][j] += this.matrix[i][k] * matrix2.matrix[k][j];
+                }
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /**
+     * 純量乘法 (n * A)。
+     *
+     * @param n 純量值
+     * @return 每個元素皆乘以 n 的新矩陣
+     */
+    public MyMatrix scalar(int n) {
+        int[][] result = zeroMatrix(rows(), cols());
+
+        for (int i = 0; i < rows(); i++) {
+            for (int j = 0; j < cols(); j++) {
+                result[i][j] = this.matrix[i][j] * n;
+            }
+        }
+        return new MyMatrix(result);
+    }
+
+    /** 以易讀的方式印出矩陣內容（供除錯使用） */
+    public void print(String title) {
+        System.out.println(title);
+        for (int[] row : matrix) {
+            for (int val : row) {
+                System.out.printf("%4d ", val);
+            }
+            System.out.println();
+        }
+    }
+}
+
+/* --------------------------------------------------------------- */
+/* 主程式類別（遵循 Java 命名慣例）                               */
+public class App10H1 {
+    public static void main(String[] args) {
+        int[][] mat1 = {{1, 2, 3}, {4, 5, 6}};
+        int[][] mat2 = {{9, 8, 7}, {6, 5, 4}};
+        int[][] mat3 = {{9, 8}, {7, 6}, {5, 4}};
+        int n = 4;
+
+        MyMatrix m1 = new MyMatrix(mat1);
+        MyMatrix m2 = new MyMatrix(mat2);
+        MyMatrix m3 = new MyMatrix(mat3);
+
+        MyMatrix mAdd = m1.add(m2);
+        MyMatrix mSub = m1.sub(m2);
+        MyMatrix mMul = m1.multiply(m3);
+        MyMatrix mScalar = m1.scalar(n);
+
+        m1.print("matrix 1:");
+        m2.print("matrix 2:");
+        m3.print("matrix 3:");
+        mAdd.print("matrix 1 + matrix 2:");
+        mSub.print("matrix 1 - matrix 2:");
+        mMul.print("matrix 1 * matrix 3:");
+        mScalar.print("4 * matrix 1:");
+    }
+}
+```
+
+---
+
+## 4. 修改說明與原因
+
+| 原始位置 | 修改內容 | 為什麼要這樣改 |
+|----------|----------|----------------|
+| `public MyMatrix(int[][] n)` | 加入 `null` 檢查、深拷貝陣列 | 防止外部陣列被意外修改，提升封裝性；避免 `NullPointerException`。 |
+| `add`、`sub`、`scalar` 中的 `int[][] flag = new int[2][3];` | 改為 `zeroMatrix(rows(), cols())`，並在方法開頭呼叫 `ensureSameSize` | 使程式支援任意尺寸矩陣，避免硬編碼 2×3。 |
+| `multiply` 中的 `int[][] flag = new int[2][2];` | 改為 `zeroMatrix(this.rows(), matrix2.cols())`，同時加入尺寸相容檢查 | 讓乘法適用於所有符合矩陣乘法規則的尺寸，避免陣列越界。 |
+| `flag` 變數名稱 | 改為 `result`（或 `result` 由 `zeroMatrix` 產生） | `result` 更能表達「運算結果」的意涵，提升可讀性。 |
+| 類別 `app10_H1` | 改名為 `App10H1`（符合 PascalCase 命名規則） | 符合 Java 官方命名慣例，讓程式更專業。 |
+| 輸出程式碼（大量 `printf` 迴圈） | 抽成 `MyMatrix.print(String title)` 方法 | 減少重複程式碼，讓 `main` 更簡潔，且未來若要改變輸出格式只需修改一處。 |
+| 缺少 Javadoc / 註解 | 為每個公開方法與建構子加入完整的 Javadoc | 讓使用者與評分者快速了解 API 功能，符合「備註」評分項目。 |
+| 縮排與空行 | 統一使用 4 個空格縮排，方法之間加入空行 | 提升程式碼可讀性，符合「格式」評分標準。 |
+
+---
+
+## 5. 改進建議與反饋
+
+1. **加入單元測試**  
+   - 建議使用 JUnit 為 `add`、`sub`、`multiply`、`scalar` 撰寫測試案例，包含正常情況、尺寸不匹配、`null` 輸入等邊界測試。這不僅能驗證程式正確性，也能在未來修改程式時防止回歸錯誤。  
+
+2. **提升彈性**  
+   - 目前已支援任意尺寸的矩陣運算，若想再擴充（例如求逆矩陣、轉置），可以在類別內部加入 `transpose()`、`determinant()` 等方法，保持同樣的尺寸檢查機制。  
+
+3. **使用 `final` 修飾不變的欄位**  
+   - 若矩陣在建立後不允許被外部直接修改，可將 `matrix` 宣告為 `private final int[][] matrix;`，並提供只讀的 getter（回傳深拷貝），加強封裝。  
+
+4. **錯誤訊息友善**  
+   - 例外訊息已加入尺寸資訊，未來可以考慮自訂例外類別（如 `MatrixDimensionException`），讓呼叫端更容易捕捉與處理。  
+
+5. **程式風格**  
+   - 建議在每個方法之間留一個空行，使用 `@Override`（若有繼承）以及 `static final` 常數（如 `DEFAULT_ROWS`）來避免魔術數字。  
+
+6. **文件與說明**  
+   - 在提交作業時，除了程式碼本身，請附上一份簡短的 README，說明程式的編譯與執行方式（`javac App10H1.java && java App10H1`），以及每個功能的使用範例。這會在「備註」項目中獲得更高分。  
+
+---
+
+**結論**：此作業已完成基本的矩陣運算需求，程式邏輯正確。透過上述的說明文件、尺寸彈性、錯誤檢查與程式風格調整，可將分數提升至 90 分以上，同時也讓程式更符合實務開發的品質要求。若有其他題目或想要進一步探討資料結構、演算法優化，隨時告訴我！祝教學順利。
