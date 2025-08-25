@@ -1,0 +1,48 @@
+【題目】
+請撰寫一個 Java 程式，完成 Rectangle 類別的設計，並在主程式中判斷三個矩形物件是否有交集。
+
+Rectangle 類別設計：
+
+屬性：
+
+x：左上角 x 座標
+
+y：左上角 y 座標
+
+width：寬度
+
+height：高度
+
+方法 getIntersectionArea(Rectangle other)：
+
+接受另一個 Rectangle 物件作為參數。
+
+計算並回傳兩個矩形交集的面積。
+
+如果沒有交集，回傳 0。
+
+主程式功能：
+
+建立三個矩形物件，並讓使用者輸入它們的參數：
+
+rect1：x, y, width, height
+
+rect2：x, y, width, height
+
+rect3：x, y, width, height
+
+判斷 rect1 與 rect2 是否有交集，若有則印出交集面積。
+
+判斷 rect1 與 rect3 是否有交集，若有則印出交集面積。
+
+判斷 rect2 與 rect3 是否有交集，若有則印出交集面積。
+
+【輸入】
+0 0 5 5
+3 3 5 5
+6 6 5 5
+
+【輸出】
+rect1 與 rect2 的交集面積：4
+rect1 與 rect3 沒有交集。
+rect2 與 rect3 的交集面積：4

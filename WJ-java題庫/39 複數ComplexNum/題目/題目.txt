@@ -1,0 +1,44 @@
+【題目】
+請撰寫一個 Java 程式，完成一個名為 ComplexNum 的類別，用以表示複數，並實作複數的四則運算功能。
+
+ComplexNum 類別設計：
+
+屬性：
+
+real：實數部分（double 類型）。
+
+image：虛數部分（double 類型）。
+
+方法：
+
+Add(ComplexNum other)：將當前複數與另一個複數相加，並回傳一個新的 ComplexNum 物件。
+
+Sub(ComplexNum other)：將當前複數與另一個複數相減，並回傳一個新的 ComplexNum 物件。
+
+Times(ComplexNum other)：將當前複數與另一個複數相乘，並回傳一個新的 ComplexNum 物件。
+
+Div(ComplexNum other)：將當前複數與另一個複數相除，並回傳一個新的 ComplexNum 物件。
+
+toString()：覆寫此方法，以 a+bi 的格式回傳複數的字串表示。
+
+主程式功能：
+
+讓使用者輸入兩個複數的實數部分和虛數部分。
+
+建立兩個 ComplexNum 物件 a 和 b。
+
+分別對 a 和 b 進行加、減、乘、除運算，並印出結果。
+
+確保程式可以處理除數為零的情況。
+
+【輸入】
+3 4
+5 6
+
+【輸出】
+a = 3.0+4.0i
+b = 5.0+6.0i
+a+b = 8.0+10.0i
+a-b = -2.0-2.0i
+a*b = -9.0+38.0i
+a/b = 0.639344262295082+0.03278688524590164i

@@ -1,0 +1,22 @@
+將資料 10 放入 Stack
+將資料 10 放入 Queue
+將資料 20 放入 Stack
+將資料 20 放入 Queue
+將資料 30 放入 Stack
+將資料 30 放入 Queue
+將資料 40 放入 Stack
+將資料 40 放入 Queue
+
+Stack 功能展示：
+Stack 頂部資料: 40
+從 Stack 取出資料: 40
+Stack 頂部資料: 30
+從 Stack 取出資料: 30
+從 Stack 取出資料: 20
+
+Queue 功能展示：
+Queue 頂部資料: 10
+從 Queue 取出資料: 10
+Queue 頂部資料: 20
+從 Queue 取出資料: 20
+從 Queue 取出資料: 30

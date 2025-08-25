@@ -1,0 +1,74 @@
+【題目】
+請撰寫一個 Java 程式，包含一個抽象父類別 Bag 和兩個繼承自它的子類別 Stack 和 Queue。
+
+Bag 父類別：
+
+必須是一個抽象類別（Abstract Class）。
+
+包含三個抽象方法：
+
+push(int data)：抽象方法，用於將資料放入。
+
+pop()：抽象方法，用於從中取出資料。
+
+top()：抽象方法，用於回傳最前面的資料。
+
+Stack 子類別：
+
+繼承自 Bag。
+
+內部使用 java.util.Stack 或 java.util.LinkedList 等資料結構來實現其行為。
+
+push(int data)：將資料放入堆疊頂部。
+
+pop()：從堆疊頂部取出並回傳資料。
+
+top()：回傳堆疊頂部的資料，但不移除。
+
+Queue 子類別：
+
+繼承自 Bag。
+
+內部使用 java.util.Queue 或 java.util.LinkedList 等資料結構來實現其行為。
+
+push(int data)：將資料放入隊列尾部。
+
+pop()：從隊列頭部取出並回傳資料。
+
+top()：回傳隊列頭部的資料，但不移除。
+
+主程式（test 類別）：
+
+依序讓使用者輸入一組整數（以 -1 結束），並將這些數字用於堆疊和隊列的測試。
+
+建立一個 Stack 物件和一個 Queue 物件。
+
+將使用者輸入的數字依序 push 到堆疊和隊列中。
+
+分別對堆疊和隊列執行 pop 和 top 操作，並印出結果，以展示各自的行為。
+
+【輸入】
+10 20 30 40 -1
+【輸出】
+將資料 10 放入 Stack
+將資料 10 放入 Queue
+將資料 20 放入 Stack
+將資料 20 放入 Queue
+將資料 30 放入 Stack
+將資料 30 放入 Queue
+將資料 40 放入 Stack
+將資料 40 放入 Queue
+
+Stack 功能展示：
+Stack 頂部資料: 40
+從 Stack 取出資料: 40
+Stack 頂部資料: 30
+從 Stack 取出資料: 30
+從 Stack 取出資料: 20
+
+Queue 功能展示：
+Queue 頂部資料: 10
+從 Queue 取出資料: 10
+Queue 頂部資料: 20
+從 Queue 取出資料: 20
+從 Queue 取出資料: 30
