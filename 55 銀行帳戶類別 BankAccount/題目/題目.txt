@@ -1,0 +1,49 @@
+【題目】
+請撰寫一個 Java 程式，建立一個名為 BankAccount 的類別，並在主程式中展示其功能。
+
+BankAccount 類別設計：
+
+屬性：
+
+name：帳戶持有人姓名。
+
+balance：帳戶餘額。
+
+transactions：一個列表或陣列，用於儲存所有交易紀錄。
+
+建構子：
+
+BankAccount(String name, double initialBalance)：初始化帳戶持有人姓名和開戶金額。
+
+方法：
+
+deposit(double amount)：存款功能，增加餘額。
+
+withdraw(double amount)：提款功能，減少餘額。如果餘額不足，需印出錯誤訊息。
+
+getBalance()：回傳當前餘額。
+
+transferTo(BankAccount receiver, double amount)：轉帳功能。將當前帳戶的金額轉給另一個帳戶。轉帳成功後，需記錄到雙方的交易紀錄中。
+
+queryTrans()：印出該帳戶的所有交易紀錄。
+
+主程式功能：
+
+建立三個 BankAccount 物件，分別為 Mary、John 和 Peter，並設定初始金額。
+
+讓使用者輸入兩個轉帳金額 x 和 y。
+
+執行 John 轉帳 x 元給 Peter。
+
+執行 Mary 轉帳 y 元給 John。
+
+呼叫 John 的 queryTrans() 方法，印出 John 的所有交易紀錄。
+
+交易日期: 2077-12-10
+【輸入】
+1000 2000
+【輸出】
+John 的交易紀錄：
+轉帳 1000.0 元給 Peter, 日期: 2077-12-10
+存款 2000.0 元, 日期: 2077-12-10
+收到來自 Mary 的轉帳 2000.0 元, 日期: 2077-12-10
