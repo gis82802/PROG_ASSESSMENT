@@ -1,0 +1,87 @@
+題目
+請根據以下要求，利用內部類別與類別繼承的方式，為一家百貨銷售商設計一個顧客管理系統。
+
+主要類別設計：
+
+DepartmentStore (百貨公司)：作為外部類別，負責管理所有商品清單與折扣比例。
+
+內部應包含 products 的 HashMap，來儲存所有商品的價格。
+
+應包含不同顧客等級的內部類別。
+
+Customer (一般顧客)：作為基礎內部類別，代表一般顧客。
+
+printProductList()：印出所有一般商品清單。
+
+getPrice(String productName)：回傳商品的原始價格。
+
+Member (會員)：繼承自 Customer。
+
+printProductList()：印出所有一般商品與會員專屬商品清單。
+
+getPrice(String productName)：回傳商品價格，並套用會員折扣(member_discount = 0.95)。
+
+VIP (貴賓)：繼承自 Member。
+
+printProductList()：印出所有一般商品、會員專屬商品與VIP專屬商品清單。
+
+getPrice(String productName)：回傳商品價格，並套用VIP折扣(vip_discount = 0.9)。
+
+程式要求：
+
+在 DepartmentStore 類別中，定義不同等級的商品清單。
+
+在主程式 test 中，建立 DepartmentStore 物件，並依序產生 Customer, Member, 和 VIP 物件。
+
+展示每個顧客等級能看到的商品清單，以及他們購買同一件商品（例如 T卹）時的價格差異。
+
+糖果10
+T卹250
+帽子300
+讓1200
+皮帶800
+Limited_cup 500
+Limited_pen 800
+Limited_bottle 300
+觀看10000
+玻璃15000
+
+輸入
+本題無任何輸入。
+輸出
+---------- 一般顧客 ---------------
+一般商品清單：
+T恤: 250
+皮帶: 800
+帽子: 300
+糖果: 10
+
+--------- 會員 ---------------
+一般商品清單：
+T恤: 250
+皮帶: 800
+帽子: 300
+糖果: 10
+會員專屬商品清單：
+Limited_cup: 500
+Limited_pen: 800
+Limited_bottle: 300
+
+----------- VIP --------------
+一般商品清單：
+T恤: 250
+皮帶: 800
+帽子: 300
+糖果: 10
+會員專屬商品清單：
+Limited_cup: 500
+Limited_pen: 800
+Limited_bottle: 300
+VIP專屬商品清單：
+手錶: 10000
+眼鏡: 15000
+
+------- 價格查詢 -----------
+一般顧客 T恤: 250.0
+會員 T恤: 237.5
+VIP T恤: 225.0
