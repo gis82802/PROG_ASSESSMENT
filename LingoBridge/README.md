@@ -34,3 +34,6 @@ python LingoBridge_v1.3.py {(int)模型選擇} {(str)提問路徑} {(str)輸出�
 ```
 python LingoBridge_v1.4.py {(int)模型選擇} {(str)輸出文本}
 ```
+
+## 2025.08.29
+- 上傳data/ 範例資料
