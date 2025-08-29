@@ -27,3 +27,6 @@ python LingoBridge_v1.3.py {(int)模型選擇} {(str)提問路徑} {(str)輸出�
 - 輸出路徑: logs/{log}/  
 - **使用需知**
   - 使用前，請務必自行更改data/items.json內的LLM Token，方可使用
+
+## LingoBridge_v1.4
+- 由傳入文本路徑及輸出路徑，更改為直接輸入輸出字串
