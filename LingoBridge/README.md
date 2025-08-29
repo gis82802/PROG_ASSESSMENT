@@ -30,3 +30,7 @@ python LingoBridge_v1.3.py {(int)模型選擇} {(str)提問路徑} {(str)輸出�
 
 ## LingoBridge_v1.4
 - 由傳入文本路徑及輸出路徑，更改為直接輸入輸出字串
+- 使用方式如下:
+```
+python LingoBridge_v1.4.py {(int)模型選擇} {(str)輸出文本}
+```
