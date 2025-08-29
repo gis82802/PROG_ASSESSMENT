@@ -1,10 +1,11 @@
 #------------------------------------------------------------------------------+
 #   PROJECT : LingoBridge
 #   AUTHOR  : PIN CHEN, TSAI
-#   VERSION : v1.4
+#   VERSION : v1.4.2
 #   UPDATE  : 2025-08-29
 #   DETAILS : 
 #       - 由傳入文本路徑及輸出路徑，更改為直接輸入輸出字串
+#       - 標準輸入改為備援功能，以間接程式呼叫為主
 #------------------------------------------------------------------------------+
 
 #--- INPORT--------------------------------------------------------------------+
@@ -69,7 +70,7 @@ QUIZ_STR   = str(sys.argv[2]) if len(sys.argv) > 2 else QUIZ_STR   # 提問文�
 
 #--- FUNCTIONS-----------------------------------------------------------------+
 
-def main(mode):
+def main(mode, quiz):
 
     # 選擇模型進行提問
     mode =  Choose_LLM(mode)
@@ -82,14 +83,14 @@ def main(mode):
         LLM_name  = "gemini-2.0-flash-exp"
         print(f"【SYSTEM】 已選擇 {LLM_name} 模型")
         g1 = Gemini(LLM_name)
-        finished  = g1.run(QUIZ_STR)
+        finished  = g1.run(quiz)
         feedback  = g1.res
         used_time = g1.time
     elif mode == 2:
         LLM_name  = "mistral-large-latest"
         print(f"【SYSTEM】 已選擇 {LLM_name} 模型")
         m1 = Mistral(LLM_name)
-        finished  = m1.run(QUIZ_STR)
+        finished  = m1.run(quiz)
         feedback  = m1.res
         used_time = m1.time
 
@@ -103,7 +104,7 @@ def main(mode):
     savefile(LOG_DIR, fb_name, feedback)
 
     # 儲存提問文本
-    savefile(LOG_DIR, LOG_QUIZ_NAME, QUIZ_STR)
+    savefile(LOG_DIR, LOG_QUIZ_NAME, quiz)
 
     # 撰寫工作紀錄 (log)，並儲存
     log_description = makeLog(LLM_name, used_time)
@@ -226,7 +227,7 @@ class Mistral:
 #--- MAIN----------------------------------------------------------------------+
 if ERROR == 0:
     print("【SYSTEM】 已執行LB系統")
-    ERROR = main(MODE)
+    ERROR = main(MODE, QUIZ_STR)
 else:
     print("【ERROR】 發生錯誤，已停止程序")
 
