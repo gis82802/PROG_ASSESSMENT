@@ -48,3 +48,11 @@ python LingoBridge_v1.4.py {(int)模型選擇} {(str)輸出文本}
 ## LingoBridge_v1_5
 - 針對間接程式呼叫進行問題除錯
 - 將提示性的patint全數註解，以便後續做使用
+
+## WebtoLB
+- v0.1 開發初稿
+- 使用方式如下:
+  - 題目路徑 & 程式路經均為可選，存在預設選項
+```
+python WebtoLB.py {(str)題目路徑} {(str)程式路徑}
+```
