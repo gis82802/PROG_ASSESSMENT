@@ -1,0 +1,54 @@
+【題目】
+請撰寫一個 Java 程式，建立一個 Cylinder 類別來表示圓柱體。此類別應**覆寫（override）**繼承自 Object 類別的 equals() 方法，以實現根據圓柱體屬性來判斷相等性的邏輯。
+
+Cylinder 類別設計：
+
+屬性：
+
+centerX, centerY：圓柱體底面圓心的 x,y 座標。
+
+radius：底面圓的半徑。
+
+height：圓柱體的高度。
+
+建構子：Cylinder(int centerX, int centerY, int radius, int height)，用於初始化所有屬性。
+
+覆寫 equals(Object obj) 方法：
+
+該方法應能正確判斷兩個 Cylinder 物件是否相等。
+
+相等條件：圓心座標、半徑、與高度都必須完全相同。
+
+必須先檢查傳入的物件是否為 null 或型別不符，以避免程式錯誤。
+
+接著，將傳入的 Object 轉型為 Cylinder，並比對所有屬性。
+
+覆寫 toString() 方法：回傳一個描述圓柱體屬性的字串，格式為 (圓心: (x, y), 半徑: r, 高度: h)。
+
+主程式功能：
+
+讓使用者依序輸入兩個圓柱體 c1 和 c2 的屬性值。
+
+建立這兩個 Cylinder 物件。
+
+讓使用者輸入第三個圓柱體 c3 的屬性值。
+
+建立 c3 物件。
+
+使用 equals() 方法，分別判斷以下三種情況並印出結果：
+
+c1.equals(c2)
+
+c1.equals(c3)
+
+c2.equals(c3)
+
+【輸入】
+1 2 5 10
+1 2 5 10
+1 2 5 20
+
+【輸出】
+c1 和 c2 相等嗎? true
+c1 和 c3 相等嗎? false
+c2 和 c3 相等嗎? false
