@@ -5,7 +5,7 @@ pip install mistralai
 ```
 
 ## 匯入方式
-- 先下載 requirements.txt
+- 到data目錄中下載 requirements.txt
 - 在同目錄執行該段程式
 ```
 pip install -r requirements.txt
