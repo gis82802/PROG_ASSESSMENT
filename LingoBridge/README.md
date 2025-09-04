@@ -54,5 +54,5 @@ python LingoBridge_v1.4.py {(int)模型選擇} {(str)輸出文本}
 - 使用方式如下:
   - 題目路徑 & 程式路經均為可選，存在預設選項
 ```
-python WebtoLB.py {(str)題目路徑} {(str)程式路徑}
+python WebtoLB.py {(str)題目.txt路徑} {(str)程式.java路徑}
 ```
