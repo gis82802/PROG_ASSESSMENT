@@ -1,11 +1,12 @@
 #------------------------------------------------------------------------------+
 #   PROJECT : LingoBridge
 #   AUTHOR  : PIN CHEN, TSAI
-#   VERSION : v1.5.1
-#   UPDATE  : 2025-08-29
+#   VERSION : v1.5.3
+#   UPDATE  : 2025-09-05
 #   DETAILS : 
 #       - 針對間接程式呼叫進行問題除錯
 #       - 將提示性的patint全數註解，以便後續做使用
+#       - 於 data/temp 中暫存一份最新log
 #------------------------------------------------------------------------------+
 
 #--- INPORT--------------------------------------------------------------------+
@@ -31,6 +32,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # items 資料路徑
 DATA_DIR    = os.path.normpath(os.path.join(CURRENT_DIR, 'data/'))
+TEMP_DIR    = os.path.normpath(os.path.join(DATA_DIR, 'temp/'))
 ITEMS_PATH  = os.path.normpath(os.path.join(DATA_DIR, 'items.json'))
 
 # log 目錄及檔名
@@ -49,6 +51,7 @@ QUIZ_STR = "今天星期幾"
 # 初始化必要目錄
 # exist_ok 預設為 False，如果目錄已存在會報錯；True 則不會報錯。
 os.makedirs(DATA_DIR, exist_ok = True)     # 建立 data目錄
+os.makedirs(TEMP_DIR, exist_ok = True)     # 建立 temp目錄
 os.makedirs(LOGS_DIR, exist_ok = True)     # 建立 logs 根目錄
 
 # 讀取 items.json 資料
@@ -100,13 +103,16 @@ def main(mode, quiz):
     # 儲存模型回饋
     fb_name = LOG_FEEDBACK_NAME.replace("@", LLM_name)
     savefile(LOG_DIR, fb_name, feedback)
+    savefile(TEMP_DIR, "feedback", feedback)
 
     # 儲存提問文本
     savefile(LOG_DIR, LOG_QUIZ_NAME, quiz)
+    savefile(TEMP_DIR, "quiz.txt", quiz)
 
     # 撰寫工作紀錄 (log)，並儲存
     log_description = makeLog(LLM_name, used_time)
     savefile(LOG_DIR, LOG_NAME, log_description)
+    savefile(TEMP_DIR, "log.txt", log_description)
 
     # 回傳模型回覆，並結束程式
     #print(f"【{LLM_name}】")
