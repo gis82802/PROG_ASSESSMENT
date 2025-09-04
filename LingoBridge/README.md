@@ -50,9 +50,12 @@ python LingoBridge_v1.4.py {(int)模型選擇} {(str)輸出文本}
 - 將提示性的patint全數註解，以便後續做使用
 
 ## WebtoLB
-- v0.1 開發初稿
+### v0.1 開發初稿
 - 使用方式如下:
   - 題目路徑 & 程式路經均為可選，存在預設選項
 ```
 python WebtoLB.py {(str)題目.txt路徑} {(str)程式.java路徑}
 ```
+
+### v0.2 更新
+- 追加sys.exit()功能；若未順利執行，回傳 1；反之若順利執行則為 0
