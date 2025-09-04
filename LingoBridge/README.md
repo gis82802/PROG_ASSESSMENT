@@ -1,6 +1,6 @@
 # 所需模組表
 ```
-pip install google-generativeai
+pip install google-genai
 pip install mistralai
 ```
 
