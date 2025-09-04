@@ -61,6 +61,7 @@ python LingoBridge_v1.4.py {(int)模型選擇} {(str)輸出文本}
 ## LingoBridge_v1_5
 - 針對間接程式呼叫進行問題除錯
 - 將提示性的patint全數註解，以便後續做使用
+- 於 data/temp 中暫存一份最新log
 
 ## WebtoLB
 ### v0.1 開發初稿
