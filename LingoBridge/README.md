@@ -4,6 +4,13 @@ pip install google-generativeai
 pip install mistralai
 ```
 
+## 匯入方式
+- 先下載 requirements.txt
+- 在同目錄執行該段程式
+```
+pip install -r requirements.txt
+```
+
 ## LingoBridge_v1.0
 - 重新撰寫Gemini.py 之功能，命名為 LingoBridge (語言橋梁)，可簡寫為LB
 - 預留Mistral 的撰寫空間
