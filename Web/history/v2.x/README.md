@@ -29,3 +29,10 @@
 
 ## v2.1.1
 - 新增selecthomework6添加了教師端的批改功能
+- 
+## v2.1.2
+
+
+
+ ## v2.1.3
+- 修正註冊帳號KEY重複偵測問題(topic/php/signup.php)
