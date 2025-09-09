@@ -35,3 +35,7 @@
 
  ## v2.1.3
 - 修正註冊帳號KEY重複偵測問題(topic/php/signup.php)
+
+ ## v2.1.4
+- 修改了遇到.java檔以外的作業無法辨識的問題(\php\selecthomework6.php)
+  - 須至...\topic\php\selecthomework6.php 中第26行$extensions處做新增
