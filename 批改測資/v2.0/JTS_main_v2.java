@@ -1,11 +1,12 @@
 //--- INFORMATION----------------------------------------------------------------------------------------------------------------------------+
 /*
 author  : PIN CHEN, TSAI。
-version : v2.0.1
-updated : 2025-09-09, (UTC+8)23:55。
+version : v2.0.2
+updated : 2025-09-10, (UTC+8)00:10。
 detail  :
  - 將批量作業版(v1.4.1) 與 網頁執行版(v1.6.2)整合至v2正式版
  - 正式專案名稱為 JavaTesterSystem_v2；檔案名稱為 JTS_main_v2.java
+ - 將時間格式從 "yyMMdd_HHmm" 改為 "yyMMdd_HHmmssSS"
 */
 
 //--- IMPORT---------------------------------------------------------------------------------------------------------------------------------+
@@ -28,7 +29,7 @@ public class JTS_main_v2 {
     static Path LG_DIR = Paths.get(LOGS_DIR); // 工作日誌目錄
 
     //時間戳記
-    static String NOWTIME = DateTimeFormatter.ofPattern("yyMMdd_HHmm").format(LocalDateTime.now()); // eg. 250909_1858
+    static String NOWTIME = DateTimeFormatter.ofPattern("yyMMdd_HHmmssSS").format(LocalDateTime.now()); // eg. 250909_1858
 
 //--- INITIAL--------------------------------------------------------------------------------------------------------------------------------+
     private static void init() throws Exception{

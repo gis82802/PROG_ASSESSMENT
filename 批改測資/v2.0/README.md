@@ -11,3 +11,6 @@ java JTS_main_v2.java 0
 java JTS_main_v2.java {(int)MODE} {(str)作業目錄} {(str)測資目錄}
 ```
 - 引數中的 MODE 目前無實裝任何功能，輸入任意 int即可
+
+## v2.0.2
+- 將時間格式從 "yyMMdd_HHmm" 改為 "yyMMdd_HHmmssSS"
