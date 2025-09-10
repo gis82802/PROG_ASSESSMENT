@@ -39,3 +39,10 @@
  ## v2.1.4
 - 修改了批改功能遇到.java檔以外的作業無法辨識的問題(\php\selecthomework6.php)
   - 須至...\topic\php\selecthomework6.php 中第26行$extensions處做新增
+
+## v2.1.5
+- 使用 v2.1.3 為基底修改
+- php/uploadhomework.php
+  - 重新使用第36行 python預設路徑，設定為 "python"
+  - 如果環境電腦無法新增python至path中，可以將其修改成python.exe 之路徑
+  - JTS更新至 v2.0.3 版本
