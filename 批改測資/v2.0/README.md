@@ -14,3 +14,7 @@ java JTS_main_v2.java {(int)MODE} {(str)作業目錄} {(str)測資目錄}
 
 ## v2.0.2
 - 將時間格式從 "yyMMdd_HHmm" 改為 "yyMMdd_HHmmssSS"
+
+## v2.0.3
+- 在 init() 中，重新加載路徑資料
+- 資料夾僅建立於本地，在目標模式中不使用 (若希望作用於目標模式，請更改init()之順序)
