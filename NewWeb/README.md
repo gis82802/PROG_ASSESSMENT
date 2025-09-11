@@ -24,8 +24,8 @@
 - 點擊左上角{國立虎尾科技大學 資訊工程系}LOGO回到首頁
 
 ## v0.0.3
-- Tindex.php (教師首頁)
-- Sindex.php (學生首頁)
+- Tindex.php (教師首頁)(TeacherIndex)
+- Sindex.php (學生首頁)(StudentIndex)
 - upload.php (上傳作業)
 - 以上僅前端網頁切換，尚未具有功能
 - 在頁面上方加入網頁切換按鈕(後端完成後需刪除)
