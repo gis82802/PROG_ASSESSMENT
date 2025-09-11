@@ -22,3 +22,11 @@
 - 更改資料庫名字，由topic-> afgs
 - 命名規則{基於大語言模型之程式作業自動評分與建議回饋系統(Automatic Grading and Feedback System for planning assignments based on a Large Language Model)}
 - 點擊左上角{國立虎尾科技大學 資訊工程系}LOGO回到首頁
+
+## v0.0.3
+- Tindex.php (教師首頁)
+- Sindex.php (學生首頁)
+- upload.php (上傳作業)
+- 以上僅前端網頁切換，尚未具有功能
+- 在頁面上方加入網頁切換按鈕(後端完成後需刪除)
+- 
