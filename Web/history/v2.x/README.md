@@ -53,3 +53,7 @@
 ## v2.1.7
 - index.php 更新至 v1.0.2
   - 修正學生與教師數量顯示邏輯
+
+## v2.1.8
+- php/selecthomework6.php
+  - 修改呼叫SQL參數(Session 認證)的邏輯
