@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2025-09-17 10:03:13
+-- 產生時間： 2025-09-17 11:09:35
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -354,8 +354,7 @@ INSERT INTO `users` (`UserID`, `Email`, `Password`, `FirstName`, `LastName`, `Jo
 (187, 'connor12345960515@gmail.com', 'connor960515', '孫', '益康', 0),
 (188, 'test@nfu.edu.tw', '1234', '鄭', '師墉', 0),
 (189, '123456789987654321gga@gmail.com', 'a5522678', '張', '鈞閔', 0),
-(190, 'teacher', '1234', '1', '234', 1),
-(10000091, '412431556@nfu.edu.tw', '1234', '鄭', '師墉', 1);
+(190, 'teacher', '1234', '1', '234', 1);
 
 -- --------------------------------------------------------
 
@@ -436,19 +435,19 @@ ALTER TABLE `results`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `student`
 --
 ALTER TABLE `student`
-  MODIFY `listID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
+  MODIFY `listID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=199;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `users`
 --
 ALTER TABLE `users`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10000092;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10000093;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `waitjoinclass`
 --
 ALTER TABLE `waitjoinclass`
-  MODIFY `listID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `listID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
