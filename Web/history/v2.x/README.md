@@ -63,3 +63,8 @@
   - 修改題目顯示格式 (由置中改為置左)
 - homeworkfeedback.php
   - 追加Markdown文法功能
+
+## v2.2.1
+- 追加GPT-oss顯示以及部分設定
+- 重製使用者資料(SQL)
+- 更換feedback資料存放路徑
