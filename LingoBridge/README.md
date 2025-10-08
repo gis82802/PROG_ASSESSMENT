@@ -73,3 +73,12 @@ python WebtoLB.py {(str)題目.txt路徑} {(str)程式.java路徑}
 
 ### v0.2 更新
 - 追加sys.exit()功能；若未順利執行，回傳 1；反之若順利執行則為 0
+
+
+## LB_light.py
+- 與各家LLM進行通訊的程序 (輕量版)
+- 使用前請先將各家LLM的API金鑰填入該程序中
+- 操作範例如下:
+```
+$python LB_light.py --model gemini-2.5-flash --message "在python中，該如何使用os.getenv()，請說明並示範"
+```
