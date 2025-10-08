@@ -4,10 +4,12 @@ AUTHOR  : PIN CHEN, TSAI
 VERSION : v1.0
 UPDATE  : 2025-10-07
 DETALES :
- - 與各家LLM進行通訊的程序 (輕量版)
- - 使用前請先將各家LLM的API金鑰填入該程序中
- - 操作範例如下:
+- 與各家LLM進行通訊的程序 (輕量版)
+- 使用前請先將各家LLM的API金鑰填入該程序中
+- 操作範例如下:
+```
  $python LB_light.py --model gemini-2.5-flash --message "在python中，該如何使用os.getenv()，請說明並示範"
+```
 WORKLOG :
 
 """
@@ -24,7 +26,7 @@ import anthropic
 
 # 各家客戶端API
 OPENAI_API_KEY    = ""
-GOOGLE_API_KEY    = "AIzaSyApqZcio6MSmp5KgY5N2YiXM6FqNF1kuoQ"
+GOOGLE_API_KEY    = ""
 MISTRAL_API_KEY   = ""
 ANTHROPIC_API_KEY = ""
 
