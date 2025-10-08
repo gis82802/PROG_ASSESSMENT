@@ -2,7 +2,7 @@
 PROJECT : LingoBridge_light
 AUTHOR  : PIN CHEN, TSAI
 VERSION : v1.0
-UPDATE  : 2025-10-07
+UPDATE  : 2025-10-08
 DETALES :
 - 與各家LLM進行通訊的程序 (輕量版)
 - 使用前請先將各家LLM的API金鑰填入該程序中
@@ -87,3 +87,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
